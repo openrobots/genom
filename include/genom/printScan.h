@@ -35,6 +35,7 @@ char *strdup(const char *s);  /* /opt/hilare2/src/tools/ansiLib */
  */
 #define TAB_INDENT 4 
 char *indentStr(int indent);
+char *indentStr2(int indent);
 
 
 /*
@@ -43,7 +44,7 @@ char *indentStr(int indent);
  *           . rien si le tableau est de dimension 0
  */
 char *getIndexesStr(int nDim, int *dims, int indice);
-
+char *getIndexesStr2(int nDim, int *dims, int indice);
 
 /*
  * Macro pour parcourir les elements "elt" d'un tableau

@@ -74,6 +74,7 @@ binsrcs=\
 	propiceGen.c		\
 	typeGen.c		\
 	printGen.c		\
+	printXMLGen.c		\
 	endianGen.c		\
 	scanGen.c		\
 	scopeGen.c		\

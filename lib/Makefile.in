@@ -52,11 +52,13 @@ LDFLAGS+=	-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)
 libsrcs=\
 	scan.c			\
 	print.c			\
+	printXML.c		\
 	printScanUtil.c		\
 	printState.c		\
 	moduleEvents.c		\
 	genomReportsLib.c	\
 	essayLib.c		\
+	posterXMLLib.c		\
 	h2endian.c
 
 libobjs = $(libsrcs:.c=.lo)

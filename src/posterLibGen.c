@@ -48,6 +48,10 @@ static void posterWriteLibMemberGen(FILE *out, POSTER_LIST *p, int protos);
 static char * posterExecTaskNameTab(void);
 static char * posterRequestNameTab(int *nbRqst);
 
+
+static char *tabPosterXML=NULL;
+static int  nbPosterXML=1;
+
 int posterLibGen(FILE *out) 
 {
     TYPE_STR *pt;
@@ -172,7 +176,7 @@ int posterLibGen(FILE *out)
       fprintf(out,
 	      "STATUS %s%sPosterRead(%s *x)\n{\n"
 	      "  if (%sPosterId == NULL) {\n"
-	      "     printf (warnMsgNotInit, \"%s\");\n"
+	      "     fprintf (stderr, warnMsgNotInit, \"%s\");\n"
 	      "     if (%s%sPosterInit() == ERROR) {\n"
 	      "        h2perror(\"%s%sPosterInit\");\n"
 	      "        return ERROR;\n"
@@ -320,7 +324,129 @@ int posterLibGen(FILE *out)
     cat_end(out);
     script_close(out, "%sPosterShowLibProto.h", module->name);
 
+
+    /** ----------------------------------------------------------------------
+     ** PosterXMLLib.c
+     **/
+
     /**
+     ** PosterXMLLibProto.h
+     **/
+    script_open(out);
+    cat_begin(out);
+
+    fprintf (out, "void web%s(FILE *f, int argc, char **argv, char **argn);\n",
+	     module->name);
+    fprintf (out, "extern STATUS %sCntrlPosterXML (FILE *f);\n",
+	     module->name);
+    fprintf (out, "extern STATUS %sCntrlPosterActivityXML (FILE *f);\n",
+	     module->name);
+    /*
+     * fonction de lecture donnees XML  des posters
+     */
+    for (p = posters; p != NULL; p = p->next) {
+
+      /* la fonction pour afficher tout le poster */
+      fprintf(out, "extern STATUS %s%sPosterXML (FILE *f);\n",
+	      module->name, p->name);
+
+      if (tabPosterXML != NULL) bufcat(&tabPosterXML, ", \\\\\n");
+      bufcat(&tabPosterXML, "{\"%s\", \"\", %s%sPosterXML}",
+	     p->name, module->name, p->name);
+      nbPosterXML++;
+	     
+      /* Les fonctions pour les e'le'ments de la structure */
+      posterLibMemberGen(out, p, 2 /* ! read */, 1 /* protos */); 
+
+    } /* for */
+
+    cat_end(out);
+    script_close(out, "%sPosterXMLLibProto.h", module->name);
+
+
+    /** 
+     ** PosterXMLLib.c
+     **/
+
+    script_open(out);
+    subst_begin(out, PROTO_POSTER_XML_LIB);
+
+    /* Nom du  module */
+    print_sed_subst(out, "module", module->name);
+    print_sed_subst(out, "MODULE", module->NAME);
+
+    print_sed_subst(out, "nbPosterXML", "%d", nbPosterXML);
+    print_sed_subst(out, "tabPosterXML", tabPosterXML);
+    free(tabPosterXML);
+    tabPosterXML=NULL;
+
+    ptstr = posterExecTaskNameTab();
+    print_sed_subst(out, "execTaskNameTabDeclare", ptstr);
+    free(ptstr);
+    ptstr = NULL;
+
+    ptstr = posterRequestNameTab(&nbRqsts);
+    print_sed_subst(out, "nbExecRqst", "%d", nbRqsts);
+    print_sed_subst(out, "requestNameTabDeclare", ptstr);
+    free(ptstr);
+    ptstr = NULL;
+
+    subst_end(out);
+
+    cat_begin(out);
+
+    /*
+     * XML de lecture donnees format XML des posters
+     */
+    for (p = posters; p != NULL; p = p->next) {
+
+      fprintf(out, "/* --  %s ------------------------------------------------- */\n\n",
+	      p->name);
+
+      /* la fonction pour lire tout le poster */
+      fprintf(out, 
+	      "STATUS %s%sPosterXML(FILE *f)\n{\n"
+	      "  BOOL err=FALSE;\n"
+	      "  %s *x;\n\n"
+	      "  xmlBalise(\"%s\",BEGIN_BALISE_NEWLINE,f,1);\n"
+	      "  xmlBalise(\"error\",BEGIN_BALISE,f,2);\n"
+	      "\n"
+	      "  if ((x = (%s *)malloc(sizeof(* x))) == NULL) {\n"
+	      "     h2perror(\"%s%sPosterXML\");\n"
+	      "     err=TRUE;\n"
+	      "  }\n"
+	      "  if (!err) {\n"
+	      "    if (%s%sPosterRead(x) == ERROR) {\n"
+	      "       h2perror(\"%s%sPosterXML\");\n"
+	      "       free(x);\n"
+	      "       err=TRUE;\n"
+	      "    }\n"
+	      "  }\n"
+	      "  fprintfBuf(f, \"</error>\\n\");\n" 
+	      "  printXML_%s(f, \"data\", x, 2, 0, NULL, NULL);\n"
+	      "  xmlBalise(\"%s\",TERMINATE_BALISE,f,1);\n"
+	      "  free(x);\n"
+	      "  return OK;\n}\n\n",
+	      module->name, p->name, /* nom fonction posterXML */
+	      p->type->name,         /* Déclaration variable */
+	      p->name,               /* balise poster */
+	      p->type->name,         /* malloc variable */
+	      module->name, p->name, /* h2perror */
+	      module->name, p->name, /* PosterRead */
+	      module->name, p->name, /* h2perror */
+	      nom_type1(p->type),  /* printXML */
+	      p->name);        /* end balise */
+      
+      /* Les fonctions pour les e'le'ments de la structure */
+      posterLibMemberGen(out, p, 2 /* ! read */, 0 /* ! protos */); 
+
+    } /* for */
+
+    cat_end(out);
+    script_close(out, "%sPosterXMLLib.c", module->name);
+
+
+    /** ----------------------------------------------------------------------
      ** PosterLib.h
      **/
     script_open(out);
@@ -373,8 +499,21 @@ int posterLibGen(FILE *out)
     subst_end(out);
     script_close(out, "%sPosterShowLib.h", module->name);
 
-
     /**
+     ** PosterXMLLib.h
+     **/
+    script_open(out);
+    subst_begin(out, PROTO_POSTER_XML_LIB_H);
+
+    /* Nom du  module */
+    print_sed_subst(out, "module", module->name);
+    print_sed_subst(out, "MODULE", module->NAME);
+
+    subst_end(out);
+    script_close(out, "%sPosterXMLLib.h", module->name);
+
+
+    /** ----------------------------------------------------------------------
      ** PosterWriteLib.c
      **/
     script_open(out);
@@ -478,7 +617,7 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
 
 	/*-- Fonction read
 	 */
-	if (readFunctions) {
+	if (readFunctions==1) {
 
 	  if (protos) {
 	    fprintf(out, "extern STATUS %s%s%sPosterRead ( %s *%s );\n",
@@ -502,7 +641,7 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
 	    fprintf(out, "  int size = sizeof(x->%s);\n", n->name);
 	    fprintf(out, 
 		    "  if (%sPosterId == NULL) {\n"
-		    "     printf (warnMsgNotInit, \"%s\");\n"
+		    "     fprintf (stderr, warnMsgNotInit, \"%s\");\n"
 
 		    "     if (%s%sPosterInit() == ERROR) {\n"
 		    "        h2perror(\"%s%sPosterInit\");\n"
@@ -532,7 +671,8 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
 
 	/*-- Fonction print 
 	 */
-	else {
+	else if (readFunctions==0) {
+
 	  if (protos) {
 	    fprintf(out, 
 		    "extern STATUS %s%s%sPosterShow ( void );\n",
@@ -576,12 +716,81 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
 	    fprintf(out, "  free(%s);\n  return OK;\n}\n\n", n->name);
 	  }
 	}
+
+
+	/*-- Fonction XML 
+	 */
+	else {
+
+	  if (protos) {
+	    fprintf(out, 
+		    "extern STATUS %s%s%sPosterXML (FILE *f);\n",
+		    module->name, p->name, n->name);
+
+	    if (tabPosterXML != NULL) bufcat(&tabPosterXML, ", \\\\\n");
+	    bufcat(&tabPosterXML, "{\"%s\", \"%s\", %s%s%sPosterXML}",
+		   p->name, n->name, module->name, p->name, n->name);
+	    nbPosterXML++;
+	  }
+	  else {
+	    fprintf(out, "/* --  %s -> %s ---------------------------------------- */\n\n",
+		    p->name, n->name);
+
+	    fprintf(out, 
+		    "STATUS %s%s%sPosterXML(FILE *f)\n"
+		    "{\n  %s *%s;\n", 
+		    module->name, p->name, n->name, type, n->name);
+	    fprintf(out, "  int %s;\n\n", decla);
+	    
+	    /* Corps de la fonction */
+	    fprintf(out, 
+		    "  xmlBalise(\"%s%s\",BEGIN_BALISE_NEWLINE,f,1);\n"
+		    "  xmlBalise(\"error\",BEGIN_BALISE,f,2);\n"
+		    "\n"
+		    "  if ((%s = malloc(sizeof(%s))) == NULL) {\n"
+		    "     fprintfBuf(f, \"%s%s%sPosterXML: allocation error\");\n"
+		    "     h2perror(\"%s%s%sPosterXML\");\n"
+		    "     return ERROR;\n"
+		    "  }\n", 
+		    p->name, n->name,
+		    n->name, addrstr,
+		    module->name, p->name, n->name,
+		    module->name, p->name, n->name);
+	    fprintf(out, 
+		    "  if (%s%s%sPosterRead(%s) == ERROR) {\n"
+		    "     fprintfBuf(f, \"%s%s%sPosterXML: poster read failed\");\n"
+		    "     h2perror(\"%s%s%sPosterRead\");\n"
+		    "     free(%s);\n"
+		    "     return ERROR;\n"
+		    "  }\n"
+		    "  fprintfBuf(f, \" </error>\\n\");\n", 
+		    module->name, p->name, n->name, n->name,
+		    module->name, p->name, n->name, 
+		    module->name, p->name, n->name, 
+		    n->name);
+	    if (n->type->type == STRUCT || n->type->type == UNION ||
+		n->type->type == TYPEDEF || n->flags & ARRAY) newline = 1;
+	    else newline = 0;
+	    fprintf(out, 
+		    "  printXML_%s(f, \"data\", %s, 2, %d, dims, NULL);\n",
+		    n->flags & STRING ? "string":nom_type1(n->type), 
+		    n->name, nDim);
+	    fprintf(out, 
+		    "  free(%s);\n"
+		    "  xmlBalise(\"%s%s\",TERMINATE_BALISE,f,1);\n"
+		    "  return OK;\n}\n\n", 
+		    n->name,
+		    p->name, n->name);
+	  }
+	}
+
 	free(type);
 	free(var);
 	free(addrstr); addrstr = NULL;
 	free(decla); decla = NULL;
     } /* for */
 }
+
 
 static void posterWriteLibMemberGen(FILE *out, POSTER_LIST *p, int protos)
 {

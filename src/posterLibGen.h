@@ -38,6 +38,9 @@
 #define PROTO_POSTER_SHOW_LIB "auto/posterShowLib.c"
 #define PROTO_POSTER_SHOW_LIB_H "auto/posterShowLib.h"
 
+#define PROTO_POSTER_XML_LIB "auto/posterXMLLib.c"
+#define PROTO_POSTER_XML_LIB_H "auto/posterXMLLib.h"
+
 #include "posterLibGenProto.h"
 
 #endif

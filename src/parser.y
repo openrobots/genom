@@ -61,6 +61,7 @@ __RCSID("$LAAS$");
 #include "reportsGen.h"
 #include "msgLibGen.h"
 #include "printGen.h"
+#include "printXMLGen.h"
 #include "endianGen.h"
 #include "scanGen.h"
 #include "scopeGen.h"
@@ -1655,6 +1656,7 @@ main(int argc, char **argv)
     fatalError |= (msgLibGen(sortie) != 0);
     fatalError |= (endianGen(sortie) != 0);
     fatalError |= (printGen(sortie) != 0);
+    fatalError |= (printXMLGen(sortie) != 0);
     fatalError |= (scanGen(sortie) != 0);
     fatalError |= (scopeGen(sortie) != 0);
     fatalError |= (headerGen(sortie) != 0);

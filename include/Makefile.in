@@ -53,6 +53,8 @@ flist=\
 	genom/modules.h			\
 	genom/printScan.h		\
 	genom/printProto.h		\
+	genom/printXMLProto.h		\
+	genom/posterXMLLib.h		\
 	genom/scanProto.h
 
 

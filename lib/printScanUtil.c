@@ -54,15 +54,14 @@ static char bufindent[80];
 static char bufindexes[80];
 
 /* ---------------------------------------------------------------------
-   indentStr -  Indentation des structures 
+   indentStr -  Structures indentation
 
-   Entrée : niveau d'indentation
-   Retour : une chaine composee de "indent*TAB_INDENT" caracteres.
-   TAB_INDENT >=2, les deux derniers caracteres etant: "| "
+   Input : indentation level
+   Output : string made of "indent*TAB_INDENT" characters.
+   TAB_INDENT >=2, last characters being : "| "
 
-   Remarque : la chaine est une chaine static qui ne necessite donc ni 
-   allocation ni desallocation. Par contre cette fonction n'est donc pas
-   ré-entrante.
+   Remark : the returned string is static : no allocation but not
+   "ré-entrante".
    --------------------------------------------------------------------- */
 char *indentStr(int indent)
 {
@@ -82,13 +81,28 @@ char *indentStr(int indent)
 }
 
 /* ---------------------------------------------------------------------
-   getIndexesStr  -  Indexes d'un element d'un tableau:
+   indentStr2 -  Structures indentation
+                 Like indentStr but with blanks only
+   --------------------------------------------------------------------- */
 
-   Entrees: nDim: dimension du tableau, 
-            dims: tableau des tailles pour chaque dimension,
-	    indice: indice de l'element considere
-   Retourne: une chaine de la forme: "[i][j]..."
-	     ou une chaine vide si ce n'est pas un tableau (nDim==0)
+char *indentStr2(int indent)
+{
+  int i,j;
+
+  bufindent[0]='\0';
+/*   for(i=0;i<indent*TAB_INDENT;i++) strcat(bufindent, " "); */
+  for(i=0;i<indent;i++) strcat(bufindent, "\t");
+  return bufindent;
+}
+
+/* ---------------------------------------------------------------------
+   getIndexesStr  -  Indexes of the element of an array :
+
+   Input: nDim: array dimensions
+            dims: array with the size of each dimension,
+	    indice: indice of the current element
+   Output: string : "[i][j]..."
+	   or empty string if nDim==0
    --------------------------------------------------------------------- */
 char *getIndexesStr(int nDim, int *dims, int indice) 
 {
@@ -108,5 +122,31 @@ char *getIndexesStr(int nDim, int *dims, int indice)
   if (nDim>0) {sprintf(buf, "%d]", indice); strcat(bufindexes,buf);}
   return bufindexes;
 }
+
+/* ---------------------------------------------------------------------
+   getIndexesStr2 -  Indexes of the element of an array
+                 Like getIndexesStr but a dot separator instead of [] 
+   --------------------------------------------------------------------- */
+
+/* A dot instead of [] */
+char *getIndexesStr2(int nDim, int *dims, int indice) 
+{
+  int index, n, m;
+  int remain;
+  char buf[80];
+
+  if(nDim>0) sprintf(bufindexes, ".");
+  else bufindexes[0]='\0';
+  for (n=0; n<nDim-1; n++) {
+    for (remain=1,m=n+1; m<nDim; m++) remain *= dims[m];
+    index = indice/remain;
+    indice %= remain;
+    sprintf(buf, "%d.", index);
+    strcat(bufindexes, buf);
+  }
+  if (nDim>0) {sprintf(buf, "%d", indice); strcat(bufindexes,buf);}
+  return bufindexes;
+}
+
 
 

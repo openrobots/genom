@@ -93,7 +93,10 @@ flist+=\
 	auto/posterLib.h		\
 	auto/posterShowLib.c		\
 	auto/posterShowLib.h		\
+	auto/posterXMLLib.c		\
+	auto/posterXMLLib.h		\
 	auto/print.h			\
+	auto/printXML.h			\
 	auto/reports.h			\
 	auto/requestCntrl.c		\
 	auto/requestExec.c		\

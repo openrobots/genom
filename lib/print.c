@@ -241,13 +241,12 @@ int get_sub_array_indexes (FILE *out, FILE *in, int indent,
     return nElts;
 
   /* Gros tableau */
-  fprintf(out, "%sArray of %d elts. ", indentStr(indent-1), nElts);
 
-  /* Mais pas de file descriptor */
-  if (in == NULL) {
-    fprintf(out, "Display only %d elements\n", genomMaxArray);
-    return genomMaxArray;
-  }
+  /* Pas de file descriptor de saisie */
+  if (in == NULL) 
+    return nElts;
+
+  fprintf(out, "%sArray of %d elts. ", indentStr(indent-1), nElts);
 
   /* Choix premier élément à afficher */
   fprintf(out, "Display from element : (0) ");

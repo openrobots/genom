@@ -64,9 +64,11 @@ $listExecTask_c$
 client_src= \
 	$module$Endian.c	\
 	$module$Print.c		\
+	$module$PrintXML.c	\
 	$module$Scan.c		\
 	$module$MsgLib.c	\
 	$module$PosterShowLib.c	\
+	$module$PosterXMLLib.c	\
 	$module$PosterLib.c
 
 init_src= \
@@ -178,8 +180,8 @@ clean:
 # --- dependencies ------------------------------------------------------
 
 .PHONY: depends
-depends dependencies:: $(tclclient_src)
-	$(MKDEP) -c"$(CC)" -odependencies -t.lo $(CPPFLAGS) $(TCL_CPPFLAGS) $?
+$genTcl$depends dependencies:: $(tclclient_src)
+$genTcl$	$(MKDEP) -c"$(CC)" -odependencies -t.lo $(CPPFLAGS) $(TCL_CPPFLAGS) $?
 
 depends dependencies:: $(module_src) $(client_src) $(connect_src) \
 		       $(posterwrite_src)
