@@ -1,5 +1,7 @@
 $LAAS$
 
+genom 1.1 released July 22, 2004
+
  14. Changed hierarchy of canvas directory: it has now `server', `codels'
      and `autoconf' directories. This is more consistent with what is
      generated.
