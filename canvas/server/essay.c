@@ -55,13 +55,16 @@
 #include "h2initGlob.h"
 #endif
 #include <taskLib.h>
-#include "xes.h"
+
 #ifdef VXWORKS
 #include "h2sysLibProto.h"
 #endif
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+#include "xes.h"
 
 /* Inclusions pour acceder au module */
 #include "$module$MsgLib.h"
