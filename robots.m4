@@ -213,7 +213,7 @@ AC_DEFUN(ROBOT_PATH_LIB,
    AC_CACHE_VAL(ac_cv_path_$2,
     [
 	IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        ac_tmppath="[$]opt_pathlib_$2:$5"
+        eval ac_tmppath="[$]opt_pathlib_$2:$5"
         for ac_dir in $ac_tmppath; do 
             test -z "$ac_dir" && ac_dir=.
             if eval test -f $ac_dir/$3; then

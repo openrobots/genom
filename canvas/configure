@@ -1039,10 +1039,10 @@ Optional Packages:
                           genom includes are in DIR
   --with-genom-libraries=DIR
                           genom libraries are in DIR
-  --with-portLib-includes=DIR
-                          portLib includes are in DIR
-  --with-portLib-libraries=DIR
-                          portLib libraries are in DIR
+  --with-pocolibs-includes=DIR
+                          pocolibs includes are in DIR
+  --with-pocolibs-libraries=DIR
+                          pocolibs libraries are in DIR
   --with-tcl=DIR          directory containing tclConfig.sh
   --with-includes=string  extra includes list for codels
   --with-libraries=string extra libraries list for codels
@@ -20358,13 +20358,13 @@ fi
 
 
 
-# Check whether --with-portLib-includes or --without-portLib-includes was given.
-if test "${with_portLib_includes+set}" = set; then
-  withval="$with_portLib_includes"
+# Check whether --with-pocolibs-includes or --without-pocolibs-includes was given.
+if test "${with_pocolibs_includes+set}" = set; then
+  withval="$with_pocolibs_includes"
   opt_pathinc_PORTLIB_INCDIR=$withval
 fi;
-   echo "$as_me:$LINENO: checking for portLib includes" >&5
-echo $ECHO_N "checking for portLib includes... $ECHO_C" >&6
+   echo "$as_me:$LINENO: checking for pocolibs includes" >&5
+echo $ECHO_N "checking for pocolibs includes... $ECHO_C" >&6
    if test "${ac_cv_path_PORTLIB_INCDIR+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -20389,10 +20389,10 @@ echo "${ECHO_T}$PORTLIB_INCDIR" >&6
    else
       echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
-      { { echo "$as_me:$LINENO: error: portLib headers not found.
-Please use --with-portLib-includes option." >&5
-echo "$as_me: error: portLib headers not found.
-Please use --with-portLib-includes option." >&2;}
+      { { echo "$as_me:$LINENO: error: pocolibs headers not found.
+Please use --with-pocolibs-includes option." >&5
+echo "$as_me: error: pocolibs headers not found.
+Please use --with-pocolibs-includes option." >&2;}
    { (exit 1); exit 1; }; }
    fi
 
@@ -20400,20 +20400,20 @@ Please use --with-portLib-includes option." >&2;}
 
 
 
-# Check whether --with-portLib-libraries or --without-portLib-libraries was given.
-if test "${with_portLib_libraries+set}" = set; then
-  withval="$with_portLib_libraries"
+# Check whether --with-pocolibs-libraries or --without-pocolibs-libraries was given.
+if test "${with_pocolibs_libraries+set}" = set; then
+  withval="$with_pocolibs_libraries"
   opt_pathlib_PORTLIB_LIBDIR=$withval
 fi;
 
-   echo "$as_me:$LINENO: checking for portLib librairies" >&5
-echo $ECHO_N "checking for portLib librairies... $ECHO_C" >&6
+   echo "$as_me:$LINENO: checking for pocolibs librairies" >&5
+echo $ECHO_N "checking for pocolibs librairies... $ECHO_C" >&6
    if test "${ac_cv_path_PORTLIB_LIBDIR+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
 
 	IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        ac_tmppath="$opt_pathlib_PORTLIB_LIBDIR:$libdir:/usr/lib:/usr/local/lib"
+        ac_tmppath="$opt_pathlib_PORTLIB_LIBDIR:$exec_prefix/lib:$prefix/lib:/usr/lib:/usr/local/lib"
         for ac_dir in $ac_tmppath; do
             test -z "$ac_dir" && ac_dir=.
             if eval test -f $ac_dir/libportLib.so; then
@@ -20432,10 +20432,10 @@ echo "${ECHO_T}$PORTLIB_LIBDIR" >&6
    else
       echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
-      { { echo "$as_me:$LINENO: error: portLib libraries not found.
-Please use --with-portLib-libraries option." >&5
-echo "$as_me: error: portLib libraries not found.
-Please use --with-portLib-libraries option." >&2;}
+      { { echo "$as_me:$LINENO: error: pocolibs libraries not found.
+Please use --with-pocolibs-libraries option." >&5
+echo "$as_me: error: pocolibs libraries not found.
+Please use --with-pocolibs-libraries option." >&2;}
    { (exit 1); exit 1; }; }
    fi
 

@@ -1,11 +1,12 @@
 $LAAS$
 
+  4. Renamed portLib options into pocolibs.  Look for pocolibs in
+     $exec_prefix/lib and $prefix/lib instead of using $libdir which causes
+     weird problems...
   3. Add the codel_files attribute to module declarations in order to add
-  more files than the default ones in the codels directory. Also make the
-  perl script more robust with sed quoting within regexps.
-
-  2.  upgrade to libtool 1.5 and handle cross-compilation more cleanly.
-
-  1.  configure fix: more robust pthread checking, add -lrt and -lm.
+     more files than the default ones in the codels directory. Also make
+     the perl script more robust with sed quoting within regexps.
+  2. upgrade to libtool 1.5 and handle cross-compilation more cleanly.
+  1. configure fix: more robust pthread checking, add -lrt and -lm.
 
 genom 1.0 released march 12, 2004

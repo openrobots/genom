@@ -63,14 +63,14 @@ AC_SUBST(OS_LIBS, "${LIBS} -lrt")
 
 dnl --- Checks for libraries --------------------------------------------
 dnl
-ROBOT_PATH_INC([portLib], PORTLIB_INC, [portLib.h],
-	       [AC_MSG_ERROR([portLib headers not found.
-Please use --with-portLib-includes option.])],
+ROBOT_PATH_INC([pocolibs], PORTLIB_INC, [portLib.h],
+	       [AC_MSG_ERROR([pocolibs headers not found.
+Please use --with-pocolibs-includes option.])],
 	       [$includedir:/usr/include:/usr/local/include])
-ROBOT_PATH_LIB([portLib], PORTLIB_LIB, [libportLib.so],
-	       [AC_MSG_ERROR([portLib libraries not found.
-Please use --with-portLib-libraries option.])],
-	       [$libdir:/usr/lib:/usr/local/lib])
+ROBOT_PATH_LIB([pocolibs], PORTLIB_LIB, [libportLib.so],
+	       [AC_MSG_ERROR([pocolibs libraries not found.
+Please use --with-pocolibs-libraries option.])],
+	       [$exec_prefix/lib:$prefix/lib:/usr/lib:/usr/local/lib])
 
 ROBOT_LIB_TCL
 

@@ -32,7 +32,7 @@ include config.mk
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
 
-dist_path= genom
+dist_path= genom-$(GENOM_MAJOR).$(GENOM_MINOR)
 dist_name= genom-$(GENOM_MAJOR).$(GENOM_MINOR)
 
 config_files = \
