@@ -54,9 +54,11 @@ all: fig-links $(genom_doc)
 
 export TEXINPUTS=.:$(srcdir):$(srcdir)/tex:
 
-$(genom_doc): genom.tex
-	echo $${TEXINPUTS}
+genom.pdf: genom.tex
 	($(LATEX) $^ && $(LATEX) $^) || rm $@
+
+genom.ps: genom.tex
+	($(LATEX) $^ && $(LATEX) $^ && dvips -o $@ $^) || rm $@
 
 # this shouldn't be necessary, but TEXINPUTS doen't seem to work with
 # figures...
