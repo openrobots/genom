@@ -227,6 +227,8 @@ int nCppOptions = 0;
 %type <idList> liste_modules liste_posters
 %type <strRefList> liste_ref_membre_struct
 %type <typeList> liste_indicateur_de_type
+%type <dclNomList> named_type_list
+%type <dclNomStr> named_type
 
 %type <dclNomList> declaration_de_typedef
 %type <typeStr> indicateur_de_declaration 
@@ -730,7 +732,7 @@ declaration_de_poster: POSTER identificateur '{'
 	  $$->create_func = NULL; }
     | POSTER identificateur '{' 
                  UPDATE ':' USER ';'
-                 TYPE ':' liste_indicateur_de_type ';'
+                 TYPE ':' named_type_list ';'
 		 EXEC_TASK ':' identificateur ';'
               '}'
 	{ $$ = STR_ALLOC(POSTER_LIST);
@@ -762,7 +764,7 @@ declaration_de_poster: POSTER identificateur '{'
           $$->create_func = NULL; }
    | POSTER identificateur '{'
                  UPDATE ':' USER ';'
-                 TYPE ':' liste_indicateur_de_type ';'
+                 TYPE ':' named_type_list ';'
 		 EXEC_TASK ':' identificateur ';'
                  ADDRESS ':' bus_space MEMBER expression_constante ';'
       '}'
@@ -780,7 +782,7 @@ declaration_de_poster: POSTER identificateur '{'
 	  $$->create_func = NULL; }
    | POSTER identificateur '{'
                  UPDATE ':' USER ';'
-                 TYPE ':' liste_indicateur_de_type ';'
+                 TYPE ':' named_type_list ';'
 		 EXEC_TASK ':' identificateur ';'
                  C_CREATE_FUNC ':' identificateur ';'
       '}'
@@ -874,12 +876,54 @@ indicateur_classe_memorisation:
     | REGISTER
     ;
 
+
 liste_indicateur_de_type: indicateur_de_type
     { $$ = STR_ALLOC(TYPE_LIST); 
       $$->next = NULL; $$->type = $1; }
     | indicateur_de_type ',' liste_indicateur_de_type
     { $$ = STR_ALLOC(TYPE_LIST); 
       $$->next = $3; $$->type = $1; }
+;
+
+named_type_list:
+    named_type
+    {
+       $$ = STR_ALLOC(DCL_NOM_LIST);
+       $$->dcl_nom = $1;
+       $$->next = NULL;
+    }
+    | named_type ',' named_type_list
+    {
+       $$ = STR_ALLOC(DCL_NOM_LIST);
+       $$->dcl_nom = $1;
+       $$->next = $3;
+    }
+;
+
+named_type:
+    indicateur_de_type
+    {
+       $$ = STR_ALLOC(DCL_NOM_STR);
+       if ($1->name)
+	  $$->name = strdup($1->name);
+       else
+	  $$->name = new_name();
+       $$->type = $1;
+       $$->pointeur = 0;
+       $$->dimensions = NULL;
+       $$->ndimensions = 0;
+       $$->flags = 0;
+    }
+    | identificateur MEMBER indicateur_de_type
+    {
+       $$ = STR_ALLOC(DCL_NOM_STR);
+       $$->name = $1;
+       $$->type = $3;
+       $$->pointeur = 0;
+       $$->dimensions = NULL;
+       $$->ndimensions = 0;
+       $$->flags = 0;
+    }
 ;
 
 indicateur_de_type: 

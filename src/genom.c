@@ -373,7 +373,8 @@ resolveTypes(void)
     RQST_LIST *lr;
     RQST_STR *r;
     TYPE_STR *tr, *t_poster, *t_sdi, *t_rqst, *t_tmp;
-    TYPE_LIST *lt;
+    DCL_NOM_LIST *lt;
+    TYPE_LIST *t;
     char buf[80];
     DCL_NOM_LIST *m, *last, *lastData;
     DCL_NOM_STR *n;
@@ -547,7 +548,7 @@ resolveTypes(void)
 	  /* Identifie/Enregistre chaque element du poster */
 	  for (lt = p->types; lt != NULL; lt = lt->next) {
 
-	    t_tmp = lt->type;
+	    t_tmp = lt->dcl_nom->type;
 	    tr = trouve_type(t_tmp);
 	    if (tr == NULL) {
 	      fprintf(stderr,
@@ -558,32 +559,15 @@ resolveTypes(void)
 		free(t_tmp->name);
 		free(t_tmp->filename);
 		free(t_tmp);
-		lt->type = tr;
+		lt->dcl_nom->type = tr;
 	      }
 	      markUsed(tr);
 	      /* tr->flags |= TYPE_POSTER; */
 	    }
 
 	    /* Enregistrement des types membre du poster Ajout en queue de liste */
-	    m = STR_ALLOC(DCL_NOM_LIST);
-	    n = STR_ALLOC(DCL_NOM_STR);
-	    n->type = tr;
-	    n->name = strdup(tr->name);
-	    for (i = 1; n->name[i] != '\0'; i++) {
-	      if (n->name[i] != '_') 
-		 n->name[i] = tolower(n->name[i]);
-	    }
-	    m->dcl_nom = n;
-	    m->dcl_nom->pointeur = NULL;
-	    m->dcl_nom->dimensions = NULL;
-	    m->dcl_nom->ndimensions = 0;
-	    m->dcl_nom->flags = 0;
-	    m->next = NULL;
 	    if (t_poster->members == NULL)
-	      t_poster->members = m;
-	    else 
-	      lastData->next = m;
-	    lastData = m;
+	      t_poster->members = lt;
 
 	    /* Enregistrement donnees */
 	    if (p->data == NULL) {
@@ -597,7 +581,7 @@ resolveTypes(void)
 	    lastType->next = NULL;
 	    lastType->str_ref = STR_ALLOC(STR_REF_STR);
 	    lastType->str_ref->sdi_ref = NULL;
-	    lastType->str_ref->dcl_nom = m->dcl_nom;
+	    lastType->str_ref->dcl_nom = lt->dcl_nom;
 	    
 	  } /* for */
 	  
@@ -705,12 +689,12 @@ resolveTypes(void)
     }
     
     /* types non utilise's */
-    for (lt = types; lt != NULL; lt = lt->next) {
-	if (lt->type->used == 0 && ((lt->type->flags & TYPE_IMPORT) == 0)) {
+    for (t = types; t != NULL; t = t->next) {
+	if (t->type->used == 0 && ((t->type->flags & TYPE_IMPORT) == 0)) {
 	    fprintf(stderr, "%s:%d: warning: type %s unused\n",
-		    lt->type->filename,
-		    lt->type->linenum,
-		    lt->type->name);
+		    t->type->filename,
+		    t->type->linenum,
+		    t->type->name);
 	}
     }
 } /* resolveTypes */

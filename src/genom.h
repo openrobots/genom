@@ -277,7 +277,7 @@ typedef struct POSTER_LIST {
     int update;
     EXEC_TASK_STR *exec_task;
     STR_REF_LIST *data;
-    TYPE_LIST *types;
+    DCL_NOM_LIST *types;
     TYPE_STR *type;
     void *address;
     char *bus_space;
