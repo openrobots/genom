@@ -78,7 +78,8 @@ binobjs = $(binsrcs:.c=.lo)
 all: $(TCLSERV)
 
 $(TCLSERV): $(binobjs)
-	$(LTLD) $(CFLAGS) $(binobjs) -o $@ $(LDFLAGS) $(TCL_LDFLAGS)
+	$(LTLD) -export-dynamic $(CFLAGS) $(binobjs) -o $@	\
+		$(LDFLAGS) $(TCL_LDFLAGS)
 
 main.lo: main.c
 	$(LTCC) -static -c $(CPPFLAGS) $(TCL_CPPFLAGS)			\
