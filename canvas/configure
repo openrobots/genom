@@ -464,7 +464,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os MKDEP CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CPP CXX CXXFLAGS ac_ct_CXX CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL LIBTOOL_DEPS ENDIANNESS RTAI_INC KERNEL_INC OSAPI OS_LIBS GENOM_INCDIR GENOM_LIBDIR POCOLIBS_INCDIR TCL_CPPFLAGS TCL_LDFLAGS TCL_LIBS TCL_LIB_FLAG TCL_LIB_SPEC EXTRA_INCLUDES EXTRA_LIBS GENOM_INC GENOM_LIB POCOLIBS_INC LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os MKDEP CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CPP CXX CXXFLAGS ac_ct_CXX CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL LIBTOOL_DEPS ENDIANNESS RTAI_INC KERNEL_INC OSAPI OS_LIBS POCOLIBS_INCDIR GENOM_INCDIR GENOM_LIBDIR TCL_CPPFLAGS TCL_LDFLAGS TCL_LIBS TCL_LIB_FLAG TCL_LIB_SPEC EXTRA_INCLUDES EXTRA_LIBS GENOM_INC GENOM_LIB POCOLIBS_INC LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1040,10 +1040,10 @@ Optional Packages:
                           RTAI headers are in DIR
   --with-kernel-includes=DIR
                           linux kernel headers are in DIR
+  --with-pocolibs=DIR     pocolibs are installed in DIR (prefix)
   --with-genom=DIR        genom is installed in DIR (prefix)
   --with-genom-exec-prefix=DIR
                           genom library is installed in DIR (exec-prefix)
-  --with-pocolibs=DIR     pocolibs are installed in DIR (prefix)
   --with-tcl=DIR          directory containing tclConfig.sh
   --with-includes=string  extra includes list for codels
   --with-libraries=string extra libraries list for codels
@@ -18932,6 +18932,83 @@ OS_LIBS="${LIBS}"
 
 
 
+# Check whether --with-pocolibs or --without-pocolibs was given.
+if test "${with_pocolibs+set}" = set; then
+  withval="$with_pocolibs"
+  opt_pocolibs=$withval
+else
+  opt_pocolibs=NONE
+fi;
+
+
+   echo "$as_me:$LINENO: checking for pocolibs headers" >&5
+echo $ECHO_N "checking for pocolibs headers... $ECHO_C" >&6
+   if test "${ac_cv_path_h_POCOLIBS_INCDIR+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+
+	ac_save_cppflags=$CPPFLAGS
+	ac_save_ifs=$IFS; IFS=":"
+        eval ac_tmppath="$opt_pocolibs/include:`$genomBin$ --includes`:/usr/local/include:/usr/include"
+        for ac_dir in $ac_tmppath; do
+	    IFS=$ac_save_ifs
+            test -z "$ac_dir" && ac_dir=.
+
+	    CPPFLAGS="-I$ac_dir "
+	    cat >conftest.$ac_ext <<_ACEOF
+
+#include "portLib.h"
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  eval ac_cv_path_h_POCOLIBS_INCDIR="$ac_dir"; break
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+	done
+	CPPFLAGS=$ac_save_cppflags
+
+fi
+
+   POCOLIBS_INCDIR="$ac_cv_path_h_POCOLIBS_INCDIR"
+   if test -n "$POCOLIBS_INCDIR"; then
+      echo "$as_me:$LINENO: result: $POCOLIBS_INCDIR" >&5
+echo "${ECHO_T}$POCOLIBS_INCDIR" >&6
+   else
+      echo "$as_me:$LINENO: result: not found" >&5
+echo "${ECHO_T}not found" >&6
+      { { echo "$as_me:$LINENO: error: please use --with-pocolibs option." >&5
+echo "$as_me: error: please use --with-pocolibs option." >&2;}
+   { (exit 1); exit 1; }; }
+   fi
+
+
+
+
+
 # Check whether --with-genom or --without-genom was given.
 if test "${with_genom+set}" = set; then
   withval="$with_genom"
@@ -18971,7 +19048,7 @@ else
 	    IFS=$ac_save_ifs
             test -z "$ac_dir" && ac_dir=.
 
-	    CPPFLAGS="-I$ac_dir"
+	    CPPFLAGS="-I$ac_dir -I$POCOLIBS_INCDIR "
 	    cat >conftest.$ac_ext <<_ACEOF
 #include "portLib.h"
 #include "genom/modules.h"
@@ -19118,83 +19195,6 @@ echo "${ECHO_T}$GENOM_LIBDIR" >&6
 echo "${ECHO_T}no" >&6
       { { echo "$as_me:$LINENO: error: please use --with-genom option." >&5
 echo "$as_me: error: please use --with-genom option." >&2;}
-   { (exit 1); exit 1; }; }
-   fi
-
-
-
-
-
-# Check whether --with-pocolibs or --without-pocolibs was given.
-if test "${with_pocolibs+set}" = set; then
-  withval="$with_pocolibs"
-  opt_pocolibs=$withval
-else
-  opt_pocolibs=NONE
-fi;
-
-
-   echo "$as_me:$LINENO: checking for pocolibs headers" >&5
-echo $ECHO_N "checking for pocolibs headers... $ECHO_C" >&6
-   if test "${ac_cv_path_h_POCOLIBS_INCDIR+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-	ac_save_cppflags=$CPPFLAGS
-	ac_save_ifs=$IFS; IFS=":"
-        eval ac_tmppath="$opt_pocolibs/include:`$genomBin$ --includes`:/usr/local/include:/usr/include"
-        for ac_dir in $ac_tmppath; do
-	    IFS=$ac_save_ifs
-            test -z "$ac_dir" && ac_dir=.
-
-	    CPPFLAGS="-I$ac_dir"
-	    cat >conftest.$ac_ext <<_ACEOF
-
-#include "portLib.h"
-_ACEOF
-rm -f conftest.$ac_objext
-if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
-  (eval $ac_compile) 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"
-			 || test ! -s conftest.err'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; } &&
-	 { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  eval ac_cv_path_h_POCOLIBS_INCDIR="$ac_dir"; break
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-fi
-rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
-	done
-	CPPFLAGS=$ac_save_cppflags
-
-fi
-
-   POCOLIBS_INCDIR="$ac_cv_path_h_POCOLIBS_INCDIR"
-   if test -n "$POCOLIBS_INCDIR"; then
-      echo "$as_me:$LINENO: result: $POCOLIBS_INCDIR" >&5
-echo "${ECHO_T}$POCOLIBS_INCDIR" >&6
-   else
-      echo "$as_me:$LINENO: result: not found" >&5
-echo "${ECHO_T}not found" >&6
-      { { echo "$as_me:$LINENO: error: please use --with-pocolibs option." >&5
-echo "$as_me: error: please use --with-pocolibs option." >&2;}
    { (exit 1); exit 1; }; }
    fi
 
@@ -20029,9 +20029,9 @@ s,@RTAI_INC@,$RTAI_INC,;t t
 s,@KERNEL_INC@,$KERNEL_INC,;t t
 s,@OSAPI@,$OSAPI,;t t
 s,@OS_LIBS@,$OS_LIBS,;t t
+s,@POCOLIBS_INCDIR@,$POCOLIBS_INCDIR,;t t
 s,@GENOM_INCDIR@,$GENOM_INCDIR,;t t
 s,@GENOM_LIBDIR@,$GENOM_LIBDIR,;t t
-s,@POCOLIBS_INCDIR@,$POCOLIBS_INCDIR,;t t
 s,@TCL_CPPFLAGS@,$TCL_CPPFLAGS,;t t
 s,@TCL_LDFLAGS@,$TCL_LDFLAGS,;t t
 s,@TCL_LIBS@,$TCL_LIBS,;t t
