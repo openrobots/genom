@@ -1,5 +1,9 @@
 $LAAS$
 
+  3. Add the codel_files attribute to module declarations in order to add
+  more files than the default ones in the codels directory. Also make the
+  perl script more robust with sed quoting within regexps.
+
   2.  upgrade to libtool 1.5 and handle cross-compilation more cleanly.
 
   1.  configure fix: more robust pthread checking, add -lrt and -lm.

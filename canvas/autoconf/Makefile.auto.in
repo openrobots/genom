@@ -51,7 +51,7 @@ VPATH=		$(srcdir)
 # --- flags -------------------------------------------------------------
 
 CPPFLAGS+= $genomDefines$ -D$(ENDIANNESS)
-CPPFLAGS+= -I. -I$(topbuild) -I$(srcdir) $serversDir$
+CPPFLAGS+= -I. -I$(topsrcdir) -I$(srcdir) $serversDir$
 CPPFLAGS+= $(COM_INC) $(GENOM_INC)
 
 # GenoM flags

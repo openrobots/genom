@@ -179,7 +179,7 @@ int nCppOptions = 0;
 
 %token <ival> MODULE REQUEST EXEC_TASK IMPORT_TYPE FROM
 %token <ival> INTERNAL_DATA
-%token <ival> NUMBER MAX_RQST_SIZE MAX_REPLY_SIZE
+%token <ival> NUMBER MAX_RQST_SIZE MAX_REPLY_SIZE CODEL_FILES
 %token <ival> TYPE INPUT OUTPUT C_CONTROL_FUNC C_EXEC_FUNC INCOMPATIBLE_WITH
 %token <ival> C_EXEC_FUNC_START C_EXEC_FUNC_END
 %token <ival> C_EXEC_FUNC_FAIL C_EXEC_FUNC_INTER
@@ -196,6 +196,7 @@ int nCppOptions = 0;
 %type <ival> error 
 
 %type <idStr> identificateur quoted_string
+%type <idList> quoted_string_list
 %type <ival> expression_constante
 %type <dval> expression_constante_flottante
 %type <ival> liste_declaration_top declaration_top
@@ -354,6 +355,9 @@ av_module: INTERNAL_DATA ':' indicateur_de_type
     | MAX_REPLY_SIZE ':' expression_constante
 	{ $$ = STR_ALLOC(MODULE_AV_STR);
 	  $$->attribut = $1; $$->value.max_reply_size = $3; }
+    | CODEL_FILES ':' quoted_string_list
+	{ $$ = STR_ALLOC(MODULE_AV_STR);
+	  $$->attribut = $1; $$->value.codel_files = $3; }
     ;
 
 /*----------------------------------------------------------------------*/
@@ -578,6 +582,29 @@ quoted_string:
         $$ = $1;
       }
    ;
+
+quoted_string_list:
+    QUOTED_STRING 
+    {
+       $$ = STR_ALLOC(ID_LIST);
+       $$->name = $1;
+       $$->next = NULL;
+    }
+    | quoted_string_list ',' quoted_string
+    {
+       ID_LIST *l;
+
+       $$ = STR_ALLOC(ID_LIST);
+       $$->name = $3;
+       $$->next = NULL;
+
+       /* keep the files ordered... just in case */
+       for(l=$1; l->next; l=l->next);
+       l->next = $$;
+
+       $$ = $1;
+    }
+
 
 /*----------------------------------------------------------------------*/
 

@@ -148,6 +148,8 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
 	break;
       case MAX_REPLY_SIZE:
 	module->max_reply_size = av->value.max_reply_size;
+      case CODEL_FILES:
+	module->codel_files = av->value.codel_files;
     }
     return(module);
 } /* ajout_av_module */
@@ -1408,24 +1410,47 @@ void
 print_sed_subst(FILE *f, const char *from, const char *fmt, ...) 
 {
     va_list ap;
-    char *f1 = "    s^\\$";
-    char *f2 = "\\$^";
-    char *f3 = "^g;\n";
+    static char sedquotes[] = "^!@#$%&*()-+[]{}|";
+    static char f1[] = "    s";
+    static char f2[] = "\\$";
+    static char f3[] = "g;\n";
     int size;
-    char *format;
+    char *c, *format;
     
+    /* examine from and fmt strings in order to find an appropriate quote
+     * for sed substitutions */
+    for(c = sedquotes; *c; c++) {
+       if (from && strchr(from, *c)) continue;
+       if (fmt && strchr(fmt, *c)) continue;
+
+       break;
+    }
+    if (!*c) {
+       fprintf(stderr,
+	       "genom: strings `%s' or `%s' contain "
+	       "too many weird characters\n", from, fmt);
+       exit(4);
+    }
+
     va_start(ap, fmt);
 
-    size = strlen(f1) + (from != NULL ? strlen(from) : 0) + strlen(f2) 
-	+ ( fmt != NULL ? strlen(fmt) : 0) + strlen(f3) + 1;    
+    size =
+       strlen(f1) + 1/*sed quote*/ + strlen(f2) +
+       (from != NULL ? strlen(from) : 0) + strlen(f2) + 1/*sed quote*/ +
+       ( fmt != NULL ? strlen(fmt) : 0) + 1/*sed quote*/ +
+       strlen(f3) + 1/*terminating nul*/;
 
     format = xalloc(size);
     strcpy(format, f1);
+    strncat(format, c, 1);
+    strcat(format, f2);
     if (from != NULL)
 	strcat(format, from);
     strcat(format, f2);
+    strncat(format, c, 1);
     if (fmt != NULL)
 	strcat(format, fmt);
+    strncat(format, c, 1);
     strcat(format, f3);
 
     vfprintf(f, format, ap);

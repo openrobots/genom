@@ -280,11 +280,17 @@ configureGen(FILE *out,
 
    /* executions tasks */
    str = NULL;
-   for (lt = taches; lt != NULL; lt = lt->next) {
-      bufcat(&str, "\t%s%sCodels.c \\\\%s", module->name, lt->exec_task->name,
-	     lt->next?"\n":"");
-   }
-   print_sed_subst(out, "listExecTaskFunc_c", str);
+   if (module->codel_files == NULL) {
+      for (lt = taches; lt != NULL; lt = lt->next) {
+	 bufcat(&str, "\t%s%sCodels.c \\\\\n",
+		module->name, lt->exec_task->name);
+      }
+      bufcat(&str, "\t%sCntrlTaskCodels.c", module->name);
+   } else
+      for (ln = module->codel_files; ln; ln = ln->next) {
+	 bufcat(&str, "\t%s \\\\%s", ln->name, ln->next?"\n":"");
+      }
+   print_sed_subst(out, "codel_files", str);
    free(str);
     
    /* done */

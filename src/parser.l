@@ -92,6 +92,7 @@ WC      {W}*\:
 "number"/{WC}         {yylval.ival = NUMBER; return(NUMBER); }
 "max_rqst_size"/{WC}  {yylval.ival = MAX_RQST_SIZE; return(MAX_RQST_SIZE); }
 "max_reply_size"/{WC} {yylval.ival = MAX_REPLY_SIZE; return(MAX_REPLY_SIZE); }
+"codel_files"/{WC}    {yylval.ival = CODEL_FILES; return(CODEL_FILES); }
 
 "type"/{WC}            {yylval.ival = TYPE; return(TYPE); }
 "input"/{WC}           {yylval.ival = INPUT; return(INPUT); }

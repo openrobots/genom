@@ -51,14 +51,13 @@ VPATH=		$(srcdir)
 
 CPPFLAGS+= $genomDefines$ -D$(ENDIANNESS)
 CPPFLAGS+= -I. -I$(topbuild) -I$(srcdir) -I$(topsrcdir)
-CPPFLAGS+= $serversDir$ $(GENOM_INC) $(COM_INC)
+CPPFLAGS+= $serversDir$ $(GENOM_INC) $(COM_INC) $(EXTRA_INCLUDES)
 
 
 # --- source files ------------------------------------------------------
 
 codels_src = \
-$listExecTaskFunc_c$
-	$module$CntrlTaskCodels.c
+$codel_files$
 
 codels_obj=	$(codels_src:.c=.lo)
 
@@ -68,7 +67,7 @@ codels_obj=	$(codels_src:.c=.lo)
 all: $(MODULE_BIN)
 
 $(MODULE_BIN): $(USER_LIB)
-	$(LTLD) $(CFLAGS) -o $@ $(LDFLAGS) \
+	$(LTLD) $(CFLAGS) -o $@ $(LDFLAGS) $(EXTRA_LIBS) \
 		$(topbuild)/auto/$(MODULE_LIB) $(USER_LIB) \
 		$(topbuild)/auto/$(POSTERWRITE_LIB) \
 		$(GENOM_LIB) $(COM_LIB) $(OS_LIBS)

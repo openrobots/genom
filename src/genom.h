@@ -255,6 +255,7 @@ typedef struct {
     int number;
     int max_rqst_size;
     int max_reply_size;
+    ID_LIST *codel_files;
 } MODULE_STR;
 
 
@@ -265,6 +266,7 @@ typedef struct {
 	int number;
 	int max_rqst_size;
 	int max_reply_size;
+	ID_LIST *codel_files;
     } value;
 } MODULE_AV_STR;
 

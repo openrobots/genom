@@ -97,6 +97,27 @@ if test "x$genTcl$" = "xyes"; then
 fi
 
 
+dnl --- Check for extra software ----------------------------------------
+
+AC_ARG_WITH(includes,
+   AC_HELP_STRING([--with-includes=string], [extra includes list for codels]),
+   [
+      if test "x$withval" != "xno" -a "x$withval" != "x"; then
+         EXTRA_INCLUDES="$withval"
+      fi
+   ], [EXTRA_INCLUDES=])
+AC_SUBST(EXTRA_INCLUDES)
+
+AC_ARG_WITH(libraries,
+   AC_HELP_STRING([--with-libraries=string], [extra libraries list for codels]),
+   [
+      if test "x$withval" != "xno" -a "x$withval" != "x"; then
+         EXTRA_LIBS="$withval"
+      fi
+   ], [EXTRA_LIBS=])
+AC_SUBST(EXTRA_LIBS)
+
+
 dnl --- create Makefiles ------------------------------------------------
 dnl
 CFLAGS="${C_DEBUG_FLAGS} ${C_WARNING_FLAGS}"
