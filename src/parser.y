@@ -54,7 +54,6 @@ __RCSID("$LAAS$");
 #include <errno.h>
 
 #include "genom.h"
-#include "userMakeGen.h"
 #include "typeGen.h"
 #include "errorGen.h"
 #include "reportsGen.h"
@@ -1509,7 +1508,7 @@ main(int argc, char **argv)
 
     fprintf(stderr, 
 	    "Module Generator GenoM\n"
-	    "Copyright (C) LAAS/CNRS 1994-2003\n");
+	    "Copyright (C) LAAS/CNRS 1994-2004\n");
 
     if (errFlag) {
       fprintf(stderr, usage);
