@@ -105,6 +105,7 @@ install-bin:
 
 clean: $(codels_obj)
 	$(topbuild)/libtool --mode=clean rm -f $^
+	rm -f $(OBJDIR)/$(MODULE_BIN)
 	rm -f $(OBJDIR)/dependencies
 
 

@@ -195,6 +195,8 @@ install-data:
 .PHONY: clean
 
 clean: $(module_obj) $(posterwrite_obj) $(client_obj) $(connect_obj)
+clean: $(init_obj) $(essay_obj)
+$genTcl$: $(tclclient_obj)
 $genPropice$clean: $(propiceclient_obj)
 
 clean:
@@ -207,20 +209,20 @@ clean:
 .PHONY: depend
 
 make_depend=\
-  $(MKDEP) -c"$(CC)" -o$(OBJDIR)/dependencies -d$(OBJDIR) -t.lo $(CPPFLAGS) $?
+  $(MKDEP) -c"$(CC)" -o$(OBJDIR)/dependencies -d$(OBJDIR) -t.lo $(CPPFLAGS)
 
 depend $(OBJDIR)/dependencies:: $(OBJDIR);
 
 depend $(OBJDIR)/dependencies:: $(module_src) $(posterwrite_src)
-	@$(make_depend)
+	@$(make_depend) $?
 depend $(OBJDIR)/dependencies::  $(client_src) $(connect_src)
-	@$(make_depend)
+	@$(make_depend) $?
 
 $genTcl$depend $(OBJDIR)/dependencies:: $(tclclient_src)
-$genTcl$	@$(make_depend) $(TCL_CPPFLAGS)
+$genTcl$	@$(make_depend) $(TCL_CPPFLAGS) $?
 
 $genPropice$depend $(OBJDIR)/dependencies:: $(propiceclient_src)
-$genPropice$	@$(make_depend) $(TCL_CPPFLAGS)
+$genPropice$	@$(make_depend) $(TCL_CPPFLAGS) $?
 
 ifneq (${MAKECMDGOALS},clean)
 -include $(OBJDIR)/dependencies
