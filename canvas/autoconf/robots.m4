@@ -218,8 +218,8 @@ AC_DEFUN([AC_CHECK_LINUXKERNEL_INCLUDES],
 ])
 
 dnl --- Look for includes in a path ------------------------------------
-dnl ROBOT_PATH_INC(PACKAGE, VARIABLE, INC, [, VALUE-IF-NOT-FOUND, [, PATH],
-dnl                [OTHER-INCLUDES]])
+dnl ROBOT_PATH_INC(PACKAGE, VARIABLE, INC, [, VALUE-IF-NOT-FOUND [, PATH 
+dnl              [, OTHER-INCLUDES [, OTHER-CPPFLAGS]]]])
 dnl
 AC_DEFUN(ROBOT_PATH_INC,
 [
@@ -233,7 +233,7 @@ AC_DEFUN(ROBOT_PATH_INC,
 	    IFS=$ac_save_ifs
             test -z "$ac_dir" && ac_dir=.
 
-	    CPPFLAGS="-I$ac_dir"
+	    CPPFLAGS="-I$ac_dir $7"
 	    AC_COMPILE_IFELSE([$6
 #include "$3"],
 			      [eval ac_cv_path_h_$2="$ac_dir"; break])
