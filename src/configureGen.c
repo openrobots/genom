@@ -70,7 +70,6 @@ configureGen(FILE *out,
       PROTO_ROBOTS_M4,
       PROTO_LIBTOOL_M4,
       PROTO_ACLOCAL_M4,
-      PROTO_CONFIG_MK,
       PROTO_CONFIG_POSIX_MK,
       PROTO_CONFIG_RTAI_MK,
       NULL
@@ -145,20 +144,6 @@ configureGen(FILE *out,
       print_sed_subst(out, "serversDir", "");
    }
 
-   /* GenoM options */
-   str = NULL;
-   for (i = 0; i < nCppOptions; i++) {
-      if (strncmp(cppOptions[i], "-D", 2) == 0) {
-	 bufcat(&str, "%s ", cppOptions[i]);
-      }
-   } /* for */
-   if (str != NULL) {
-      print_sed_subst(out, "genomDefines", str);
-      free(str);
-   } else {
-      print_sed_subst(out, "genomDefines", "");
-   }
-
    /* executions tasks */
    str = NULL;
    if (module->codel_files == NULL) {
@@ -177,6 +162,43 @@ configureGen(FILE *out,
    /* done */
    subst_end(out);
    script_close(out, PROTO_MAKEFILE_CODELS);
+
+   /* --- config.mk --------------------------------------------------- */
+   script_open(out);
+   subst_begin(out, PROTO_CONFIG_MK);
+   print_sed_subst(out, "module", module->name);
+   print_sed_subst(out, "genTcl", genTcl?"yes":"no");
+   print_sed_subst(out, "genomBin", genomBin);
+   print_sed_subst(out, "codelsDir", codelsDir);
+   /* GenoM options */
+   str = NULL;
+   for (i = 0; i < nCppOptions; i++) {
+      if (strncmp(cppOptions[i], "-D", 2) == 0) {
+	 bufcat(&str, "%s ", cppOptions[i]);
+      }
+   } /* for */
+   if (str != NULL) {
+      print_sed_subst(out, "genomDefines", str);
+      free(str);
+   } else {
+      print_sed_subst(out, "genomDefines", "");
+   }
+
+   str = NULL;
+   for (i = 0; i < nCppOptions; i++) {
+      if (strncmp(cppOptions[i], "-I", 2) == 0) {
+	 bufcat(&str, "%s ", cppOptions[i]);
+      }
+   } /* for */
+   if (str != NULL) {
+      print_sed_subst(out, "genomIncludes", str);
+      free(str);
+   } else {
+      print_sed_subst(out, "genomIncludes", "");
+   }
+
+   subst_end(out);
+   script_close(out, PROTO_CONFIG_MK);
 
    return 0;
 }
@@ -299,20 +321,6 @@ configureServerGen(FILE *out,
       free(str2);
    } else {
       print_sed_subst(out, "externScopeLibs", "");
-   }
-
-   /* GenoM options */
-   str = NULL;
-   for (i = 0; i < nCppOptions; i++) {
-      if (strncmp(cppOptions[i], "-D", 2) == 0) {
-	 bufcat(&str, "%s ", cppOptions[i]);
-      }
-   } /* for */
-   if (str != NULL) {
-      print_sed_subst(out, "genomDefines", str);
-      free(str);
-   } else {
-      print_sed_subst(out, "genomDefines", "");
    }
 
    /* execution tasks */

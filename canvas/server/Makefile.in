@@ -50,7 +50,7 @@ include $(topsrcdir)/$(autoconfdir)/config.$(OSAPI).mk
 
 # --- flags -------------------------------------------------------------
 
-CPPFLAGS+= $genomDefines$ $(ENDIANNESS)
+CPPFLAGS+= $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
 CPPFLAGS+= -I. -I$(topsrcdir) -I$(srcdir) $serversDir$
 CPPFLAGS+= $(POCOLIBS_INC) $(GENOM_INC)
 
