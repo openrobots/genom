@@ -32,7 +32,7 @@ include config.mk
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
 
-dist_path= bin/genom
+dist_path= genom
 dist_name= genom-$(GENOM_MAJOR).$(GENOM_MINOR)
 
 config_files = \
@@ -76,9 +76,9 @@ clean:
 dist:
 	mkdir -p $(dist_path)
 	(cd $(topsrcdir); tar cf - .) | (cd $(dist_path); tar xpf -)
-	find $(dist_path) \( -name "CVS" -o -name "*~" \) -exec rm -rf {} \;
-	rm -rf $(dist_path)/autom4te.cache
-	rm -rf $(dist_path)/canvas/configure/autom4te.cache
+	find $(dist_path) -name "CVS" | xargs rm -rf
+	find $(dist_path) -name "*~" | xargs rm -rf
+	find $(dist_path) -name "autom4te.cache" | xargs rm -rf
 	tar cf - $(dist_path) | gzip -c -9 > $(dist_name).tar.gz
 	rm -rf $(dist_path)
 
