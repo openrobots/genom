@@ -1,3 +1,7 @@
 $LAAS$
 
+  2.  upgrade to libtool 1.5 and handle cross-compilation more cleanly.
+
+  1.  configure fix: more robust pthread checking, add -lrt and -lm.
+
 genom 1.0 released march 12, 2004

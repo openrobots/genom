@@ -129,7 +129,7 @@ AC_CACHE_CHECK(
 	)
 	CFLAGS=$ac_save_CFLAGS
 )
-if test $robot_cv_gcc_pthread = yes; then
+if test "$robot_cv_gcc_pthread" = "yes"; then
 	robot_threads=""
 	CFLAGS="$CFLAGS -pthread"
 	LDFLAGS="$LDFLAGS -pthread";
@@ -145,7 +145,7 @@ else
 		)
 		CFLAGS=$ac_save_CFLAGS
 	)
-	if test $robot_cv_cc_mt = yes; then
+	if test "$robot_cv_cc_mt" = "yes"; then
 		CFLAGS="$CFLAGS -mt";
 		LDFLAGS="$LDFLAGS -mt";
 	else
@@ -331,6 +331,7 @@ AC_DEFUN(ROBOT_LIB_TCL,
    AC_MSG_CHECKING([for tcl library])
    test -z "$tcl_test_lib" && tcl_test_lib="${TCL_LIB_FILE}"
    for ac_dir in \
+      $TCL_EXEC_PREFIX/lib                    \
       $TCL_PREFIX/lib                         \
       /usr/local/lib                          \
       /usr/lib                                \

@@ -63,12 +63,21 @@ Please use --with-genom-includes option.])],
 	[`$genomBin$ --includes`:$includedir:/usr/include:/usr/local/include]
 )
 
-ROBOT_PATH_LIB(
+if test "x${cross_compiling}" = "xyes"; then
+   ROBOT_PATH_LIB(
 	[genom], GENOM_LIBDIR, [libgenom.a],
        	[AC_MSG_ERROR([genom libraries not found.
 Please use --with-genom-libraries option.])],
-	[`$genomBin$ --libraries`:$includedir:/usr/include:/usr/local/include]
+	[$libdir:/usr/lib:/usr/local/lib]
 )
+else
+   ROBOT_PATH_LIB(
+	[genom], GENOM_LIBDIR, [libgenom.a],
+       	[AC_MSG_ERROR([genom libraries not found.
+Please use --with-genom-libraries option.])],
+	[`$genomBin$ --libraries`:$libdir:/usr/lib:/usr/local/lib]
+)
+fi
 
 dnl portLib
 ROBOT_PATH_INC([portLib], PORTLIB_INCDIR, [portLib.h],
@@ -80,6 +89,7 @@ ROBOT_PATH_LIB([portLib], PORTLIB_LIBDIR, [libportLib.so],
 	       [AC_MSG_ERROR([portLib libraries not found.
 Please use --with-portLib-libraries option.])],
 	       [$libdir:/usr/lib:/usr/local/lib])
+
 
 dnl tcl
 if test "x$genTcl$" = "xyes"; then
