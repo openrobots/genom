@@ -28,6 +28,13 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+host_cpu=	@host_cpu@
+
+module=		$module$
+codelsdir=	$codelsDir$
+serverdir=	server
+autoconfdir=	autoconf
+
 
 # --- Programs ----------------------------------------------------------
 
@@ -37,7 +44,7 @@ CC=		@CC@
 LTCC=           $(topbuild)/libtool --mode=compile $(CC)
 LTLD=           $(topbuild)/libtool --mode=link $(PURIFY) $(CC)
 MKDEP=		@MKDEP@
-INSTALL=	$(topsrcdir)/auto/configure/install-sh -c
+INSTALL=	$(topsrcdir)/$(autoconfdir)/install-sh -c
 LTINSTALL=	$(topbuild)/libtool --mode=install $(INSTALL)
 LTINSTALL_DATA=	$(topbuild)/libtool --mode=install $(INSTALL) -m 644
 
@@ -47,19 +54,19 @@ SED=		sed
 # --- Libraries ---------------------------------------------------------
 
 # executables or modules
-MODULE_BIN=	$(OBJDIR)/$module$$(BINEXT)
-INIT_BIN=	$(OBJDIR)/$module$SendInitRqst$(BINEXT)
-ESSAY_BIN=	$(OBJDIR)/$module$Essay$(BINEXT)
+MODULE_BIN=	$module$$(BINEXT)
+INIT_BIN=	$module$SendInitRqst$(BINEXT)
+ESSAY_BIN=	$module$Essay$(BINEXT)
 
 # client libraries
-CLIENT_LIB=		$(OBJDIR)/lib$module$Client$(LIBEXT)
-TCLCLIENT_LIB=		$(OBJDIR)/lib$module$TclServ$(LIBEXT)
-PROPICECLIENT_LIB=	$(OBJDIR)/lib$module$Propice$(LIBEXT)
+CLIENT_LIB=		lib$module$Client$(LIBEXT)
+TCLCLIENT_LIB=		lib$module$TclServ$(LIBEXT)
+PROPICECLIENT_LIB=	lib$module$Propice$(LIBEXT)
 
 # libtool 'helper' libs -- static archives
-MODULE_LIB=		$(OBJDIR)/lib$module$Server.la
-USER_LIB=		$(OBJDIR)/lib$module$Codels.la
-POSTERWRITE_LIB=	$(OBJDIR)/lib$module$PosterWrite.la
+MODULE_LIB=		lib$module$Server.la
+USER_LIB=		lib$module$Codels.la
+POSTERWRITE_LIB=	lib$module$PosterWrite.la
 
 
 # --- Flags -------------------------------------------------------------
@@ -80,8 +87,7 @@ RTAI_INC=	@RTAI_INC@
 TCL_CPPFLAGS=	@TCL_CPPFLAGS@
 TCL_LDFLAGS=	@TCL_LDFLAGS@ @TCL_LIB_FLAG@ @TCL_LIBS@
 
-COM_INC=	@COM_INC@
-COM_LIB=	@COM_LIB@
+POCOLIBS_INC=	@POCOLIBS_INC@
 
 GENOM_INC=	@GENOM_INC@
 GENOM_LIB=	@GENOM_LIB@

@@ -32,7 +32,7 @@
 #ifndef _ERRORGEN_H
 #define _ERRORGEN_H
 
-#define PROTO_ERROR_H "auto/error.h"
+#define PROTO_ERROR_H "server/error.h"
 
 #include "errorGenProto.h" 
 

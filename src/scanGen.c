@@ -104,7 +104,7 @@ scanGen(FILE *out)
 		ltypedefs->dcl_nom->name);
     }
     cat_end(out);
-    script_close(out, "%sScanProto.h", module->name);
+    script_close(out, "server/%sScanProto.h", module->name);
 
 
     /* FUNCS */
@@ -201,7 +201,7 @@ scanGen(FILE *out)
     }
 
     cat_end(out);
-    script_close(out, "%sScan.c", module->name);
+    script_close(out, "server/%sScan.c", module->name);
 
     /*
      * Generation header
@@ -212,7 +212,7 @@ scanGen(FILE *out)
     /* Structures importees d'autres modules */
     str = NULL;
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-      bufcat(&str, "\n#include \"auto/%sScan.h\"\n", ln->name);
+      bufcat(&str, "\n#include \"server/%sScan.h\"\n", ln->name);
     } /* for */
     if (str != NULL) {
       print_sed_subst(out, "externScanLibs", str);
@@ -225,7 +225,7 @@ scanGen(FILE *out)
     print_sed_subst(out, "MODULE", module->NAME);
 
     subst_end(out);
-    script_close(out, "%sScan.h", module->name);
+    script_close(out, "server/%sScan.h", module->name);
 
     return(0);
 } /* scanGen */

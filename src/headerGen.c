@@ -87,7 +87,7 @@ int headerGen(FILE *out)
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
 	for (ln = t->cs_client_from; ln != NULL; ln = ln->next) {
-	    bufcat(&str, "#include \"auto/%sMsgLib.h\"\n", ln->name);
+	    bufcat(&str, "#include \"server/%sMsgLib.h\"\n", ln->name);
 	} /* for */
     } /* for */
     
@@ -102,7 +102,7 @@ int headerGen(FILE *out)
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
 	for (ln = t->poster_client_from; ln != NULL; ln = ln->next) {
-	    bufcat(&str, "#include \"auto/%sPosterLib.h\"\n", ln->name);
+	    bufcat(&str, "#include \"server/%sPosterLib.h\"\n", ln->name);
 	} /* for */
     } /* for */
     if (str != NULL) {
@@ -204,7 +204,7 @@ int headerGen(FILE *out)
 
     /* Fin */
     subst_end(out);
-    script_close(out, "%sHeader.h", module->name);
+    script_close(out, "server/%sHeader.h", module->name);
 
     return(0);
 

@@ -32,14 +32,14 @@
 #ifndef _MSGLIBGEN_H
 #define _MSGLIBGEN_H
 
-#define PROTO_MSG_CONTROL "auto/msgCntrl.c"
-#define PROTO_MSG_EXEC    "auto/msgExec.c"
-#define PROTO_MSG_CONTROL_PROTO "auto/msgLibCntrlProto.h"
-#define PROTO_MSG_EXEC_PROTO    "auto/msgLibExecProto.h"
-#define PROTO_MSG_PROTO  "auto/msgLibProto.h"
-#define PROTO_MSG_HEADER  "auto/msgLib.h"
-#define PROTO_MSG_TITLE   "auto/msgLib.c"
-#define PROTO_MSG_CONNECT "auto/connectLib.c"
+#define PROTO_MSG_CONTROL "server/msgCntrl.c"
+#define PROTO_MSG_EXEC    "server/msgExec.c"
+#define PROTO_MSG_CONTROL_PROTO "server/msgLibCntrlProto.h"
+#define PROTO_MSG_EXEC_PROTO    "server/msgLibExecProto.h"
+#define PROTO_MSG_PROTO  "server/msgLibProto.h"
+#define PROTO_MSG_HEADER  "server/msgLib.h"
+#define PROTO_MSG_TITLE   "server/msgLib.c"
+#define PROTO_MSG_CONNECT "server/connectLib.c"
 #include "msgLibGenProto.h" 
 
 #endif

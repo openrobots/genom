@@ -98,7 +98,7 @@ printGen(FILE *out)
     }
 
     cat_end(out);
-    script_close(out, "%sPrintProto.h", module->name);
+    script_close(out, "server/%sPrintProto.h", module->name);
 
 
     /* functions */
@@ -190,7 +190,7 @@ printGen(FILE *out)
     }
 
     cat_end(out);
-    script_close(out, "%sPrint.c", module->name);
+    script_close(out, "server/%sPrint.c", module->name);
 
     /*
      * Generation header
@@ -201,7 +201,7 @@ printGen(FILE *out)
     /* Structures importees d'autres modules */
     str = NULL;
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-      bufcat(&str, "\n#include \"auto/%sPrint.h\"\n", ln->name);
+      bufcat(&str, "\n#include \"server/%sPrint.h\"\n", ln->name);
     } /* for */
     if (str != NULL) {
       print_sed_subst(out, "externPrintLibs", str);
@@ -214,7 +214,7 @@ printGen(FILE *out)
     print_sed_subst(out, "MODULE", module->NAME);
 
     subst_end(out);
-    script_close(out, "%sPrint.h", module->name);
+    script_close(out, "server/%sPrint.h", module->name);
 
     return(0);
 } /* printGen */

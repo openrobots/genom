@@ -132,7 +132,7 @@ int reportsGen(FILE *out)
 
 
     subst_end(out);
-    script_close(out, "%sReports.h", module->name);
+    script_close(out, "server/%sReports.h", module->name);
 
     return(0);
 

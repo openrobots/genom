@@ -8,6 +8,15 @@ AC_REVISION($LAAS$)
 AC_INIT(src/genom.c)
 AC_CONFIG_HEADER(genom-config.h)
 
+AC_CANONICAL_HOST
+
+AC_ARG_WITH(libsonly,
+           AC_HELP_STRING([--with-libsonly],
+               [only compile run-time libraries]),
+           [LIBSONLY=yes],[LIBSONLY=no])
+AC_SUBST(LIBSONLY)
+
+
 dnl --- Programs names --------------------------------------------------
 dnl
 GENOM=genom
@@ -120,15 +129,23 @@ AC_SUBST(ENDIANNESS)
 
 dnl --- Checks for libraries --------------------------------------------
 dnl
-ROBOT_PATH_INC([pocolibs], PORTLIB_INC, [portLib.h],
-	       [AC_MSG_ERROR([pocolibs headers not found.
-Please use --with-pocolibs-includes option.])],
-	       [$includedir:/usr/include:/usr/local/include])
 
-ROBOT_PATH_LIB([pocolibs], PORTLIB_LIB, [libportLib.so],
-	       [AC_MSG_ERROR([pocolibs libraries not found.
-Please use --with-pocolibs-libraries option.])],
-	       [$exec_prefix/lib:$prefix/lib:/usr/lib:/usr/local/lib])
+AC_ARG_WITH(pocolibs,
+           AC_HELP_STRING([--with-pocolibs=DIR],
+               [pocolibs are installed in DIR (prefix)]),
+           [opt_pocolibs=$withval],[opt_pocolibs=$prefix])
+AC_ARG_WITH(pocolibs-exec-prefix,
+           AC_HELP_STRING([--with-pocolibs-exec-prefix=DIR],
+               [pocolibs libraries are installed in DIR (exec-prefix)]),
+           [opt_pocolibs_eprefix=$withval],[opt_pocolibs_eprefix=$exec_prefix])
+
+ROBOT_PATH_INC([pocolibs], PORTLIB_INC, [portLib.h],
+	[AC_MSG_ERROR([please use --with-pocolibs option.])],
+	[$opt_pocolibs/include:/usr/local/include:/usr/include])
+
+ROBOT_PATH_LIB([pocolibs], PORTLIB_LIB, [portLib], [osInit],
+	[AC_MSG_ERROR([please use --with-pocolibs option.])],
+	[$opt_pocolibs_eprefix/lib:$opt_pocolibs/lib:/usr/local/lib:/usr/lib])
 
 ROBOT_LIB_TCL
 

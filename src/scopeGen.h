@@ -32,8 +32,8 @@
 #ifndef _SCOPEGEN_H
 #define _SCOPEGEN_H
 
-#define PROTO_SCOPE_LIB_H "auto/scopeLib.h"
-#define PROTO_SCOPE_MAIN_C "auto/scopeMain.c"
+#define PROTO_SCOPE_LIB_H "server/scopeLib.h"
+#define PROTO_SCOPE_MAIN_C "server/scopeMain.c"
 
 #include "scopeGenProto.h" 
 

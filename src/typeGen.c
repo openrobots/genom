@@ -141,7 +141,7 @@ int typeGen(FILE *out)
     fputs("\n#endif\n", out);
     
     cat_end(out);
-    script_close(out, "%sType.h", module->name);
+    script_close(out, "server/%sType.h", module->name);
 
     return(0);
 }

@@ -31,9 +31,9 @@
 #ifndef _TCLCLIENTGEN_H
 #define _TCLCLIENTGEN_H
 
-#define PROTO_TCLCLIENT		"auto/tclClient.tcl"
-#define PROTO_TCLCLIENTRQST	"auto/tclClientRqst.tcl"
-#define PROTO_TCLCLIENTPOSTER	"auto/tclClientPoster.tcl"
+#define PROTO_TCLCLIENT		"server/tclClient.tcl"
+#define PROTO_TCLCLIENTRQST	"server/tclClientRqst.tcl"
+#define PROTO_TCLCLIENTPOSTER	"server/tclClientPoster.tcl"
 
 #include "tclClientGenProto.h" 
 

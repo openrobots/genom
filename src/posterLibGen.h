@@ -32,14 +32,14 @@
 #ifndef _POSTERLIBGEN_H
 #define _POSTERLIBGEN_H
 
-#define PROTO_POSTER_LIB "auto/posterLib.c"
-#define PROTO_POSTER_LIB_H "auto/posterLib.h"
+#define PROTO_POSTER_LIB "server/posterLib.c"
+#define PROTO_POSTER_LIB_H "server/posterLib.h"
 
-#define PROTO_POSTER_SHOW_LIB "auto/posterShowLib.c"
-#define PROTO_POSTER_SHOW_LIB_H "auto/posterShowLib.h"
+#define PROTO_POSTER_SHOW_LIB "server/posterShowLib.c"
+#define PROTO_POSTER_SHOW_LIB_H "server/posterShowLib.h"
 
-#define PROTO_POSTER_XML_LIB "auto/posterXMLLib.c"
-#define PROTO_POSTER_XML_LIB_H "auto/posterXMLLib.h"
+#define PROTO_POSTER_XML_LIB "server/posterXMLLib.c"
+#define PROTO_POSTER_XML_LIB_H "server/posterXMLLib.h"
 
 #include "posterLibGenProto.h"
 

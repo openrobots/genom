@@ -5,10 +5,11 @@ dnl	process this file with autoconf to produce a configure script.
 dnl
 AC_REVISION($LAAS$)
 
-AC_INIT(auto/$module$Header.h)
-AC_CONFIG_AUX_DIR(auto/configure)
+AC_INIT(server/$module$Header.h)
+AC_CONFIG_AUX_DIR(autoconf)
 dnl AC_CONFIG_HEADER(../config.h)
 
+AC_CANONICAL_HOST
 
 dnl --- checks for programs ---------------------------------------------
 dnl
@@ -22,7 +23,7 @@ dnl Checks for headers --------------------------------------------------
 dnl
 AC_CHECK_HEADERS(sys/cdefs.h)
 
-AC_C_BIGENDIAN([ENDIANNESS=IS_BIG_ENDIAN], [ENDIANNESS=IS_LITTLE_ENDIAN])
+AC_C_BIGENDIAN([ENDIANNESS=-DWORDS_BIGENDIAN], [ENDIANNESS=])
 AC_SUBST(ENDIANNESS)
 
 
@@ -111,39 +112,42 @@ dnl --- checks for libraries --------------------------------------------
 dnl
 
 dnl genom
-ROBOT_PATH_INC(
-	[genom], GENOM_INCDIR, [genom/modules.h],
-       	[AC_MSG_ERROR([genom headers not found.
-Please use --with-genom-includes option.])],
-	[`$genomBin$ --includes`:$includedir:/usr/include:/usr/local/include]
-)
+AC_ARG_WITH(genom,
+           AC_HELP_STRING([--with-genom=DIR],
+               [genom is installed in DIR (prefix)]),
+           [opt_genom=$withval],[opt_genom=NONE])
+AC_ARG_WITH(genom-exec-prefix,
+           AC_HELP_STRING([--with-genom-exec-prefix=DIR],
+               [genom library is installed in DIR (exec-prefix)]),
+           [opt_genom_eprefix=$withval],[opt_genom_eprefix=NONE])
 
+
+genom_path_lib=$opt_genom_eprefix/lib:$opt_genom/lib
 if test "x${cross_compiling}" = "xyes"; then
-   ROBOT_PATH_LIB(
-	[genom], GENOM_LIBDIR, [libgenom.a],
-       	[AC_MSG_ERROR([genom libraries not found.
-Please use --with-genom-libraries option.])],
-	[$libdir:/usr/lib:/usr/local/lib]
-)
+   genom_path_lib=$genom_path_lib:$libdir:$prefix/lib
 else
-   ROBOT_PATH_LIB(
-	[genom], GENOM_LIBDIR, [libgenom.a],
-       	[AC_MSG_ERROR([genom libraries not found.
-Please use --with-genom-libraries option.])],
-	[`$genomBin$ --libraries`:$libdir:/usr/lib:/usr/local/lib]
-)
+   genom_path_lib=$genom_path_lib:`$genomBin$ --libraries`
 fi
+genom_path_lib=$genom_path_lib:/usr/local/lib:/usr/lib
+
+ROBOT_PATH_INC([genom], GENOM_INCDIR, [genom/modules.h],
+	[AC_MSG_ERROR([please use --with-genom option.])],
+	[$opt_genom/include:`$genomBin$ --includes`:/usr/local/include:/usr/include])
+
+ROBOT_PATH_LIB([genom], GENOM_LIBDIR, [genom], [h2GetEvnStateString],
+	[AC_MSG_ERROR([please use --with-genom option.])],
+	[$genom_path_lib])
+
 
 dnl portLib
-ROBOT_PATH_INC([pocolibs], PORTLIB_INCDIR, [portLib.h],
-	        [AC_MSG_ERROR([pocolibs headers not found.
-Please use --with-pocolibs-includes option.])],
-   		[`$genomBin$ --includes`:$includedir:/usr/include:/usr/local/include])
+AC_ARG_WITH(pocolibs,
+           AC_HELP_STRING([--with-pocolibs=DIR],
+               [pocolibs are installed in DIR (prefix)]),
+           [opt_pocolibs=$withval],[opt_pocolibs=NONE])
 
-ROBOT_PATH_LIB([pocolibs], PORTLIB_LIBDIR, [libportLib.so],
-	       [AC_MSG_ERROR([pocolibs libraries not found.
-Please use --with-pocolibs-libraries option.])],
-	       [`$genomBin$ --libraries`:$exec_prefix/lib:$prefix/lib:/usr/lib:/usr/local/lib])
+ROBOT_PATH_INC([pocolibs], POCOLIBS_INCDIR, [portLib.h],
+	[AC_MSG_ERROR([please use --with-pocolibs option.])],
+	[$opt_pocolibs/include:`$genomBin$ --includes`:/usr/local/include:/usr/include])
 
 
 dnl tcl
@@ -182,16 +186,13 @@ GENOM_LIB="-L${GENOM_LIBDIR} -R${GENOM_LIBDIR} -lgenom"
 AC_SUBST(GENOM_INC)
 AC_SUBST(GENOM_LIB)
 
-COM_INC="-I${PORTLIB_INCDIR}"
-COM_LIB="-L${PORTLIB_LIBDIR} -R${PORTLIB_LIBDIR}"
-COM_LIB="${COM_LIB} -lposterLib -lerrorLib -lcomLib -lportLib"
-AC_SUBST(COM_INC)
-AC_SUBST(COM_LIB)
+POCOLIBS_INC="-I${POCOLIBS_INCDIR}"
+AC_SUBST(POCOLIBS_INC)
 
 AC_CONFIG_FILES(
-	[config.mk:auto/configure/config.mk.in]
-	[Makefile:auto/configure/Makefile.top.in]
-	[auto/Makefile:auto/configure/Makefile.auto.in]
-	[codels/Makefile:auto/configure/Makefile.codels.in]
+	[config.mk:autoconf/config.mk.in]
+	[Makefile]
+	[codels/Makefile]
+	[server/Makefile]
 )
 AC_OUTPUT

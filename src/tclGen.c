@@ -72,7 +72,7 @@ tclGen(FILE *out)
    if (buf != NULL) free(buf); buf = NULL;
 
    cat_end(out);
-   script_close(out,  "%sTclProto.h", module->name);
+   script_close(out,  "server/%sTclProto.h", module->name);
 
    /* func */
    script_open(out);
@@ -345,7 +345,7 @@ tclGen(FILE *out)
 
    subst_end(out);
 
-   script_close(out, "%sTcl.c", module->name);
+   script_close(out, "server/%sTcl.c", module->name);
    return 0;
 }
 

@@ -31,8 +31,8 @@
 #ifndef _SPYSERVERLIBGEN_H
 #define _SPYSERVERLIBGEN_H
 
-#define PROTO_SPY_SERVER_LIB "auto/spyServerLib.c"
-#define PROTO_SPY_SERVER_LIB_H "auto/spyServerLib.h"
+#define PROTO_SPY_SERVER_LIB "server/spyServerLib.c"
+#define PROTO_SPY_SERVER_LIB_H "server/spyServerLib.h"
 
 #include "spyServerLibGenProto.h"
 

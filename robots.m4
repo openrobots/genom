@@ -170,29 +170,27 @@ dnl ROBOT_PATH_INC(PACKAGE, VARIABLE, INC, [, VALUE-IF-NOT-FOUND, [, PATH]])
 dnl
 AC_DEFUN(ROBOT_PATH_INC,
 [
-   AC_ARG_WITH($1-includes,
-	       AC_HELP_STRING([--with-$1-includes=DIR],
-        		      [$1 includes are in DIR]),
-               opt_pathinc_$2=$withval)
-   AC_MSG_CHECKING([for $1 includes])
-   AC_CACHE_VAL(ac_cv_path_$2,
+   AC_MSG_CHECKING([for $1 headers])
+   AC_CACHE_VAL(ac_cv_path_h_$2,
     [
-	IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        ac_tmppath="[$]opt_pathinc_$2:$5"
+	ac_save_cppflags=$CPPFLAGS
+	ac_save_ifs=$IFS; IFS=":"
+        eval ac_tmppath="$5"
         for ac_dir in $ac_tmppath; do 
+	    IFS=$ac_save_ifs
             test -z "$ac_dir" && ac_dir=.
-            if eval test -f $ac_dir/$3; then
-               eval ac_cv_path_$2="$ac_dir"
-               break
-            fi
+
+	    CPPFLAGS="-I$ac_dir"
+	    AC_COMPILE_IFELSE([#include "$3"],
+			      [eval ac_cv_path_h_$2="$ac_dir"; break])
 	done
-	IFS="$ac_save_ifs"
+	CPPFLAGS=$ac_save_cppflags
     ])
-   $2="$ac_cv_path_$2"
+   $2="$ac_cv_path_h_$2"
    if test -n "[$]$2"; then
       AC_MSG_RESULT([$]$2)
    else
-      AC_MSG_RESULT(no)
+      AC_MSG_RESULT([not found])
       ifelse([$4], , , $4)
    fi
    AC_SUBST($2)
@@ -200,35 +198,36 @@ AC_DEFUN(ROBOT_PATH_INC,
 
 
 dnl --- Look for a library in a path ------------------------------------
-dnl ROBOT_PATH_LIB(PACKAGE, VARIABLE, LIB, [, VALUE-IF-NOT-FOUND, [, PATH]])
+dnl ROBOT_PATH_LIB(PACKAGE, VARIABLE, LIB, FNCT [,VALUE-IF-NOT-FOUND [,PATH]])
 dnl
 AC_DEFUN(ROBOT_PATH_LIB,
 [
-   AC_ARG_WITH($1-libraries,
-	       AC_HELP_STRING([--with-$1-libraries=DIR],
-        		      [$1 libraries are in DIR]),
-               opt_pathlib_$2=$withval)
-
    AC_MSG_CHECKING([for $1 librairies])
-   AC_CACHE_VAL(ac_cv_path_$2,
+   AC_CACHE_VAL(ac_cv_path_l_$2,
     [
-	IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        eval ac_tmppath="[$]opt_pathlib_$2:$5"
+	AC_LANG_C
+	ac_save_ldflags=$LDFLAGS
+	ac_save_libs=$LIBS
+        LIBS="-l$3 $ac_save_libs"
+	ac_save_ifs=$IFS; IFS=":"
+        eval ac_tmppath="$6"
         for ac_dir in $ac_tmppath; do 
+            IFS=$ac_save_ifs
             test -z "$ac_dir" && ac_dir=.
-            if eval test -f $ac_dir/$3; then
-               eval ac_cv_path_$2="$ac_dir"
-               break
-            fi
-	done
-	IFS="$ac_save_ifs"
+
+	    LDFLAGS="-L$ac_dir $ac_save_ldflags"
+	    AC_LINK_IFELSE(AC_LANG_CALL([], [$4]),
+			   [eval ac_cv_path_l_$2=$ac_dir; break])
+ 	done
+        LIBS=$ac_save_libs
+	LDFLAGS=$ac_save_ldflags
     ])
-   $2="$ac_cv_path_$2"
+   $2="$ac_cv_path_l_$2"
    if test -n "[$]$2"; then
       AC_MSG_RESULT([$]$2)
    else
       AC_MSG_RESULT(no)
-      ifelse([$4], , , $4)
+      ifelse([$5], , , $5)
    fi
    AC_SUBST($2)
 ])

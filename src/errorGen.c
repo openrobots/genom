@@ -152,7 +152,7 @@ int errorGen(FILE *out)
 
     /* Fin */
     subst_end(out);
-    script_close(out, "%sError.h", module->name);
+    script_close(out, "server/%sError.h", module->name);
     return(0);
 
 }

@@ -204,7 +204,7 @@ int posterLibGen(FILE *out)
     } /* for */
 
     cat_end(out);
-    script_close(out, "%sPosterLib.c", module->name);
+    script_close(out, "server/%sPosterLib.c", module->name);
 
     /**
      ** PosterLibProto.h
@@ -229,7 +229,7 @@ int posterLibGen(FILE *out)
     } /* for */
 
     cat_end(out);
-    script_close(out, "%sPosterLibProto.h", module->name);
+    script_close(out, "server/%sPosterLibProto.h", module->name);
 
 
     /**
@@ -295,7 +295,7 @@ int posterLibGen(FILE *out)
     } /* for */
 
     cat_end(out);
-    script_close(out, "%sPosterShowLib.c", module->name);
+    script_close(out, "server/%sPosterShowLib.c", module->name);
 
     /**
      ** PosterShowLibProto.h
@@ -322,7 +322,7 @@ int posterLibGen(FILE *out)
     } /* for */
 
     cat_end(out);
-    script_close(out, "%sPosterShowLibProto.h", module->name);
+    script_close(out, "server/%sPosterShowLibProto.h", module->name);
 
 
     /** ----------------------------------------------------------------------
@@ -361,7 +361,7 @@ int posterLibGen(FILE *out)
     } /* for */
 
     cat_end(out);
-    script_close(out, "%sPosterXMLLibProto.h", module->name);
+    script_close(out, "server/%sPosterXMLLibProto.h", module->name);
 
 
     /** 
@@ -443,7 +443,7 @@ int posterLibGen(FILE *out)
     } /* for */
 
     cat_end(out);
-    script_close(out, "%sPosterXMLLib.c", module->name);
+    script_close(out, "server/%sPosterXMLLib.c", module->name);
 
 
     /** ----------------------------------------------------------------------
@@ -484,7 +484,7 @@ int posterLibGen(FILE *out)
     free(ptstr);
 
     subst_end(out);
-    script_close(out, "%sPosterLib.h", module->name);
+    script_close(out, "server/%sPosterLib.h", module->name);
 
     /**
      ** PosterShowLib.h
@@ -497,7 +497,7 @@ int posterLibGen(FILE *out)
     print_sed_subst(out, "MODULE", module->NAME);
 
     subst_end(out);
-    script_close(out, "%sPosterShowLib.h", module->name);
+    script_close(out, "server/%sPosterShowLib.h", module->name);
 
     /**
      ** PosterXMLLib.h
@@ -510,7 +510,7 @@ int posterLibGen(FILE *out)
     print_sed_subst(out, "MODULE", module->NAME);
 
     subst_end(out);
-    script_close(out, "%sPosterXMLLib.h", module->name);
+    script_close(out, "server/%sPosterXMLLib.h", module->name);
 
 
     /** ----------------------------------------------------------------------
@@ -554,7 +554,7 @@ int posterLibGen(FILE *out)
     } /* for */
 
     cat_end(out);
-    script_close(out, "%sPosterWriteLib.c", module->name);
+    script_close(out, "server/%sPosterWriteLib.c", module->name);
 
     /**
      ** PosterWriteLibProto.h
@@ -574,7 +574,7 @@ int posterLibGen(FILE *out)
     }
 
     cat_end(out);
-    script_close(out, "%sPosterWriteLibProto.h", module->name);
+    script_close(out, "server/%sPosterWriteLibProto.h", module->name);
 
     return(0);
 }

@@ -96,7 +96,7 @@ printXMLGen(FILE *out)
     }
 
     cat_end(out);
-    script_close(out, "%sPrintXMLProto.h", module->name);
+    script_close(out, "server/%sPrintXMLProto.h", module->name);
 
 
     /* functions */
@@ -194,7 +194,7 @@ printXMLGen(FILE *out)
     }
 
     cat_end(out);
-    script_close(out, "%sPrintXML.c", module->name);
+    script_close(out, "server/%sPrintXML.c", module->name);
 
     /*
      * Generation header
@@ -205,7 +205,7 @@ printXMLGen(FILE *out)
     /* Structures importees d'autres modules */
     str = NULL;
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-      bufcat(&str, "\n#include \"auto/%sPrintXML.h\"\n", ln->name);
+      bufcat(&str, "\n#include \"server/%sPrintXML.h\"\n", ln->name);
     } /* for */
     if (str != NULL) {
       print_sed_subst(out, "externPrintXMLLibs", str);
@@ -218,7 +218,7 @@ printXMLGen(FILE *out)
     print_sed_subst(out, "MODULE", module->NAME);
 
     subst_end(out);
-    script_close(out, "%sPrintXML.h", module->name);
+    script_close(out, "server/%sPrintXML.h", module->name);
 
     return(0);
 } /* printGen */

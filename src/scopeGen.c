@@ -171,7 +171,7 @@ scopeGen(FILE *out)
   }
 
   cat_end(out);
-  script_close(out, "%sScopeLibProto.h", module->name);
+  script_close(out, "server/%sScopeLibProto.h", module->name);
 
   /**
    ** La fonction main totoScope dans totoScope.c
@@ -182,7 +182,7 @@ scopeGen(FILE *out)
   print_sed_subst(out, "MODULE", module->NAME);
   print_sed_subst(out, "internalData", module->internal_data->name);
   subst_end(out);
-  script_close(out, "%sScopeMain.c", module->name);
+  script_close(out, "server/%sScopeMain.c", module->name);
   
   /**
    ** Fichier header totoScopeLib.h de la bibilotheque totoScopeLib.c
@@ -193,7 +193,7 @@ scopeGen(FILE *out)
   /* Structures importees d'autres modules */
   str = NULL;
   for (ln = externLibs; ln != NULL; ln = ln->next) {
-    bufcat(&str, "\n#include \"auto/%sScopeLib.h\"\n", ln->name);
+    bufcat(&str, "\n#include \"server/%sScopeLib.h\"\n", ln->name);
   } /* for */
   if (str != NULL) {
     print_sed_subst(out, "externScopeLibs", str);
@@ -206,7 +206,7 @@ scopeGen(FILE *out)
   print_sed_subst(out, "MODULE", module->NAME);
   
   subst_end(out);
-  script_close(out, "%sScopeLib.h", module->name);
+  script_close(out, "server/%sScopeLib.h", module->name);
 
   /**
    ** La bibliotheque totoScopeLib.c des fonctions pour chaque type
@@ -263,7 +263,7 @@ scopeGen(FILE *out)
   } /* for */
 
   cat_end(out);
-  script_close(out, "%sScopeLib.c", module->name);
+  script_close(out, "server/%sScopeLib.c", module->name);
   
   
   return(0);

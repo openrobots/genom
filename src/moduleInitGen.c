@@ -91,7 +91,7 @@ int moduleInitGen(FILE *out)
 
     /* Fin */
     subst_end(out);
-    script_close(out, "%sModuleInit.c", module->name);
+    script_close(out, "server/%sModuleInit.c", module->name);
     
     return(0);
 

@@ -32,7 +32,7 @@
 #ifndef _MODULEINITGEN_H
 #define _MODULEINITGEN_H
 
-#define PROTO_MODULE_INIT "auto/moduleInit.c"
+#define PROTO_MODULE_INIT "server/moduleInit.c"
 
 #include "moduleInitGenProto.h" 
 

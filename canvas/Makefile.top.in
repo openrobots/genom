@@ -1,6 +1,6 @@
 #	$LAAS$
-
 $commentbegin$
+
 #
 # Copyright (c) 1993-2003 LAAS/CNRS
 # All rights reserved.
@@ -35,23 +35,19 @@ include $(topbuild)/config.mk
 
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
-codelsdir=	$codelsDir$
-serverdir=	auto
+
+SUBDIRS= $(serverdir) $(codelsdir)
 
 config_files = \
-	config.mk		\
 	Makefile		\
 	$(serverdir)/Makefile	\
-	$(codelsdir)/Makefile	\
+	$(codelsdir)/Makefile
 
 # GenoM flags
-include $(topsrcdir)/auto/configure/genom.mk
+include $(topsrcdir)/$(autoconfdir)/genom.mk
 
 
 # --- Directory recursion -----------------------------------------------
-
-# order matters!
-SUBDIRS= $(serverdir) $(codelsdir)
 
 # Generic targets
 .PHONY: all install depend
@@ -78,18 +74,10 @@ make_subdirs=\
 
 # --- genom -------------------------------------------------------------
 
-forceregen=
-ifeq (${MAKECMDGOALS},regen)
-  forceregen=-i
-endif
-
 .PHONY: regen
-regen: update
+regen:
+	(cd $(topsrcdir); $(GENOM) $(GENFLAGS) $(GENFILE))
 	./config.status
-
-.PHONY: update
-update:
-	(cd $(GENOMWD); $(GENOM) $(forceregen) $(GENFLAGS) $(GENFILE))
 
 
 # --- autoconf/autoheader -----------------------------------------------
@@ -102,21 +90,8 @@ LIBTOOL_DEPS=   @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)
 	./config.status --recheck
 
-$(config_files):: ./config.status
-
-config.mk:: $(topsrcdir)/$(serverdir)/configure/config.mk.in
+config.mk: $(topsrcdir)/$(autoconfdir)/config.mk.in
 	CONFIG_FILES='$@:$<' CONFIG_HEADERS= ./config.status
 
-Makefile:: $(topsrcdir)/$(serverdir)/configure/Makefile.top.in
-	CONFIG_FILES='$@:$<' CONFIG_HEADERS= ./config.status
-
-$(serverdir)/Makefile:: $(topsrcdir)/$(serverdir)/configure/Makefile.auto.in
-	CONFIG_FILES='$@:$<' CONFIG_HEADERS= ./config.status
-
-$(codelsdir)/Makefile:: $(topsrcdir)/$(serverdir)/configure/Makefile.codels.in
-	CONFIG_FILES='$@:$<' CONFIG_HEADERS= ./config.status
-
-
-#$(config_headers): %: $(topsrcdir)/%.in config.status
-#	CONFIG_FILES= CONFIG_HEADERS=$@ ./config.status
-#	touch $@
+$(config_files): %: $(topsrcdir)/%.in config.status
+	CONFIG_FILES=$@ CONFIG_HEADERS= ./config.status

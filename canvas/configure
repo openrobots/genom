@@ -426,7 +426,7 @@ PACKAGE_VERSION=
 PACKAGE_STRING=
 PACKAGE_BUGREPORT=
 
-ac_unique_file="auto/$module$Header.h"
+ac_unique_file="server/$module$Header.h"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -464,7 +464,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS MKDEP build build_cpu build_vendor build_os host host_cpu host_vendor host_os CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CPP CXX CXXFLAGS ac_ct_CXX CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL LIBTOOL_DEPS ENDIANNESS RTAI_INC OSAPI OS_LIBS GENOM_INCDIR GENOM_LIBDIR PORTLIB_INCDIR PORTLIB_LIBDIR TCL_CPPFLAGS TCL_LDFLAGS TCL_LIBS TCL_LIB_FLAG TCL_LIB_SPEC EXTRA_INCLUDES EXTRA_LIBS GENOM_INC GENOM_LIB COM_INC COM_LIB LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os MKDEP CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CPP CXX CXXFLAGS ac_ct_CXX CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL LIBTOOL_DEPS ENDIANNESS RTAI_INC OSAPI OS_LIBS GENOM_INCDIR GENOM_LIBDIR POCOLIBS_INCDIR TCL_CPPFLAGS TCL_LDFLAGS TCL_LIBS TCL_LIB_FLAG TCL_LIB_SPEC EXTRA_INCLUDES EXTRA_LIBS GENOM_INC GENOM_LIB POCOLIBS_INC LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1038,14 +1038,10 @@ Optional Packages:
   --with-rtai=yes|no      configure to use RTAI
   --with-rtai-includes=DIR
                           RTAI headers are in DIR
-  --with-genom-includes=DIR
-                          genom includes are in DIR
-  --with-genom-libraries=DIR
-                          genom libraries are in DIR
-  --with-pocolibs-includes=DIR
-                          pocolibs includes are in DIR
-  --with-pocolibs-libraries=DIR
-                          pocolibs libraries are in DIR
+  --with-genom=DIR        genom is installed in DIR (prefix)
+  --with-genom-exec-prefix=DIR
+                          genom library is installed in DIR (exec-prefix)
+  --with-pocolibs=DIR     pocolibs are installed in DIR (prefix)
   --with-tcl=DIR          directory containing tclConfig.sh
   --with-includes=string  extra includes list for codels
   --with-libraries=string extra libraries list for codels
@@ -1503,7 +1499,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 ac_aux_dir=
-for ac_dir in auto/configure $srcdir/auto/configure; do
+for ac_dir in autoconf $srcdir/autoconf; do
   if test -f $ac_dir/install-sh; then
     ac_aux_dir=$ac_dir
     ac_install_sh="$ac_aux_dir/install-sh -c"
@@ -1519,13 +1515,67 @@ for ac_dir in auto/configure $srcdir/auto/configure; do
   fi
 done
 if test -z "$ac_aux_dir"; then
-  { { echo "$as_me:$LINENO: error: cannot find install-sh or install.sh in auto/configure $srcdir/auto/configure" >&5
-echo "$as_me: error: cannot find install-sh or install.sh in auto/configure $srcdir/auto/configure" >&2;}
+  { { echo "$as_me:$LINENO: error: cannot find install-sh or install.sh in autoconf $srcdir/autoconf" >&5
+echo "$as_me: error: cannot find install-sh or install.sh in autoconf $srcdir/autoconf" >&2;}
    { (exit 1); exit 1; }; }
 fi
 ac_config_guess="$SHELL $ac_aux_dir/config.guess"
 ac_config_sub="$SHELL $ac_aux_dir/config.sub"
 ac_configure="$SHELL $ac_aux_dir/configure" # This should be Cygnus configure.
+
+
+# Make sure we can run config.sub.
+$ac_config_sub sun4 >/dev/null 2>&1 ||
+  { { echo "$as_me:$LINENO: error: cannot run $ac_config_sub" >&5
+echo "$as_me: error: cannot run $ac_config_sub" >&2;}
+   { (exit 1); exit 1; }; }
+
+echo "$as_me:$LINENO: checking build system type" >&5
+echo $ECHO_N "checking build system type... $ECHO_C" >&6
+if test "${ac_cv_build+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_cv_build_alias=$build_alias
+test -z "$ac_cv_build_alias" &&
+  ac_cv_build_alias=`$ac_config_guess`
+test -z "$ac_cv_build_alias" &&
+  { { echo "$as_me:$LINENO: error: cannot guess build type; you must specify one" >&5
+echo "$as_me: error: cannot guess build type; you must specify one" >&2;}
+   { (exit 1); exit 1; }; }
+ac_cv_build=`$ac_config_sub $ac_cv_build_alias` ||
+  { { echo "$as_me:$LINENO: error: $ac_config_sub $ac_cv_build_alias failed" >&5
+echo "$as_me: error: $ac_config_sub $ac_cv_build_alias failed" >&2;}
+   { (exit 1); exit 1; }; }
+
+fi
+echo "$as_me:$LINENO: result: $ac_cv_build" >&5
+echo "${ECHO_T}$ac_cv_build" >&6
+build=$ac_cv_build
+build_cpu=`echo $ac_cv_build | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\1/'`
+build_vendor=`echo $ac_cv_build | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\2/'`
+build_os=`echo $ac_cv_build | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\3/'`
+
+
+echo "$as_me:$LINENO: checking host system type" >&5
+echo $ECHO_N "checking host system type... $ECHO_C" >&6
+if test "${ac_cv_host+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_cv_host_alias=$host_alias
+test -z "$ac_cv_host_alias" &&
+  ac_cv_host_alias=$ac_cv_build_alias
+ac_cv_host=`$ac_config_sub $ac_cv_host_alias` ||
+  { { echo "$as_me:$LINENO: error: $ac_config_sub $ac_cv_host_alias failed" >&5
+echo "$as_me: error: $ac_config_sub $ac_cv_host_alias failed" >&2;}
+   { (exit 1); exit 1; }; }
+
+fi
+echo "$as_me:$LINENO: result: $ac_cv_host" >&5
+echo "${ECHO_T}$ac_cv_host" >&6
+host=$ac_cv_host
+host_cpu=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\1/'`
+host_vendor=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\2/'`
+host_os=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\3/'`
 
 
 
@@ -1678,60 +1728,6 @@ if test "${enable_fast_install+set}" = set; then
 else
   enable_fast_install=yes
 fi;
-
-# Make sure we can run config.sub.
-$ac_config_sub sun4 >/dev/null 2>&1 ||
-  { { echo "$as_me:$LINENO: error: cannot run $ac_config_sub" >&5
-echo "$as_me: error: cannot run $ac_config_sub" >&2;}
-   { (exit 1); exit 1; }; }
-
-echo "$as_me:$LINENO: checking build system type" >&5
-echo $ECHO_N "checking build system type... $ECHO_C" >&6
-if test "${ac_cv_build+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_cv_build_alias=$build_alias
-test -z "$ac_cv_build_alias" &&
-  ac_cv_build_alias=`$ac_config_guess`
-test -z "$ac_cv_build_alias" &&
-  { { echo "$as_me:$LINENO: error: cannot guess build type; you must specify one" >&5
-echo "$as_me: error: cannot guess build type; you must specify one" >&2;}
-   { (exit 1); exit 1; }; }
-ac_cv_build=`$ac_config_sub $ac_cv_build_alias` ||
-  { { echo "$as_me:$LINENO: error: $ac_config_sub $ac_cv_build_alias failed" >&5
-echo "$as_me: error: $ac_config_sub $ac_cv_build_alias failed" >&2;}
-   { (exit 1); exit 1; }; }
-
-fi
-echo "$as_me:$LINENO: result: $ac_cv_build" >&5
-echo "${ECHO_T}$ac_cv_build" >&6
-build=$ac_cv_build
-build_cpu=`echo $ac_cv_build | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\1/'`
-build_vendor=`echo $ac_cv_build | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\2/'`
-build_os=`echo $ac_cv_build | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\3/'`
-
-
-echo "$as_me:$LINENO: checking host system type" >&5
-echo $ECHO_N "checking host system type... $ECHO_C" >&6
-if test "${ac_cv_host+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_cv_host_alias=$host_alias
-test -z "$ac_cv_host_alias" &&
-  ac_cv_host_alias=$ac_cv_build_alias
-ac_cv_host=`$ac_config_sub $ac_cv_host_alias` ||
-  { { echo "$as_me:$LINENO: error: $ac_config_sub $ac_cv_host_alias failed" >&5
-echo "$as_me: error: $ac_config_sub $ac_cv_host_alias failed" >&2;}
-   { (exit 1); exit 1; }; }
-
-fi
-echo "$as_me:$LINENO: result: $ac_cv_host" >&5
-echo "${ECHO_T}$ac_cv_host" >&6
-host=$ac_cv_host
-host_cpu=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\1/'`
-host_vendor=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\2/'`
-host_os=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\3/'`
-
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -3145,7 +3141,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 3148 "configure"' > conftest.$ac_ext
+  echo '#line 3144 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -4608,7 +4604,7 @@ fi
 
 
 # Provide some information about the compiler.
-echo "$as_me:4611:" \
+echo "$as_me:4607:" \
      "checking for Fortran 77 compiler version" >&5
 ac_compiler=`set X $ac_compile; echo $2`
 { (eval echo "$as_me:$LINENO: \"$ac_compiler --version </dev/null >&5\"") >&5
@@ -5646,11 +5642,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:5649: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:5645: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:5653: \$? = $ac_status" >&5
+   echo "$as_me:5649: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -5879,11 +5875,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:5882: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:5878: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:5886: \$? = $ac_status" >&5
+   echo "$as_me:5882: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -5939,11 +5935,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:5942: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:5938: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:5946: \$? = $ac_status" >&5
+   echo "$as_me:5942: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -8123,7 +8119,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 8126 "configure"
+#line 8122 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -8221,7 +8217,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 8224 "configure"
+#line 8220 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10404,11 +10400,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10407: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10403: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:10411: \$? = $ac_status" >&5
+   echo "$as_me:10407: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -10464,11 +10460,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10467: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10463: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:10471: \$? = $ac_status" >&5
+   echo "$as_me:10467: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -11825,7 +11821,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11828 "configure"
+#line 11824 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11923,7 +11919,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11926 "configure"
+#line 11922 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12750,11 +12746,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12753: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12749: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:12757: \$? = $ac_status" >&5
+   echo "$as_me:12753: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -12810,11 +12806,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12813: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12809: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:12817: \$? = $ac_status" >&5
+   echo "$as_me:12813: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14848,11 +14844,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14851: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14847: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14855: \$? = $ac_status" >&5
+   echo "$as_me:14851: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -15081,11 +15077,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15084: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15080: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15088: \$? = $ac_status" >&5
+   echo "$as_me:15084: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -15141,11 +15137,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15144: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15140: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15148: \$? = $ac_status" >&5
+   echo "$as_me:15144: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17325,7 +17321,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 17328 "configure"
+#line 17324 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -17423,7 +17419,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 17426 "configure"
+#line 17422 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -18805,9 +18801,9 @@ echo "$as_me:$LINENO: result: $ac_cv_c_bigendian" >&5
 echo "${ECHO_T}$ac_cv_c_bigendian" >&6
 case $ac_cv_c_bigendian in
   yes)
-    ENDIANNESS=IS_BIG_ENDIAN ;;
+    ENDIANNESS=-DWORDS_BIGENDIAN ;;
   no)
-    ENDIANNESS=IS_LITTLE_ENDIAN ;;
+    ENDIANNESS= ;;
   *)
     { { echo "$as_me:$LINENO: error: unknown endianness
 presetting ac_cv_c_bigendian=no (or yes) will help" >&5
@@ -18899,175 +18895,191 @@ OS_LIBS="${LIBS}"
 
 
 
-
-# Check whether --with-genom-includes or --without-genom-includes was given.
-if test "${with_genom_includes+set}" = set; then
-  withval="$with_genom_includes"
-  opt_pathinc_GENOM_INCDIR=$withval
+# Check whether --with-genom or --without-genom was given.
+if test "${with_genom+set}" = set; then
+  withval="$with_genom"
+  opt_genom=$withval
+else
+  opt_genom=NONE
 fi;
-   echo "$as_me:$LINENO: checking for genom includes" >&5
-echo $ECHO_N "checking for genom includes... $ECHO_C" >&6
-   if test "${ac_cv_path_GENOM_INCDIR+set}" = set; then
+
+# Check whether --with-genom-exec-prefix or --without-genom-exec-prefix was given.
+if test "${with_genom_exec_prefix+set}" = set; then
+  withval="$with_genom_exec_prefix"
+  opt_genom_eprefix=$withval
+else
+  opt_genom_eprefix=NONE
+fi;
+
+
+genom_path_lib=$opt_genom_eprefix/lib:$opt_genom/lib
+if test "x${cross_compiling}" = "xyes"; then
+   genom_path_lib=$genom_path_lib:$libdir:$prefix/lib
+else
+   genom_path_lib=$genom_path_lib:`$genomBin$ --libraries`
+fi
+genom_path_lib=$genom_path_lib:/usr/local/lib:/usr/lib
+
+
+   echo "$as_me:$LINENO: checking for genom headers" >&5
+echo $ECHO_N "checking for genom headers... $ECHO_C" >&6
+   if test "${ac_cv_path_h_GENOM_INCDIR+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
 
-	IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        ac_tmppath="$opt_pathinc_GENOM_INCDIR:`$genomBin$ --includes`:$includedir:/usr/include:/usr/local/include
-"
+	ac_save_cppflags=$CPPFLAGS
+	ac_save_ifs=$IFS; IFS=":"
+        eval ac_tmppath="$opt_genom/include:`$genomBin$ --includes`:/usr/local/include:/usr/include"
         for ac_dir in $ac_tmppath; do
+	    IFS=$ac_save_ifs
             test -z "$ac_dir" && ac_dir=.
-            if eval test -f $ac_dir/genom/modules.h; then
-               eval ac_cv_path_GENOM_INCDIR="$ac_dir"
-               break
-            fi
+
+	    CPPFLAGS="-I$ac_dir"
+	    cat >conftest.$ac_ext <<_ACEOF
+#include "genom/modules.h"
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  eval ac_cv_path_h_GENOM_INCDIR="$ac_dir"; break
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
 	done
-	IFS="$ac_save_ifs"
+	CPPFLAGS=$ac_save_cppflags
 
 fi
 
-   GENOM_INCDIR="$ac_cv_path_GENOM_INCDIR"
+   GENOM_INCDIR="$ac_cv_path_h_GENOM_INCDIR"
    if test -n "$GENOM_INCDIR"; then
       echo "$as_me:$LINENO: result: $GENOM_INCDIR" >&5
 echo "${ECHO_T}$GENOM_INCDIR" >&6
    else
-      echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-      { { echo "$as_me:$LINENO: error: genom headers not found.
-Please use --with-genom-includes option." >&5
-echo "$as_me: error: genom headers not found.
-Please use --with-genom-includes option." >&2;}
+      echo "$as_me:$LINENO: result: not found" >&5
+echo "${ECHO_T}not found" >&6
+      { { echo "$as_me:$LINENO: error: please use --with-genom option." >&5
+echo "$as_me: error: please use --with-genom option." >&2;}
    { (exit 1); exit 1; }; }
    fi
 
 
 
-if test "x${cross_compiling}" = "xyes"; then
-
-
-# Check whether --with-genom-libraries or --without-genom-libraries was given.
-if test "${with_genom_libraries+set}" = set; then
-  withval="$with_genom_libraries"
-  opt_pathlib_GENOM_LIBDIR=$withval
-fi;
 
    echo "$as_me:$LINENO: checking for genom librairies" >&5
 echo $ECHO_N "checking for genom librairies... $ECHO_C" >&6
-   if test "${ac_cv_path_GENOM_LIBDIR+set}" = set; then
+   if test "${ac_cv_path_l_GENOM_LIBDIR+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
 
-	IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        ac_tmppath="$opt_pathlib_GENOM_LIBDIR:$libdir:/usr/lib:/usr/local/lib
-"
+	ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+	ac_save_cc=$CC
+	ac_save_ldflags=$LDFLAGS
+	ac_save_libs=$LIBS
+	ac_save_ifs=$IFS; IFS=":"
+
+	CC="./libtool $CC"
+        LIBS="-lgenom $ac_save_libs"
+        eval ac_tmppath="$genom_path_lib"
         for ac_dir in $ac_tmppath; do
+            IFS=$ac_save_ifs
             test -z "$ac_dir" && ac_dir=.
-            if eval test -f $ac_dir/libgenom.a; then
-               eval ac_cv_path_GENOM_LIBDIR="$ac_dir"
-               break
-            fi
-	done
-	IFS="$ac_save_ifs"
+
+	    LDFLAGS="-L$ac_dir $ac_save_ldflags"
+	    cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char h2GetEvnStateString ();
+int
+main ()
+{
+h2GetEvnStateString ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  eval ac_cv_path_l_GENOM_LIBDIR=$ac_dir; break
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+ 	done
+        LIBS=$ac_save_libs
+	LDFLAGS=$ac_save_ldflags
+	CC=$ac_save_cc
 
 fi
 
-   GENOM_LIBDIR="$ac_cv_path_GENOM_LIBDIR"
+   GENOM_LIBDIR="$ac_cv_path_l_GENOM_LIBDIR"
    if test -n "$GENOM_LIBDIR"; then
       echo "$as_me:$LINENO: result: $GENOM_LIBDIR" >&5
 echo "${ECHO_T}$GENOM_LIBDIR" >&6
    else
       echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
-      { { echo "$as_me:$LINENO: error: genom libraries not found.
-Please use --with-genom-libraries option." >&5
-echo "$as_me: error: genom libraries not found.
-Please use --with-genom-libraries option." >&2;}
-   { (exit 1); exit 1; }; }
-   fi
-
-
-else
-
-
-# Check whether --with-genom-libraries or --without-genom-libraries was given.
-if test "${with_genom_libraries+set}" = set; then
-  withval="$with_genom_libraries"
-  opt_pathlib_GENOM_LIBDIR=$withval
-fi;
-
-   echo "$as_me:$LINENO: checking for genom librairies" >&5
-echo $ECHO_N "checking for genom librairies... $ECHO_C" >&6
-   if test "${ac_cv_path_GENOM_LIBDIR+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-	IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        ac_tmppath="$opt_pathlib_GENOM_LIBDIR:`$genomBin$ --libraries`:$libdir:/usr/lib:/usr/local/lib
-"
-        for ac_dir in $ac_tmppath; do
-            test -z "$ac_dir" && ac_dir=.
-            if eval test -f $ac_dir/libgenom.a; then
-               eval ac_cv_path_GENOM_LIBDIR="$ac_dir"
-               break
-            fi
-	done
-	IFS="$ac_save_ifs"
-
-fi
-
-   GENOM_LIBDIR="$ac_cv_path_GENOM_LIBDIR"
-   if test -n "$GENOM_LIBDIR"; then
-      echo "$as_me:$LINENO: result: $GENOM_LIBDIR" >&5
-echo "${ECHO_T}$GENOM_LIBDIR" >&6
-   else
-      echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-      { { echo "$as_me:$LINENO: error: genom libraries not found.
-Please use --with-genom-libraries option." >&5
-echo "$as_me: error: genom libraries not found.
-Please use --with-genom-libraries option." >&2;}
-   { (exit 1); exit 1; }; }
-   fi
-
-
-fi
-
-
-
-# Check whether --with-pocolibs-includes or --without-pocolibs-includes was given.
-if test "${with_pocolibs_includes+set}" = set; then
-  withval="$with_pocolibs_includes"
-  opt_pathinc_PORTLIB_INCDIR=$withval
-fi;
-   echo "$as_me:$LINENO: checking for pocolibs includes" >&5
-echo $ECHO_N "checking for pocolibs includes... $ECHO_C" >&6
-   if test "${ac_cv_path_PORTLIB_INCDIR+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-	IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        ac_tmppath="$opt_pathinc_PORTLIB_INCDIR:`$genomBin$ --includes`:$includedir:/usr/include:/usr/local/include"
-        for ac_dir in $ac_tmppath; do
-            test -z "$ac_dir" && ac_dir=.
-            if eval test -f $ac_dir/portLib.h; then
-               eval ac_cv_path_PORTLIB_INCDIR="$ac_dir"
-               break
-            fi
-	done
-	IFS="$ac_save_ifs"
-
-fi
-
-   PORTLIB_INCDIR="$ac_cv_path_PORTLIB_INCDIR"
-   if test -n "$PORTLIB_INCDIR"; then
-      echo "$as_me:$LINENO: result: $PORTLIB_INCDIR" >&5
-echo "${ECHO_T}$PORTLIB_INCDIR" >&6
-   else
-      echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-      { { echo "$as_me:$LINENO: error: pocolibs headers not found.
-Please use --with-pocolibs-includes option." >&5
-echo "$as_me: error: pocolibs headers not found.
-Please use --with-pocolibs-includes option." >&2;}
+      { { echo "$as_me:$LINENO: error: please use --with-genom option." >&5
+echo "$as_me: error: please use --with-genom option." >&2;}
    { (exit 1); exit 1; }; }
    fi
 
@@ -19075,42 +19087,75 @@ Please use --with-pocolibs-includes option." >&2;}
 
 
 
-# Check whether --with-pocolibs-libraries or --without-pocolibs-libraries was given.
-if test "${with_pocolibs_libraries+set}" = set; then
-  withval="$with_pocolibs_libraries"
-  opt_pathlib_PORTLIB_LIBDIR=$withval
+# Check whether --with-pocolibs or --without-pocolibs was given.
+if test "${with_pocolibs+set}" = set; then
+  withval="$with_pocolibs"
+  opt_pocolibs=$withval
+else
+  opt_pocolibs=NONE
 fi;
 
-   echo "$as_me:$LINENO: checking for pocolibs librairies" >&5
-echo $ECHO_N "checking for pocolibs librairies... $ECHO_C" >&6
-   if test "${ac_cv_path_PORTLIB_LIBDIR+set}" = set; then
+
+   echo "$as_me:$LINENO: checking for pocolibs headers" >&5
+echo $ECHO_N "checking for pocolibs headers... $ECHO_C" >&6
+   if test "${ac_cv_path_h_POCOLIBS_INCDIR+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
 
-	IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        ac_tmppath="$opt_pathlib_PORTLIB_LIBDIR:`$genomBin$ --libraries`:$exec_prefix/lib:$prefix/lib:/usr/lib:/usr/local/lib"
+	ac_save_cppflags=$CPPFLAGS
+	ac_save_ifs=$IFS; IFS=":"
+        eval ac_tmppath="$opt_pocolibs/include:`$genomBin$ --includes`:/usr/local/include:/usr/include"
         for ac_dir in $ac_tmppath; do
+	    IFS=$ac_save_ifs
             test -z "$ac_dir" && ac_dir=.
-            if eval test -f $ac_dir/libportLib.so; then
-               eval ac_cv_path_PORTLIB_LIBDIR="$ac_dir"
-               break
-            fi
+
+	    CPPFLAGS="-I$ac_dir"
+	    cat >conftest.$ac_ext <<_ACEOF
+#include "portLib.h"
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  eval ac_cv_path_h_POCOLIBS_INCDIR="$ac_dir"; break
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
 	done
-	IFS="$ac_save_ifs"
+	CPPFLAGS=$ac_save_cppflags
 
 fi
 
-   PORTLIB_LIBDIR="$ac_cv_path_PORTLIB_LIBDIR"
-   if test -n "$PORTLIB_LIBDIR"; then
-      echo "$as_me:$LINENO: result: $PORTLIB_LIBDIR" >&5
-echo "${ECHO_T}$PORTLIB_LIBDIR" >&6
+   POCOLIBS_INCDIR="$ac_cv_path_h_POCOLIBS_INCDIR"
+   if test -n "$POCOLIBS_INCDIR"; then
+      echo "$as_me:$LINENO: result: $POCOLIBS_INCDIR" >&5
+echo "${ECHO_T}$POCOLIBS_INCDIR" >&6
    else
-      echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-      { { echo "$as_me:$LINENO: error: pocolibs libraries not found.
-Please use --with-pocolibs-libraries option." >&5
-echo "$as_me: error: pocolibs libraries not found.
-Please use --with-pocolibs-libraries option." >&2;}
+      echo "$as_me:$LINENO: result: not found" >&5
+echo "${ECHO_T}not found" >&6
+      { { echo "$as_me:$LINENO: error: please use --with-pocolibs option." >&5
+echo "$as_me: error: please use --with-pocolibs option." >&2;}
    { (exit 1); exit 1; }; }
    fi
 
@@ -19265,13 +19310,10 @@ GENOM_LIB="-L${GENOM_LIBDIR} -R${GENOM_LIBDIR} -lgenom"
 
 
 
-COM_INC="-I${PORTLIB_INCDIR}"
-COM_LIB="-L${PORTLIB_LIBDIR} -R${PORTLIB_LIBDIR}"
-COM_LIB="${COM_LIB} -lposterLib -lerrorLib -lcomLib -lportLib"
+POCOLIBS_INC="-I${POCOLIBS_INCDIR}"
 
 
-
-                                        ac_config_files="$ac_config_files config.mk:auto/configure/config.mk.in Makefile:auto/configure/Makefile.top.in auto/Makefile:auto/configure/Makefile.auto.in codels/Makefile:auto/configure/Makefile.codels.in"
+                                        ac_config_files="$ac_config_files config.mk:autoconf/config.mk.in Makefile codels/Makefile server/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -19823,10 +19865,10 @@ for ac_config_target in $ac_config_targets
 do
   case "$ac_config_target" in
   # Handling of arguments.
-  "config.mk" ) CONFIG_FILES="$CONFIG_FILES config.mk:auto/configure/config.mk.in" ;;
-  "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile:auto/configure/Makefile.top.in" ;;
-  "auto/Makefile" ) CONFIG_FILES="$CONFIG_FILES auto/Makefile:auto/configure/Makefile.auto.in" ;;
-  "codels/Makefile" ) CONFIG_FILES="$CONFIG_FILES codels/Makefile:auto/configure/Makefile.codels.in" ;;
+  "config.mk" ) CONFIG_FILES="$CONFIG_FILES config.mk:autoconf/config.mk.in" ;;
+  "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+  "codels/Makefile" ) CONFIG_FILES="$CONFIG_FILES codels/Makefile" ;;
+  "server/Makefile" ) CONFIG_FILES="$CONFIG_FILES server/Makefile" ;;
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
@@ -19910,7 +19952,6 @@ s,@ECHO_C@,$ECHO_C,;t t
 s,@ECHO_N@,$ECHO_N,;t t
 s,@ECHO_T@,$ECHO_T,;t t
 s,@LIBS@,$LIBS,;t t
-s,@MKDEP@,$MKDEP,;t t
 s,@build@,$build,;t t
 s,@build_cpu@,$build_cpu,;t t
 s,@build_vendor@,$build_vendor,;t t
@@ -19919,6 +19960,7 @@ s,@host@,$host,;t t
 s,@host_cpu@,$host_cpu,;t t
 s,@host_vendor@,$host_vendor,;t t
 s,@host_os@,$host_os,;t t
+s,@MKDEP@,$MKDEP,;t t
 s,@CC@,$CC,;t t
 s,@CFLAGS@,$CFLAGS,;t t
 s,@LDFLAGS@,$LDFLAGS,;t t
@@ -19951,8 +19993,7 @@ s,@OSAPI@,$OSAPI,;t t
 s,@OS_LIBS@,$OS_LIBS,;t t
 s,@GENOM_INCDIR@,$GENOM_INCDIR,;t t
 s,@GENOM_LIBDIR@,$GENOM_LIBDIR,;t t
-s,@PORTLIB_INCDIR@,$PORTLIB_INCDIR,;t t
-s,@PORTLIB_LIBDIR@,$PORTLIB_LIBDIR,;t t
+s,@POCOLIBS_INCDIR@,$POCOLIBS_INCDIR,;t t
 s,@TCL_CPPFLAGS@,$TCL_CPPFLAGS,;t t
 s,@TCL_LDFLAGS@,$TCL_LDFLAGS,;t t
 s,@TCL_LIBS@,$TCL_LIBS,;t t
@@ -19962,8 +20003,7 @@ s,@EXTRA_INCLUDES@,$EXTRA_INCLUDES,;t t
 s,@EXTRA_LIBS@,$EXTRA_LIBS,;t t
 s,@GENOM_INC@,$GENOM_INC,;t t
 s,@GENOM_LIB@,$GENOM_LIB,;t t
-s,@COM_INC@,$COM_INC,;t t
-s,@COM_LIB@,$COM_LIB,;t t
+s,@POCOLIBS_INC@,$POCOLIBS_INC,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 CEOF

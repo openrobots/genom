@@ -32,9 +32,13 @@
 
 # --- RTAI-specific configuration ---------------------------------------
 
-moddir=		module
+moddir=		modules
 MOD=		$(moddir)/lib$(BASENAME).o
-MOD_CPPFLAGS+=	-I$(RTAI_INCLUDES) -D__RTAI__ -D__KERNEL__ -DMODULE
+
+MOD_CPPFLAGS+=	-I$(RTAI_INC) -D__RTAI__ -D__KERNEL__ -DMODULE
+ifeq (powerpc,$(host_cpu))
+MOD_CFLAGS+= -fsigned-char -msoft-float -ffixed-r2 -mmultiple -mstring
+endif
 
 modobjs=$(modsrcs:%.c=$(moddir)/%.lo)
 
@@ -46,12 +50,17 @@ $(MOD): $(modobjs)
 	$(LTLD) -o $@ $(modobjs)
 
 $(moddir)/%.lo: %.c
-	$(LTCC) -prefer-non-pic -c $(CFLAGS) $(CPPFLAGS) $(MOD_CPPFLAGS) \
-		-o $@ $<
+	$(LTCC) -prefer-non-pic -c $(CFLAGS) $(MOD_CFLAGS) \
+		$(CPPFLAGS) $(MOD_CPPFLAGS) -o $@ $<
 
 # object file directory
 $(moddir):
 	mkdir -p $@
+
+# install
+install:: all-os
+	$(LTINSTALL) $(MOD) $(libdir)/$(MOD)
+
 
 # module dependencies
 depend $(moddir)/dependencies:: $(moddir)

@@ -32,10 +32,9 @@
 #ifndef _ESSAYGEN_H
 #define _ESSAYGEN_H
 
-#define PROTO_ESSAY "auto/essay.c"
-#define PROTO_ESSAY_EXEC_RQST "auto/essayExec.c"
-#define PROTO_ESSAY_CNTRL_RQST "auto/essayCntrl.c"
-#define PROTO_ESSAY_SCRIPT "auto/essay_script"
+#define PROTO_ESSAY "server/essay.c"
+#define PROTO_ESSAY_EXEC_RQST "server/essayExec.c"
+#define PROTO_ESSAY_CNTRL_RQST "server/essayCntrl.c"
 
 #include "essayGenProto.h" 
 

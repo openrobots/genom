@@ -32,8 +32,8 @@
 #ifndef _INITGEN_H
 #define _INITGEN_H
 
-#define PROTO_INIT "auto/init.c"
-#define PROTO_INIT_PROTO "auto/initProto.h"
+#define PROTO_INIT "server/init.c"
+#define PROTO_INIT_PROTO "server/initProto.h"
 
 #include "initGenProto.h" 
 

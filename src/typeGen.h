@@ -32,7 +32,7 @@
 #ifndef _TYPEGEN_H
 #define _TYPEGEN_H
 
-#define PROTO_TYPE_H "auto/type.h"
+#define PROTO_TYPE_H "server/type.h"
 
 #include "typeGenProto.h" 
 

@@ -464,7 +464,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS GENOM TCLSERV build build_cpu build_vendor build_os host host_cpu host_vendor host_os CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CPP CXX CXXFLAGS ac_ct_CXX CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL LIBTOOL_DEPS LEX LEXLIB LEX_OUTPUT_ROOT YACC LATEX STDINCPP MKDEP RTAI_INC OSAPI OS_LIBS ENDIANNESS PORTLIB_INC PORTLIB_LIB HAS_TCL TCL_CPPFLAGS TCL_LDFLAGS TCL_LIBS TCL_LIB_FLAG TCL_LIB_SPEC LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os LIBSONLY GENOM TCLSERV CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CPP CXX CXXFLAGS ac_ct_CXX CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL LIBTOOL_DEPS LEX LEXLIB LEX_OUTPUT_ROOT YACC LATEX STDINCPP MKDEP RTAI_INC OSAPI OS_LIBS ENDIANNESS PORTLIB_INC PORTLIB_LIB HAS_TCL TCL_CPPFLAGS TCL_LDFLAGS TCL_LIBS TCL_LIB_FLAG TCL_LIB_SPEC LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1034,6 +1034,7 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-libsonly         only compile run-time libraries
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-pic              try to use only PIC/non-PIC objects [default=use
                           both]
@@ -1042,10 +1043,10 @@ Optional Packages:
   --with-rtai=yes|no      configure to use RTAI
   --with-rtai-includes=DIR
                           RTAI headers are in DIR
-  --with-pocolibs-includes=DIR
-                          pocolibs includes are in DIR
-  --with-pocolibs-libraries=DIR
-                          pocolibs libraries are in DIR
+  --with-pocolibs=DIR     pocolibs are installed in DIR (prefix)
+  --with-pocolibs-exec-prefix=DIR
+                          pocolibs libraries are installed in DIR
+                          (exec-prefix)
   --with-tcl=DIR          directory containing tclConfig.sh. 'no' to disable.
 
 Some influential environment variables:
@@ -1504,84 +1505,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
           ac_config_headers="$ac_config_headers genom-config.h"
 
 
-GENOM=genom
-TCLSERV=tclserv
-
-
-
-
-# Check whether --enable-shared or --disable-shared was given.
-if test "${enable_shared+set}" = set; then
-  enableval="$enable_shared"
-  p=${PACKAGE-default}
-    case $enableval in
-    yes) enable_shared=yes ;;
-    no) enable_shared=no ;;
-    *)
-      enable_shared=no
-      # Look at the argument we got.  We use all the common list separators.
-      lt_save_ifs="$IFS"; IFS="${IFS}$PATH_SEPARATOR,"
-      for pkg in $enableval; do
-	IFS="$lt_save_ifs"
-	if test "X$pkg" = "X$p"; then
-	  enable_shared=yes
-	fi
-      done
-      IFS="$lt_save_ifs"
-      ;;
-    esac
-else
-  enable_shared=yes
-fi;
-
-# Check whether --enable-static or --disable-static was given.
-if test "${enable_static+set}" = set; then
-  enableval="$enable_static"
-  p=${PACKAGE-default}
-    case $enableval in
-    yes) enable_static=yes ;;
-    no) enable_static=no ;;
-    *)
-     enable_static=no
-      # Look at the argument we got.  We use all the common list separators.
-      lt_save_ifs="$IFS"; IFS="${IFS}$PATH_SEPARATOR,"
-      for pkg in $enableval; do
-	IFS="$lt_save_ifs"
-	if test "X$pkg" = "X$p"; then
-	  enable_static=yes
-	fi
-      done
-      IFS="$lt_save_ifs"
-      ;;
-    esac
-else
-  enable_static=yes
-fi;
-
-# Check whether --enable-fast-install or --disable-fast-install was given.
-if test "${enable_fast_install+set}" = set; then
-  enableval="$enable_fast_install"
-  p=${PACKAGE-default}
-    case $enableval in
-    yes) enable_fast_install=yes ;;
-    no) enable_fast_install=no ;;
-    *)
-      enable_fast_install=no
-      # Look at the argument we got.  We use all the common list separators.
-      lt_save_ifs="$IFS"; IFS="${IFS}$PATH_SEPARATOR,"
-      for pkg in $enableval; do
-	IFS="$lt_save_ifs"
-	if test "X$pkg" = "X$p"; then
-	  enable_fast_install=yes
-	fi
-      done
-      IFS="$lt_save_ifs"
-      ;;
-    esac
-else
-  enable_fast_install=yes
-fi;
-
 ac_aux_dir=
 for ac_dir in $srcdir $srcdir/.. $srcdir/../..; do
   if test -f $ac_dir/install-sh; then
@@ -1660,6 +1583,96 @@ host_cpu=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\1/'`
 host_vendor=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\2/'`
 host_os=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\3/'`
 
+
+
+
+# Check whether --with-libsonly or --without-libsonly was given.
+if test "${with_libsonly+set}" = set; then
+  withval="$with_libsonly"
+  LIBSONLY=yes
+else
+  LIBSONLY=no
+fi;
+
+
+
+GENOM=genom
+TCLSERV=tclserv
+
+
+
+
+# Check whether --enable-shared or --disable-shared was given.
+if test "${enable_shared+set}" = set; then
+  enableval="$enable_shared"
+  p=${PACKAGE-default}
+    case $enableval in
+    yes) enable_shared=yes ;;
+    no) enable_shared=no ;;
+    *)
+      enable_shared=no
+      # Look at the argument we got.  We use all the common list separators.
+      lt_save_ifs="$IFS"; IFS="${IFS}$PATH_SEPARATOR,"
+      for pkg in $enableval; do
+	IFS="$lt_save_ifs"
+	if test "X$pkg" = "X$p"; then
+	  enable_shared=yes
+	fi
+      done
+      IFS="$lt_save_ifs"
+      ;;
+    esac
+else
+  enable_shared=yes
+fi;
+
+# Check whether --enable-static or --disable-static was given.
+if test "${enable_static+set}" = set; then
+  enableval="$enable_static"
+  p=${PACKAGE-default}
+    case $enableval in
+    yes) enable_static=yes ;;
+    no) enable_static=no ;;
+    *)
+     enable_static=no
+      # Look at the argument we got.  We use all the common list separators.
+      lt_save_ifs="$IFS"; IFS="${IFS}$PATH_SEPARATOR,"
+      for pkg in $enableval; do
+	IFS="$lt_save_ifs"
+	if test "X$pkg" = "X$p"; then
+	  enable_static=yes
+	fi
+      done
+      IFS="$lt_save_ifs"
+      ;;
+    esac
+else
+  enable_static=yes
+fi;
+
+# Check whether --enable-fast-install or --disable-fast-install was given.
+if test "${enable_fast_install+set}" = set; then
+  enableval="$enable_fast_install"
+  p=${PACKAGE-default}
+    case $enableval in
+    yes) enable_fast_install=yes ;;
+    no) enable_fast_install=no ;;
+    *)
+      enable_fast_install=no
+      # Look at the argument we got.  We use all the common list separators.
+      lt_save_ifs="$IFS"; IFS="${IFS}$PATH_SEPARATOR,"
+      for pkg in $enableval; do
+	IFS="$lt_save_ifs"
+	if test "X$pkg" = "X$p"; then
+	  enable_fast_install=yes
+	fi
+      done
+      IFS="$lt_save_ifs"
+      ;;
+    esac
+else
+  enable_fast_install=yes
+fi;
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -3073,7 +3086,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 3076 "configure"' > conftest.$ac_ext
+  echo '#line 3089 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -4536,7 +4549,7 @@ fi
 
 
 # Provide some information about the compiler.
-echo "$as_me:4539:" \
+echo "$as_me:4552:" \
      "checking for Fortran 77 compiler version" >&5
 ac_compiler=`set X $ac_compile; echo $2`
 { (eval echo "$as_me:$LINENO: \"$ac_compiler --version </dev/null >&5\"") >&5
@@ -5574,11 +5587,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:5577: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:5590: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:5581: \$? = $ac_status" >&5
+   echo "$as_me:5594: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -5807,11 +5820,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:5810: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:5823: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:5814: \$? = $ac_status" >&5
+   echo "$as_me:5827: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -5867,11 +5880,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:5870: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:5883: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:5874: \$? = $ac_status" >&5
+   echo "$as_me:5887: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -8051,7 +8064,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 8054 "configure"
+#line 8067 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -8149,7 +8162,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 8152 "configure"
+#line 8165 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10332,11 +10345,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10335: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10348: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:10339: \$? = $ac_status" >&5
+   echo "$as_me:10352: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -10392,11 +10405,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:10395: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:10408: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:10399: \$? = $ac_status" >&5
+   echo "$as_me:10412: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -11753,7 +11766,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11756 "configure"
+#line 11769 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11851,7 +11864,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11854 "configure"
+#line 11867 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12678,11 +12691,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12681: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12694: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:12685: \$? = $ac_status" >&5
+   echo "$as_me:12698: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -12738,11 +12751,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12741: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12754: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:12745: \$? = $ac_status" >&5
+   echo "$as_me:12758: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14776,11 +14789,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14779: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14792: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14783: \$? = $ac_status" >&5
+   echo "$as_me:14796: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -15009,11 +15022,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15012: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15025: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:15016: \$? = $ac_status" >&5
+   echo "$as_me:15029: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings
@@ -15069,11 +15082,11 @@ else
    -e 's:.*FLAGS}? :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:15072: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:15085: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:15076: \$? = $ac_status" >&5
+   echo "$as_me:15089: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17253,7 +17266,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 17256 "configure"
+#line 17269 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -17351,7 +17364,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 17354 "configure"
+#line 17367 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -21398,84 +21411,178 @@ esac
 
 
 
-# Check whether --with-pocolibs-includes or --without-pocolibs-includes was given.
-if test "${with_pocolibs_includes+set}" = set; then
-  withval="$with_pocolibs_includes"
-  opt_pathinc_PORTLIB_INC=$withval
+# Check whether --with-pocolibs or --without-pocolibs was given.
+if test "${with_pocolibs+set}" = set; then
+  withval="$with_pocolibs"
+  opt_pocolibs=$withval
+else
+  opt_pocolibs=$prefix
 fi;
-   echo "$as_me:$LINENO: checking for pocolibs includes" >&5
-echo $ECHO_N "checking for pocolibs includes... $ECHO_C" >&6
-   if test "${ac_cv_path_PORTLIB_INC+set}" = set; then
+
+# Check whether --with-pocolibs-exec-prefix or --without-pocolibs-exec-prefix was given.
+if test "${with_pocolibs_exec_prefix+set}" = set; then
+  withval="$with_pocolibs_exec_prefix"
+  opt_pocolibs_eprefix=$withval
+else
+  opt_pocolibs_eprefix=$exec_prefix
+fi;
+
+
+   echo "$as_me:$LINENO: checking for pocolibs headers" >&5
+echo $ECHO_N "checking for pocolibs headers... $ECHO_C" >&6
+   if test "${ac_cv_path_h_PORTLIB_INC+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
 
-	IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        ac_tmppath="$opt_pathinc_PORTLIB_INC:$includedir:/usr/include:/usr/local/include"
+	ac_save_cppflags=$CPPFLAGS
+	ac_save_ifs=$IFS; IFS=":"
+        eval ac_tmppath="$opt_pocolibs/include:/usr/local/include:/usr/include"
         for ac_dir in $ac_tmppath; do
+	    IFS=$ac_save_ifs
             test -z "$ac_dir" && ac_dir=.
-            if eval test -f $ac_dir/portLib.h; then
-               eval ac_cv_path_PORTLIB_INC="$ac_dir"
-               break
-            fi
+
+	    CPPFLAGS="-I$ac_dir"
+	    cat >conftest.$ac_ext <<_ACEOF
+#include "portLib.h"
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  eval ac_cv_path_h_PORTLIB_INC="$ac_dir"; break
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
 	done
-	IFS="$ac_save_ifs"
+	CPPFLAGS=$ac_save_cppflags
 
 fi
 
-   PORTLIB_INC="$ac_cv_path_PORTLIB_INC"
+   PORTLIB_INC="$ac_cv_path_h_PORTLIB_INC"
    if test -n "$PORTLIB_INC"; then
       echo "$as_me:$LINENO: result: $PORTLIB_INC" >&5
 echo "${ECHO_T}$PORTLIB_INC" >&6
    else
-      echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-      { { echo "$as_me:$LINENO: error: pocolibs headers not found.
-Please use --with-pocolibs-includes option." >&5
-echo "$as_me: error: pocolibs headers not found.
-Please use --with-pocolibs-includes option." >&2;}
+      echo "$as_me:$LINENO: result: not found" >&5
+echo "${ECHO_T}not found" >&6
+      { { echo "$as_me:$LINENO: error: please use --with-pocolibs option." >&5
+echo "$as_me: error: please use --with-pocolibs option." >&2;}
    { (exit 1); exit 1; }; }
    fi
 
 
 
 
-
-# Check whether --with-pocolibs-libraries or --without-pocolibs-libraries was given.
-if test "${with_pocolibs_libraries+set}" = set; then
-  withval="$with_pocolibs_libraries"
-  opt_pathlib_PORTLIB_LIB=$withval
-fi;
-
    echo "$as_me:$LINENO: checking for pocolibs librairies" >&5
 echo $ECHO_N "checking for pocolibs librairies... $ECHO_C" >&6
-   if test "${ac_cv_path_PORTLIB_LIB+set}" = set; then
+   if test "${ac_cv_path_l_PORTLIB_LIB+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
 
-	IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        eval ac_tmppath="$opt_pathlib_PORTLIB_LIB:$exec_prefix/lib:$prefix/lib:/usr/lib:/usr/local/lib"
+	ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+	ac_save_ldflags=$LDFLAGS
+	ac_save_libs=$LIBS
+        LIBS="-lportLib $ac_save_libs"
+	ac_save_ifs=$IFS; IFS=":"
+        eval ac_tmppath="$opt_pocolibs_eprefix/lib:$opt_pocolibs/lib:/usr/local/lib:/usr/lib"
         for ac_dir in $ac_tmppath; do
+            IFS=$ac_save_ifs
             test -z "$ac_dir" && ac_dir=.
-            if eval test -f $ac_dir/libportLib.so; then
-               eval ac_cv_path_PORTLIB_LIB="$ac_dir"
-               break
-            fi
-	done
-	IFS="$ac_save_ifs"
+
+	    LDFLAGS="-L$ac_dir $ac_save_ldflags"
+	    cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char osInit ();
+int
+main ()
+{
+osInit ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  eval ac_cv_path_l_PORTLIB_LIB=$ac_dir; break
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+ 	done
+        LIBS=$ac_save_libs
+	LDFLAGS=$ac_save_ldflags
 
 fi
 
-   PORTLIB_LIB="$ac_cv_path_PORTLIB_LIB"
+   PORTLIB_LIB="$ac_cv_path_l_PORTLIB_LIB"
    if test -n "$PORTLIB_LIB"; then
       echo "$as_me:$LINENO: result: $PORTLIB_LIB" >&5
 echo "${ECHO_T}$PORTLIB_LIB" >&6
    else
       echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
-      { { echo "$as_me:$LINENO: error: pocolibs libraries not found.
-Please use --with-pocolibs-libraries option." >&5
-echo "$as_me: error: pocolibs libraries not found.
-Please use --with-pocolibs-libraries option." >&2;}
+      { { echo "$as_me:$LINENO: error: please use --with-pocolibs option." >&5
+echo "$as_me: error: please use --with-pocolibs option." >&2;}
    { (exit 1); exit 1; }; }
    fi
 
@@ -22224,8 +22331,6 @@ s,@ECHO_C@,$ECHO_C,;t t
 s,@ECHO_N@,$ECHO_N,;t t
 s,@ECHO_T@,$ECHO_T,;t t
 s,@LIBS@,$LIBS,;t t
-s,@GENOM@,$GENOM,;t t
-s,@TCLSERV@,$TCLSERV,;t t
 s,@build@,$build,;t t
 s,@build_cpu@,$build_cpu,;t t
 s,@build_vendor@,$build_vendor,;t t
@@ -22234,6 +22339,9 @@ s,@host@,$host,;t t
 s,@host_cpu@,$host_cpu,;t t
 s,@host_vendor@,$host_vendor,;t t
 s,@host_os@,$host_os,;t t
+s,@LIBSONLY@,$LIBSONLY,;t t
+s,@GENOM@,$GENOM,;t t
+s,@TCLSERV@,$TCLSERV,;t t
 s,@CC@,$CC,;t t
 s,@CFLAGS@,$CFLAGS,;t t
 s,@LDFLAGS@,$LDFLAGS,;t t

@@ -32,7 +32,7 @@
 #ifndef _HEADERGEN_H
 #define _HEADERGEN_H
 
-#define PROTO_HEADER "auto/header.h"
+#define PROTO_HEADER "server/header.h"
 
 #include "headerGenProto.h"
 

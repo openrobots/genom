@@ -28,10 +28,13 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+host_cpu=	@host_cpu@
+
 # --- Version -----------------------------------------------------------
 
 GENOM_MAJOR=	1
-GENOM_MINOR=	0C
+GENOM_MINOR=	0
+GENOM_REV=	C
 
 
 # --- Programs ----------------------------------------------------------
@@ -59,6 +62,8 @@ LIBTCLCLIENT=	lib@GENOM@TclClient$(LIBEXT)
 
 # --- Flags -------------------------------------------------------------
 
+LIBSONLY=	@LIBSONLY@
+
 CPPFLAGS=	@CPPFLAGS@
 CFLAGS=		@CFLAGS@
 LDFLAGS=	@LDFLAGS@
@@ -82,4 +87,4 @@ LIBTOOL_DEPS=   @LIBTOOL_DEPS@
 
 # --- Paths -------------------------------------------------------------
 
-CANVASDIR=	$(datadir)/genom/$(GENOM_MAJOR).$(GENOM_MINOR)
+CANVASDIR=	$(datadir)/genom/$(GENOM_MAJOR).$(GENOM_MINOR)$(GENOM_REV)

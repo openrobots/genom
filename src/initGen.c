@@ -107,7 +107,7 @@ initGen(FILE *out)
     print_sed_subst(out, "inputVerif", "");
 
     subst_end(out);
-    script_close(out, "%sInit.c", module->name);
+    script_close(out, "server/%sInit.c", module->name);
      
     /* PROTO */
     script_open(out);
@@ -115,7 +115,7 @@ initGen(FILE *out)
     print_sed_subst(out, "module", module->name);
     print_sed_subst(out, "inputFlat", "void");    
     subst_end(out);
-    script_close(out, "%sInitProto.h", module->name);
+    script_close(out, "server/%sInitProto.h", module->name);
     
     return(0);
   }
@@ -153,7 +153,7 @@ initGen(FILE *out)
 
     fprintf(stderr, "genInit warning: init request without parameters\n");
     subst_end(out);
-    script_close(out, "%sInit.c", module->name);
+    script_close(out, "server/%sInit.c", module->name);
     
     /* PROTO */
     script_open(out);
@@ -161,7 +161,7 @@ initGen(FILE *out)
     print_sed_subst(out, "module", module->name);
     print_sed_subst(out, "inputFlat", "void");    
     subst_end(out);
-    script_close(out, "%sInitProto.h", module->name);
+    script_close(out, "server/%sInitProto.h", module->name);
 
     return(0);
   }
@@ -186,7 +186,7 @@ initGen(FILE *out)
   if (flatDcl (dcl) != 0) {
     free_strings();
     subst_end(out);
-    script_close(out, "%sInit.c", module->name);
+    script_close(out, "server/%sInit.c", module->name);
     return (1);
   }
 
@@ -202,7 +202,7 @@ initGen(FILE *out)
 
   /* C'est fini */
   subst_end(out);
-  script_close(out, "%sInit.c", module->name);
+  script_close(out, "server/%sInit.c", module->name);
   
   /* PROTO */
   script_open(out);
@@ -210,7 +210,7 @@ initGen(FILE *out)
   print_sed_subst(out, "module", module->name);
   print_sed_subst(out, "inputFlat", "%s", strList);
   subst_end(out);
-  script_close(out, "%sInitProto.h", module->name);
+  script_close(out, "server/%sInitProto.h", module->name);
   
   free_strings();
   return(0);

@@ -45,73 +45,65 @@ VPATH=		$(srcdir)
 
 # autoconf/libtool
 flist=\
-	configure/configure		\
-	configure/install-sh		\
-	configure/config.sub		\
-	configure/config.guess		\
-	configure/ltconfig		\
-	configure/ltcf-c.sh		\
-	configure/ltmain.sh
-
-# makefiles
-flist+= \
-	configure/genom.mk		\
-	configure/config.posix.mk	\
-	configure/config.rtai.mk	\
-	configure/config.mk.in		\
-	configure/Makefile.top.in	\
-	configure/Makefile.auto.in	\
-	configure/Makefile.codels.in
+	autoconf/install-sh		\
+	autoconf/config.sub		\
+	autoconf/config.guess		\
+	autoconf/ltmain.sh		\
+	autoconf/robots.m4		\
+	autoconf/libtool.m4		\
+	autoconf/genom.mk		\
+	autoconf/config.posix.mk	\
+	autoconf/config.rtai.mk		\
+	autoconf/config.mk.in
 
 # server templates
 flist+=\
-	auto/cntrlTask.c		\
-	auto/connectLib.c		\
-	auto/end.pl			\
-	auto/error.h			\
-	auto/essay.c			\
-	auto/essayCntrl.c		\
-	auto/essayExec.c		\
-	auto/essay_script		\
-	auto/execTask.c			\
-	auto/execTaskHeader.h		\
-	auto/header.h			\
-	auto/init.c			\
-	auto/initProto.h		\
-	auto/moduleInit.c		\
-	auto/msgCntrl.c			\
-	auto/msgExec.c			\
-	auto/msgLib.c			\
-	auto/msgLib.h			\
-	auto/msgLibCntrlProto.h		\
-	auto/msgLibExecProto.h		\
-	auto/msgLibProto.h		\
-	auto/posterLib.c		\
-	auto/posterLib.h		\
-	auto/posterShowLib.c		\
-	auto/posterShowLib.h		\
-	auto/posterXMLLib.c		\
-	auto/posterXMLLib.h		\
-	auto/print.h			\
-	auto/printXML.h			\
-	auto/reports.h			\
-	auto/requestCntrl.c		\
-	auto/requestExec.c		\
-	auto/scan.h			\
-	auto/scopeLib.h			\
-	auto/scopeMain.c		\
-	auto/scope_script		\
-	auto/spyServerLib.c		\
-	auto/spyServerLib.h		\
-	auto/start.pl			\
-	auto/tclClient.tcl		\
-	auto/tclClientPoster.tcl	\
-	auto/tclClientRqst.tcl		\
-	auto/tclEpilog.c		\
-	auto/tclPoster.c		\
-	auto/tclProlog.c		\
-	auto/tclRqst.c			\
-	auto/type.h
+	server/Makefile.in		\
+	server/cntrlTask.c		\
+	server/connectLib.c		\
+	server/error.h			\
+	server/essay.c			\
+	server/essayCntrl.c		\
+	server/essayExec.c		\
+	server/essay_script		\
+	server/execTask.c		\
+	server/execTaskHeader.h		\
+	server/header.h			\
+	server/init.c			\
+	server/initProto.h		\
+	server/moduleInit.c		\
+	server/msgCntrl.c		\
+	server/msgExec.c		\
+	server/msgLib.c			\
+	server/msgLib.h			\
+	server/msgLibCntrlProto.h	\
+	server/msgLibExecProto.h	\
+	server/msgLibProto.h		\
+	server/posterLib.c		\
+	server/posterLib.h		\
+	server/posterShowLib.c		\
+	server/posterShowLib.h		\
+	server/posterXMLLib.c		\
+	server/posterXMLLib.h		\
+	server/print.h			\
+	server/printXML.h		\
+	server/reports.h		\
+	server/requestCntrl.c		\
+	server/requestExec.c		\
+	server/scan.h			\
+	server/scopeLib.h		\
+	server/scopeMain.c		\
+	server/scope_script		\
+	server/spyServerLib.c		\
+	server/spyServerLib.h		\
+	server/tclClient.tcl		\
+	server/tclClientPoster.tcl	\
+	server/tclClientRqst.tcl	\
+	server/tclEpilog.c		\
+	server/tclPoster.c		\
+	server/tclProlog.c		\
+	server/tclRqst.c		\
+	server/type.h
 
 # propice templates
 flist+=\
@@ -130,7 +122,16 @@ flist+=\
 
 # codels templates
 flist+=\
-	user/start
+	codels/Makefile.in
+
+# top level templates
+flist+=\
+	Makefile.top.in			\
+	configure			\
+	configure.in			\
+	aclocal.m4			\
+	start.pl			\
+	end.pl
 
 
 # -----------------------------------------------------------------------

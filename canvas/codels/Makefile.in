@@ -40,22 +40,21 @@ prefix=		@prefix@
 exec_prefix=	@exec_prefix@
 bindir=		@bindir@
 libdir=		@libdir@
-serverdir=	auto
 
-VPATH=		$(srcdir):$(GENFILE_PATH)/codels
+VPATH=		$(srcdir):$(GENFILE_PATH)/$(codelsdir)
 
 include $(topbuild)/config.mk
-include $(topsrcdir)/auto/configure/config.$(OSAPI).mk
+include $(topsrcdir)/$(autoconfdir)/config.$(OSAPI).mk
 
 
 # --- flags -------------------------------------------------------------
 
-CPPFLAGS+= $genomDefines$ -D$(ENDIANNESS)
+CPPFLAGS+= $genomDefines$ $(ENDIANNESS)
 CPPFLAGS+= -I. -I$(topbuild) -I$(srcdir) -I$(topsrcdir)
-CPPFLAGS+= $serversDir$ $(GENOM_INC) $(COM_INC) $(EXTRA_INCLUDES)
+CPPFLAGS+= $serversDir$ $(GENOM_INC) $(POCOLIBS_INC) $(EXTRA_INCLUDES)
 
 # GenoM flags
-include $(topsrcdir)/auto/configure/genom.mk
+include $(topsrcdir)/$(autoconfdir)/genom.mk
 
 # --- source files ------------------------------------------------------
 
@@ -67,19 +66,20 @@ codels_obj=	$(codels_src:%.c=$(OBJDIR)/%.lo)
 
 # --- compilation -------------------------------------------------------
 
-all: $(OBJDIR) $(MODULE_BIN)
+all: $(OBJDIR) $(OBJDIR)/$(MODULE_BIN)
 
-$(MODULE_BIN): $(USER_LIB)
-$(MODULE_BIN): $(topbuild)/auto/$(MODULE_LIB)
-$(MODULE_BIN): $(topbuild)/auto/$(POSTERWRITE_LIB)
+$(OBJDIR)/$(MODULE_BIN): $(OBJDIR)/$(USER_LIB)
+$(OBJDIR)/$(MODULE_BIN): $(topbuild)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)
+$(OBJDIR)/$(MODULE_BIN): $(topbuild)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LIB)
 
-$(MODULE_BIN):
-	$(LTLD) $(CFLAGS) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT)	\
-		$(topbuild)/auto/$(MODULE_LIB) $(USER_LIB)	\
-		$(topbuild)/auto/$(POSTERWRITE_LIB)		\
+$(OBJDIR)/$(MODULE_BIN):
+	$(LTLD) $(CFLAGS) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT)		\
+		$(topbuild)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)	\
+		$(OBJDIR)/$(USER_LIB)					\
+		$(topbuild)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LIB)	\
 		$(EXTRA_LIBS) $(LTLK_GENOM_LIB)
 
-$(USER_LIB): $(codels_obj)
+$(OBJDIR)/$(USER_LIB): $(codels_obj)
 	$(LTLD) -static $(CFLAGS) $(codels_obj) -o $@ $(LDFLAGS) \
 		$(LIBTOOL_LINKOPT)
 
@@ -96,7 +96,7 @@ $(OBJDIR):
 install: all install-bin
 
 install-bin:
-	$(LTINSTALL) $(MODULE_BIN) $(bindir)/$(MODULE_BIN)
+	$(LTINSTALL) $(OBJDIR)/$(MODULE_BIN) $(bindir)/$module$/$(MODULE_BIN)
 
 
 # --- clean -------------------------------------------------------------
@@ -118,5 +118,5 @@ depend $(OBJDIR)/dependencies:: $(codels_src)
 		$(CPPFLAGS) $?
 
 ifneq (${MAKECMDGOALS},clean)
--include dependencies
+-include $(OBJDIR)/dependencies
 endif

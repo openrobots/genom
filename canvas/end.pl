@@ -32,70 +32,19 @@
 # End of script for module generation
 #----------------------------------------------------------------------
 
-# Copy configure script in main directory if it doesn't exist
-if (! -e '../configure' || $installUserPart == 1) {
-    if(system("cmp -s configure/configure ../configure") != 0) {
-      system ("cp -i configure/configure ../configure");
-    }
-}
-
-# Idem pour le script de demarrage de la tache d'essay */
-if (! -e "../$module\_essay" || $installUserPart == 1) {
-    if(system("cmp -s $module\_essay ../$module\_essay") != 0) {
-	system ("cp -i $module\_essay ../");
-	chmod 0777, "../$module\_essay";
-    }
-}
-
-# Instale la partie codels
 if ($installUserPart == 1) {
+  # Install user files
 
-    # 1ere lettre en majuscule
-    $module = ucfirst($module);
-    $startFile = "start$module";
-    $userDir = "../$codelsDir";
+  mirror_dir("codels", "../$codelsDir", "", "", 1);
+  mirror_dir("autoconf", "../$autoconfDir", "", "^configure", 1);
 
-    if (! -e "../$startFile") {
-	system (cp, "user/$startFile", '../');
-    }
+  mirror_dir(".", "..", "^configure", "", 1);
+  mirror_dir(".", "..", "^aclocal.m4", "", 1);
+  mirror_dir(".", "..", "^Makefile.in", "", 1);
 
-    if (! -d $userDir) {
-	print "Creating directory $codelsDir";
-	mkdir $userDir, 04775;
-	$newdir = 1;
-    }
-    else {
-	$newdir = 0;
-    }
+} else {
+  # Install server files
 
-    # On recupere chaque fichier de auto/user
-    opendir(USER, "user");
-    foreach(readdir(USER)) {
-	if (/\.c$/ || (/^Makefile/ && !/Makefile.all/)) {
-	    # Il n'existe pas encore
-	    if (! -f "$userDir/$_") {
-		$agree = 'y';
-		if(!$newdir) {
-		    printf "Agree to create file $userDir/$_ (y/n) ? ";
-		    chomp($agree=<STDIN>);
-		}
-		if ($agree eq 'y') {
-		    system ("cp user/$_ $userDir");
-		}
-	    }
-	    # Il existe deja
-	    elsif (system("cmp -s user/$_ $userDir/$_") != 0) {
-		printf ("overwrite $userDir/$_ (y/n) ? ");
-		chomp($agree=<STDIN>);
-		if ($agree eq 'y') {
-		    printf ("save $userDir/$_ in $userDir/$_.genomsave\n");
-		    system ("cp $userDir/$_ $userDir/$_.genomsave");
-		    system ("cp  user/$_ $userDir");
-		}
-	    }
-	}
-    }
-    closedir(USER);
-    print "$codelsDir/ is installed, from now just call \"gnumake\" !";
+  mirror_dir("server", "../$serverDir", "", 0);
+  mirror_dir("autoconf", "../$autoconfDir", "^genom.mk", "", 1);
 }
-

@@ -31,6 +31,10 @@
 
 # --- RTAI-specific configuration ---------------------------------------
 
+ifeq (powerpc,$(host_cpu))
+CFLAGS+= -fsigned-char -ffixed-r2 -mmultiple -mstring
+endif
+
 CPPFLAGS += -I$(RTAI_INC) -D__RTAI__ -D__KERNEL__ -DMODULE
 
 # produce relocatable objects

@@ -59,7 +59,7 @@ userStartGen(FILE *out, char *codelsDir)
 
   subst_end(out);
 
-  script_close(out, "user/start%s", Name);
+  script_close(out, "codels/start%s", Name);
   
   return(0);
 }

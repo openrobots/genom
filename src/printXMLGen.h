@@ -34,7 +34,7 @@
 
 #define POINTER_PRINTXML_ADDR
 
-#define PROTO_PRINTXML_H "auto/printXML.h"
+#define PROTO_PRINTXML_H "server/printXML.h"
 
 #include "printXMLGenProto.h" 
 

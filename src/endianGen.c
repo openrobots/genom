@@ -87,7 +87,7 @@ endianGen(FILE *out)
     }
 
     cat_end(out);
-    script_close(out, "%sEndianProto.h", module->name);
+    script_close(out, "server/%sEndianProto.h", module->name);
 
 
     /* functions */
@@ -176,7 +176,7 @@ endianGen(FILE *out)
     }
 
     cat_end(out);
-    script_close(out, "%sEndian.c", module->name);
+    script_close(out, "server/%sEndian.c", module->name);
 
     /*
      * Generation header
@@ -210,13 +210,13 @@ endianGen(FILE *out)
 
     /* Structures importees d'autres modules */
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-      fprintf(out, "\n#include \"auto/%sEndian.h\"\n", ln->name);
+      fprintf(out, "\n#include \"server/%sEndian.h\"\n", ln->name);
     } /* for */
 
     fprintf(out, "#endif\n");
 
     cat_end(out);
-    script_close(out, "%sEndian.h", module->name);
+    script_close(out, "server/%sEndian.h", module->name);
 
     return(0);
 } /* endianGen */

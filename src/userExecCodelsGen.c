@@ -93,8 +93,7 @@ userExecCodelsGen(FILE *out)
     fprintf(out, "#else\n");
     fprintf(out, "# include <portLib.h>\n");
     fprintf(out, "#endif\n");
-    fprintf(out, "#include <stdio.h>\n");
-    fprintf(out, "#include \"auto/%sHeader.h\"\n\n\n", module->name);
+    fprintf(out, "#include \"server/%sHeader.h\"\n\n\n", module->name);
     
     /* 
      * Codel d'initialisation 
@@ -293,7 +292,7 @@ userExecCodelsGen(FILE *out)
 	
     cat_end(out);
 
-    script_close(out, "user/%s%sCodels.c", module->name, t->name);
+    script_close(out, "codels/%s%sCodels.c", module->name, t->name);
     
   } /* for */
   return(0);

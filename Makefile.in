@@ -35,8 +35,8 @@ srcdir=		@srcdir@
 
 include config.mk
 
-dist_path= genom-$(GENOM_MAJOR).$(GENOM_MINOR)
-dist_name= genom-$(GENOM_MAJOR).$(GENOM_MINOR)
+dist_path= genom-$(GENOM_MAJOR).$(GENOM_MINOR)$(GENOM_REV)
+dist_name= genom-$(GENOM_MAJOR).$(GENOM_MINOR)$(GENOM_REV)
 
 config_files = \
 	config.mk		\
@@ -57,13 +57,22 @@ config_headers = \
 # --- Directory recursion -----------------------------------------------
 
 # order matters!
-SUBDIRS= lib src include canvas emacs scripts
+SUBDIRS= lib
+
+ifneq (yes,$(LIBSONLY))
+SUBDIRS+= src
+
 ifeq (yes,$(HAS_TCL))
 SUBDIRS+= tclserv/server tclserv/client
 endif
 ifneq (:,$(LATEX))
 SUBDIRS+= doc/user_guide
 endif
+
+SUBDIRS+= canvas emacs scripts
+endif
+
+SUBDIRS+= include
 
 make_subdirs= @for d in ${SUBDIRS}; do (cd $$d; ${MAKE} $@ ) || exit 2; done
 

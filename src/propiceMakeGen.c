@@ -74,14 +74,14 @@ int propiceMakeGen(FILE *out)
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
 	for (ln = t->cs_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/auto/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
 	}
 	for (ln = t->poster_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/auto/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
 	} 
     }
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/auto/propice ", ln->NAME, ln->NAME, ln->NAME);
+	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
     }
     if (str != NULL) {
 	print_sed_subst(out, "serversDir", str);
@@ -123,14 +123,14 @@ int propiceMakeGen(FILE *out)
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
 	for (ln = t->cs_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/auto/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
 	} /* for */
 	for (ln = t->poster_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/auto/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
 	} /* for */
     } /* for */
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/auto/propice ", ln->NAME, ln->NAME, ln->NAME);
+	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
     }
     if (str != NULL) {
 	print_sed_subst(out, "serversDir", str);
@@ -175,14 +175,14 @@ int propiceMakeGen(FILE *out)
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
 	for (ln = t->cs_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/auto/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
 	} /* for */
 	for (ln = t->poster_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/auto/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
 	} /* for */
     } /* for */
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/auto/propice ", ln->NAME, ln->NAME, ln->NAME);
+	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
     }
     if (str != NULL) {
 	print_sed_subst(out, "serversDir", str);

@@ -29,10 +29,7 @@
 #
 
 GENOM=		$genomBin$
-
-GENOMWD=	$genomWd$
 GENFILE=	$genomFile$
-GENFILE_PATH=	$genomFilePath$
 
 GENFLAGS=	$genomIncludes$ $genomDefines$
 $genTcl$GENFLAGS+=	-t

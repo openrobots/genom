@@ -181,8 +181,8 @@ propiceGen(FILE *out)
      /* Entete */
      cat_begin(out);
      fprintf(out, file_header_op);
-     fprintf(out, "include \"auto/propice/%sPropice.sym\"\n", module->name);
-     fprintf(out, "load opf \"auto/propice/%sPropice.opf\"\n", module->name);
+     fprintf(out, "include \"server/propice/%sPropice.sym\"\n", module->name);
+     fprintf(out, "load opf \"server/propice/%sPropice.opf\"\n", module->name);
      cat_end(out);
   
      script_close(out, "propice/%sPropice.inc", module->name);

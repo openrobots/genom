@@ -93,7 +93,7 @@ cntrlTaskGen(FILE *out)
     char *execTask;
 
     script_open(out);
-	subst_begin(out, PROTO_CNTRL_TASK_C);
+    subst_begin(out, PROTO_CNTRL_TASK_C);
     
     /* Nom du  module */
     print_sed_subst(out, "module", module->name);
@@ -313,7 +313,7 @@ cntrlTaskGen(FILE *out)
 	}
 	subst_end(out);
     } /* for */
-    script_close(out, "%sCntrlTask.c", module->name);
+    script_close(out, "server/%sCntrlTask.c", module->name);
     return(0);
 }
 

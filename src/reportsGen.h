@@ -32,7 +32,7 @@
 #ifndef _REPORTSGEN_H
 #define _REPORTSGEN_H
 
-#define PROTO_REPORTS_H "auto/reports.h"
+#define PROTO_REPORTS_H "server/reports.h"
 
 #include "reportsGenProto.h" 
 

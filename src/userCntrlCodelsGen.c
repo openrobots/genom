@@ -79,8 +79,7 @@ userCntrlCodelsGen(FILE *out)
   fprintf(out, "#else\n");
   fprintf(out, "# include <portLib.h>\n");
   fprintf(out, "#endif\n");
-  fprintf(out, "#include <stdio.h>\n");
-  fprintf(out, "#include \"auto/%sHeader.h\"\n\n\n", module->name);
+  fprintf(out, "#include \"server/%sHeader.h\"\n\n\n", module->name);
 
   /* 
    * Codels de controle
@@ -158,7 +157,7 @@ userCntrlCodelsGen(FILE *out)
   
   cat_end(out);
   
-  script_close(out, "user/%sCntrlTaskCodels.c", module->name);
+  script_close(out, "codels/%sCntrlTaskCodels.c", module->name);
     
   return(0);
 

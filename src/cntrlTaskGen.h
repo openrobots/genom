@@ -32,9 +32,9 @@
 #ifndef _CNTRLTASKGEN_H
 #define _CNTRLTASKGEN_H
 
-#define PROTO_CNTRL_TASK_C "auto/cntrlTask.c" 
-#define PROTO_RQST_CNTRL_C "auto/requestCntrl.c" 
-#define PROTO_RQST_EXEC_C "auto/requestExec.c" 
+#define PROTO_CNTRL_TASK_C "server/cntrlTask.c" 
+#define PROTO_RQST_CNTRL_C "server/requestCntrl.c" 
+#define PROTO_RQST_EXEC_C "server/requestExec.c" 
 
 #include "cntrlTaskGenProto.h"
 

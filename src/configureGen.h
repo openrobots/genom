@@ -31,24 +31,30 @@
 #ifndef H_CONFIGUREGEN
 #define H_CONFIGUREGEN
 
-#define PROTO_CONFIGURE		"configure/configure" 
-#define PROTO_INSTALL		"configure/install-sh" 
-#define PROTO_CONFIGSUB		"configure/config.sub" 
-#define PROTO_CONFIGGUESS	"configure/config.guess" 
-#define PROTO_LTCONFIG		"configure/ltconfig" 
-#define PROTO_LTCFC		"configure/ltcf-c.sh" 
-#define PROTO_LTMAIN		"configure/ltmain.sh" 
-#define PROTO_CONFIG_MK		"configure/config.mk.in"
-#define PROTO_CONFIG_POSIX_MK	"configure/config.posix.mk"
-#define PROTO_CONFIG_RTAI_MK	"configure/config.rtai.mk"
-#define PROTO_GENOM_MK		"configure/genom.mk"
+#define PROTO_CONFIGURE		"configure" 
+#define PROTO_CONFIGURE_IN	"configure.in" 
+#define PROTO_INSTALL		"autoconf/install-sh" 
+#define PROTO_CONFIGSUB		"autoconf/config.sub" 
+#define PROTO_CONFIGGUESS	"autoconf/config.guess" 
+#define PROTO_LTMAIN		"autoconf/ltmain.sh" 
 
-#define PROTO_MAKEFILE_TOP	"configure/Makefile.top.in"
-#define PROTO_MAKEFILE_AUTO	"configure/Makefile.auto.in"
-#define PROTO_MAKEFILE_CODELS	"configure/Makefile.codels.in"
+#define PROTO_ROBOTS_M4		"autoconf/robots.m4" 
+#define PROTO_LIBTOOL_M4	"autoconf/libtool.m4" 
+#define PROTO_ACLOCAL_M4	"aclocal.m4" 
+
+#define PROTO_CONFIG_MK		"autoconf/config.mk.in"
+#define PROTO_CONFIG_POSIX_MK	"autoconf/config.posix.mk"
+#define PROTO_CONFIG_RTAI_MK	"autoconf/config.rtai.mk"
+#define PROTO_GENOM_MK		"autoconf/genom.mk"
+
+#define PROTO_MAKEFILE_TOP	"Makefile.top.in"
+#define PROTO_MAKEFILE_SERVER	"server/Makefile.in"
+#define PROTO_MAKEFILE_CODELS	"codels/Makefile.in"
 
 int configureGen(FILE *out, const char *codelsDir, const char *cmdLine,
 	const char *genomBin, const char *genomFile, const char *genomWd,
 	int genTcl, int genPropice, int genSpy);
+int configureServerGen(FILE *out, const char *genomBin,
+	const char *genomFile, int genTcl, int genPropice, int genSpy);
 
 #endif /* H_CONFIGUREGEN */

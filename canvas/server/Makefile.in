@@ -45,17 +45,17 @@ datadir=	@datadir@/modules
 VPATH=		$(srcdir)
 
 include $(topbuild)/config.mk
-include $(topsrcdir)/auto/configure/config.$(OSAPI).mk
+include $(topsrcdir)/$(autoconfdir)/config.$(OSAPI).mk
 
 
 # --- flags -------------------------------------------------------------
 
-CPPFLAGS+= $genomDefines$ -D$(ENDIANNESS)
+CPPFLAGS+= $genomDefines$ $(ENDIANNESS)
 CPPFLAGS+= -I. -I$(topsrcdir) -I$(srcdir) $serversDir$
-CPPFLAGS+= $(COM_INC) $(GENOM_INC)
+CPPFLAGS+= $(POCOLIBS_INC) $(GENOM_INC)
 
 # GenoM flags
-include $(topsrcdir)/auto/configure/genom.mk
+include $(topsrcdir)/$(autoconfdir)/genom.mk
 
 
 # --- source files ------------------------------------------------------
@@ -114,11 +114,13 @@ propiceclient_obj=$(propiceclient_src:%.c=$(OBJDIR)/%.lo)
 
 all: $(OBJDIR) server client
 
-server: $(MODULE_LIB) $(INIT_BIN) $(POSTERWRITE_LIB)
+server: $(OBJDIR)/$(MODULE_LIB)
+server: $(OBJDIR)/$(INIT_BIN)
+server: $(OBJDIR)/$(POSTERWRITE_LIB)
 
-client:: $(ESSAY_BIN) $(CONNECT)
-$genTcl$client:: $(TCLCLIENT_LIB)
-$genPropice$client:: $(PROPICECLIENT_LIB)
+client:: $(OBJDIR)/$(ESSAY_BIN) $(OBJDIR)/$(CONNECT)
+$genTcl$client:: $(OBJDIR)/$(TCLCLIENT_LIB)
+$genPropice$client:: $(OBJDIR)/$(PROPICECLIENT_LIB)
 
 $(OBJDIR):
 	mkdir -p $@
@@ -126,38 +128,38 @@ $(OBJDIR):
 
 # --- libraries ---------------------------------------------------------
 
-$(MODULE_LIB): $(module_obj)
+$(OBJDIR)/$(MODULE_LIB): $(module_obj)
 	$(LTLD) -static $(CFLAGS) $(module_obj) -o $@ $(LDFLAGS) \
 		$(LIBTOOL_LINKOPT)
 
-$(POSTERWRITE_LIB): $(posterwrite_obj)
+$(OBJDIR)/$(POSTERWRITE_LIB): $(posterwrite_obj)
 	$(LTLD) -static $(CFLAGS) $(posterwrite_obj) -o $@ $(LDFLAGS) \
 		$(LIBTOOL_LINKOPT)
 
-$(CLIENT_LIB): $(client_obj)
+$(OBJDIR)/$(CLIENT_LIB): $(client_obj)
 	$(LTLD) $(CFLAGS) $(client_obj) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT)
 
 
-$(TCLCLIENT_LIB): $(tclclient_obj) $serversEndianLib$
+$(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj) $serversEndianLib$
 	$(LTLD) $(CFLAGS) $(tclclient_obj) $serversEndianLib$ -o $@	\
 		$(LIBTOOL_LINKOPT) $(GENOM_LIB)				\
 		$(LDFLAGS) $(TCL_LDFLAGS)
 
-$(PROPICECLIENT_LIB): $(propiceclient_obj)
+$(OBJDIR)/$(PROPICECLIENT_LIB): $(propiceclient_obj)
 	$(LTLD) $(CFLAGS) $(propiceclient_obj) -o $@ $(LDFLAGS)		\
 		$(GENOM_LIB) $(COM_LIB) $(OS_LIBS) -rpath $(libdir)
 
 
 # --- binaries ----------------------------------------------------------
 
-$(INIT_BIN): $(init_obj) $(CLIENT_LIB)
+$(OBJDIR)/$(INIT_BIN): $(init_obj) $(OBJDIR)/$(CLIENT_LIB)
 	$(LTLD) $(CFLAGS) $(init_obj) -o $@ $(LDFLAGS)	\
 		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)	\
 		$(GENOM_LIB)
 
-$(ESSAY_BIN): $(essay_obj) $(CLIENT_LIB) $serversLib$
-	$(LTLD) $(CFLAGS) $(essay_obj) -o $@  $(LDFLAGS) $(CLIENT_LIB) \
-		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)	\
+$(OBJDIR)/$(ESSAY_BIN): $(essay_obj) $(OBJDIR)/$(CLIENT_LIB) $serversLib$
+	$(LTLD) $(CFLAGS) $(essay_obj) -o $@  $(LDFLAGS) 	\
+		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)		\
 		$serversLib$ $(GENOM_LIB)
 
 
@@ -178,10 +180,10 @@ $(OBJDIR)/%.lo: %.c
 install: all install-bin install-data
 
 install-bin:
-	$(LTINSTALL) $(INIT_BIN) $(bindir)/$(INIT_BIN)
-	$(LTINSTALL) $(ESSAY_BIN) $(bindir)/$(ESSAY_BIN)
-	$(LTINSTALL) $(CLIENT_LIB) $(libdir)/$(CLIENT_LIB)
-	$genTcl$$(LTINSTALL) $(TCLCLIENT_LIB) $(libdir)/$(TCLCLIENT_LIB)
+	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$module$/$(INIT_BIN)
+	$(LTINSTALL) $(OBJDIR)/$(ESSAY_BIN) $(bindir)/$module$/$(ESSAY_BIN)
+	$(LTINSTALL) $(OBJDIR)/$(CLIENT_LIB) $(libdir)/$module$/$(CLIENT_LIB)
+	$genTcl$$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/$module$/$(TCLCLIENT_LIB)
 
 install-data:
 	$genTcl$$(LTINSTALL_DATA) \

@@ -371,7 +371,7 @@ execTaskGen(FILE *out)
 	free(str);
 	
 	subst_end(out);
-	script_close(out, "%s%s.c", module->name, t->name);
+	script_close(out, "server/%s%s.c", module->name, t->name);
 
     } /* for */
     return(0);

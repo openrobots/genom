@@ -75,7 +75,7 @@ int msgLibGen(FILE *out)
 	subst_end(out);
     } /* for */
 
-    script_close(out, "%sMsgLib.c", module->name);
+    script_close(out, "server/%sMsgLib.c", module->name);
 
     /* 
      * ConnectLib.c
@@ -87,7 +87,7 @@ int msgLibGen(FILE *out)
     print_sed_subst(out, "module", module->name);
     print_sed_subst(out, "MODULE", module->NAME);
     subst_end(out);
-    script_close(out, "%sConnectLib.c", module->name);
+    script_close(out, "server/%sConnectLib.c", module->name);
 
     /* 
      * MsgLib.h
@@ -126,7 +126,7 @@ int msgLibGen(FILE *out)
     print_sed_subst(out, "maxReplySize", "%d", maxReplySize);
     
     subst_end(out);
-    script_close(out, "%sMsgLib.h", module->name);
+    script_close(out, "server/%sMsgLib.h", module->name);
 
 
     /*
@@ -155,7 +155,7 @@ int msgLibGen(FILE *out)
     fprintf(out, "#endif /* %s_MSG_LIB_PROTO_H */\n", module->name);
     cat_end(out);
 
-    script_close(out, "%sMsgLibProto.h", module->name);
+    script_close(out, "server/%sMsgLibProto.h", module->name);
 
 
     return(0);

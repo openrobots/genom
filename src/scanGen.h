@@ -32,7 +32,7 @@
 #ifndef _SCANGEN_H
 #define _SCANGEN_H
 
-#define PROTO_SCAN_H "auto/scan.h"
+#define PROTO_SCAN_H "server/scan.h"
 
 #include "scanGenProto.h" 
 

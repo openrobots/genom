@@ -235,17 +235,6 @@ essayGen(FILE *out)
     int nbPosters;
     char *decla=NULL, *scanOrPrint=NULL;
     
-
-    /* Script de lancement de la tache d'essay */
-    script_open(out);
-    subst_begin(out, PROTO_ESSAY_SCRIPT);
-    
-    print_sed_subst(out, "module", module->name);
-
-    subst_end(out);
-    script_close(out, "%s_essay", module->name);
-
-
     /* La tache d'essay */
     script_open(out);
     subst_begin(out, PROTO_ESSAY);
@@ -320,7 +309,7 @@ essayGen(FILE *out)
     } /* for */
 
     
-    script_close(out, "%sEssay.c", module->name);
+    script_close(out, "server/%sEssay.c", module->name);
     
     return(0);
 }

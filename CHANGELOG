@@ -1,5 +1,19 @@
 $LAAS$
 
+ 14. Changed hierarchy of canvas directory: it has now `server', `codels'
+     and `autoconf' directories. This is more consistent with what is
+     generated.
+ 13. Generate files in '.genom' directory, and move them to user
+     directories afterwards. This way it will be possible to implement
+     incremental patching for files that are both generated and modified
+     by users. 
+ 12. Modules files are now intalled in $(bindir)/$(module) and
+     $(libdir)/$(module).
+ 11. Changed -i option so that it generates only user files. Handy for
+     bootstrapping a module.
+ 10. Added an automatic -I directive that points to the directory of the
+     .gen file so that we can fetch include files there.
+  9. Uniquify tclserv mailbox name (Sara Fleury).
   8. Added RTAI support.
   7. Renamed config.h to genom-config.h in order to avoid name clashes
      with <linux/config.h> when compiling for RTAI.

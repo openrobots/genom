@@ -75,7 +75,7 @@ libobjs = $(libsrcs:.c=.lo)
 all: all-os $(LIB)
 
 .PHONY: install
-install: all
+install:: $(LIB)
 	$(LTINSTALL) $(LIB) $(libdir)/$(LIB)
 
 $(LIB): $(libobjs)

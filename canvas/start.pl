@@ -56,31 +56,85 @@ sub move_if_change {
     }
 }
 
+sub mirror_dir {
+  local ($srcdir, $dstdir, $include, $exclude, $confirm) = @_;
+
+  if (! -d "$dstdir") {
+    $agree='y';
+    if ($confirm) {
+      printf ("create $dstdir (y/n)? ");
+      chomp($agree=<STDIN>);
+    }
+    if ($agree eq 'y') {
+      mkdir "$dstdir", 04775;
+    } else { return; }
+  }
+
+  opendir(DIR, $srcdir);
+  foreach(readdir(DIR)) {
+    # skip unwanted files
+    if (!$exclude eq "") { if (/$exclude/) { next; } }
+    if (!$include eq "") { if (!/$include/) { next; } }
+    if (! -f "$srcdir/$_") { next; }
+
+    if (! -f "$dstdir/$_") {
+      # file doesn't exist
+      system("cp $srcdir/$_ $dstdir/$_");
+
+    } elsif (system("cmp -s $srcdir/$_ $dstdir/$_") != 0) {
+      # file exists and is different
+      if ($confirm) {
+	printf ("overwrite $dstdir/$_ (y/n)? ");
+	chomp($agree=<STDIN>);
+	if ($agree eq 'y') {
+	  printf ("save $dstdir/$_ in $dstdir/$_.genomsave\n");
+	  system ("cp $dstdir/$_ $dstdir/$_.genomsave");
+	} else {
+	  printf ("keeping $dstdir/$_\n");
+	  next;
+	}
+      }
+      system ("cp $srcdir/$_ $dstdir/$_");
+    }
+  }
+  closedir(DIR);
+}
+
 # Creation du repertoire user
 #
-if (! -d "user") {
-    print "Creating directory user";
-    mkdir "user", 04775;
+if (! -d "codels") {
+    print "directory codels created";
+    mkdir "codels", 04775;
 }
 else {
-    chmod 04775, 'user';
+    chmod 04775, 'codels';
 }
 
 # Creation du repertoire configure
 #
-if (! -d "configure") {
-    print "Creating directory configure";
-    mkdir "configure", 04775;
+if (! -d "autoconf") {
+    print "directory autoconf created";
+    mkdir "autoconf", 04775;
 }
 else {
-    chmod 04775, 'configure';
+    chmod 04775, 'autoconf';
+}
+
+# Create server directory
+#
+if (! -d "server") {
+    print "directory server created";
+    mkdir "server", 04775;
+}
+else {
+    chmod 04775, 'server';
 }
 
 # Creation du repertoire propice
 #
 if ($genPropice == 1) {
   if (! -d "propice") {
-    print "Creating directory propice";
+    print "directory propice created";
     mkdir "propice", 04775;
   }
   else {
@@ -92,7 +146,7 @@ if ($genPropice == 1) {
 #
 if ($genSpy == 1) {
   if (! -d "spy") {
-    print "Creating directory spy";
+    print "directory spy created";
     mkdir "spy", 04775;
   }
   else {

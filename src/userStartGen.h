@@ -32,7 +32,7 @@
 #ifndef _USERSTARTGEN_H
 #define _USERSTARTGEN_H
 
-#define PROTO_START_USER "user/start"
+#define PROTO_START_USER "codels/start"
 
 #include "userStartGenProto.h" 
 

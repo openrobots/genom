@@ -32,7 +32,7 @@
 #ifndef _EXECTASKGEN_H
 #define _EXECTASKGEN_H
 
-#define PROTO_EXEC_TASK "auto/execTask.c"
+#define PROTO_EXEC_TASK "server/execTask.c"
 
 #include "execTaskGenProto.h" 
 

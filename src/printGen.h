@@ -34,7 +34,7 @@
 
 #define POINTER_PRINT_ADDR
 
-#define PROTO_PRINT_H "auto/print.h"
+#define PROTO_PRINT_H "server/print.h"
 
 #include "printGenProto.h" 
 

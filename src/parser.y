@@ -46,6 +46,7 @@ __RCSID("$LAAS$");
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <libgen.h>
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -1352,10 +1353,8 @@ main(int argc, char **argv)
     int status, fatalError;
 
     char cwd[MAXPATHLEN];
-    static const char *autoDir = "auto";
     static const char *upDir = "../";
     char chDir[10] = "";              /* upDir ou "" */
-    char yesFlag;
     static const char *extention = ".gen";
 
     int genIfChange = 0;
@@ -1364,23 +1363,26 @@ main(int argc, char **argv)
     int genSpy = 0;
     int upToDate;
     struct stat statfile, statstamp, statgen;
-    static const char *nomstamp = ".gen_stamp";
+    static const char *nomstamp = "genom-stamp";
     FILE *stamp;
     ID_LIST *il;
     int installUserPart = 0;
     char *cmdLine=NULL;
     int i;
 
+    char tempDir[MAXPATHLEN] = ".genom";
     char codelsDir[MAXPATHLEN] = "codels";
+    char autoDir[MAXPATHLEN] = "server";
+    char autoconfDir[MAXPATHLEN] = "autoconf";
 
     static const char *usage = 
       "Usage: \n  genom [-i] [-c] [-d] [-n] [-p protoDir] [-s] [-t] "
       "[-u codelsDir] [-x]\n\t[-Ddefine] [-Ipath] [-Jvar=path] module[.gen]\n"
       "with:\n"
+      "     -i: installs new templates for codels and makefiles (new module)\n"
       "     -D: compilation flags\n"
       "     -I: path for included file\n"
       "     -J: make variable path name + path for included file (eg, -JFLAT=$(FLAT)\n"
-      "     -i: installs codels part (new module)\n"
       "     -s: makes a spy server for this module\n"
       "     -c: generates if changes only  \n"
       "     -u: specifies the name of the codels directory\n"
@@ -1389,7 +1391,8 @@ main(int argc, char **argv)
       "     -p: changes the path for prototype files (canvas) \n"
       "     -t: produces on-board tcl client code\n"
       "     -x: produces propice interfaces\n\n"
-      "     --includes: print path to libgenom includes\n";
+      "     --includes:  print path to libgenom includes\n"
+      "     --libraries: print path to libgenom libraries\n";
 
 
     /* remember cwd */
@@ -1506,16 +1509,12 @@ main(int argc, char **argv)
 	nopt--;
     } /* while */
 
-    fprintf(stderr, 
-	    "Module Generator GenoM\n"
-	    "Copyright (C) LAAS/CNRS 1994-2004\n");
-
     if (errFlag) {
       fprintf(stderr, usage);
       exit(2);
     }
 
-    /* make sure we've an input file */
+    /* make sure we've got an input file */
     if (nopt == 0) {
 	fprintf(stderr, "%s: error: no file specified\n", argv[0]);
 	fprintf(stderr, usage);
@@ -1549,7 +1548,7 @@ main(int argc, char **argv)
     genfile = strdup(nomfic);
 
     /*
-     * Analyse du fichier de description
+     * Parse description file
      */
 
     if ((yyin = fopen(nomTemp, "r")) == NULL) {
@@ -1572,29 +1571,39 @@ main(int argc, char **argv)
       exit(2);
     }
 
-    /* change to auto directory */
-    if (strlen(cwd) < strlen(autoDir) ||
-	(strcmp(cwd + strlen(cwd) - strlen(autoDir), autoDir) != 0)) {
+    /*
+     * Build data structures
+     */
+    strcpy(nomfic, genfile);
+
+    upCaseNames();
+
+    resolveRequests();
+    resolveTypes();
+    resolveTasks();
+    construitIncludeList();
+
+    /*
+     * Change to temporary directory
+     */
+    if (strlen(cwd) < strlen(tempDir) ||
+	(strcmp(cwd + strlen(cwd) - strlen(tempDir), autoDir) != 0)) {
 	
-	/* mkdir autoDir */
-	if (stat(autoDir, &statfile) == -1 
+	/* mkdir tempDir */
+	if (stat(tempDir, &statfile) == -1 
 	    || ((statfile.st_mode & S_IFDIR) == 0)) {
-	    fprintf(stdout, "No directory %s, install it ? (y/n) ", autoDir);
-	    fscanf(stdin, "%c", &yesFlag);
-	    if (yesFlag != 'y') {
-		exit(0);
-	    }
-	    if (mkdir (autoDir, 0775) != 0) {
-		perror ("mkdir auto");
-		exit(2);
-	    }
+	   if (mkdir (tempDir, 0775) != 0) {
+	      fprintf(stderr, "mkdir `%s'", tempDir);
+	      perror("");
+	      exit(2);
+	   }
 	}
 
-	/* chdir autoDir */
-	fprintf (stderr, "Entering directory `%s'\n", autoDir);
-	if (chdir (autoDir) == -1) {
-	    perror ("chdir auto");
-	    exit(2);
+	/* chdir tempDir */
+	if (chdir (tempDir) == -1) {
+	   fprintf(stderr, "chdir `%s'", tempDir);
+	   perror("");
+	   exit(2);
 	}
 	strcpy(chDir, upDir);
     }
@@ -1641,19 +1650,7 @@ main(int argc, char **argv)
 
 
     /*
-     * Contruction des donnees
-     */
-    strcpy(nomfic, genfile);
-
-    upCaseNames();
-
-    resolveRequests();
-    resolveTypes();
-    resolveTasks();
-    construitIncludeList();
-
-    /*
-     * Generation du fichier perl
+     * Generate perl script
      */
 
     /* En-tete du fichier */
@@ -1671,11 +1668,21 @@ main(int argc, char **argv)
     fprintf(sortie, "$genPropice=\"%d\";\n", genPropice);
     fprintf(sortie, "$genSpy=\"%d\";\n\n", genSpy);
 
+    fprintf(sortie, "$codelsDir=\"%s\";\n\n", codelsDir);
+    fprintf(sortie, "$autoconfDir=\"%s\";\n\n", autoconfDir);
+    fprintf(sortie, "$serverDir=\"%s\";\n\n", autoDir);
+    fprintf(sortie, "$installUserPart=\"%d\";\n\n", installUserPart);
+
     /* Debut du fichier perl */
-    script_do(sortie, protoDir, "auto/start.pl");
+    script_do(sortie, protoDir, "start.pl");
 
     /* Le module */
     fatalError = 0;
+
+    if (installUserPart) goto userPart;
+
+    fatalError |= (configureServerGen(sortie, argv[0], genfile,
+				      genTcl, genPropice, genSpy)!=0);
     fatalError |= (typeGen(sortie) != 0);
     fatalError |= (errorGen(sortie) != 0);
     fatalError |= (msgLibGen(sortie) != 0);
@@ -1692,9 +1699,6 @@ main(int argc, char **argv)
     fatalError |= (posterLibGen(sortie) != 0);
     fatalError |= (initGen(sortie) != 0);
     fatalError |= (reportsGen(sortie) != 0);
-    fatalError |= (configureGen(sortie,
-				codelsDir, cmdLine, argv[0], genfile, cwd,
-				genTcl, genPropice, genSpy) != 0);
 
     /****** par Laurent ******/
     if (genSpy)
@@ -1711,17 +1715,19 @@ main(int argc, char **argv)
        fatalError |= (tclClientGen(sortie) != 0);
     }
 
-    /* La partie user */
+  userPart:
+    /* user templates */
     fatalError |= (userExecCodelsGen(sortie) != 0);
     fatalError |= (userCntrlCodelsGen(sortie) != 0);
-    fatalError |= (userStartGen(sortie, codelsDir) != 0);
+
+    /* building environment */
+    fatalError |= (configureGen(sortie,
+				codelsDir, cmdLine, argv[0], genfile, cwd,
+				genTcl, genPropice, genSpy) != 0);
 
     /* On termine */
-    fprintf(sortie, "$codelsDir=\"%s\";\n\n", codelsDir);
-    fprintf(sortie, "$installUserPart=\"%d\";\n\n", installUserPart);
-    script_do(sortie, protoDir, "auto/end.pl");
+    script_do(sortie, protoDir, "end.pl");
     fclose(sortie);
-
 
     if (!fatalError) {
 	/* 
