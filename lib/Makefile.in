@@ -46,6 +46,8 @@ CPPFLAGS+=	-I$(PORTLIB_INC) -D$(ENDIANNESS)
 LDFLAGS+=	-L$(PORTLIB_LIB) -R$(PORTLIB_LIB)
 LDFLAGS+=	-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)
 
+SHLIB_MAJOR=	1
+SHLIB_MINOR=	0
 
 # -----------------------------------------------------------------------
 
@@ -74,7 +76,7 @@ install: all
 
 $(LIBGENOM): $(libobjs)
 	$(LTLD) $(CFLAGS) $(libobjs) -o $@ $(LDFLAGS) -rpath $(libdir) \
-	   -version-info $(GENOM_MAJOR):$(GENOM_MINOR):0
+	   -version-info $(SHLIB_MAJOR):$(SHLIB_MINOR)
 
 %.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
