@@ -34,4 +34,12 @@
  ** Manual editing not recommended. Changes will be overridden.
  **/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern STATUS $module$SendInitRqst ( $inputFlat$ );
+
+#ifdef __cplusplus
+}
+#endif

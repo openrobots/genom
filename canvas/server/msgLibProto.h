@@ -35,6 +35,10 @@
 #ifndef $module$_MSG_LIB_PROTO_H
 #define $module$_MSG_LIB_PROTO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 STATUS $module$ClientInit (CLIENT_ID *pClientId);
 
 STATUS $module$ClientEnd (CLIENT_ID clientId);
@@ -53,4 +57,6 @@ int $module$AbortRqstAndRcv (CLIENT_ID clientId,
 			     int *activity,
 			     int *bilan);
 
-
+#ifdef __cplusplus
+}
+#endif
