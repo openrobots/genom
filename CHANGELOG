@@ -1,5 +1,7 @@
 $LAAS$
 
+  7. Renamed config.h to genom-config.h in order to avoid name clashes
+     with <linux/config.h> when compiling for RTAI.
   6. Handle enum types in typeGen() for types declared in the .gen file.
   5. Removed old makefiles from LAAS distribution. Configuring modules
      from within the source directory now works.
@@ -12,4 +14,4 @@ $LAAS$
   2. upgrade to libtool 1.5 and handle cross-compilation more cleanly.
   1. configure fix: more robust pthread checking, add -lrt and -lm.
 
-genom 1.0 released march 12, 2004
+genom 1.0 released March 12, 2004
