@@ -426,7 +426,7 @@ PACKAGE_VERSION=
 PACKAGE_STRING=
 PACKAGE_BUGREPORT=
 
-ac_unique_file="auto/Makefile"
+ac_unique_file="auto/$module$Header.h"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>

@@ -1,5 +1,9 @@
 $LAAS$
 
+genom 1.0A released April 30, 2004
+
+  5. Removed old makefiles from LAAS distribution. Configuring modules
+     from within the source directory now works.
   4. Renamed portLib options into pocolibs.  Look for pocolibs in
      $exec_prefix/lib and $prefix/lib instead of using $libdir which causes
      weird problems...

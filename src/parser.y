@@ -54,7 +54,6 @@ __RCSID("$LAAS$");
 #include <errno.h>
 
 #include "genom.h"
-#include "makeGen.h"
 #include "userMakeGen.h"
 #include "typeGen.h"
 #include "errorGen.h"
@@ -1677,7 +1676,6 @@ main(int argc, char **argv)
 
     /* Le module */
     fatalError = 0;
-    fatalError |= (makeGen(sortie,genfile,genTcl,genPropice,genSpy) != 0);
     fatalError |= (typeGen(sortie) != 0);
     fatalError |= (errorGen(sortie) != 0);
     fatalError |= (msgLibGen(sortie) != 0);
@@ -1714,7 +1712,6 @@ main(int argc, char **argv)
     }
 
     /* La partie user */
-    fatalError |= (userMakeGen(sortie, codelsDir, cmdLine) != 0);
     fatalError |= (userExecCodelsGen(sortie) != 0);
     fatalError |= (userCntrlCodelsGen(sortie) != 0);
     fatalError |= (userStartGen(sortie, codelsDir) != 0);

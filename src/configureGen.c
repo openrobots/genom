@@ -117,13 +117,6 @@ configureGen(FILE *out,
    script_close(out, PROTO_GENOM_MK);
 
 
-   /* --- bootstrap makefile ----------------------------------------- */
-   script_open(out);
-   subst_begin(out, PROTO_MAKEFILE_BS);
-   subst_end(out);
-   script_close(out, PROTO_MAKEFILE_BS);
-
-
    /* --- main makefile ---------------------------------------------- */
    script_open(out);
    subst_begin(out, PROTO_MAKEFILE_TOP);

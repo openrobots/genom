@@ -41,7 +41,6 @@
 #define PROTO_CONFIG_MK		"configure/config.mk.in"
 #define PROTO_GENOM_MK		"configure/genom.mk"
 
-#define PROTO_MAKEFILE_BS	"configure/Makefile.bootstrap.in"
 #define PROTO_MAKEFILE_TOP	"configure/Makefile.top.in"
 #define PROTO_MAKEFILE_AUTO	"configure/Makefile.auto.in"
 #define PROTO_MAKEFILE_CODELS	"configure/Makefile.codels.in"

@@ -57,18 +57,12 @@ flist=\
 flist+= \
 	configure/genom.mk		\
 	configure/config.mk.in		\
-	configure/Makefile.bootstrap.in	\
 	configure/Makefile.top.in	\
 	configure/Makefile.auto.in	\
 	configure/Makefile.codels.in
 
 # server templates
 flist+=\
-	auto/Makefile			\
-	auto/Makefile.unix		\
-	auto/Makefile.vxworks		\
-	auto/MakefileSpy		\
-	auto/MakefileSpy.unix		\
 	auto/cntrlTask.c		\
 	auto/connectLib.c		\
 	auto/end.pl			\
@@ -134,7 +128,6 @@ flist+=\
 
 # codels templates
 flist+=\
-	user/Makefile.vxworks	\
 	user/start
 
 

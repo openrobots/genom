@@ -63,7 +63,6 @@ binsrcs=\
 	essayGen.c		\
 	execTaskGen.c		\
 	headerGen.c		\
-	makeGen.c		\
 	moduleInitGen.c		\
 	msgLibGen.c		\
 	posterLibGen.c		\
@@ -81,7 +80,6 @@ binsrcs=\
 	initGen.c		\
 	tclGen.c		\
 	tclClientGen.c		\
-	userMakeGen.c		\
 	userExecCodelsGen.c	\
 	userCntrlCodelsGen.c	\
 	userStartGen.c		\

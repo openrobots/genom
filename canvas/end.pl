@@ -32,13 +32,6 @@
 # End of script for module generation
 #----------------------------------------------------------------------
 
-# Copy bootstrap makefile in main directory if it doesn't exist
-if (! -e '../Makefile' || $installUserPart == 1) {
-    if(system("cmp -s configure/Makefile.bootstrap.in ../Makefile") != 0) {
-      system ("cp -i configure/Makefile.bootstrap.in ../Makefile");
-    }
-}
-
 # Copy configure script in main directory if it doesn't exist
 if (! -e '../configure' || $installUserPart == 1) {
     if(system("cmp -s configure/configure ../configure") != 0) {

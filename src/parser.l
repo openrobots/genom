@@ -44,6 +44,7 @@ WC      {W}*\:
 
  #include <string.h>
  #include <stdlib.h>
+ #include <sys/param.h>
 
  #include "genom.h"
  #include "parser.tab.h"
@@ -168,30 +169,39 @@ WC      {W}*\:
 	  }
      }
 
-^\#.*$ { sscanf(yytext, "# %d \"%s", &num_ligne, nomfic); 
-         /* cpp retourne le numero de la ligne suivante */
-         num_ligne--;
-         /* Ecrase le guillemet fermant, 
-            car le format %s ci-dessus l'a lu  */
-         nomfic[strlen(nomfic) - 1] = '\0';
-         /* on stocke ce nom de fichier dans allIncludeFiles */
-         {
-            ID_LIST *il;
-       	    /* Le fichier est-il deja dans la liste ? */
-            for (il = allIncludeFiles; il != NULL; il = il->next) {
-                if (!strcmp(il->name, nomfic)) {
-            	break;
-                }
-            } /* for */
-            if (il == NULL) {
-                /* pas trouve' */
-                il = STR_ALLOC(ID_LIST);
-                il->name = strdup(nomfic);
-                il->next = allIncludeFiles;
-                allIncludeFiles = il;
-            }
-         }
-        }
+^\#.*$ {
+   int tmpnum;
+   static char tmpfic[MAXPATHLEN];
+
+   if (sscanf(yytext, "# %d \"%s", &tmpnum, tmpfic) != 2)
+      break;
+
+   /* cpp returns next line number */
+   num_ligne = tmpnum-1;
+   /* Ecrase le guillemet fermant, car le format %s ci-dessus l'a lu  */
+   tmpfic[strlen(tmpfic) - 1] = '\0';
+
+   if (tmpfic[0] != '<') /* deal with gcc strangeness */
+      strcpy(nomfic, tmpfic);
+
+   /* on stocke ce nom de fichier dans allIncludeFiles */
+   {
+      ID_LIST *il;
+      /* Le fichier est-il deja dans la liste ? */
+      for (il = allIncludeFiles; il != NULL; il = il->next) {
+	 if (!strcmp(il->name, nomfic)) {
+	    break;
+	 }
+      } /* for */
+      if (il == NULL) {
+	 /* pas trouve' */
+	 il = STR_ALLOC(ID_LIST);
+	 il->name = strdup(nomfic);
+	 il->next = allIncludeFiles;
+	 allIncludeFiles = il;
+      }
+   }
+}
 
 
      /* Une chaîne entre guillements (")  

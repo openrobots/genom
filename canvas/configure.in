@@ -5,7 +5,7 @@ dnl	process this file with autoconf to produce a configure script.
 dnl
 AC_REVISION($LAAS$)
 
-AC_INIT(auto/Makefile)
+AC_INIT(auto/$module$Header.h)
 AC_CONFIG_AUX_DIR(auto/configure)
 dnl AC_CONFIG_HEADER(../config.h)
 
