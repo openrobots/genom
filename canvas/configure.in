@@ -31,10 +31,12 @@ dnl
 
 LIBS=
 
-AC_CHECK_LIB(pthread, pthread_create, [],
-          [AC_MSG_ERROR([pthread_create() not found])], [])
-AC_SEARCH_LIBS(socket, [socket], [LIBS="${LIBS} -lnsl"],
+AC_CHECK_PTHREADS
+
+AC_SEARCH_LIBS(socket, [socket], [],
 	  [AC_MSG_ERROR([socket() not found])], [-lnsl])
+AC_SEARCH_LIBS(socket, [nsl], [],
+	  [AC_MSG_ERROR([socket() not found])], [])
 AC_SEARCH_LIBS(clnt_create, [nsl], [],
 	  [AC_MSG_ERROR([clnt_create() not found])], [])
 AC_SEARCH_LIBS(gethostbyname, [nsl], [],
@@ -44,7 +46,10 @@ AC_SEARCH_LIBS(sem_init, [rt], [],
 AC_SEARCH_LIBS(dlopen, [dl], [],
 	  [AC_MSG_ERROR([dlopen() not found])], [])
 
-AC_SUBST(OS_LIBS, "${LIBS}")
+AC_SEARCH_LIBS([fabs], [m])
+AC_SEARCH_LIBS([atan], [m])
+
+AC_SUBST(OS_LIBS, "${LIBS} -lrt")
 
 
 dnl --- checks for libraries --------------------------------------------

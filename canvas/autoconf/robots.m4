@@ -95,6 +95,77 @@ AC_DEFUN(ROBOT_PROG_MKDEP,
 ])
 
 
+dnl --- Check for pthread support ---------------------------------------
+dnl
+dnl AC_CHECK_PTHREADS_LINK(action ok, action not ok, action cross-compiling)
+AC_DEFUN(AC_CHECK_PTHREADS_LINK,
+[
+	AC_LANG_SAVE
+	AC_LANG_C
+	AC_TRY_RUN([
+#include <pthread.h>
+void *pipo(void *a) {   exit(0); }
+ 
+int main() {
+    pthread_t t;
+    pthread_create(&t, NULL, pipo, NULL);
+    pthread_join(t, NULL);
+    exit(2);
+}
+	],[$1],[$2],:)
+	AC_LANG_RESTORE
+])
+
+AC_DEFUN([AC_CHECK_PTHREADS],
+[
+AC_CACHE_CHECK(
+	[if compiler recognizes -pthread],
+	robot_cv_gcc_pthread,
+	ac_save_CFLAGS=$CFLAGS
+	CFLAGS="$CFLAGS -pthread"
+	AC_CHECK_PTHREADS_LINK(
+		robot_cv_gcc_pthread=yes, 
+		robot_cv_gcc_pthread=no
+	)
+	CFLAGS=$ac_save_CFLAGS
+)
+if test $robot_cv_gcc_pthread = yes; then
+	robot_threads=""
+	CFLAGS="$CFLAGS -pthread"
+	LDFLAGS="$LDFLAGS -pthread";
+else
+	AC_CACHE_CHECK(
+		[if compiler recognizes -mt],
+		robot_cv_cc_mt,
+		ac_save_CFLAGS=$CFLAGS
+		CFLAGS="$CFLAGS -mt"
+		AC_CHECK_PTHREADS_LINK(
+			robot_cv_cc_mt=yes,
+			robot_cv_cc_mt=no
+		)
+		CFLAGS=$ac_save_CFLAGS
+	)
+	if test $robot_cv_cc_mt = yes; then
+		CFLAGS="$CFLAGS -mt";
+		LDFLAGS="$LDFLAGS -mt";
+	else
+		AC_CHECK_LIB(pthread,pthread_create,robot_threads=-lpthread,
+        	     [AC_CHECK_LIB(c_r,pthread_create,robot_threads=-lc_r)])
+		ac_save_LIBS="$LIBS"
+		if test -n "$robot_threads" ; then
+			LIBS="$robot_threads $LIBS"
+		fi
+		AC_CHECK_PTHREADS_LINK([
+			:
+		],[
+			AC_MSG_ERROR([No working thread support found (fatal)])
+			exit 2
+		])
+	fi
+fi
+])
+
+
 dnl --- Look for includes in a path ------------------------------------
 dnl ROBOT_PATH_INC(PACKAGE, VARIABLE, INC, [, VALUE-IF-NOT-FOUND, [, PATH]])
 dnl
