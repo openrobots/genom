@@ -117,6 +117,10 @@ int msgLibGen(FILE *out)
 	    }
 	}
     } /* for */
+
+    /* abort request takes an int as input */
+    if (maxRqstSize < sizeof(int)) maxRqstSize = sizeof(int);
+
     bufcat(&rqstList, "#define %s_ABORT_RQST %d\n", module->NAME, abortNum);
     print_sed_subst(out, "listRequests", rqstList);
     free(rqstList);
