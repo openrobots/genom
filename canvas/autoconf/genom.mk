@@ -1,7 +1,7 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2003 LAAS/CNRS                        --  Mon Aug 25 2003
+# Copyright (c) 2003 LAAS/CNRS                        --  Mon Sep  8 2003
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -28,51 +28,14 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+GENOM=		$genomBin$
 
-# --- Programs ----------------------------------------------------------
+GENOMWD=	$genomWd$
+GENFILE=	$genomFile$
 
-CPP=		@CPP@
-PURIFY=		
-CC=		@CC@
-LTCC=           $(topbuild)/libtool --mode=compile $(CC)
-LTLD=           $(topbuild)/libtool --mode=link $(PURIFY) $(CC)
-MKDEP=		@MKDEP@
-INSTALL=	$(topsrcdir)/auto/configure/install-sh -c
-LTINSTALL=	$(topbuild)/libtool --mode=install $(INSTALL)
-LTINSTALL_DATA=	$(topbuild)/libtool --mode=install $(INSTALL) -m 644
-
-SED=		sed
+GENFLAGS=	$genomIncludes$ $genomDefines$
+$genTcl$GENFLAGS+=	-t
+$genPropice$GENFLAGS+=	-x
+$genSpy$GENFLAGS+=	-s
 
 
-# --- Libraries ---------------------------------------------------------
-
-MODULE_BIN=	$module$
-INIT_BIN=	$module$SendInitRqst
-ESSAY_BIN=	$module$Essay
-
-MODULE_LIB=		lib$module$Server.la
-CLIENT_LIB=		lib$module$Client.la
-USER_LIB=		lib$module$Codels.la
-POSTERWRITE_LIB=	lib$module$PosterWrite.la
-TCLCLIENT_LIB=		lib$module$TclServ.la
-PROPICECLIENT_LIB=	lib$module$Propice.la
-
-
-# --- Flags -------------------------------------------------------------
-
-CPPFLAGS=	@CPPFLAGS@
-CFLAGS=		@CFLAGS@
-LDFLAGS=	@LDFLAGS@
-
-ENDIANNESS=	@ENDIANNESS@
-
-OS_LIBS=	@OS_LIBS@
-
-TCL_CPPFLAGS=	@TCL_CPPFLAGS@
-TCL_LDFLAGS=	@TCL_LDFLAGS@ @TCL_LIB_FLAG@ @TCL_LIBS@
-
-COM_INC=	@COM_INC@
-COM_LIB=	@COM_LIB@
-
-GENOM_INC=	@GENOM_INC@
-GENOM_LIB=	@GENOM_LIB@

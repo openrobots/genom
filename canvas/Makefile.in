@@ -55,6 +55,7 @@ flist=\
 
 # makefiles
 flist+= \
+	configure/genom.mk		\
 	configure/config.mk.in		\
 	configure/Makefile.bootstrap.in	\
 	configure/Makefile.top.in	\

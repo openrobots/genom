@@ -39,6 +39,7 @@
 #define PROTO_LTCFC		"configure/ltcf-c.sh" 
 #define PROTO_LTMAIN		"configure/ltmain.sh" 
 #define PROTO_CONFIG_MK		"configure/config.mk.in"
+#define PROTO_GENOM_MK		"configure/genom.mk"
 
 #define PROTO_MAKEFILE_BS	"configure/Makefile.bootstrap.in"
 #define PROTO_MAKEFILE_TOP	"configure/Makefile.top.in"

@@ -38,14 +38,6 @@ srcdir=		@srcdir@
 codelsdir=	$codelsDir$
 serverdir=	auto
 
-GENOMWD=	$genomWd$
-GENFILE=	$genomFile$
-GENFLAGS=	$genomIncludes$ $genomDefines$
-
-$genTcl$GENFLAGS+=	-t
-$genPropice$GENFLAGS+=	-x
-$genSpy$GENFLAGS+=	-s
-
 config_files = \
 	config.mk		\
 	Makefile		\
@@ -54,6 +46,10 @@ config_files = \
 
 #config_headers = \
 #	config.h
+
+# GenoM flags
+include $(topsrcdir)/auto/configure/genom.mk
+
 
 # --- Directory recursion -----------------------------------------------
 

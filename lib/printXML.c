@@ -63,7 +63,7 @@
 #include <errno.h>
 #include <stdarg.h>
 
-#include "printXMLProto.h"
+#include "genom/printXMLProto.h"
 #include "genom/printScan.h"
 
 

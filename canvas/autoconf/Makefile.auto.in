@@ -33,6 +33,7 @@ $commentend$
 topbuild=..
 include $(topbuild)/config.mk
 
+
 # --- paths -------------------------------------------------------------
 
 topsrcdir=	@top_srcdir@
@@ -52,6 +53,9 @@ VPATH=		$(srcdir)
 CPPFLAGS+= $genomDefines$ -D$(ENDIANNESS)
 CPPFLAGS+= -I. -I$(topbuild) -I$(srcdir) $serversDir$
 CPPFLAGS+= $(COM_INC) $(GENOM_INC)
+
+# GenoM flags
+include $(topsrcdir)/auto/configure/genom.mk
 
 
 # --- source files ------------------------------------------------------
@@ -84,12 +88,17 @@ posterwrite_src= \
 	$module$PosterWriteLib.c
 
 tclclient_src= \
-	 $module$Tcl.c		\
-	 $module$PosterLib.c	\
-	 $module$Endian.c
+	$module$Tcl.c		\
+	$module$PosterLib.c	\
+	$module$Endian.c
 
 tclclient_tcl= \
-	 $module$Client.tcl
+	$module$Client.tcl
+
+propiceclient_src= \
+	$module$DecodePropice.c \
+	$module$EncodePropice.c \
+	$module$RequestsPropice.c
 
 module_obj=	$(module_src:.c=.lo)
 client_obj=	$(client_src:.c=.lo)
@@ -98,6 +107,7 @@ essay_obj=	$(essay_src:.c=.lo)
 connect_obj=	$(connect_src:.c=.lo)
 posterwrite_obj=$(posterwrite_src:.c=.lo)
 tclclient_obj=	$(tclclient_src:.c=.lo)
+propiceclient_obj=$(propiceclient_src:.c=.lo)
 
 
 # --- what to do --------------------------------------------------------
@@ -106,7 +116,9 @@ all: server client
 
 server: $(MODULE_LIB) $(INIT_BIN) $(POSTERWRITE_LIB)
 
-client: $(ESSAY_BIN) $(CONNECT) $genTcl$ $(TCLCLIENT_LIB)
+client:: $(ESSAY_BIN) $(CONNECT)
+$genTcl$client:: $(TCLCLIENT_LIB)
+$genPropice$client:: $(PROPICECLIENT_LIB)
 
 
 # --- how to do ---------------------------------------------------------
@@ -134,6 +146,10 @@ $(TCLCLIENT_LIB): $(tclclient_obj) $serversEndianLib$
 	$(LTLD) $(CFLAGS) $(tclclient_obj) $serversEndianLib$ -o $@	\
 		$(LDFLAGS) $(GENOM_LIB) $(COM_LIB) $(TCL_LDFLAGS)	\
 		$(OS_LIBS) -rpath $(libdir)
+
+$(PROPICECLIENT_LIB): $(propiceclient_obj)
+	$(LTLD) $(CFLAGS) $(propiceclient_obj) -o $@ $(LDFLAGS)		\
+		$(GENOM_LIB) $(COM_LIB) $(OS_LIBS) -rpath $(libdir)
 
 
 # --- basic rules -------------------------------------------------------
@@ -171,6 +187,7 @@ clean: $(module_obj)
 clean: $(client_obj)
 clean: $(connect_obj)
 clean: $(posterwrite_obj)
+clean: $(propiceclient_obj)
 
 clean:
 	$(topbuild)/libtool --mode=clean rm -f $^
@@ -182,6 +199,9 @@ clean:
 .PHONY: depends
 $genTcl$depends dependencies:: $(tclclient_src)
 $genTcl$	$(MKDEP) -c"$(CC)" -odependencies -t.lo $(CPPFLAGS) $(TCL_CPPFLAGS) $?
+
+$genPropice$depends dependencies:: $(propiceclient_src)
+$genPropice$	$(MKDEP) -c"$(CC)" -odependencies -t.lo $(CPPFLAGS) $?
 
 depends dependencies:: $(module_src) $(client_src) $(connect_src) \
 		       $(posterwrite_src)

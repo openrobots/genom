@@ -69,32 +69,19 @@ configureGen(FILE *out,
       script_open(out);
       subst_begin(out, *p);
       print_sed_subst(out, "module", module->name);
-      print_sed_subst(out, "genomBin", genomBin);
       print_sed_subst(out, "genTcl", genTcl?"yes":"no");
+      print_sed_subst(out, "genomBin", genomBin);
       subst_end(out);
       script_close_exec(out, *p);
    }
 
-
-   /* --- bootstrap makefile ----------------------------------------- */
+   /* --- genom.mk --------------------------------------------------- */
    script_open(out);
-   subst_begin(out, PROTO_MAKEFILE_BS);
-   subst_end(out);
-   script_close(out, PROTO_MAKEFILE_BS);
-
-
-   /* --- main makefile ---------------------------------------------- */
-   script_open(out);
-   subst_begin(out, PROTO_MAKEFILE_TOP);
-
-   print_sed_subst(out, "module", module->name);
-   print_sed_subst(out, "codelsDir", codelsDir);
-   print_sed_subst(out, "cmdLine", cmdLine);
+   subst_begin(out, PROTO_GENOM_MK);
    print_sed_subst(out, "genomBin", genomBin);
    print_sed_subst(out, "genomFile", genomFile);
    print_sed_subst(out, "genomWd", genomWd);
 
-   /* tools */
    print_sed_subst(out, "genTcl", genTcl ? "" : "#");
    print_sed_subst(out, "genPropice", genPropice ? "" : "#");
    print_sed_subst(out, "genSpy", genSpy ? "" : "#");
@@ -125,6 +112,25 @@ configureGen(FILE *out,
    } else {
       print_sed_subst(out, "genomIncludes", "");
    }
+
+   subst_end(out);
+   script_close(out, PROTO_GENOM_MK);
+
+
+   /* --- bootstrap makefile ----------------------------------------- */
+   script_open(out);
+   subst_begin(out, PROTO_MAKEFILE_BS);
+   subst_end(out);
+   script_close(out, PROTO_MAKEFILE_BS);
+
+
+   /* --- main makefile ---------------------------------------------- */
+   script_open(out);
+   subst_begin(out, PROTO_MAKEFILE_TOP);
+
+   print_sed_subst(out, "module", module->name);
+   print_sed_subst(out, "codelsDir", codelsDir);
+   print_sed_subst(out, "cmdLine", cmdLine);
 
    subst_end(out);
    script_close(out, PROTO_MAKEFILE_TOP);
