@@ -213,6 +213,11 @@ int posterLibGen(FILE *out)
     cat_begin(out);
 
     /* fonctions communes */
+    fprintf(out,
+	    "#ifdef __cplusplus\n"
+	    "extern \"C\" {\n"
+	    "#endif\n");
+
     fprintf(out, "extern STATUS %sPosterInit ( void );\n", module->name);
     fprintf(out, "extern STATUS %sCntrlPosterRead ( %s_CNTRL_STR *%sCntrlStrId );\n", module->name, module->NAME, module->name);
     fprintf(out, "extern STATUS %sCntrlPosterInit ( void );\n", module->name);
@@ -227,6 +232,11 @@ int posterLibGen(FILE *out)
       /* Les fonctions pour les e'le'ments de la structure */
       posterLibMemberGen(out, p, 1 /* read */, 1 /* protos */); 
     } /* for */
+
+    fprintf(out,
+	    "#ifdef __cplusplus\n"
+	    "}\n"
+	    "#endif\n");
 
     cat_end(out);
     script_close(out, "server/%sPosterLibProto.h", module->name);
