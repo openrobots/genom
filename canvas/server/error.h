@@ -38,29 +38,21 @@
 
 #include "h2errorLib.h"
 
-#define M_$module$CntrlTask ($numModule$ )
-#define M_$module$MsgLib    ($numModule$ + 1)
-#define M_$module$PosterLib    ($numModule$ + 2)
+#define M_$module$    ($numModule$)
+#define M_$module$Std ($numModule$ + 1)
 
-$listExecTask$           
-
-#define S_$module$CntrlTask_ACTIVITY_INTERRUPTED  (M_$module$CntrlTask << 16 | 0)
-#define S_$module$CntrlTask_TOO_MANY_ACTIVITIES (M_$module$CntrlTask << 16 | 1)
-#define S_$module$CntrlTask_ACTIVITY_FAILED (M_$module$CntrlTask << 16 | 2)
-#define S_$module$CntrlTask_WAIT_ABORT_ZOMBIE_ACTIVITY (M_$module$CntrlTask << 16 | 3)
-#define S_$module$CntrlTask_UNKNOWN_ACTIVITY (M_$module$CntrlTask << 16 | 4)
-#define S_$module$CntrlTask_FORBIDDEN_ACTIVITY_TRANSITION (M_$module$CntrlTask << 16 | 5)
-#define S_$module$CntrlTask_SYSTEM_ERROR (M_$module$CntrlTask << 16 | 6)
-
-#define S_$module$CntrlTask_ACTIVITY_ALREADY_ENDED (M_$module$CntrlTask << 16 | 7)
-#define S_$module$CntrlTask_WAIT_INIT_RQST (M_$module$CntrlTask << 16 | 8)
-
-#define S_$module$CntrlTask_CONTROL_CODEL_ERROR (M_$module$CntrlTask << 16 | 9)
-
-/* Il faudra des numeros en plus ! */
-/* #define S_$module$CntrlTask_EXEC_TASK_SUSPENDED  (M_$module$CntrlTask << 16 | 10) */
-
-#define S_$module$MsgLib_BAD_BLOCK_TYPE (M_$module$MsgLib << 16 | 0)
+#define S_$module$Std_ACTIVITY_INTERRUPTED          (M_$module$Std << 16 | 1 )
+#define S_$module$Std_TOO_MANY_ACTIVITIES           (M_$module$Std << 16 | 2 )
+#define S_$module$Std_ACTIVITY_FAILED               (M_$module$Std << 16 | 3 )
+#define S_$module$Std_WAIT_ABORT_ZOMBIE_ACTIVITY    (M_$module$Std << 16 | 4 )
+#define S_$module$Std_UNKNOWN_ACTIVITY              (M_$module$Std << 16 | 5 )
+#define S_$module$Std_FORBIDDEN_ACTIVITY_TRANSITION (M_$module$Std << 16 | 6 )
+#define S_$module$Std_SYSTEM_ERROR                  (M_$module$Std << 16 | 7 )
+#define S_$module$Std_ACTIVITY_ALREADY_ENDED        (M_$module$Std << 16 | 8 )
+#define S_$module$Std_WAIT_INIT_RQST                (M_$module$Std << 16 | 9 )
+#define S_$module$Std_CONTROL_CODEL_ERROR           (M_$module$Std << 16 | 10 )
+#define S_$module$Std_EXEC_TASK_SUSPENDED           (M_$module$Std << 16 | 11 )
+#define S_$module$Std_BAD_BLOCK_TYPE                (M_$module$Std << 16 | 12 )
 
 $listCntrlFailures$
 $listExecFailures$ 

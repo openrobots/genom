@@ -38,7 +38,7 @@ GENFILE = $genfile$
 GENFLAGS = -c $genomIncludes$ $genomDefines$
 $genTcl$GENFLAGS += -t
 $genPropice$GENFLAGS += -x
-$genSpy$GENFLAGS += -s
+
 
 #----------------------------------------------------------------------
 # DEFAULT ACTIONS : generate vxworks unix_client
@@ -57,7 +57,6 @@ vxworks:
 	@$(ECHO) "-- AUTO $@ $(TARGET): server and client"
 	@$(MAKE) -f Makefile.vxworks all
 $genPropice$	cd propice; $(MAKE) $@
-$genSpy$	cd spy;	$(MAKE)	$@
 
 vxworks_client:
 	@$(ECHO) ""
@@ -70,7 +69,6 @@ unix:
 	@$(ECHO) "-- AUTO $@ $(TARGET): server and client"
 	@$(MAKE) -f Makefile.unix all
 $genPropice$	cd propice; $(MAKE) $@
-$genSpy$	cd spy;	$(MAKE)	$@
 
 unix_client:
 	@$(ECHO) ""
@@ -83,14 +81,12 @@ depend_unix:
 	@$(ECHO) "-- AUTO  $(TARGET) $@"
 	@$(MAKE) -f Makefile.unix depend
 $genPropice$	cd propice; $(MAKE) $@
-$genSpy$	cd spy;	$(MAKE)	$@
 
 depend_vx:
 	@$(ECHO) ""
 	@$(ECHO) "-- AUTO  $(TARGET) $@"
 	@$(MAKE) -f Makefile.vxworks depend
 $genPropice$	cd propice; $(MAKE) $@
-$genSpy$	cd spy;	$(MAKE)	$@
 
 install:
 	@$(ECHO) ""
@@ -103,7 +99,6 @@ clean_unix:
 	\rm -f .gen_stamp
 	@$(MAKE) -f Makefile.unix clean
 $genPropice$	cd propice; $(MAKE) $@
-$genSpy$	cd spy;	$(MAKE)	$@
 
 clean_vx:
 	@$(ECHO) ""
@@ -111,13 +106,10 @@ clean_vx:
 	\rm -f .gen_stamp
 	@$(MAKE) -f Makefile.vxworks clean
 $genPropice$	cd propice; $(MAKE) $@
-$genSpy$	cd spy;	$(MAKE)	$@
 
 clean: clean_vx clean_unix
 depend: depend_vx depend_unix
 
 prop:
-	cd propice; $(MAKE)
+	cd propice; $(MAKE) TOP=$(TOP)/..
 
-spy:
-	cd spy; $(MAKE)

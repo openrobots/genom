@@ -85,7 +85,7 @@ static void $module$Cntrl$request$ (SERV_ID servId, int rqstId)
 #endif
     if (status != OK) {
       if (bilan == OK)
-	bilan =  S_$module$CntrlTask_CONTROL_CODEL_ERROR;
+	bilan =  S_$module$Std_CONTROL_CODEL_ERROR;
       if (csServReplySend (servId, rqstId, FINAL_REPLY, bilan, 
 			   (void *) NULL, 0, (FUNCPTR) NULL) != OK)
 	$module$CntrlTaskSuspend (TRUE);

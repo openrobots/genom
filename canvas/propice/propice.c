@@ -69,9 +69,8 @@
 #include "pu-genom_f.h"
 
 #include "$module$Error.h"
-#include "$module$Reports.h"
 #include "$module$MsgLib.h"
 #include "$module$PosterLib.h"
 
-#include "$module$DecodePropice.h"
-#include "$module$EncodePropice.h"
+#include "propice/$module$DecodePropice.h"
+#include "propice/$module$EncodePropice.h"

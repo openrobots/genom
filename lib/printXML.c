@@ -69,11 +69,10 @@ __RCSID("$LAAS$");
 #include "genom/printScan.h"
 
 
-void fprintfBuf(FILE *out, const char *fmt, ...)
+int fprintfBuf(FILE *out, const char *fmt, ...)
 {    
   va_list args;
-  int n;
-  int nbc, count;
+  int nbc, nbci, count;
   char buf[1024];
   char *p=buf;
   
@@ -82,6 +81,7 @@ void fprintfBuf(FILE *out, const char *fmt, ...)
   va_end(args);
 
   nbc = strlen(buf);
+  nbci = nbc;
   do {
     errno = 0;
     count = fwrite(p, 1, nbc, out);
@@ -89,150 +89,164 @@ void fprintfBuf(FILE *out, const char *fmt, ...)
     nbc -= count;
     if (errno != 0) {
       printf ("dxml write %d miss %d err %d\n", count, nbc, errno);
-      perror("dxml:");
-      }
+      perror ("dxml:");
+    }
   } while (nbc>0 && errno==EINTR);
-  return ;
+
+  if (errno != 0 || nbc != 0) return 0;
+  return nbci;
 }
 
 
-void printXML_char(FILE *out, char *name, char *x, int indent, int nDim, int *dims, FILE *in) 
+int printXML_char(FILE *out, char *name, char *x, int indent, int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-/*     fprintfBuf(out, "%s%s %c\n",  */
-    fprintfBuf(out, "%s<%s%s>%d</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%d</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt), 
-	    *(x+elt), name, getIndexesStr2(nDim, dims, elt));
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }
 
-void printXML_unsigned_char(FILE *out, char *name, unsigned char *x, int indent, 
+int printXML_unsigned_char(FILE *out, char *name, unsigned char *x, int indent, 
 			 int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-    fprintfBuf(out, "%s<%s%s>%c</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%c</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-	    *(x+elt), name, getIndexesStr2(nDim, dims, elt));
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }
 
-void printXML_short_int(FILE *out, char *name, short int *x, int indent, int nDim, int *dims, FILE *in) 
+int printXML_short_int(FILE *out, char *name, short int *x, int indent, int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-    fprintfBuf(out, "%s<%s%s>%d</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%d</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-	    *(x+elt), name, getIndexesStr2(nDim, dims, elt));
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }
 
-void printXML_int(FILE *out, char *name, int *x, int indent, int nDim, int *dims, FILE *in) 
+int printXML_int(FILE *out, char *name, int *x, int indent, int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-    fprintfBuf(out, "%s<%s%s>%d</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%d</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-	    *(x+elt), name, getIndexesStr2(nDim, dims, elt));
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }
 
-void printXML_long_int(FILE *out, char *name, long int *x, int indent, int nDim, int *dims, FILE *in) 
+int printXML_long_int(FILE *out, char *name, long int *x, int indent, int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-    fprintfBuf(out, "%s<%s%s>%ld</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%ld</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-	    *(x+elt), name, getIndexesStr2(nDim, dims, elt));
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }
 
-void printXML_unsigned_short_int(FILE *out, char *name, unsigned short *x, int indent, 
+int printXML_unsigned_short_int(FILE *out, char *name, unsigned short *x, int indent, 
 			      int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-    fprintfBuf(out, "%s<%s%s>%u</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%u</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-	    *(x+elt), name, getIndexesStr2(nDim, dims, elt));
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }
 
-void printXML_unsigned_int(FILE *out, char *name, unsigned int *x, int indent, 
+int printXML_unsigned_int(FILE *out, char *name, unsigned int *x, int indent, 
 			int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-    fprintfBuf(out, "%s<%s%s>%u</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%u</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-	    *(x+elt), name, getIndexesStr2(nDim, dims, elt));
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }
 
-void printXML_unsigned_long_int(FILE *out, char *name, unsigned long *x, int indent,
+int printXML_unsigned_long_int(FILE *out, char *name, unsigned long *x, int indent,
 			     int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-    fprintfBuf(out, "%s<%s%s>%lu</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%lu</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-	    *(x+elt), name, getIndexesStr2(nDim, dims, elt));
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }
 
-void printXML_float(FILE *out, char *name, float *x, int indent, int nDim, int *dims, FILE *in) 
+int printXML_float(FILE *out, char *name, float *x, int indent, int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-    fprintfBuf(out, "%s<%s%s>%f</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%f</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-	    *(x+elt), name, getIndexesStr2(nDim, dims, elt));
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }
 
 
 
-void printXML_double(FILE *out, char *name, double *x, int indent, int nDim, int *dims, FILE *in) 
+int printXML_double(FILE *out, char *name, double *x, int indent, int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-    fprintfBuf(out, "%s<%s%s>%f</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%f</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-	    *(x+elt), name, getIndexesStr2(nDim, dims, elt));
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }
 
 
-void printXML_addr(FILE *out, char *name, void **x, int indent, int nDim, int *dims, FILE *in) 
+int printXML_addr(FILE *out, char *name, void **x, int indent, int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-    fprintfBuf(out, "%s<%s%s>0x%p</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>0x%p</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-	    *(x+elt), name, getIndexesStr2(nDim, dims, elt));
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }
 
-void printXML_string(FILE *out, char *name, char *x, int indent, int nDim, int *dims, FILE *in) 
+int printXML_string(FILE *out, char *name, char *x, int indent, int nDim, int *dims, FILE *in) 
 {
 
   if(dims[nDim-1] == 0) {
-    fprintfBuf(out, "Null string length\n");
-    return;
+    if (!(fprintfBuf(out, "Null string length\n"))) return 0;
+    return 1;
   }
 
-  printXML_string_len(out, name, x, dims[nDim-1], indent, nDim-1, dims, in);
+  if (!printXML_string_len(out, name, x, dims[nDim-1], indent, nDim-1, dims, in)) return 0;
+  return 1;
 }
 
 
-void printXML_string_len(FILE *out, char *name, char *x, int max_str_len,
+int printXML_string_len(FILE *out, char *name, char *x, int max_str_len,
 		      int indent, int nDim, int *dims, FILE *in) 
 {
   indent++;
   FOR_NB_elt(nDim,dims) 
-    fprintfBuf(out, "%s<%s%s>%s</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%s</%s%s>\n", 
 	    indentStr2(indent-1), name,
-	    getIndexesStr2(nDim, dims, elt), (x+elt*max_str_len), name, getIndexesStr2(nDim, dims, elt));
+		     getIndexesStr2(nDim, dims, elt), (x+elt*max_str_len), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
+  return 1;
 }

@@ -49,9 +49,18 @@ __RCSID("$LAAS$");
 #include <stdlib.h>
 
 #include "genom/posterXMLLib.h"
+#include "genom/printXMLProto.h"
 
 
-
+/* ----------------------------------------------------------------------
+ * 
+ * Test if poster exists and select command
+ *
+ * Returns the id of the data to be read or
+ * -2 if the parameters are not correct or
+ * -1 if the command or the poster is unknown
+ * 
+ */
 int getPosterXML(FILE *stream, int argc, char **argv, char **argn, 
 		 int nbPostersData,
 		 GENOM_POSTER_XML posterXML[])
@@ -106,29 +115,30 @@ int getPosterXML(FILE *stream, int argc, char **argv, char **argn,
   return j;
 }
 
-void posterListXML(FILE *f, int nbPoster, GENOM_POSTER_XML posterXML[])
+int posterListXML(FILE *f, int nbPoster, GENOM_POSTER_XML posterXML[])
 {
   int i;
   char posterDataName[1024];
 
-  fprintfBuf(f, "\t<posterList>\n");
-  if (nbPoster==0)
-    return;
+  if (!(fprintfBuf(f, "\t<posterList>\n"))) return 0;
+  if (nbPoster==0) {
+    if (!(fprintfBuf(f, "\t</posterList>\n"))) return 0;
+    return 1;
+  }
 
   for (i=0; i<nbPoster-1; i++) {
     posterDataName[0] = '\0';
     strcat(posterDataName, posterXML[i].posterName);
     strcat(posterDataName, posterXML[i].posterData);
-    fprintfBuf(f, "\t\t\"%s\",\n", posterDataName);
+    if (!(fprintfBuf(f, "\t\t\"%s\",\n", posterDataName))) return 0;
   }
   posterDataName[0] = '\0';
   strcat(posterDataName, posterXML[i].posterName);
   strcat(posterDataName, posterXML[i].posterData);
-  fprintfBuf(f, "\t\t\"%s\"\n", posterDataName);
+  if (!(fprintfBuf(f, "\t\t\"%s\"\n", posterDataName))) return 0;
 
-  fprintfBuf(f, "\t</posterList>\n");
-
-  return;
+  if (!(fprintfBuf(f, "\t</posterList>\n"))) return 0;
+  return 1;
 }
 
 
@@ -144,10 +154,13 @@ void posterListXML(FILE *f, int nbPoster, GENOM_POSTER_XML posterXML[])
 
 /* Envoie sur la sortie stream l'entete xml */
 
-int xmlHeader(FILE *stream){
-  int result=0;
-  result+=fprintfBuf(stream,XML_HEADER);
-  result+=fprintfBuf(stream,"\n");
+int xmlHeader(FILE *stream)
+{
+  int res, result=0;
+  if (!(res=fprintfBuf(stream,XML_HEADER))) return 0;
+  result += res;
+  if (!(res=fprintfBuf(stream,"\n"))) return 0;
+  result += res;
   return result;
 }
 
@@ -160,30 +173,34 @@ int xmlHeader(FILE *stream){
 */
 
 
-int xmlBalise(char *balise,int beginEnd,FILE *stream,int level){
-  int result=0;
+int xmlBalise(char *balise,int beginEnd,FILE *stream,int level)
+{
+  int res, result=0;
   int i;
 
-
   for(i=0;i<level;i++){
-    result+=fprintfBuf(stream,"\t");
+    if (!(res = fprintfBuf(stream,"\t"))) return 0;
+    result += res;
   }
-
-
+  
   switch(beginEnd){
-  case TERMINATE_BALISE: result+=fprintfBuf(stream,END_BALISE);break;
-  default: result+=fprintfBuf(stream,BALISE_HEAD);
-   
+  case TERMINATE_BALISE: 
+    if (!(res=fprintfBuf(stream,END_BALISE))) return 0;
+    result += res;
+    break;
+  default: if (!(res=fprintfBuf(stream,BALISE_HEAD))) return 0;
+    result += res;
   }
-
-  result+=fprintfBuf(stream,balise); 
-  result+=fprintfBuf(stream,BALISE_END);
-
-
+  
+  if (!(res=fprintfBuf(stream,balise))) return 0; 
+  result += res;
+  if (!(res=fprintfBuf(stream,BALISE_END))) return 0;
+  result += res;
+  
   if(beginEnd==TERMINATE_BALISE|| beginEnd==BEGIN_BALISE_NEWLINE){
-    result+=fprintfBuf(stream,"\n");
+    if (!(res=fprintfBuf(stream,"\n"))) return 0;
+    result += res;
   }
-
-
+  
   return result;
 }  

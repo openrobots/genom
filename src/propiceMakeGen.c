@@ -74,21 +74,33 @@ int propiceMakeGen(FILE *out)
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
 	for (ln = t->cs_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/server ", ln->NAME, ln->NAME);
 	}
 	for (ln = t->poster_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/server ", ln->NAME, ln->NAME);
 	} 
     }
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
+	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/server ", ln->NAME, ln->NAME);
     }
+
+    /* Options -J et -I passe'es a` genom */
+    for (ln = externPathMacro; ln != NULL; ln = ln->next) {
+        bufcatIfNotIn(&str, "-I\\$(%s) ", ln->name);
+    } /* for */
+    for (i = 0; i < nCppOptions; i++) {
+	if (strncmp(cppOptions[i], "-I", 2) == 0) {
+	    bufcatIfNotIn(&str, "%s ", cppOptions[i]);
+	}
+    } /* for */
+    
     if (str != NULL) {
 	print_sed_subst(out, "serversDir", str);
 	free(str);
     } else {
 	print_sed_subst(out, "serversDir", "");
     }
+
     /* Options passe'es a` genom */
     str = NULL;
     for (i = 0; i < nCppOptions; i++) {
@@ -102,8 +114,7 @@ int propiceMakeGen(FILE *out)
     } else {
 	print_sed_subst(out, "genomDefines", "");
     }
-    str = NULL;
-    
+
     /* Fin */
     subst_end(out);
     script_close(out, "propice/Makefile.vxworks");
@@ -123,15 +134,26 @@ int propiceMakeGen(FILE *out)
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
 	for (ln = t->cs_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/server ", ln->NAME, ln->NAME);
 	} /* for */
 	for (ln = t->poster_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/server ", ln->NAME, ln->NAME);
 	} /* for */
     } /* for */
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
+	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/server ", ln->NAME, ln->NAME);
     }
+    /* Options -J et -I passe'es a` genom */
+    for (ln = externPathMacro; ln != NULL; ln = ln->next) {
+        bufcatIfNotIn(&str, "-I\\$(%s) ", ln->name);
+    } 
+    /* for */
+    for (i = 0; i < nCppOptions; i++) {
+	if (strncmp(cppOptions[i], "-I", 2) == 0) {
+	    bufcatIfNotIn(&str, "%s ", cppOptions[i]);
+	}
+    } /* for */
+    
     if (str != NULL) {
 	print_sed_subst(out, "serversDir", str);
 	free(str);
@@ -142,7 +164,6 @@ int propiceMakeGen(FILE *out)
     str = NULL;
 
     /* Options passe'es a` genom */
-    str = NULL;
     for (i = 0; i < nCppOptions; i++) {
 	if (strncmp(cppOptions[i], "-D", 2) == 0) {
 	    bufcat(&str, "%s ", cppOptions[i]);
@@ -175,14 +196,14 @@ int propiceMakeGen(FILE *out)
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
 	for (ln = t->cs_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/server ", ln->NAME, ln->NAME);
 	} /* for */
 	for (ln = t->poster_client_from; ln != NULL; ln = ln->next) {
-	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
+	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/server ", ln->NAME, ln->NAME);
 	} /* for */
     } /* for */
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/auto -I\\$(%s)/server/propice ", ln->NAME, ln->NAME, ln->NAME);
+	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/server ", ln->NAME, ln->NAME);
     }
     if (str != NULL) {
 	print_sed_subst(out, "serversDir", str);
@@ -190,8 +211,6 @@ int propiceMakeGen(FILE *out)
     } else {
 	print_sed_subst(out, "serversDir", "");
     }
-
-    str = NULL;
 
     /* Options passe'es a` genom */
     str = NULL;

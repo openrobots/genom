@@ -91,12 +91,11 @@ WC      {W}*\:
 
 "internal_data"/{WC}  {yylval.ival = INTERNAL_DATA; return(INTERNAL_DATA); }
 "number"/{WC}         {yylval.ival = NUMBER; return(NUMBER); }
-"max_rqst_size"/{WC}  {yylval.ival = MAX_RQST_SIZE; return(MAX_RQST_SIZE); }
-"max_reply_size"/{WC} {yylval.ival = MAX_REPLY_SIZE; return(MAX_REPLY_SIZE); }
 "codel_files"/{WC}    {yylval.ival = CODEL_FILES; return(CODEL_FILES); }
 
 "type"/{WC}            {yylval.ival = TYPE; return(TYPE); }
 "input"/{WC}           {yylval.ival = INPUT; return(INPUT); }
+"posters_input"/{WC}    {yylval.ival = POSTERS_INPUT; return(POSTERS_INPUT); }
 "output"/{WC}          {yylval.ival = OUTPUT; return(OUTPUT); }
 "c_control_func"/{WC}  {yylval.ival = C_CONTROL_FUNC; return(C_CONTROL_FUNC); }
 "c_exec_func"/{WC}     {yylval.ival = C_EXEC_FUNC; return(C_EXEC_FUNC); }
@@ -140,8 +139,6 @@ WC      {W}*\:
 "none"            {yylval.ival = G_NONE; return(G_NONE); }
 
 "user"            {yylval.ival = USER; return(USER); }
-
-"martha_rqst_num"/{WC} {yylval.ival = RQST_NUM; return(RQST_NUM); }
 
 {C}+{A}* { yylval.idStr = (ID_STR *)malloc(strlen(yytext) + 1);
           strcpy((char *)yylval.idStr, yytext);

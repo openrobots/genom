@@ -535,7 +535,7 @@ static int allocActivity (int rqstId,     /* Id de la requete */
   /* Il y a une activite ZOMBIE */
   if ($module$NbZombie != 0) {
     if (csServReplySend (servId, rqstId, FINAL_REPLY, 
-			 S_$module$CntrlTask_WAIT_ABORT_ZOMBIE_ACTIVITY, 
+			 S_$module$Std_WAIT_ABORT_ZOMBIE_ACTIVITY, 
 			 (void *) NULL, 0, (FUNCPTR) NULL) != OK)
       $module$CntrlTaskSuspend (TRUE);
     return -1;
@@ -556,7 +556,7 @@ static int allocActivity (int rqstId,     /* Id de la requete */
   /* Pas d'activite libre */
   if (/*activity*/ i == MAX_ACTIVITIES) {
     if (csServReplySend (servId, rqstId, FINAL_REPLY, 
-			 S_$module$CntrlTask_TOO_MANY_ACTIVITIES, 
+			 S_$module$Std_TOO_MANY_ACTIVITIES, 
 			 (void *) NULL, 0, (FUNCPTR) NULL) != OK)
       $module$CntrlTaskSuspend (TRUE);
     return -1;
@@ -602,9 +602,9 @@ static BOOL controlExecTaskStatus(SERV_ID servId, int rqstId)
   for (i=0; i<$MODULE$_NB_EXEC_TASK; i++)
     if (EXEC_TASK_STATUS(i) == ERROR) {
       /* XXXXX Il faudrait definir un bilan spécifique:
-	 S_$module$CntrlTask_EXEC_TASK_SUSPENDED */
+	 S_$module$Std_EXEC_TASK_SUSPENDED */
       csServReplySend (servId, rqstId, FINAL_REPLY, 
-		       S_$module$CntrlTask_SYSTEM_ERROR,
+		       S_$module$Std_SYSTEM_ERROR,
 		       (void *) NULL, 0, (FUNCPTR) NULL);
       return FALSE;
     }
@@ -626,9 +626,9 @@ static BOOL controlExecTaskStatusAndInitRqst(SERV_ID servId, int rqstId)
   for (i=0; i<$MODULE$_NB_EXEC_TASK; i++)
     if (EXEC_TASK_STATUS(i) == ERROR) {
       /* XXXXX Il faudrait definir un bilan spécifique:
-	 S_$module$CntrlTask_EXEC_TASK_SUSPENDED */
+	 S_$module$Std_EXEC_TASK_SUSPENDED */
       csServReplySend (servId, rqstId, FINAL_REPLY, 
-		       S_$module$CntrlTask_SYSTEM_ERROR,
+		       S_$module$Std_SYSTEM_ERROR,
 		       (void *) NULL, 0, (FUNCPTR) NULL);
       return FALSE;
     }
@@ -636,7 +636,7 @@ static BOOL controlExecTaskStatusAndInitRqst(SERV_ID servId, int rqstId)
   /* Init request */
   if (INIT_RQST != -1) {
     csServReplySend (servId, rqstId, FINAL_REPLY, 
-		     S_$module$CntrlTask_WAIT_INIT_RQST, 
+		     S_$module$Std_WAIT_INIT_RQST, 
 		     (void *) NULL, 0, (FUNCPTR) NULL);
     return FALSE;
   }    
@@ -692,7 +692,7 @@ static void $module$SendFinalReply (SERV_ID servId,
     /* Clean interruption or not yet started  */
     if (ACTIVITY_STATUS(activity) == INIT ||
 	ACTIVITY_STATUS(activity) == INTER) {
-      bilan = S_$module$CntrlTask_ACTIVITY_INTERRUPTED;
+      bilan = S_$module$Std_ACTIVITY_INTERRUPTED;
       ACTIVITY_BILAN(activity) = bilan;
     }
     
@@ -701,7 +701,7 @@ static void $module$SendFinalReply (SERV_ID servId,
       bilan = ACTIVITY_BILAN(activity);
       if (bilan != OK && !H2_MODULE_ERR_FLAG(bilan)) {
 	CNTRL_TASK_BILAN = bilan;
-	bilan = S_$module$CntrlTask_SYSTEM_ERROR;
+	bilan = S_$module$Std_SYSTEM_ERROR;
       }
     }
     break;
@@ -709,18 +709,18 @@ static void $module$SendFinalReply (SERV_ID servId,
     /* Activity not yet started */
   case START:
     if (ACTIVITY_STATUS(activity) == INIT) {
-      bilan = S_$module$CntrlTask_ACTIVITY_INTERRUPTED;
+      bilan = S_$module$Std_ACTIVITY_INTERRUPTED;
       ACTIVITY_BILAN(activity) = bilan;      
     }
 
     /* Echec */
   case ZOMBIE:
-    bilan = S_$module$CntrlTask_ACTIVITY_FAILED;
+    bilan = S_$module$Std_ACTIVITY_FAILED;
     break;
 
     /* Interruption before starting (state == INIT) */
   case NO_EVENT:
-    bilan = S_$module$CntrlTask_ACTIVITY_INTERRUPTED;
+    bilan = S_$module$Std_ACTIVITY_INTERRUPTED;
     ACTIVITY_BILAN(activity) = bilan;
     break;
 
@@ -728,8 +728,8 @@ static void $module$SendFinalReply (SERV_ID servId,
   default:
     logMsg("$module$CntrlTask: activity %d state %d event %d !?! \n", 
 	   activity, ACTIVITY_STATUS(activity), ACTIVITY_EVN(activity));
-    errnoSet(S_$module$CntrlTask_FORBIDDEN_ACTIVITY_TRANSITION);
-    bilan = S_$module$CntrlTask_FORBIDDEN_ACTIVITY_TRANSITION;
+    errnoSet(S_$module$Std_FORBIDDEN_ACTIVITY_TRANSITION);
+    bilan = S_$module$Std_FORBIDDEN_ACTIVITY_TRANSITION;
     ACTIVITY_BILAN(activity) = bilan;
   }
   
@@ -869,7 +869,7 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 
 	/* Test s'il n'y a pas d'activités en cours */
 	if (NB_ACTIVITIES != 0) {
-	  bilan = S_$module$CntrlTask_WAIT_ABORT_ZOMBIE_ACTIVITY;
+	  bilan = S_$module$Std_WAIT_ABORT_ZOMBIE_ACTIVITY;
 	  /* bilan = S_ACTIVITIES_REMAINED; */
 	  break;
 	}
@@ -919,14 +919,14 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 	break;
 
       default:
-	bilan = S_$module$CntrlTask_UNKNOWN_ACTIVITY;
+	bilan = S_$module$Std_UNKNOWN_ACTIVITY;
 	break;
       } /* switch */
   }
   
   /* Numéro d'activité positive inconnu */
   else if(activityId > $module$LastAbsolutActivityNum) {
-    bilan = S_$module$CntrlTask_UNKNOWN_ACTIVITY;
+    bilan = S_$module$Std_UNKNOWN_ACTIVITY;
   }
     
   /* Numéro valide */
@@ -939,7 +939,7 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 
     /* Activité déjà terminée */
     if (activity == MAX_ACTIVITIES || ACTIVITY_STATUS(activity) == ETHER)
-      bilan = S_$module$CntrlTask_ACTIVITY_ALREADY_ENDED;
+      bilan = S_$module$Std_ACTIVITY_ALREADY_ENDED;
 
     /* Activité trouvée: interruption */
     else 

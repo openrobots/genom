@@ -57,6 +57,7 @@
 /* Inclusions concernant le module */
 #include "$module$PosterLib.h"
 #include "$module$PosterWriteLibProto.h"
+#include "$module$PosterReadLibProto.h"
 
 /* Inclusions des bibliotheques des serveurs du module */
 $listServerHeader$

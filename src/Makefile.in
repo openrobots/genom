@@ -84,9 +84,6 @@ binsrcs=\
 	userExecCodelsGen.c	\
 	userCntrlCodelsGen.c	\
 	userStartGen.c		\
-	spyDescriptionGen.c	\
-	spyStructGen.c		\
-	spyServerLibGen.c	\
 	configureGen.c	
 
 binobjs = $(binsrcs:.c=.lo)

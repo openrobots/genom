@@ -41,6 +41,7 @@
 # include <linux/kernel.h>
 #else
 # include <stdio.h>
+# include <stddef.h>
 #endif
 
 #include <errnoLib.h>
@@ -139,7 +140,7 @@ int $module$AbortReplyRcv (CLIENT_ID clientId,
 
   /* Verifier le flag de type de blocage */
   if (block != NO_BLOCK && block != BLOCK_ON_FINAL_REPLY) {
-    errnoSet (S_$module$MsgLib_BAD_BLOCK_TYPE);
+    errnoSet (S_$module$Std_BAD_BLOCK_TYPE);
     return (ERROR);
   }
   

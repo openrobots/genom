@@ -52,7 +52,7 @@ typedef struct {
 /* 
  * Definition des structures de posters
  */
-$listPosterTypeDeclare$
+#include "$module$PosterLibStruct.h"
 
 /*---------------- PROTOTYPES DES FONCTIONS EXTERNES ------------------*/
 

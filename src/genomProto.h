@@ -63,6 +63,7 @@ extern int trouve_abort_num ( void );
 extern EXEC_TASK_STR * trouve_exec_task ( char *name );
 extern int trouve_members ( TYPE_STR *t );
 extern RQST_STR * trouve_requete ( char *name );
+extern POSTERS_INPUT_LIST * trouve_poster_input(char *name);
 extern DCL_NOM_STR * trouve_sdi_ref ( STR_REF_STR *ref );
 extern TYPE_STR * trouve_type ( TYPE_STR *t );
 extern DCL_NOM_STR * trouve_typedef ( TYPE_STR *t );

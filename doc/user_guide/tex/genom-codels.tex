@@ -125,7 +125,7 @@ demoControlSpeed(DEMO_SPEED *speed, int *report)
 {
    /* Refuse *speed if the value is erroneous */
    if (*speed != DEMO_SLOW && *speed != DEMO_FAST) {
-        *report = S_demoCntrlTask_INVALID_PARAMETER;
+        *report = S_demo_INVALID_PARAMETER;
         return ERROR;
    }
    /* Parameter is valid: it will be entered into the fIDS */
@@ -376,9 +376,9 @@ Reports which  are declared in the {\tt  fail\_msg} field are mapped into
 32 bits integers with the VxWorks format.
 
 The name of this integer is build as follow: {\tt S\_<source>\_<report>},
-where {\tt <source>} is the name of the task or the library which defines
+where {\tt <source>} is the name of the module or the library which defines
 the      {\tt       <report>}     string.    For       instance:     {\tt
-S\_demoCnrtlTask\_INVALID\_PARAMETER}.
+S\_demo\_INVALID\_PARAMETER}.
 
 The numerical value is computed as follow:
 \begin{itemize}
@@ -772,7 +772,7 @@ demoGotoPosition(double *goal, int *bilan)
 
    /* Measure current speed and position */
    if (mobileState(&(SDI_F->state.position), &(SDI_F->state.speed)) != OK) {
-        *bilan = S_demoMotionTask_MOBILE_OUT_OF_ORDER;
+        *bilan = S_demo_MOBILE_OUT_OF_ORDER;
         return ETHER;
    }
 
@@ -791,7 +791,7 @@ demoGotoPosition(double *goal, int *bilan)
    /* Are we done? */
    if (fabs(remain) < increment) {
         if (mobileMove(*goal, 0) != OK) {
-            *bilan = S_demoMotionTask_MOBILE_OUT_OF_ORDER;
+            *bilan = S_demo_MOBILE_OUT_OF_ORDER;
             return ETHER;
         }
         return END;
@@ -800,7 +800,7 @@ demoGotoPosition(double *goal, int *bilan)
    /* Continue */
    if (mobileMove(SDI_F->state.position +
                       SIGN(remain) * increment, speed) != OK) {
-        *bilan = S_demoMotionTask_MOBILE_OUT_OF_ORDER;
+        *bilan = S_demo_MOBILE_OUT_OF_ORDER;
         return ETHER;
    }
    return EXEC;

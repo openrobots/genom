@@ -432,6 +432,9 @@ essayMakeGetInput(RQST_STR *rqst, char *varName, char **scanOrPrint)
   /* Recherche d'une requete dont output a meme adresse */
   for (l = requetes; l != NULL; l = l->next) {
     r = l->rqst;
+    /* not itself */
+    if (!strcmp(r->name, rqst->name))
+      continue;
     if (r->output != NULL) {
       for (il = r->output->sdi_ref; il != NULL; il = il->next) {
 	bufcat(&bufout, ".%s", il->name);

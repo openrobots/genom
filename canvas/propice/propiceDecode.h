@@ -42,6 +42,6 @@ $externPropiceDecodeLibs$
 /* Structures du module */
 #include "$module$PosterLib.h"
 
-#include "$module$DecodePropiceProto.h"
+#include "propice/$module$DecodePropiceProto.h"
 
 #endif /* $MODULE$_PROPICE_DECODE_H */

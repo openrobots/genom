@@ -63,6 +63,7 @@ int reportsGen(FILE *out)
     int n;
     char *cntrlFail, *execFail;
     char *localFail = NULL;
+    EXEC_TASK_LIST *lt;
 
 
     script_open(out);
@@ -75,9 +76,22 @@ int reportsGen(FILE *out)
     /* Nume'ro du module */
     print_sed_subst(out, "numModule", "%d", module->number);
 
-
     /* Liste des erreurs */
     /* 1. Construction d'une liste unique */
+
+    /* Liste des taches d'exec */
+    for (lt = taches; lt != NULL; lt = lt->next) {
+	for (m = lt->exec_task->fail_msg; m != NULL; m = m->next) {
+	    if (!id_member(m, execFailList)) {
+		tmp = STR_ALLOC(ID_LIST);
+		tmp->name = m->name;
+		tmp->next = execFailList;
+		execFailList = tmp;
+	    }
+	} /* for */
+    } /* for */
+
+    /* list des requetes */
     for (l = requetes; l != NULL; l = l->next) {
 	r = l->rqst;
 	for (m = r->fail_msg; m != NULL; m = m->next) {
@@ -97,15 +111,16 @@ int reportsGen(FILE *out)
 
     /* generation liste */
     cntrlFail = NULL;
-    n = 10;
+    n = 1;
     for (m = cntrlFailList; m != NULL; m = m->next) {
 	bufcat(&cntrlFail, 
 	       "#define S_%s_%s ((M_%s << 16) | %d)\n",
 	       module->name, m->name, module->name, n);
 	bufcat(&localFail,
-	       "    {\"%s\", %d},\n", m->name, n);
+	       "\n    {\"%s\", %d}, \\\\", m->name, n);
 	n++;
     }
+
     /* Liberation liste */
     for (m = cntrlFailList; m != NULL; tmp = m->next, free(m), m = tmp);
 
@@ -114,7 +129,7 @@ int reportsGen(FILE *out)
 	bufcat(&execFail, "#define S_%s_%s ((M_%s << 16) | %d)\n",
 	       module->name, m->name, module->name, n);
 	bufcat(&localFail,
-	       "    {\"%s\", %d},\n", m->name, n);
+	       "\n    {\"%s\", %d},\\\\", m->name, n);
 	n++;
     }
     /* liberation liste */

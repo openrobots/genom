@@ -81,10 +81,6 @@ __RCSID("$LAAS$");
 #include "userExecCodelsGen.h"
 #include "userStartGen.h"
 
-#include "spyServerLibGen.h"
-#include "spyStructGenProto.h"
-#include "spyDescriptionGenProto.h"
-
 #include "configureGen.h"
 
 /* compile time configuration */
@@ -179,8 +175,9 @@ int nCppOptions = 0;
 
 %token <ival> MODULE REQUEST EXEC_TASK IMPORT_TYPE FROM
 %token <ival> INTERNAL_DATA
-%token <ival> NUMBER MAX_RQST_SIZE MAX_REPLY_SIZE CODEL_FILES
+%token <ival> NUMBER CODEL_FILES
 %token <ival> TYPE INPUT OUTPUT C_CONTROL_FUNC C_EXEC_FUNC INCOMPATIBLE_WITH
+%token <ival> POSTERS_INPUT
 %token <ival> C_EXEC_FUNC_START C_EXEC_FUNC_END
 %token <ival> C_EXEC_FUNC_FAIL C_EXEC_FUNC_INTER
 %token <ival> PERIOD C_INIT_FUNC C_END_FUNC PRIORITY STACK_SIZE C_FUNC
@@ -351,12 +348,6 @@ av_module: INTERNAL_DATA ':' indicateur_de_type
     | NUMBER ':' expression_constante
 	{ $$ = STR_ALLOC(MODULE_AV_STR);
 	  $$->attribut = $1; $$->value.number = $3; }
-    | MAX_RQST_SIZE ':' expression_constante
-	{ $$ = STR_ALLOC(MODULE_AV_STR);
-	  $$->attribut = $1; $$->value.max_rqst_size = $3; }
-    | MAX_REPLY_SIZE ':' expression_constante
-	{ $$ = STR_ALLOC(MODULE_AV_STR);
-	  $$->attribut = $1; $$->value.max_reply_size = $3; }
     | CODEL_FILES ':' quoted_string_list
 	{ $$ = STR_ALLOC(MODULE_AV_STR);
 	  $$->attribut = $1; $$->value.codel_files = $3; }
@@ -395,6 +386,10 @@ av_requete: TYPE {keyword = 0;} ':' type_requete
 	{ $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1; 
 	  $$->value.input = $3; }
+    | POSTERS_INPUT ':' liste_indicateur_de_type
+	{ $$ = STR_ALLOC(RQST_AV_STR);
+	  $$->attribut = $1; 
+	  $$->value.posters_input_types = $3; }
     | OUTPUT ':' ref_membre_struct
 	{ $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1; 
@@ -656,6 +651,10 @@ av_tache: PERIOD ':' valeur_periode
 	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
 	  $$->attribut = $1;
 	  $$->value.c_func = $3; }
+    | POSTERS_INPUT ':' liste_indicateur_de_type
+	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
+	  $$->attribut = $1; 
+	  $$->value.posters_input_types = $3; }
     | CS_CLIENT_FROM ':' liste_modules
 	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
 	  $$->attribut = $1;
@@ -806,6 +805,7 @@ bus_space:
         | POSTER_VME24 { $$ = "POSTER_VME_A24"; } 
         | POSTER_VME32 { $$ = "POSTER_VME_A32"; } 
         ;
+
 
 /*----------------------------------------------------------------------*/
 
@@ -1389,7 +1389,7 @@ main(int argc, char **argv)
     char *equal;
     
     char *nomTemp;
-    char opt;
+    int opt;
     int errFlag;
     int noExecFlag = 0;
     extern char *optarg;
@@ -1404,7 +1404,6 @@ main(int argc, char **argv)
     int genIfChange = 0;
     int genTcl = 0;
     int genPropice = 0;
-    int genSpy = 0;
     int upToDate;
     struct stat statfile, statstamp, statgen;
     static const char *nomstamp = "genom-stamp";
@@ -1427,7 +1426,6 @@ main(int argc, char **argv)
       "     -D: compilation flags\n"
       "     -I: path for included file\n"
       "     -J: make variable path name + path for included file (eg, -JFLAT=$(FLAT)\n"
-      "     -s: makes a spy server for this module\n"
       "     -c: generates if changes only  \n"
       "     -u: specifies the name of the codels directory\n"
       "     -d: debug \n"
@@ -1487,7 +1485,7 @@ main(int argc, char **argv)
 	    /* separation between macro and path */
 	    strcpy(path, equal+1);
 	    strncpy(pathmacro, optarg, equal-optarg);
-	    pathmacro[equal-optarg+1] = '\0';
+	    pathmacro[equal-optarg] = '\0';
 
 	    /* make option for cpp with the path */
 	    sprintf(nomout, "-I%s", path);
@@ -1504,9 +1502,6 @@ main(int argc, char **argv)
 	    il->next = externPathMacro;
 	    externPathMacro = il;
 
-	    break;
-	  case 's':
-	    genSpy = 1;
 	    break;
 	  case 'd':
 	    yydebug = 1;
@@ -1675,7 +1670,6 @@ main(int argc, char **argv)
 
 	     /* Test date fichiers inclus dans .gen */
 	     for (il = allIncludeFiles; il != NULL; il = il->next) {
-		printf ("allIncludeFiles : %s \n", il->name);
 		stat(il->name, &statfile);
 		if (statstamp.st_mtime < statfile.st_mtime) {
 		   upToDate = 0;
@@ -1710,7 +1704,6 @@ main(int argc, char **argv)
     /* Variables generales pour perl */
     fprintf(sortie, "$module=\"%s\";\n", module->name);
     fprintf(sortie, "$genPropice=\"%d\";\n", genPropice);
-    fprintf(sortie, "$genSpy=\"%d\";\n\n", genSpy);
 
     fprintf(sortie, "$codelsDir=\"%s\";\n\n", codelsDir);
     fprintf(sortie, "$autoconfDir=\"%s\";\n\n", autoconfDir);
@@ -1726,7 +1719,7 @@ main(int argc, char **argv)
     if (installUserPart) goto userPart;
 
     fatalError |= (configureServerGen(sortie, argv[0], genfile,
-				      genTcl, genPropice, genSpy)!=0);
+				      genTcl, genPropice)!=0);
     fatalError |= (typeGen(sortie) != 0);
     fatalError |= (errorGen(sortie) != 0);
     fatalError |= (msgLibGen(sortie) != 0);
@@ -1744,14 +1737,6 @@ main(int argc, char **argv)
     fatalError |= (initGen(sortie) != 0);
     fatalError |= (reportsGen(sortie) != 0);
 
-    /****** par Laurent ******/
-    if (genSpy)
-    {
-     fatalError |= (spyDescriptionGen(sortie) != 0);
-     fatalError |= (spyStructGen(sortie) != 0);
-     fatalError |= (spyServerLibGen(sortie) != 0);
-    }
-    /******             ******/
     if (genPropice)
       fatalError |= (propiceGen(sortie) != 0); 
     if (genTcl) {
@@ -1767,7 +1752,7 @@ main(int argc, char **argv)
     /* building environment */
     fatalError |= (configureGen(sortie,
 				codelsDir, cmdLine, argv[0], genfile, cwd,
-				genTcl, genPropice, genSpy) != 0);
+				genTcl, genPropice) != 0);
 
     /* On termine */
     script_do(sortie, protoDir, "end.pl");

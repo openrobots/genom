@@ -56,9 +56,6 @@ static H2_ENDIANNESS posterDataEndianness;
 /*  prototypes de la bibliotheque printState */
 extern char const * h2GetEvnStateString(int num);
 
-static char *warnMsgNotInit = "WARNING poster $module$%s wasn't initialized\n";
-
-
 /* ---------------- LE POSTER DE CONTROLE ------------------------------ */
 
 /* ----------------------------------------------------------------------

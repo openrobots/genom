@@ -18,12 +18,12 @@
  
 #ifdef VXWORKS
 #include <vxWorks.h>
-#include <stdioLib.h>
-#include <string.h>
 #else
 #include <portLib.h>
-#include <stdio.h>
 #endif
+
+#include <stdio.h>
+#include <string.h>
  
 #include "h2errorLib.h"
 #include "genom/genomReportsLib.h"
@@ -69,6 +69,7 @@ char const * h2getLocalMsgErrno(GENOM_REPORTS_STRUCT *failuresMsg,
   int testNum;
   H2_FAILED_STRUCT *tabErr;
   int nbErrs;
+  static H2_FAILED_STRUCT genomStdFailed[] = GENOM_STD_FAILED;
 
   /* OK */
   if (error == 0) {
@@ -87,7 +88,7 @@ char const * h2getLocalMsgErrno(GENOM_REPORTS_STRUCT *failuresMsg,
   /* Erreur standard */
   if (numErr >=0 && numErr<=8) {
     sprintf (h2msgLocalErrno, "%s: %s", 
-	     failuresMsg->moduleName, GENOM_STD_TAB_FAIL[numErr].errorName); 
+	     failuresMsg->moduleName, genomStdFailed[numErr].errorName); 
     return(h2msgLocalErrno);
   }
 

@@ -59,18 +59,19 @@
 $listCntrlFailures$
 $listExecFailures$
 
-static H2_FAILED_STRUCT $MODULE$_REPORTS_TAB[] = {
-$listTabFailures$
-};
+/* static H2_FAILED_STRUCT $MODULE$_REPORTS_TAB[] = { */
+#define $MODULE$_REPORTS_LIST {\$listTabFailures$
+}
 
 
 
-static GENOM_REPORTS_STRUCT $MODULE$_REPORTS_STRUCT = {
-    M_$module$,
-    $MODULE$_NB_REPORTS,
-    $MODULE$_MODULE_NAME,
-    $MODULE$_REPORTS_TAB
-};
+/* static GENOM_REPORTS_STRUCT $MODULE$_REPORTS_STRUCT = { */
+#define $MODULE$_REPORTS_STRUCT	{ \
+    M_$module$,\
+    $MODULE$_NB_REPORTS,\
+    $MODULE$_MODULE_NAME,\
+    $MODULE$_REPORTS_TAB\
+}
 
 
 /*-------------------- Fin de chargement du fichier -----------------------*/

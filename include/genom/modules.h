@@ -67,7 +67,7 @@ typedef enum GENOM_STATUS {
  *                                      . MAX_SERVERS < CLIENT_NMAX_RQST_ID
  */
 #define MAX_SERVERS    4
-#define MAX_POSTERS    6     /* ATTENTION: verifier coherence avec genom.h */
+#define MAX_POSTERS    16     /* ATTENTION: verifier coherence avec genom.h */
 
 /* Numéro d'abort pour arrêter le module */
 #define GENOM_END_MODULE -99

@@ -59,11 +59,10 @@ int errorGen(FILE *out)
     RQST_LIST *l;
     RQST_STR *r;
     EXEC_TASK_LIST *lt;
-    ID_LIST *m, *cntrlFailList = NULL, *execFailList = NULL, *execlist = NULL, *tmp;
+    ID_LIST *m, *cntrlFailList = NULL, *execFailList = NULL,  *tmp;
+    ID_LIST *execTaskListTmpXXX = NULL;
     int n;
-    char *cntrlFail, *execFail, *execTask;
-    int i;
-
+    char *cntrlFail, *execFail;
 
     script_open(out);
 	subst_begin(out, PROTO_ERROR_H);
@@ -75,30 +74,28 @@ int errorGen(FILE *out)
     /* Nume'ro du module */
     print_sed_subst(out, "numModule", "%d", module->number);
 
+    /* Liste des erreurs */
+    /* 1. Construction d'une liste unique */
+
     /* Liste des taches d'exec */
-    execTask = NULL;
-    i = 0;
     for (lt = taches; lt != NULL; lt = lt->next) {
-	bufcat(&execTask, "#define M_%s%s\t(%d + %d)\n", module->name, 
-	       lt->exec_task->name, module->number, 3+i++);
 	for (m = lt->exec_task->fail_msg; m != NULL; m = m->next) {
 	    if (!id_member(m, execFailList)) {
 		tmp = STR_ALLOC(ID_LIST);
 		tmp->name = m->name;
 		tmp->next = execFailList;
 		execFailList = tmp;
+
+		/* XXX tmp for compatibility purpose */
 		tmp = (ID_LIST *)xalloc(sizeof(ID_LIST));
 		tmp->name = lt->exec_task->name;
-		tmp->next = execlist;
-		execlist = tmp;
+		tmp->next = execTaskListTmpXXX;
+		execTaskListTmpXXX = tmp;
 	    }
 	} /* for */
     } /* for */
-    print_sed_subst(out, "listExecTask", execTask);
-    free(execTask);
 
-    /* Liste des erreurs */
-    /* 1. Construction d'une liste unique */
+    /* erreur pour les reque^tes */
     for (l = requetes; l != NULL; l = l->next) {
 	r = l->rqst;
 	for (m = r->fail_msg; m != NULL; m = m->next) {
@@ -111,10 +108,12 @@ int errorGen(FILE *out)
 		} else {
 		    tmp->next = execFailList;
 		    execFailList = tmp;
+
+		    /* XXX tmp for compatibility purpose */
 		    tmp = (ID_LIST *)xalloc(sizeof(ID_LIST));
 		    tmp->name = r->exec_task_name;
-		    tmp->next = execlist;
-		    execlist = tmp;
+		    tmp->next = execTaskListTmpXXX;
+		    execTaskListTmpXXX = tmp;
 		}
 	    }
 	}
@@ -122,25 +121,42 @@ int errorGen(FILE *out)
 
     /* generation liste */
     cntrlFail = NULL;
-    n = 10;
+    n = 1;
     for (m = cntrlFailList; m != NULL; m = m->next) {
 	bufcat(&cntrlFail, 
-	       "#define S_%sCntrlTask_%s ((M_%sCntrlTask << 16) | %d)\n",
+	       "#define S_%s_%s \t\t(M_%s << 16 | %d )\n",
 	       module->name, m->name, module->name, n);
 	n++;
     }
-    /* Liberation liste */
-    for (m = cntrlFailList; m != NULL; tmp = m->next, free(m), m = tmp);
 
     execFail = NULL;
     for (m = execFailList; m != NULL; m = m->next) {
-	bufcat(&execFail, "#define S_%s%s_%s ((M_%s%s << 16) | %d)\n",
-	       module->name, execlist->name, m->name, module->name, execlist->name, n);
-	tmp = execlist;
-	execlist = execlist->next;
-	free(tmp);
+	bufcat(&execFail, "#define S_%s_%s \t\t(M_%s << 16 | %d )\n",
+	       module->name, m->name, module->name, n);
 	n++;
     }
+
+    /* XXXXX generation liste for compatibility purpose */
+    bufcat(&execFail,  "\n\n/* XXXXX temporary for compatibility purpose */\n");
+    for (m = cntrlFailList; m != NULL; m = m->next) {
+	bufcat(&execFail, 
+	       "#define S_%sCntrlTask_%s \t\tS_%s_%s\n",
+	       module->name, m->name, module->name, m->name);
+    }
+    bufcat(&execFail,  "\n");
+
+    for (m = execFailList; m != NULL; m = m->next) {
+	bufcat(&execFail, "#define S_%s%s_%s \t\tS_%s_%s\n",
+	       module->name, execTaskListTmpXXX->name, m->name, 
+	       module->name, m->name);
+	tmp = execTaskListTmpXXX;
+	execTaskListTmpXXX = execTaskListTmpXXX->next;
+	free(tmp);
+    }
+
+    /* Liberation liste */
+    for (m = cntrlFailList; m != NULL; tmp = m->next, free(m), m = tmp);
+
     /* liberation liste */
     for (m = execFailList; m != NULL; tmp = m->next, free(m), m = tmp);
 

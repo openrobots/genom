@@ -131,6 +131,8 @@ execTaskGen(FILE *out)
 		continue;
 	    }
 	    if (p->address == NULL) {
+	      
+	      /* create posters */
 		if (p->create_func == NULL) {
 		    /* appel standard de posterCreate */
 		    bufcat(&str, "  if (posterCreate(%s_%s_POSTER_NAME,\n",
@@ -148,11 +150,40 @@ execTaskGen(FILE *out)
 		       t->num, i,
 		       module->name, t->name, p->name);
 
+		/* init posters created automatically */
+		if (p->create_func == NULL) {
+		  bufcat(&str, 
+		         "    {\n"
+			 "       int size = sizeof(%s);\n"
+		         "       char *tmp = malloc(size);\n",
+			 p->type->name);
+		  bufcat(&str, 
+			 "       if (tmp == NULL) {\n"
+			 "          fprintf (stderr, \"%s%sInitTaskFunc : not enough mem to init poster %s\\\\n\");\n"
+			 "       }\n",
+			 module->name, t->name, p->name);
+		  bufcat(&str, 
+			 "       else {\n"
+			 "          memset(tmp, 0, size);\n"
+			 "          if (posterWrite(EXEC_TASK_POSTER_ID(%d)[%d], 0, tmp, size) != size) {\n"
+			 "             fprintf (stderr, \"%s%sInitTaskFunc : cannot init poster %s\\\\n\");\n"
+			 "             free(tmp);\n"
+			 "             return(ERROR);\n"
+			 "          }\n" 
+			 "          free(tmp);\n"
+			 "       }\n"
+			 "    }\n",
+			 t->num, i,
+			 module->name, t->name, p->name);
+		}
+
+ 		/* also func to delete poster */
 		bufcat(&str2, "  if (EXEC_TASK_POSTER_ID(%d)[%d] != NULL)\n",
 		       t->num, i);
 		bufcat(&str2,
 		       "    posterDelete(EXEC_TASK_POSTER_ID(%d)[%d]);\n",
 		       t->num, i);
+
 		    
 	    } else {
 		/* Definition des posters avec adresse */

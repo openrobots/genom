@@ -138,8 +138,8 @@ userExecCodelsGen(FILE *out)
 	      " * Description: \n * \n"
 	      " * Reports:      OK\n", t->c_func);
       for (lf=t->fail_msg; lf != NULL; lf=lf->next) {
-	fprintf(out, " *              S_%s%s_%s\n",  
-		module->name, t->name, lf->name);
+	fprintf(out, " *              S_%s_%s\n",  
+		module->name, lf->name);
       }
 	      
       fprintf(out,
@@ -168,7 +168,7 @@ userExecCodelsGen(FILE *out)
 	      " * Description: \n *\n"
 	      " * Reports:      OK\n", r->name);
       for (lf=r->fail_msg; lf != NULL; lf=lf->next) {
-	fprintf(out, " *              S_%s%s_%s\n",  module->name, t->name, lf->name);
+	fprintf(out, " *              S_%s_%s\n",  module->name, lf->name);
       }
       fprintf(out, " */\n\n");
       

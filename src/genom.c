@@ -45,6 +45,10 @@ __RCSID("$LAAS$");
 #include <portLib.h>
 #include <csLib.h>
 
+
+POSTERS_INPUT_LIST *posters_input=NULL;
+
+
 /***
  *** Fonctions d'usage ge'ne'ral dans genom
  ***/
@@ -64,6 +68,7 @@ upCaseNames(void)
     RQST_STR *r;
     ID_LIST *ln;
     POSTER_LIST *p;
+    POSTERS_INPUT_LIST *p_in;
 
     /* nom du module */
     if (module->name != NULL) {
@@ -117,6 +122,14 @@ upCaseNames(void)
 	p->NAME[i] = '\0';
     } /* for */
 
+    /* Noms des posters IN */
+    for (p_in = posters_input; p_in != NULL; p_in = p_in->next) {
+	p_in->NAME = (ID_STR *)xalloc(strlen(p_in->name) + 1);
+	for (i = 0; p_in->name[i] != '\0';
+	     p_in->NAME[i] = toupper(p_in->name[i]), i++);
+	p_in->NAME[i] = '\0';
+    } /* for */
+
     /* Noms des bibliotheques exterieures */
     for (ln = externLibs; ln != NULL; ln = ln->next) {
 	ln->NAME = (ID_STR *)xalloc(strlen(ln->name) + 1);
@@ -143,11 +156,6 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
       case NUMBER:
 	module->number = av->value.number;
 	break;
-      case MAX_RQST_SIZE:
-	module->max_rqst_size = av->value.max_rqst_size;
-	break;
-      case MAX_REPLY_SIZE:
-	module->max_reply_size = av->value.max_reply_size;
       case CODEL_FILES:
 	module->codel_files = av->value.codel_files;
     }
@@ -169,6 +177,9 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case INPUT:
 	rqst->input = av->value.input;
+	break;
+      case POSTERS_INPUT:
+	rqst->posters_input_types = av->value.posters_input_types;
 	break;
       case OUTPUT:
 	rqst->output = av->value.input;
@@ -248,11 +259,20 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case C_FUNC:
 	task->c_func = av->value.c_func;
 	break;
+      case POSTERS_INPUT:
+	task->posters_input_types = av->value.posters_input_types;
+	break;
       case CS_CLIENT_FROM:
 	task->cs_client_from = av->value.cs_client_from;
+	fprintf(stderr, 
+		"%s: warning: old fashion declaration \"cs_client_from: %s\"\n", 
+		nomfic, av->value.cs_client_from->name);
 	break;
       case POSTER_CLIENT_FROM:
 	task->poster_client_from = av->value.poster_client_from;
+	fprintf(stderr, 
+		"%s: warning: old fashion declaration \"poster_client_from: %s\"\n", 
+		nomfic, av->value.poster_client_from->name);
 	break;
       case RESOURCES:
 	task->resource_list = av->value.resource_list;
@@ -374,13 +394,16 @@ resolveTypes(void)
     RQST_STR *r;
     TYPE_STR *tr, *t_poster, *t_sdi, *t_rqst, *t_tmp;
     DCL_NOM_LIST *lt;
+    TYPE_LIST *ltt;
     TYPE_LIST *t;
     char buf[80];
     DCL_NOM_LIST *m, *last, *lastData;
     DCL_NOM_STR *n;
     STR_REF_LIST *lm, *lastType;
     POSTER_LIST *p;
+    POSTERS_INPUT_LIST *p_in;
     int i;
+    EXEC_TASK_LIST *le;
 
     /* Type de la structure interne du module */
     t_sdi = module->internal_data;
@@ -404,6 +427,8 @@ resolveTypes(void)
     /* types des parametres des requetes */
     for (lr = requetes; lr != NULL; lr = lr->next) {
 	r = lr->rqst;
+
+	/* inputs */
 	if (r->input != NULL) {
 	  if ((n = trouve_sdi_ref(r->input)) == NULL) {
 	    fprintf(stderr, "%s: Error: no element %s in SDI for requete %s\n",
@@ -438,7 +463,9 @@ resolveTypes(void)
 		free(t_rqst);
 		t_rqst = tr;
 	    }
-	}
+	} /* input */
+
+	/* outputs */
 	if (r->output != NULL) {
 	    if ((n = trouve_sdi_ref(r->output)) == NULL) {
 		fprintf(stderr, "%s: Error: no element %s in SDI for requete %s\n", nomfic, r->output->sdi_ref->name, r->name);
@@ -471,18 +498,69 @@ resolveTypes(void)
 		free(t_rqst);
 		t_rqst = tr;
 	    }
-	}
-    } /* for */
+	} /* output */
 
+
+	/* posters inputs */
+	if (r->posters_input_types) {
+
+	    /* Identifie/Enregistre chaque type de structure de poster */
+	    for (ltt = r->posters_input_types; ltt != NULL; ltt = ltt->next) {
+
+	      /* already done */
+	      if (trouve_poster_input(ltt->type->name))
+		break;
+
+	      /* Look for this data type */
+	      t_tmp = ltt->type;
+	      tr = trouve_type(t_tmp);
+	      if (tr == NULL) {
+		fprintf(stderr,
+			"%s: Error: type of poster input of request %s: %s unknown\n", 
+			nomfic, r->name, t_tmp->name);
+		exit(2);
+	      }
+	      if (tr != t_tmp) {
+		  free(t_tmp->name);
+		  free(t_tmp->filename);
+		  free(t_tmp);
+		  ltt->type = tr;
+	      }
+	      markUsed(tr);
+	      /* tr->flags |= TYPE_POSTER; */
+
+	      /* allocate a new poster description */
+	      p_in = STR_ALLOC(POSTERS_INPUT_LIST);
+	      
+	      p_in->type = tr;
+	      p_in->name = strdup(tr->name);
+
+	      /* add in poster input list */
+	      if (!posters_input) {
+		posters_input = p_in;
+		posters_input->next = NULL;
+	      }
+	      else {
+		p_in->next = posters_input;
+		posters_input = p_in;
+	      }
+	      
+	    } /* for each type */
+
+	} /* posters input */
+
+    } /* for each request */
+
+    /* typedefs */
     if (typedefs == NULL) {
 	fprintf(stderr, "Warning: no new typedef\n");
 	return;
     }
-    
-    /* Types des posters */
+
     for (last = typedefs; last != NULL && last->next != NULL; 
 	 last = last->next);
 
+    /* Types des posters */
     for (p = posters; p != NULL; p = p->next) {
 
         /* On cree la structure du poster */
@@ -538,11 +616,11 @@ resolveTypes(void)
 		else 
 		  lastData->next = m;
 		lastData = m;
-	    } /* for */
+	    } /* for each data */
 
-	} 
+	} /* poster with data */
 
-	/* Poster user sans structure definie */
+	/* Poster user sans structure definie (data=null) */
 	else {
 
 	  /* Identifie/Enregistre chaque element du poster */
@@ -552,8 +630,9 @@ resolveTypes(void)
 	    tr = trouve_type(t_tmp);
 	    if (tr == NULL) {
 	      fprintf(stderr,
-		      "%s: Warning: type of poster %s: %s unknown\n", 
+		      "%s: Error: type of poster %s: %s unknown\n", 
 		      nomfic, p->name, t_tmp->name);
+	      exit(2);
 	    } else {
 	      if (tr != t_tmp) {
 		free(t_tmp->name);
@@ -602,9 +681,64 @@ resolveTypes(void)
 	p->type = t_poster;
 
     } /* for poster */
+
     
+    /* posters input des taches d'exec */
+    for (le = taches; le != NULL; le = le->next) {
+
+	/* posters inputs */
+	if (le->exec_task->posters_input_types) {
+
+	    /* Identifie/Enregistre chaque type de structure de poster */
+	    for (ltt = le->exec_task->posters_input_types; ltt != NULL; ltt = ltt->next) {
+
+	      /* already done */
+	      if (trouve_poster_input(ltt->type->name))
+		break;
+
+	      /* Look for this data type */
+	      t_tmp = ltt->type;
+	      tr = trouve_type(t_tmp);
+	      if (tr == NULL) {
+		fprintf(stderr,
+			"%s: Error: type of poster input of exec task %s: %s unknown\n", 
+			nomfic, le->exec_task->name, t_tmp->name);
+		exit(2);
+	      }
+	      if (tr != t_tmp) {
+		  free(t_tmp->name);
+		  free(t_tmp->filename);
+		  free(t_tmp);
+		  ltt->type = tr;
+	      }
+	      markUsed(tr);
+	      /* tr->flags |= TYPE_POSTER; */
+
+	      /* allocate a new poster description */
+	      p_in = STR_ALLOC(POSTERS_INPUT_LIST);
+	      
+	      p_in->type = tr;
+	      p_in->name = strdup(tr->name);
+
+	      /* add in poster input list */
+	      if (!posters_input) {
+		posters_input = p_in;
+		posters_input->next = NULL;
+	      }
+	      else {
+		p_in->next = posters_input;
+		posters_input = p_in;
+	      }
+	      
+	    } /* for each type */
+
+	} /* posters input */
+
+    } /* for each exec task */
 
 
+    
+    /* module internal data */
     if (module->internal_data) {
 	tr = module->internal_data;
 
@@ -684,9 +818,9 @@ resolveTypes(void)
 			  nomfic, r->name, r->input->dcl_nom->name);
 		}
 	    }
-	} /* for */
+	} /* for each request */
 	
-    }
+    } /* module internal data */
     
     /* types non utilise's */
     for (t = types; t != NULL; t = t->next) {
@@ -717,6 +851,22 @@ trouve_requete(char *name)
     return(NULL);
 } /* trouve_requete */
 
+/**
+ ** Recherche d'un posters_input par nom 
+ **/
+POSTERS_INPUT_LIST *
+trouve_poster_input(char *name)
+{
+    POSTERS_INPUT_LIST *p_in;
+
+    /* Noms des posters IN */
+    for (p_in = posters_input; p_in != NULL; p_in = p_in->next) {
+      if (!strcmp(p_in->name, name)) 
+	return (p_in);
+    } /* for */
+
+    return NULL;
+}
 /*----------------------------------------------------------------------*/
 
 /**
@@ -835,7 +985,7 @@ resolveTasks(void)
 		exit(2);
 	    }
 	}
-    } /* for */
+    } /* for requests */
 
     /* Instanciation des exec tasks dans les posters */
     for (p = posters; p != NULL; p = p->next) {
@@ -851,7 +1001,7 @@ resolveTasks(void)
 		exit(2);
 	    }
 	}
-    } /* for */
+    } /* for posters */
     
 } /* resolveTasks */
 

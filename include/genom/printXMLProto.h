@@ -31,19 +31,19 @@
 #ifndef H_PRINTXMLPROTO
 #define H_PRINTXMLPROTO
 
-extern void printXML_char ( FILE *out, char *name, char *x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_unsigned_char ( FILE *out, char *name, unsigned char *x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_short_int ( FILE *out, char *name, short int *x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_int ( FILE *out, char *name, int *x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_long_int ( FILE *out, char *name, long int *x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_unsigned_short_int ( FILE *out, char *name, unsigned short *x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_unsigned_int ( FILE *out, char *name, unsigned int *x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_unsigned_long_int ( FILE *out, char *name, unsigned long *x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_float ( FILE *out, char *name, float *x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_double ( FILE *out, char *name, double *x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_addr ( FILE *out, char *name, void **x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_string ( FILE *out, char *name, char *x, int indent, int nDim, int *dims, FILE *in );
-extern void printXML_string_len ( FILE *out, char *name, char *x, int max_str_len, int indent, int nDim, int *dims, FILE *in );
-extern void fprintfBuf(FILE *out, const char *fmt, ...);
+extern int printXML_char ( FILE *out, char *name, char *x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_unsigned_char ( FILE *out, char *name, unsigned char *x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_short_int ( FILE *out, char *name, short int *x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_int ( FILE *out, char *name, int *x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_long_int ( FILE *out, char *name, long int *x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_unsigned_short_int ( FILE *out, char *name, unsigned short *x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_unsigned_int ( FILE *out, char *name, unsigned int *x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_unsigned_long_int ( FILE *out, char *name, unsigned long *x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_float ( FILE *out, char *name, float *x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_double ( FILE *out, char *name, double *x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_addr ( FILE *out, char *name, void **x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_string ( FILE *out, char *name, char *x, int indent, int nDim, int *dims, FILE *in );
+extern int printXML_string_len ( FILE *out, char *name, char *x, int max_str_len, int indent, int nDim, int *dims, FILE *in );
+extern int fprintfBuf(FILE *out, const char *fmt, ...);
 
 #endif /* H_PRINTXMLPROTO */

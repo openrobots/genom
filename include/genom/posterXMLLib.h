@@ -46,7 +46,7 @@ extern int getPosterXML(FILE *stream, int argc, char **argv, char **argn,
 			int nbPosterData,
 			GENOM_POSTER_XML tabPosterXML[]);
 
-extern void posterListXML(FILE *f, int nbPoster, GENOM_POSTER_XML posterXML[]);
+extern int posterListXML(FILE *f, int nbPoster, GENOM_POSTER_XML posterXML[]);
 
 #define XML_HEADER "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>"
 
@@ -60,8 +60,8 @@ extern void posterListXML(FILE *f, int nbPoster, GENOM_POSTER_XML posterXML[]);
 #define TERMINATE_BALISE 2
 
 
-int xmlBalise(char *balise,int beginEnd,FILE *stream,int level);
-int xmlHeader(FILE *stream);
+extern int xmlBalise(char *balise,int beginEnd,FILE *stream,int level);
+extern int xmlHeader(FILE *stream);
 
 #endif /* POSTER_XML_LIB_H */
 

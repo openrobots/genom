@@ -142,18 +142,6 @@ if ($genPropice == 1) {
   }
 }
 
-# Creation du repertoire spy
-#
-if ($genSpy == 1) {
-  if (! -d "spy") {
-    print "directory spy created";
-    mkdir "spy", 04775;
-  }
-  else {
-      chmod 04775, 'spy';
-  }
-}
-
 
 #---------------------------------------------------------------
 

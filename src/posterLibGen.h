@@ -34,6 +34,7 @@
 
 #define PROTO_POSTER_LIB "server/posterLib.c"
 #define PROTO_POSTER_LIB_H "server/posterLib.h"
+#define PROTO_POSTER_LIB_STRUCT_H "server/posterLibStruct.h"
 
 #define PROTO_POSTER_SHOW_LIB "server/posterShowLib.c"
 #define PROTO_POSTER_SHOW_LIB_H "server/posterShowLib.h"

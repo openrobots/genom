@@ -198,8 +198,6 @@ eg : (setq genom-find-file-hook 'find-file)")
 			)))
   "GenoM programming style")
 
-(setq c-delete-function 'backward-delete-char)
-
 
 ;----------------------------------------------------------------------
 ;
@@ -272,7 +270,7 @@ Key bindings:
   (setq comment-start "/* "
  	comment-end   " */"
  	comment-multi-line t
- 	c-comment-start-regexp c-C++-comment-start-regexp
+ 	c-comment-start-regexp comment-start
  	c-baseclass-key nil)
   (c-add-style "genom" genom-style t)
 ;  (set-variable '*fonctions-sur-au-revoir* '(transforme))
@@ -322,7 +320,7 @@ This does fairly subdued highlighting.")
 (let ((types (concat "request\\|module\\|typedef struct\\|"
 		     "import from\\|poster\\|exec_task"))
       (fields (concat
-	       "type\\|doc\\|input\\|input_info\\|output\\|"
+	       "type\\|doc\\|input\\|posters_input\\|input_info\\|output\\|"
 	       "c_control_func\\|fail_msg\\|"
 	       "c_exec_func_start\\|c_exec_func_end\\|c_exec_func_inter\\|"
 	       "c_exec_func_fail\\|c_exec_func\\|c_func\\|"
@@ -855,6 +853,7 @@ request " request-name " {
      exec_task:           <<exec-task-name>>; 
      input:               <name>::<sdi-ref>; 
      input_info:          <default-value>::\"<doc>\"" genom-etc ";
+     posters_input:       <struct-name>" genom-etc ";
      output:              <name>::<sdi-ref>; 
      c_control_func:      " (if codel-name 
 			       (concat codel-name "Cntrl;") "<codel>;") "
@@ -979,6 +978,7 @@ exec_task " (genom-upcase-initial exec-name) " {
      delay:              <number>;
      priority:           <<number>>;
      stack_size:         <<number>>;
+     posters_input:       <struct-name>" genom-etc ";
      c_init_func:        " (if codel-name 
 			       (concat codel-name "Init;") "<codel>;") "
      c_end_func:         " (if codel-name 

@@ -45,7 +45,7 @@ int
 configureGen(FILE *out,
 	     const char *codelsDir, const char *cmdLine,
 	     const char *genomBin, const char *genomFile, const char *genomWd,
-	     int genTcl, int genPropice, int genSpy)
+	     int genTcl, int genPropice)
 {
    const char **p;
    char *str, *str1;
@@ -191,7 +191,7 @@ configureGen(FILE *out,
 int
 configureServerGen(FILE *out, 
 		   const char *genomBin, const char *genomFile,
-		   int genTcl, int genPropice, int genSpy)
+		   int genTcl, int genPropice)
 {
    char *str, *str1, *str2, *str3;
    EXEC_TASK_LIST *lt;
@@ -207,7 +207,6 @@ configureServerGen(FILE *out,
 
    print_sed_subst(out, "genTcl", genTcl ? "" : "#");
    print_sed_subst(out, "genPropice", genPropice ? "" : "#");
-   print_sed_subst(out, "genSpy", genSpy ? "" : "#");
 
    /* GenoM options */
    str = NULL;
@@ -249,7 +248,6 @@ configureServerGen(FILE *out,
 
    print_sed_subst(out, "genTcl", genTcl ? "" : "#");
    print_sed_subst(out, "genPropice", genPropice ? "" : "#");
-   print_sed_subst(out, "genSpy", genSpy ? "" : "#");
 
    /* servers */
    str = str1 = str2 = str3 = NULL;

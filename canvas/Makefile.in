@@ -81,6 +81,7 @@ flist+=\
 	server/msgLibProto.h		\
 	server/posterLib.c		\
 	server/posterLib.h		\
+	server/posterLibStruct.h	\
 	server/posterShowLib.c		\
 	server/posterShowLib.h		\
 	server/posterXMLLib.c		\
@@ -94,8 +95,6 @@ flist+=\
 	server/scopeLib.h		\
 	server/scopeMain.c		\
 	server/scope_script		\
-	server/spyServerLib.c		\
-	server/spyServerLib.h		\
 	server/tclClient.tcl		\
 	server/tclClientPoster.tcl	\
 	server/tclClientRqst.tcl	\

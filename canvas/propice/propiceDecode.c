@@ -67,4 +67,4 @@
 
 #include "$module$PosterLib.h"
 
-#include "$module$DecodePropice.h"
+#include "propice/$module$DecodePropice.h"

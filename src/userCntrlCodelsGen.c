@@ -102,9 +102,8 @@ userCntrlCodelsGen(FILE *out)
 	      r->type == EXEC ? "EXEC" : r->type == INIT ? "INIT" : "CONTROL",
 	      r->name, prev_rqst_name);
       for (lf=r->fail_msg; lf != NULL; lf=lf->next) {
-	fprintf(out, " *                 S_%s%s_%s\n",  
+	fprintf(out, " *                 S_%s_%s\n",  
 		module->name, 
-		r->type == CONTROL ? "CntrlTask" : r->exec_task_name, 
 		lf->name);
       }
       fprintf(out, " *\n * Returns:    OK or ERROR\n"
@@ -124,9 +123,8 @@ userCntrlCodelsGen(FILE *out)
 	    r->type == EXEC ? "EXEC" : r->type == INIT ? "INIT" : "CONTROL",
 	    r->name);
     for (lf=r->fail_msg; lf != NULL; lf=lf->next) {
-      fprintf(out, " *                 S_%s%s_%s\n",  
+      fprintf(out, " *                 S_%s_%s\n",  
 	      module->name, 
-	      r->type == CONTROL ? "CntrlTask" : r->exec_task_name , 
 	      lf->name);
     }
     fprintf(out, " *\n * Returns:    OK or ERROR\n"

@@ -122,7 +122,7 @@ propiceEncodeGen(FILE *out)
     /* Structures importees d'autres modules */
     str = NULL;
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-      bufcat(&str, "\n#include \"%sEncodePropice.h\"\n", ln->name);
+      bufcat(&str, "\n#include \"auto/propice/%sEncodePropice.h\"\n", ln->name);
     } /* for */
     if (str != NULL) {
       print_sed_subst(out, "externPropiceEncodeLibs", str);

@@ -165,23 +165,23 @@ $inputVerif$
   /* On traite les status */
   switch(status) {
     case WAITING_FINAL_REPLY:
-      printf ("** Intermed reply: OK\n");
+      printf ("-- Intermed reply: OK\n");
       if (csClientReplyRcv (initCId, rqstId, BLOCK_ON_FINAL_REPLY, 
 			    (void *) NULL, 0, (FUNCPTR) NULL, 
 			    (void *) NULL, 0, 
 			    (FUNCPTR) NULL) == ERROR) {
           bilan = errnoGet();
           if (H2_MODULE_ERR_FLAG(bilan))
-	    printf("** Final reply: ");
+	    printf("-- Final reply: ");
 	  else 
 	    printf("** Error : ");
       }
       else
-	printf("** Final reply: ");
+	printf("-- Final reply: ");
       break;
 
     case FINAL_REPLY_OK:
-      printf("** Final reply: ");
+      printf("-- Final reply: ");
       break;
 
     case FINAL_REPLY_TIMEOUT:
@@ -190,7 +190,7 @@ $inputVerif$
 
     case ERROR:
       if (H2_MODULE_ERR_FLAG(bilan))
-	printf("** Final reply: ");
+	printf("-- Final reply: ");
       else 
 	printf("** Error : ");
       break;
@@ -257,6 +257,7 @@ static STATUS $module$InitInitTask (CLIENT_ID *clientId, int size)
 		   sizeof(int),
 		   clientId) != OK) {
       h2perror("$module$Init: $module$ClientInit failed\n");
+      csMboxEnd();
       return (ERROR);
     }
 

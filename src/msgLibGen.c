@@ -100,8 +100,8 @@ int msgLibGen(FILE *out)
     print_sed_subst(out, "MODULE", module->NAME);
 
     /* Compte des tailles des requetes et des repliques */
-    maxRqstSize = module->max_rqst_size;
-    maxReplySize = module->max_reply_size;
+    maxRqstSize = sizeof(int); /* at least abort request parameter */
+    maxReplySize = sizeof(double); /* at least activityNum + alignment */
     for (l = requetes; l != NULL; l = l->next) {
 	r = l->rqst;
 	bufcat(&rqstList, "#define %s_%s_RQST %d\n",

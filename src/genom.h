@@ -34,7 +34,7 @@
 
 #include <sys/types.h>
 
-#define MAX_POSTERS 6		/* Verifier coherence avec modules.h */
+#define MAX_POSTERS 16		/* Verifier coherence avec modules.h */
 
 #define STR_ALLOC(s) ((s *)xalloc(sizeof(s)))
 
@@ -153,7 +153,6 @@ typedef struct rqst_input_info_list {
     struct rqst_input_info_list *next;
 } RQST_INPUT_INFO_LIST;
     
-
 /* Description d'une ta^che d'exe'cution */
 typedef struct exec_task_str {
     ID_STR *name;
@@ -166,6 +165,7 @@ typedef struct exec_task_str {
     ID_STR *c_init_func;
     ID_STR *c_end_func;
     ID_STR *c_func;
+    TYPE_LIST *posters_input_types;
     ID_LIST *cs_client_from;
     ID_LIST *poster_client_from;
     ID_LIST *resource_list;
@@ -182,6 +182,7 @@ typedef struct {
 	ID_STR *c_init_func;
 	ID_STR *c_end_func;
         ID_STR *c_func;
+        TYPE_LIST *posters_input_types;
 	ID_STR *poster_name;
 	STR_REF_LIST *poster_data;
 	ID_LIST *cs_client_from;
@@ -204,6 +205,7 @@ typedef struct rqst_str {
     int type;
     int num;
     STR_REF_STR *input;
+    TYPE_LIST *posters_input_types;
     STR_REF_STR *output;
     ID_STR *c_control_func;
     ID_STR *c_exec_func;
@@ -227,6 +229,7 @@ typedef struct {
     union {
 	int type;
 	STR_REF_STR *input;
+        TYPE_LIST *posters_input_types;
 	STR_REF_STR *output;
 	ID_STR *c_control_func;
 	ID_STR *c_exec_func;
@@ -253,8 +256,6 @@ typedef struct {
     RQST_LIST *requests;
     TYPE_STR *internal_data;
     int number;
-    int max_rqst_size;
-    int max_reply_size;
     ID_LIST *codel_files;
 } MODULE_STR;
 
@@ -264,8 +265,6 @@ typedef struct {
     union {
 	TYPE_STR *internal_data;
 	int number;
-	int max_rqst_size;
-	int max_reply_size;
 	ID_LIST *codel_files;
     } value;
 } MODULE_AV_STR;
@@ -287,6 +286,16 @@ typedef struct POSTER_LIST {
 
 extern const char *protoDir;
 
+/* Description d'un poster attendu en entree */
+typedef struct POSTERS_INPUT_LIST {
+    ID_STR  *name;
+    ID_STR *NAME;
+    TYPE_LIST *types;
+    TYPE_STR *type;
+    STR_REF_LIST *data;
+    struct POSTERS_INPUT_LIST *next;
+} POSTERS_INPUT_LIST;
+
 extern int keyword;	
 extern int num_ligne;
 extern char nomfic[];
@@ -304,6 +313,7 @@ extern ID_LIST *allIncludeFiles;
 extern ID_LIST *externLibs;
 extern ID_LIST *externPathMacro;
 extern POSTER_LIST *posters;
+extern POSTERS_INPUT_LIST *posters_input;
 extern int initRequest;
 
 extern char *cppOptions[];

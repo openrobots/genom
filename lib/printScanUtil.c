@@ -87,7 +87,7 @@ char *indentStr(int indent)
 
 char *indentStr2(int indent)
 {
-  int i,j;
+  int i;
 
   bufindent[0]='\0';
 /*   for(i=0;i<indent*TAB_INDENT;i++) strcat(bufindent, " "); */

@@ -48,8 +48,11 @@
 #  include <time.h>
 # else
 # include <sys/time.h>
-# endif /* VXWORKS */
-#endif /* RTAI && KERNEL */
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# endif /* not VXWORKS */
+#endif /* not RTAI && KERNEL */
 
 #include <taskLib.h>
 #include <errnoLib.h>

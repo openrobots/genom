@@ -53,8 +53,8 @@
 
 int configureGen(FILE *out, const char *codelsDir, const char *cmdLine,
 	const char *genomBin, const char *genomFile, const char *genomWd,
-	int genTcl, int genPropice, int genSpy);
+	int genTcl, int genPropice);
 int configureServerGen(FILE *out, const char *genomBin,
-	const char *genomFile, int genTcl, int genPropice, int genSpy);
+	const char *genomFile, int genTcl, int genPropice);
 
 #endif /* H_CONFIGUREGEN */

@@ -68,7 +68,7 @@ int $module$$request$ReplyRcv (CLIENT_ID clientId,
 
   /* Verifier le flag de type de blocage */
   if (block != NO_BLOCK && block != BLOCK_ON_FINAL_REPLY) {
-    errnoSet (S_$module$MsgLib_BAD_BLOCK_TYPE);
+    errnoSet (S_$module$Std_BAD_BLOCK_TYPE);
     return (ERROR);
   }
   

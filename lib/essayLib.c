@@ -49,8 +49,6 @@ __RCSID("$LAAS$");
 /* Inclusions generales */
 #ifdef VXWORKS
 #include <vxWorks.h>
-#include <taskLib.h>
-#include "h2sysLibProto.h"
 #else
 #include <portLib.h>
 #endif
@@ -60,6 +58,9 @@ __RCSID("$LAAS$");
 #include <unistd.h>
 #include <string.h>
 #include <errnoLib.h>
+#include <stdarg.h>
+
+#include <taskLib.h>
 
 #include "csLib.h"
 #include "genom/modules.h"
