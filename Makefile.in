@@ -45,7 +45,8 @@ config_files = \
 	tclserv/server/Makefile	\
 	tclserv/client/Makefile	\
 	doc/user_guide/Makefile	\
-	emacs/Makefile
+	emacs/Makefile		\
+	scripts/Makefile
 
 config_headers = \
 	config.h
@@ -53,7 +54,7 @@ config_headers = \
 # --- Directory recursion -----------------------------------------------
 
 # order matters!
-SUBDIRS= lib src include canvas emacs
+SUBDIRS= lib src include canvas emacs scripts
 ifeq (yes,$(HAS_TCL))
 SUBDIRS+= tclserv/server tclserv/client
 endif
