@@ -1,0 +1,45 @@
+#	$LAAS$
+
+Copyright (c) 1993-2004 LAAS/CNRS
+
+
+--- PREREQUISITES -------------------------------------------------------
+
+You need the following tools installed on the system before you can
+compile eltclsh:
+
+- pocolibs library.
+  (<http://softs.laas.fr/openrobots/libs/pocolibs.php>). 
+
+- The GNU make utility, version 3.79 or higher.
+  (<http://www.gnu.org/software/make/make.html>).
+
+- Optionnaly, Tcl/Tk. 8.4 is recommended, but it works with 8.3 too, and
+  might work with all versions from 8.0.
+  (<http://tcl.tk/>). 
+
+
+--- GETTING GENOM -------------------------------------------------------
+
+The lastest version is available from:
+<http://softs.laas.fr/openrobots/tools/genom.php>
+
+
+--- INSTALLATION INSTRUCTIONS -------------------------------------------
+
+genom uses the GNU configure system to handle most of the system
+dependencies configuration. So you can build and install it with the
+following commands: 
+
+        ./configure [options]
+        make
+        make install
+
+Use './configure --help' to find out all the available configure
+options. On most systems, --with-tcl=DIR and --with-tk=DIR will be
+required to specify where to find tclConfig.sh (resp. tkConfig.h). 
+You might also need to use --with-includes and --with-libraries to
+specify the path to pocolibs headers and library, respectively.
+
+The --prefix option (default: /usr/local) defines the base directory
+of the installation. 
