@@ -1,5 +1,20 @@
 $LAAS$
 
+ 21. Added a --with-kernel-includes option when configuring for RTAI, in
+     case kernel headers and RTAI headers are not in the same path.
+ 20. Clarified the confirmation message to send a control request.
+ 19. By default, generate a configure script that looks for Tcl even if
+     -t wasn't given with -i. This was a bit misleading people who
+     forgot the -t when bootstraping the module.
+ 18. Changed the minimum mailbox size for receiving requests to at least
+     sizeof(int) because of the Abort request.
+ 17. Added a few extern "C" declarations to tackle C++ compatibility.
+ 16. Added more default paths to standard Tcl installations.
+ 15. Added the possibility to define the name of a member of a poster
+     defined by a 'type', with the syntax <name>::<type>. Sharing the
+     same name between the type and the structure member doesn't work
+     with g++ 3.3.4. 
+
 genom 1.1 released July 22, 2004
 
  14. Changed hierarchy of canvas directory: it has now `server', `codels'

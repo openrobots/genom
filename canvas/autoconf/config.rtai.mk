@@ -35,7 +35,8 @@ ifeq (powerpc,$(host_cpu))
 CFLAGS+= -fsigned-char -ffixed-r2 -mmultiple -mstring
 endif
 
-CPPFLAGS += -I$(RTAI_INC) -D__RTAI__ -D__KERNEL__ -DMODULE
+CPPFLAGS += -D__RTAI__ -D__KERNEL__ -DMODULE
+CPPFLAGS += -I$(RTAI_INC) -I$(KERNEL_INC)
 
 # produce relocatable objects
 BINEXT=.o

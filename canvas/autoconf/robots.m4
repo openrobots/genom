@@ -165,9 +165,61 @@ else
 fi
 ])
 
+# --- RTAI & lihux kernel includes --------------------------------------
+# AC_CHECK_RTAI_INCLUDES(var, path)
+AC_DEFUN([AC_CHECK_RTAI_INCLUDES],
+[
+   AC_MSG_CHECKING([for RTAI includes])
+   AC_CACHE_VAL(ac_cv_path_rtai,
+    [
+       IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+        ac_tmppath="$2:/usr/realtime/include:/usr/src/rtai/include"
+        for ac_dir in $ac_tmppath; do 
+            test -z "$ac_dir" && ac_dir=.
+            if eval test -f $ac_dir/rtai.h; then
+               eval ac_cv_path_rtai="$ac_dir"
+               break
+            fi
+       done
+       IFS="$ac_save_ifs"
+    ])
+   $1="$ac_cv_path_rtai"
+   if test -n "[$]$1"; then
+      AC_MSG_RESULT([$]$1)
+   else
+      AC_MSG_ERROR([cannot find RTAI includes], 2)
+   fi
+   AC_SUBST($1)
+])
+
+AC_DEFUN([AC_CHECK_LINUXKERNEL_INCLUDES],
+[
+   AC_MSG_CHECKING([for linux kernel includes])
+   AC_CACHE_VAL(ac_cv_path_linuxkernel,
+    [
+       IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+        ac_tmppath="$2:/usr/realtime/include:/usr/src/rtai/include:/usr/src/linux"
+        for ac_dir in $ac_tmppath; do 
+            test -z "$ac_dir" && ac_dir=.
+            if eval test -f $ac_dir/linux/kernel.h; then
+               eval ac_cv_path_linuxkernel="$ac_dir"
+               break
+            fi
+       done
+       IFS="$ac_save_ifs"
+    ])
+   $1="$ac_cv_path_linuxkernel"
+   if test -n "[$]$1"; then
+      AC_MSG_RESULT([$]$1)
+   else
+      AC_MSG_ERROR([cannot find linux kernel includes], 2)
+   fi
+   AC_SUBST($1)
+])
 
 dnl --- Look for includes in a path ------------------------------------
-dnl ROBOT_PATH_INC(PACKAGE, VARIABLE, INC, [, VALUE-IF-NOT-FOUND, [, PATH]])
+dnl ROBOT_PATH_INC(PACKAGE, VARIABLE, INC, [, VALUE-IF-NOT-FOUND, [, PATH],
+dnl                [OTHER-INCLUDES]])
 dnl
 AC_DEFUN(ROBOT_PATH_INC,
 [
@@ -182,7 +234,8 @@ AC_DEFUN(ROBOT_PATH_INC,
             test -z "$ac_dir" && ac_dir=.
 
 	    CPPFLAGS="-I$ac_dir"
-	    AC_COMPILE_IFELSE([#include "$3"],
+	    AC_COMPILE_IFELSE([$6
+#include "$3"],
 			      [eval ac_cv_path_h_$2="$ac_dir"; break])
 	done
 	CPPFLAGS=$ac_save_cppflags

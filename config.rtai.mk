@@ -35,7 +35,8 @@
 moddir=		modules
 MOD=		$(moddir)/lib$(BASENAME).o
 
-MOD_CPPFLAGS+=	-I$(RTAI_INC) -D__RTAI__ -D__KERNEL__ -DMODULE
+MOD_CPPFLAGS+=	-I$(RTAI_INC) -I$(LNXKERN_INC)
+MOD_CPPFLAGS+=	-D__RTAI__ -D__KERNEL__ -DMODULE
 ifeq (powerpc,$(host_cpu))
 MOD_CFLAGS+= -fsigned-char -msoft-float -ffixed-r2 -mmultiple -mstring
 endif

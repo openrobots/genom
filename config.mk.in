@@ -34,7 +34,7 @@ host_cpu=	@host_cpu@
 
 GENOM_MAJOR=	1
 GENOM_MINOR=	1
-GENOM_REV=
+GENOM_REV=	B
 
 
 # --- Programs ----------------------------------------------------------
@@ -75,6 +75,7 @@ PORTLIB_INC=	@PORTLIB_INC@
 PORTLIB_LIB=	@PORTLIB_LIB@
 
 RTAI_INC=	@RTAI_INC@
+LNXKERN_INC=	@LNXKERN_INC@
 
 HAS_TCL=	@HAS_TCL@
 TCL_CPPFLAGS=	@TCL_CPPFLAGS@

@@ -29,31 +29,6 @@ AC_SUBST(ENDIANNESS)
 
 dnl --- RTAI support ----------------------------------------------------
 dnl
-# AC_CHECK_RTAI_INCLUDES(var, path)
-AC_DEFUN([AC_CHECK_RTAI_INCLUDES],
-[
-   AC_MSG_CHECKING([for RTAI includes])
-   AC_CACHE_VAL(ac_cv_path_rtai,
-    [
-       IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
-        ac_tmppath="$2:/usr/realtime/include:/usr/src/rtai/include"
-        for ac_dir in $ac_tmppath; do 
-            test -z "$ac_dir" && ac_dir=.
-            if eval test -f $ac_dir/rtai.h; then
-               eval ac_cv_path_rtai="$ac_dir"
-               break
-            fi
-       done
-       IFS="$ac_save_ifs"
-    ])
-   $1="$ac_cv_path_rtai"
-   if test -n "[$]$1"; then
-      AC_MSG_RESULT([$]$1)
-   else
-      AC_MSG_ERROR([cannot find RTAI includes], 2)
-   fi
-   AC_SUBST($1)
-])
 
 # configure options
 AC_ARG_WITH(rtai,
@@ -64,12 +39,17 @@ AC_ARG_WITH(rtai-includes,
            AC_HELP_STRING([--with-rtai-includes=DIR],
                [RTAI headers are in DIR]),
            [opt_rtai_includes=$withval])
+AC_ARG_WITH(kernel-includes,
+           AC_HELP_STRING([--with-kernel-includes=DIR],
+               [linux kernel headers are in DIR]),
+           [opt_kernel_includes=$withval])
 
 # make related stuff
 if test "x$opt_rtai" = "xyes"; then
    OSAPI=rtai
    AC_MSG_RESULT([Configuring to use RTAI])
    AC_CHECK_RTAI_INCLUDES(RTAI_INC, $opt_rtai_includes)
+   AC_CHECK_LINUXKERNEL_INCLUDES(KERNEL_INC, $opt_kernel_includes)
 
 elif test "x$opt_rtai" = "xno"; then :
    OSAPI=posix
@@ -132,7 +112,8 @@ genom_path_lib=$genom_path_lib:/usr/local/lib:/usr/lib
 
 ROBOT_PATH_INC([genom], GENOM_INCDIR, [genom/modules.h],
 	[AC_MSG_ERROR([please use --with-genom option.])],
-	[$opt_genom/include:`$genomBin$ --includes`:/usr/local/include:/usr/include])
+	[$opt_genom/include:`$genomBin$ --includes`:/usr/local/include:/usr/include],
+	[#include "portLib.h"])
 
 ROBOT_PATH_LIB([genom], GENOM_LIBDIR, [genom], [h2GetEvnStateString],
 	[AC_MSG_ERROR([please use --with-genom option.])],
@@ -151,9 +132,7 @@ ROBOT_PATH_INC([pocolibs], POCOLIBS_INCDIR, [portLib.h],
 
 
 dnl tcl
-if test "x$genTcl$" = "xyes"; then
-   ROBOT_LIB_TCL
-fi
+ROBOT_LIB_TCL
 
 
 dnl --- Check for extra software ----------------------------------------
