@@ -87,8 +87,8 @@ typedef struct {
   int taskId;              /* (CONST.) Id de la tache (process) */
   STATUS status;           /* status de la tache OK ou ERROR */
   double period;           /* (CONST.) Periode requise (sec) */
-  u_long maxPeriod;        /* Periode max (msec) */
-  u_long onPeriod;         /* Periode courante (msec) */
+  unsigned long maxPeriod; /* Periode max (msec) */
+  unsigned long onPeriod;  /* Periode courante (msec) */
   int bilan;               /* bilan de la tache et de l'activite permanente */
   int currentActivity;     /* Activite courante */
   int wakeUp;              /* Eveil de la tache d'exec requis */
