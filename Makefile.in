@@ -1,0 +1,98 @@
+#	$LAAS$
+
+#
+# Copyright (c) 2003 LAAS/CNRS                        --  Mon Aug 18 2003
+# All rights reserved.
+#
+# Redistribution  and  use in source   and binary forms,  with or without
+# modification, are permitted provided that  the following conditions are
+# met:
+#
+#   1. Redistributions  of  source code must  retain  the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must  reproduce the above copyright
+#      notice,  this list of  conditions and  the following disclaimer in
+#      the  documentation   and/or  other  materials   provided with  the
+#      distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+# ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+# SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+# BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+include config.mk
+
+topsrcdir=	@top_srcdir@
+srcdir=		@srcdir@
+
+dist_path= bin/genom
+dist_name= genom-$(GENOM_MAJOR).$(GENOM_MINOR)
+
+config_files = \
+	config.mk		\
+	Makefile		\
+	lib/Makefile		\
+	src/Makefile		\
+	include/Makefile	\
+	canvas/Makefile		\
+	tclserv/server/Makefile	\
+	tclserv/client/Makefile	\
+	doc/user_guide/Makefile	\
+	emacs/Makefile
+
+config_headers = \
+	config.h
+
+# --- Directory recursion -----------------------------------------------
+
+# order matters!
+SUBDIRS= lib src include canvas emacs
+ifeq (yes,$(HAS_TCL))
+SUBDIRS+= tclserv/server tclserv/client
+endif
+ifneq (:,$(LATEX))
+SUBDIRS+= doc/user_guide
+endif
+
+make_subdirs= @for d in ${SUBDIRS}; do (cd $$d; ${MAKE} $@ ) || exit 2; done
+
+all install depends: $(config_files) $(config_headers)
+	$(make_subdirs)
+
+clean:
+	$(make_subdirs)
+
+
+# --- build distribution ------------------------------------------------
+
+dist:
+	mkdir -p $(dist_path)
+	(cd $(topsrcdir); tar cf - .) | (cd $(dist_path); tar xpf -)
+	find $(dist_path) \( -name "CVS" -o -name "*~" \) -exec rm -rf {} \;
+	rm -rf $(dist_path)/autom4te.cache
+	rm -rf $(dist_path)/canvas/configure/autom4te.cache
+	tar cf - $(dist_path) | gzip -c -9 > $(dist_name).tar.gz
+	rm -rf $(dist_path)
+
+
+# --- autoconf/autoheader -----------------------------------------------
+
+config.status: $(topsrcdir)/configure
+	./config.status --recheck
+
+libtool: $(LIBTOOL_DEPS)
+	./config.status --recheck
+
+$(config_files): %: $(topsrcdir)/%.in config.status
+	CONFIG_FILES=$@ CONFIG_HEADERS= ./config.status
+
+$(config_headers): %: $(topsrcdir)/%.in config.status
+	CONFIG_FILES= CONFIG_HEADERS=$@ ./config.status
+	touch $@

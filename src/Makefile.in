@@ -1,0 +1,139 @@
+#	$LAAS$
+
+#
+# Copyright (c) 2003 LAAS/CNRS                        --  Mon Aug 18 2003
+# All rights reserved.
+#
+# Redistribution  and  use in source   and binary forms,  with or without
+# modification, are permitted provided that  the following conditions are
+# met:
+#
+#   1. Redistributions  of  source code must  retain  the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must  reproduce the above copyright
+#      notice,  this list of  conditions and  the following disclaimer in
+#      the  documentation   and/or  other  materials   provided with  the
+#      distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+# ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+# SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+# BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+TOPBUILD=..
+include $(TOPBUILD)/config.mk
+
+topsrcdir=	@top_srcdir@
+srcdir=		@srcdir@
+
+prefix=		@prefix@
+exec_prefix=	@exec_prefix@
+bindir=		@bindir@
+libdir=		@libdir@
+includedir=	@includedir@
+datadir=	@datadir@
+
+VPATH=		$(srcdir)
+
+CPPFLAGS+=	-I$(TOPBUILD) -I$(topsrcdir)/include -I$(srcdir) -I.
+CPPFLAGS+=	-I$(PORTLIB_INC)
+
+LDFLAGS+=	@LEXLIB@
+
+# -----------------------------------------------------------------------
+
+lexsrcs=  parser.l
+yaccsrcs= parser.y
+
+binsrcs=\
+	$(yaccsrcs:.y=.tab.c)	\
+	$(lexsrcs:.l=.lex.c)	\
+	genom.c			\
+	cntrlTaskGen.c		\
+	errorGen.c		\
+	reportsGen.c		\
+	essayGen.c		\
+	execTaskGen.c		\
+	headerGen.c		\
+	makeGen.c		\
+	moduleInitGen.c		\
+	msgLibGen.c		\
+	posterLibGen.c		\
+	propiceEncodeGen.c	\
+	propiceDecodeGen.c	\
+	propiceMakeGen.c	\
+	propiceOpGen.c		\
+	propiceGen.c		\
+	typeGen.c		\
+	printGen.c		\
+	endianGen.c		\
+	scanGen.c		\
+	scopeGen.c		\
+	initGen.c		\
+	tclGen.c		\
+	tclClientGen.c		\
+	userMakeGen.c		\
+	userExecCodelsGen.c	\
+	userCntrlCodelsGen.c	\
+	userStartGen.c		\
+	spyDescriptionGen.c	\
+	spyStructGen.c		\
+	spyServerLibGen.c	\
+	configureGen.c	
+
+binobjs = $(binsrcs:.c=.lo)
+
+.PRECIOUS: $(yaccsrcs:%.y=%.tab.h)
+
+# -----------------------------------------------------------------------
+
+.PHONY: all
+all: $(GENOM)
+
+.PHONY: install
+install: all
+	$(LTINSTALL) $(GENOM) $(bindir)/$(GENOM)
+
+$(GENOM): $(binobjs) $(TOPBUILD)/lib/$(LIBGENOM)
+	$(LTLD) -static $(CFLAGS) $(binobjs) -o $@ \
+		$(TOPBUILD)/lib/$(LIBGENOM) $(LDFLAGS)
+
+parser.tab.lo: parser.tab.c
+	$(LTCC) -static -c $(CPPFLAGS)  $(CFLAGS)	\
+		-DINCLUDEDIR='"$(includedir)"'		\
+		-DLIBRARYDIR='"$(libdir)"'		\
+		-DCANVASDIR='"$(CANVASDIR)"'		\
+		-DSTDINCPP='"$(STDINCPP)"'		\
+		-o $@ $<
+
+%.lo: %.c
+	$(LTCC) -static -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
+
+%.lex.c: %.l
+	$(LEX) -o$@ $<
+
+%.tab.c %.tab.h: %.y
+	$(YACC) -v -d -b $* $<
+
+.PHONY: clean
+clean:
+	$(TOPBUILD)/libtool --mode=clean rm -f $(binobjs) $(GENOM)
+	rm -f $(yaccsrcs:%.y=%.tab.h) $(yaccsrcs:%.y=%.tab.c)
+	rm -f $(lexsrcs:%.l=%.lex.c)
+	rm -f dependencies
+
+.PHONY: depends
+depends dependencies: $(binsrcs)
+	$(MKDEP) -c$(CC) -odependencies -t.lo $(CPPFLAGS) $?
+
+ifneq (${MAKECMDGOALS},clean)
+-include dependencies
+endif

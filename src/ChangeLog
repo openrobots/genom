@@ -1,0 +1,76 @@
+1999-09-24  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceDecodeGen.c: Fix a bug in enum decodage where we returned 
+	FALSE instead of a real Term.
+
+1999-09-21  Francois Felix Ingrand  <felix@laas.fr>
+
+	* parser.y (main): call perl explicitely... instead of relying on
+	the #!/blah/blah
+
+1999-09-17  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceGen.c: Added ABORT request and the symbol and op declarations.
+	* propiceGen.c: Added ASYNC OP symbol declarations.
+
+1999-09-02  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceGen.c: Fixed a pb with type name not properly written
+	(unsigned int, instead of unsigned_int).
+
+1999-07-20  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceEncodeGen.c: An update missing in this file.
+
+1999-07-19  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceGen.c: Cast the encode/decode functions to avoid warning.
+
+1999-07-07  Francois Felix Ingrand  <felix@laas.fr>
+
+	* Changes in the include directives to make proper inclusion of
+	included modules...
+
+1999-07-03  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceGen.c: Declare functional fact 0, not 1.
+
+1999-06-28  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceGen.c (declarePosters): Uppercase the poster components
+	name, and fixed some name problems.
+
+1999-06-25  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceGen.c: Added function for encode/decode posters and their 
+	components.
+
+1999-06-24  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceOpGen.c: Keep output if applicable, and remove NIL inputs 
+	arg grom the invocation part.
+
+1999-06-23  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceDecodeGen.c: Added the size of the string.
+
+	* propiceEncodeGen.c (genEncodeEnum): We must take the element
+	elt+1 from the Term_Comp.
+
+	* parser.y: Added a $genPropice var in the perl script.
+
+1999-06-22  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceGen.c: Encode a la place de la fonction de decode...
+
+1999-06-15  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceMakeGen.c: Added propice/Makefile.protos
+
+	* propiceGen.c: Un arg de trop au format.
+
+1999-06-10  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceOpGen.c (propiceOpGen): When no INPUTS, put nil.
+	(propiceOpGen): OUTPUTS, idem.
+

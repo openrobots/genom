@@ -1,0 +1,46 @@
+1999-09-24  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceRqst.op: When the rs-send-request fails (rqid ==
+	-1)... we also fail the OP after printing an error message and
+	concluding a RS-SEND-REQUEST-ERROR in the DB.
+
+1999-09-02  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceRqst.op: Added an asynchronous OP... 
+
+1999-07-26  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propice*.c: Replaced #include "../$module$Struct.h"
+	 with #include "$module$Type.h".
+
+
+1999-07-20  Francois Felix Ingrand  <felix@laas.fr>
+
+	* *.c: the include portLib.h was not present... 
+
+1999-07-07  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propice{De,En}code.h are now included, instead of only the Proto
+	(to ensure proper modules inclusion).
+
+1999-06-30  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propicePoster.op: Added OP for reading/writting posters.
+
+	* propiceRqst.op: Added a version of the OP which passes the
+	report as argument (for the caller to analyse it).
+
+1999-06-24  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceRqst.op: If no input, remove the arg from the invocation part.
+	Keep output when applicable.
+
+1999-06-15  Francois Felix Ingrand  <felix@laas.fr>
+
+	* Makefile.protos: Added Makefile.protos
+
+1999-06-10  Francois Felix Ingrand  <felix@laas.fr>
+
+	* propiceRqst.op: defka -> defop.
+	$DATA -> $OUTPUT
+

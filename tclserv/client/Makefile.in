@@ -1,0 +1,94 @@
+#	$LAAS$
+
+#
+# Copyright (c) 2003 LAAS/CNRS                        --  Fri Aug 29 2003
+# All rights reserved.
+#
+# Redistribution  and  use in source   and binary forms,  with or without
+# modification, are permitted provided that  the following conditions are
+# met:
+#
+#   1. Redistributions  of  source code must  retain  the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must  reproduce the above copyright
+#      notice,  this list of  conditions and  the following disclaimer in
+#      the  documentation   and/or  other  materials   provided with  the
+#      distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+# ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+# SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+# BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+TOPBUILD=../..
+include $(TOPBUILD)/config.mk
+
+topsrcdir=	@top_srcdir@
+srcdir=		@srcdir@
+
+prefix=		@prefix@
+exec_prefix=	@exec_prefix@
+libdir=		@libdir@
+datadir=	@datadir@
+
+VPATH=		$(srcdir)
+
+CPPFLAGS+=	-I$(TOPBUILD) -I$(topsrcdir)/include -I$(srcdir) -I.
+CPPFLAGS+=	-I$(PORTLIB_INC)
+CPPFLAGS+=	-D$(ENDIANNESS)
+
+LDFLAGS+=	-L$(PORTLIB_LIB) -R$(PORTLIB_LIB)
+LDFLAGS+=	-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)
+
+
+# -----------------------------------------------------------------------
+
+tlist=\
+	init.tcl	\
+	cs.tcl		\
+	load.tcl	\
+	misc.tcl	\
+	server.tcl
+
+pkgfile= pkgIndex.tcl
+
+# -----------------------------------------------------------------------
+
+.PHONY: all
+all: $(pkgfile)
+
+$(pkgfile): $(pkgfile).in
+	$(SED) \
+		-e 's,@canvasdir\@,$(CANVASDIR),g'			\
+		-e 's,@genomversion\@,$(GENOM_MAJOR).$(GENOM_MINOR),g'	\
+		< $< > $@
+
+
+# --- install -----------------------------------------------------------
+
+.PHONY: install
+install: all
+	@for f in $(tlist); do						\
+		$(LTINSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f;	\
+	done
+	$(LTINSTALL_DATA) $(pkgfile) $(datadir)/genom/$(pkgfile)
+
+
+# --- clean -------------------------------------------------------------
+
+.PHONY: clean
+clean:
+
+
+# --- dependencies ------------------------------------------------------
+
+.PHONY: depends
+depends:

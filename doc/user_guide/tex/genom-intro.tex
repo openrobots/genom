@@ -1,0 +1,142 @@
+%
+% Copyright (c) 2001 LAAS/CNRS                        --  Thu Oct 18 2001
+% All rights reserved.                                     Anthony Mallet
+%
+% This document is a translation of the French documentation of GenoM,
+% originally written by Sara Fleury and Matthieu Herrb.
+%
+% Redistribution  and  use in source   and binary forms,  with or without
+% modification, are permitted provided that  the following conditions are
+% met:
+%
+%   1. Redistributions  of  source code must  retain  the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%   2. Redistributions in binary form must  reproduce the above copyright
+%      notice,  this list of  conditions and  the following disclaimer in
+%      the  documentation   and/or  other  materials   provided with  the
+%      distribution.
+%
+% THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+% ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+% IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+% PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+% BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+% CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+% SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+% BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+% WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+% OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+% ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+% $Id$
+%
+
+\GenoM\ ({\bf Gen}erator {\bf o}f {\bf M}odules) is a development
+framework that allows  the definition and the  production of modules that
+encapsulate algorithms.  A module is  a standardized software entity that
+is able to offer services which are provided by your algorithms.  Modules
+can start or stop the execution of these services,  pass arguments to the
+algorithms and export the data produced.
+
+Now  you  might ask  yourself:  ``why should  I bother  integrating  into
+modules my   own algorithms that   {\em do} work  very  well?''. That's a
+pretty good  question and this introduction  will try to advocate on that
+point and give you some answers.
+
+\bigbreak
+
+Your  algorithms aim to  being embedded into  a  {\em target} machine ---
+let's say: a robot.  You might not embrace the way  this machine works in
+its whole and, most important, your  algorithms will be integrated into a
+more general software system that includes  other algorithms developed by
+other persons.  This set of  algorithms  share several common properties:
+they must be configured (don't you have a bunch of parameters you want to
+adjust?), they must be started, interrupted, started again or stopped and
+we might expect them to exchange data and communicate  with other part of
+the system.
+
+Consider the example of a mobile  robot: depending on the requirements of
+its mission and the current context of execution, the robot might need to
+acquire an image, localize itself,  build a local  map with some  sensors
+and  move.  If the  environment  is rather free, the  robot  could plan a
+trajectory, but  it could also  decide to move on the  basis of the local
+data given by its  proximetric  sensors.  To be   able to schedule  these
+rather complex (and uncertain!) actions, it  is {\em necessary} to define
+a protocol that can handle tasks at an abstract level. This protocol will
+let the robot:
+
+\begin{itemize}
+\item start an action when it is needed;
+\item stop an action in a clean manner;
+\item pass a set of parameters and data to the action;
+\item coordinate several actions;
+\item get the results of these actions;
+\item handle the failures of the actions (yes, actions can fail!) an keep
+them from  taking the whole system with them when they spiral
+down. Failures can be as general as:
+   \begin{itemize}
+   \item low batteries,
+   \item incorrect algorithm parameters,
+   \item not enough memory to handle that case,
+   \item the target to localize does not appear in the images,
+   \item the algorithm cannot handle that situation yet,
+   \item \ldots
+   \end{itemize}
+\end{itemize}
+
+Therefore,  the  general   concept  of  {\em module}  and   {\em standard
+protocols}  have  been defined.   These  generic  modules can encapsulate
+almost  every  kind of  algorithm:  periodic or aperiodic, synchronous or
+asynchronous, interruptible or uninterruptible, and even yours!
+
+Of course, you could yourself write a module on the basis of that generic
+model. But that's a long and difficult story: you will  have to port your
+software on the different systems you want it to run on, you will have to
+write  test procedures to  check that  your  module behaves correctly  in
+every situation, \ldots\ and \GenoM\ already does it for you!
+
+\bigbreak
+
+The generator  of modules comes  with  a description {\em language},  and
+standard templates.  The templates will let you describe your module, the
+services  it  can offer, and  for   each  service the  list  of  expected
+parameters,  the algorithms (yours!) that will  be  executed, the results
+along with their description, the failure messages and a few other items.
+
+With the template file and the code of your algorithms --- sorry, you still
+must write it yourself --- \GenoM\ produces:
+
+\begin{itemize}
+   \item {\em a complete module} that can run on several flavor of Unix
+or VxWorks, 
+   \item {\em interface libraries} that will let you use the services of
+the module and get their results back,
+   \item {\em an interactive test program} that let you send several
+requests to the module and trigger the execution of the corresponding
+services.
+\end{itemize}
+
+\bigbreak
+
+Now that you  have an idea  of what \GenoM\ can  be used for, this manual
+will explain you {\em how} to actually do it. You will learn
+
+\begin{center}\begin{cartouche}\parbox{0.9\hsize}{
+\parskip10pt
+    1. {\bf How to produce and use a first test module}, with a concrete
+example.
+
+    2. {\bf How the generic modules work}, and {\bf how they are
+structured}. In particular, some useful vocabulary is explained.
+
+    3. {\bf How to describe your own modules}. The complete
+specification language will be explained.
+
+    4. {\bf How to generate your modules}.
+
+    5. {\bf How to integrate your algorithms into the modules}.
+
+    6. {\bf How to use modules} (from an interactive program, from
+another module, \ldots).
+}\end{cartouche}\end{center}
+

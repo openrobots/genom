@@ -1,0 +1,16 @@
+#!/bin/csh
+
+if ($#argv < 1 || $#argv > 2) then 
+	echo "usage: $module$_scope  <rack> [<$module$_cpu>]"
+	exit 1
+endif
+
+if ($#argv == 1) then
+
+    xterm -sb -bg lightsteelblue3 -title "$module$_scope $1" -e ./auto/${MACHTYPE}-${OSTYPE}/$module$Scope $1 &
+
+else
+
+    xterm -sb -bg lightsteelblue3 -title "$module$_scope $1" -e ./auto/${MACHTYPE}-${OSTYPE}/$module$Scope $1 $2 &
+
+endif

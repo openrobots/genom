@@ -1,0 +1,147 @@
+<module> ::= <liste déclarations top>
+
+<liste déclarations top> ::= <vide> 
+			| <déclaration top> <liste déclarations top>
+			
+<déclaration top> ::= <déclaration de type>
+		| <déclaration de module>
+		| <déclaration de requête>
+		| <déclaration de tâche>
+
+/*----------------------------------------------------------------------*/
+
+<déclaration de module> ::= module <IDENTIFICATEUR> <attributs de module>;
+
+<attributs de module> ::= { <liste attribut/valeur module> }
+
+<liste attribut/valeur module> ::= <paire attribut/valeur module>
+		| <paire attribut/valeur module> 
+			<liste attribut/valeur module>
+
+<paire attribut/valeur module> ::= <attribut/valeur module> ;
+
+<attribut/valeur module> ::= internal_data : <IDENTIFICATEUR>
+
+/*----------------------------------------------------------------------*/
+
+<déclaration de requête> ::= request <IDENTIFICATEUR> <attributs de requête> ;
+
+<attributs de requête> ::= { <liste attribut/valeur requête> }
+
+<liste attribut/valeur requête> ::= <paire attribut/valeur requête>
+		| <paire attribut/valeur requête> 
+			<liste attribut/valeur requête>
+
+<paire attribut/valeur requête> ::= <attribut/valeur requête> ;
+	
+<attribut/valeur requête> ::= type : <type requête> 
+		| input : <structure nom>
+		| output : <structure nom> 
+		| c_control_func : <IDENTIFICATEUR> 
+		| c_exec_func : <IDENTIFICATEUR> 
+		| compatible_with : <liste requêtes> 
+		| exec_task_name : <IDENTIFICATEUR> 
+		| fail_msg : <liste erreurs>
+		| resources : <liste ressources>
+
+<type requête> ::=  exec | control 
+		| control_get  | control_set 
+
+<sdi ref> ::=  <ref membre structure interne> 
+		|  all 
+
+<ref membre structure interne> ::= <IDENTIFICATEUR>
+		| <ref membre structure interne> . <IDENTIFICATEUR>
+
+<structure nom> ::= <indicateur de type> <sdi ref> <IDENTIFICATEUR>
+                | <indicateur de type> <sdi ref> * <IDENDIFICATEUR>
+                | <indicateur de type> <sdi ref> <IDENTIFICATEUR> [ <NUMBER> ]
+
+<liste requêtes> ::= none | all | all_control | all_exec 
+		| <liste requêtes simple> 
+
+<liste requêtes simple> ::= <IDENTIFICATEUR>
+		| <IDENTIFICATEUR> , <liste requêtes simple>
+
+<liste echecs> ::= <IDENTIFICATEUR>
+		| <IDENTIFICATEUR> , <liste echecs>
+
+/*----------------------------------------------------------------------*/
+
+<déclaration de tâche> ::= exec_task <IDENTIFICATEUR> <attributs de tâche> ;
+
+<attributs de tâche> ::= { <liste attribut/valeur tâche> }
+
+<liste attribut/valeur tâche> ::= <paire attribut/valeur tâche>
+		| <paire attribut/valeur tâche> <liste attribut/valeur tâche>
+
+<paire attribut/valeur tâche> ::= <attribut/valeur tâche> ;
+
+<attribut/valeur tâche> ::= type : <type tâche>
+		| period : <valeur periode>
+		| priority: <NUMBER>
+		| c_init_func : <IDENTIFICATEUR>
+		| c_func : <IDENTIFICATEUR>
+		| exported_data : <identificateur de type> <IDENTIFICATEUR>
+		| cs_client_from: <liste modules>
+		| poster_client_from: <liste posters>
+	 	| resources: <liste ressources>
+
+<type tâche> ::= filter | server | servo_process | surveillance
+
+<valeur période> ::= none | <NUMBER> 
+
+<liste modules> ::= <IDENTIFICATEUR>
+		| <IDENTIFICATEUR> , <liste modules>
+
+<liste posters> ::= <IDENTIFICATEUR>
+		| <IDENTIFICATEUR> , <liste posters>
+
+<liste ressources> ::= <IDENTIFICATEUR>
+		| <IDENTIFICATEUR> , <liste ressources>
+
+/*----------------------------------------------------------------------*/
+
+
+<déclaration de type> ::= <indicateur de déclaration> ;
+		| <indicateur de déclaration> <liste decl> ;
+
+<indicateur de déclaration> ::= <indicateur de type>
+	| <indicateur classe de mémorisation> <indicateur de déclaration> 
+
+<indicateur classe de mémorisation> ::= auto | static | extern | register 
+					| typedef
+
+<indicateur de type> ::= char | short | int | long | unsigned | float 
+		| double | <indicateur de structure/union> | <nom typedef>
+
+<liste decl> ::= <élément déclarable>
+	     | <élément déclarable> , liste decl>
+
+<indicateur de structure/union> ::= struct { <liste decl struct> }
+		| struct <IDENTIFICATEUR> { <liste decl struct> }
+		| struct <IDENTIFICATEUR>
+		| union { <liste decl struct> }
+		| union <IDENTIFICATEUR> { <liste decl struct> }
+		| union <IDENTIFICATEUR>
+
+<liste decl struct> ::= <déclaration structure>
+		| <déclaration structure> <liste decl struct>
+
+<déclaration structure> ::= <indicateur de type> <liste membres> ;
+
+<liste membres> ::= <membre structure>
+		| <membre structure> , <liste membres>
+
+<membre structure> ::= <élément déclarable>
+		| <élément déclarable> : <IDENTIFICATEUR>
+
+<élément déclarable> ::= <IDENTIFICATEUR>
+		| ( <élément déclarable> )
+		| * <élément déclarable>
+		| <élément déclarable> ( )
+		| <élément déclarable> [ ]
+		| <élément déclarable> [ <IDENTIFICATEUR> ]
+
+<nom typedef> ::= <IDENTIFICATEUR>
+

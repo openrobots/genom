@@ -1,0 +1,96 @@
+;	$LAAS$
+
+;
+; Copyright (c) 1999-2003 LAAS/CNRS
+; All rights reserved.
+;
+; Redistribution  and  use in source   and binary forms,  with or without
+; modification, are permitted provided that  the following conditions are
+; met:
+;
+;   1. Redistributions  of  source code must  retain  the above copyright
+;      notice, this list of conditions and the following disclaimer.
+;   2. Redistributions in binary form must  reproduce the above copyright
+;      notice,  this list of  conditions and  the following disclaimer in
+;      the  documentation   and/or  other  materials   provided with  the
+;      distribution.
+;
+; THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+; ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+; PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+; BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+; SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+; BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+; WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+; OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+; ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; |$MODULE$ $request$|
+;;;;;;;;;;;;;;;;;;;;;;;;;
+(defop |$MODULE$ $request$|
+    :invocation (! ($MODULE$-$REQUEST$ $INPUTS_ARG$))
+    :body ((IF (! (RS-SEND-REQUEST $MODULE$ $MODULE$_$REQUEST$
+		   $INPUTS$
+		   $RQST-ID))
+              (^ (FR $MODULE$ $MODULE$_$REQUEST$ $RQST-ID $REPORT $OUTPUTS$))
+              (IF (? (~ (EQUAL $REPORT "OK")))
+                 (! (PRINTIFF (FORMAT "RS: BAD report in $MODULE$_$REQUEST$: %d\n" $REPORT)))
+               ELSE
+	         $KEEP_OUTPUTS$ (=> (FR-OUTPUT $MODULE$ $MODULE$_$REQUEST$ $RQST-ID $OUTPUTS$))
+                 (~> (IR $MODULE$ $MODULE$_$REQUEST$ $RQST-ID $ACTID))
+		 (~> (FR $MODULE$ $MODULE$_$REQUEST$ $RQST-ID $REPORT $DATA))
+                 (! (PRINTIF "RS: $MODULE$_$REQUEST$ reply OK\n"))
+              )
+            ELSE
+              (! (PRINTIF "RS: Fail send $MODULE$_$REQUEST$ to $MODULE$\n"))
+	      (=> (RS-SEND-REQUEST-ERROR $MODULE$ $MODULE$_$REQUEST$  $INPUTS$ $RQST-ID))
+	      (! (FAILED))
+           )
+          )
+ :documentation "$DOC$"
+)
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; |$MODULE$ $request$ report|
+;;;;;;;;;;;;;;;;;;;;;;;;;
+(defop |$MODULE$ $request$ report|
+    :invocation (! ($MODULE$-$REQUEST$-REPORT $INPUTS_ARG$ $REPORT))
+    :body ((IF (! (RS-SEND-REQUEST $MODULE$ $MODULE$_$REQUEST$
+		   $INPUTS$
+		   $RQST-ID))
+              (^ (FR $MODULE$ $MODULE$_$REQUEST$ $RQST-ID $REPORT $OUTPUTS$))
+              (IF (? (~ (EQUAL $REPORT "OK")))
+                 (! (PRINTIFF (FORMAT "RS: BAD report in $MODULE$_$REQUEST$: %d\n" $REPORT)))
+               ELSE
+	         $KEEP_OUTPUTS$ (=> (FR-OUTPUT $MODULE$ $MODULE$_$REQUEST$ $RQST-ID $OUTPUTS$))
+                 (~> (IR $MODULE$ $MODULE$_$REQUEST$ $RQST-ID $ACTID))
+		 (~> (FR $MODULE$ $MODULE$_$REQUEST$ $RQST-ID $REPORT $DATA))
+                 (! (PRINTIF "RS: $MODULE$_$REQUEST$ reply OK\n"))
+              )
+            ELSE
+              (! (PRINTIF "RS: Fail send $MODULE$_$REQUEST$ to $MODULE$\n"))
+	      (=> (RS-SEND-REQUEST-ERROR $MODULE$ $MODULE$_$REQUEST$  $INPUTS$ $RQST-ID))
+	      (! (FAILED))
+           )
+          )
+ :documentation "$DOC$"
+)
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; |$MODULE$ $request$ async|
+;;;;;;;;;;;;;;;;;;;;;;;;;
+(defop |$MODULE$ $request$ async|
+    :invocation (! ($MODULE$-$REQUEST$-ASYNC $INPUTS_ARG$ $RQST-ID))
+    :body ((IF (! (RS-SEND-REQUEST $MODULE$ $MODULE$_$REQUEST$
+		   $INPUTS$
+		   $RQST-ID))
+            ELSE
+              (! (PRINTIF "RS: Fail send $MODULE$_$REQUEST$ to $MODULE$\n"))
+	      (=> (RS-SEND-REQUEST-ERROR $MODULE$ $MODULE$_$REQUEST$ $INPUTS$ $RQST-ID))
+	      (! (FAILED))
+           )
+          )
+ :documentation "$DOC$"
+)

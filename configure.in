@@ -1,0 +1,93 @@
+dnl	$LAAS$
+dnl
+dnl configure.in --
+dnl	process this file with autoconf to produce a configure script.
+dnl
+AC_REVISION($LAAS$)
+
+AC_INIT(src/genom.c)
+AC_CONFIG_HEADER(config.h)
+
+dnl Programs names ------------------------------------------------------
+GENOM=genom
+TCLSERV=tclserv
+AC_SUBST(GENOM)
+AC_SUBST(TCLSERV)
+
+
+dnl Checks for headers --------------------------------------------------
+dnl
+AC_CHECK_HEADERS(sys/cdefs.h)
+
+AC_C_BIGENDIAN([ENDIANNESS=IS_BIG_ENDIAN], [ENDIANNESS=IS_LITTLE_ENDIAN],
+          [ENDIANNESS=IS_UNKNOWN_ENDIAN])
+AC_SUBST(ENDIANNESS)
+
+
+dnl Checks for programs -------------------------------------------------
+dnl
+AC_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
+
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_LEX
+AC_PROG_YACC
+
+AC_ARG_VAR(LATEX, "LaTeX text formatting and typesetting")
+AC_CHECK_PROGS(LATEX, [pdflatex latex], [:])
+
+ROBOT_CFLAGS
+ROBOT_CPP_USES_STDIN
+ROBOT_PROG_MKDEP
+
+dnl --- Checks for functions --------------------------------------------
+dnl
+LIBS=
+
+AC_CHECK_LIB(pthread, pthread_create, [],
+          [AC_MSG_ERROR([pthread_create() not found])], [])
+AC_SEARCH_LIBS(socket, [socket], [LIBS="${LIBS} -lnsl"],
+	  [AC_MSG_ERROR([socket() not found])], [-lnsl])
+AC_SEARCH_LIBS(clnt_create, [nsl], [],
+	  [AC_MSG_ERROR([clnt_create() not found])], [])
+AC_SEARCH_LIBS(gethostbyname, [nsl], [],
+	  [AC_MSG_ERROR([gethostbyname() not found])], [])
+AC_SEARCH_LIBS(sem_init, [rt], [],
+	  [AC_MSG_ERROR([sem_init() not found])], [])
+AC_SEARCH_LIBS(dlopen, [dl], [],
+	  [AC_MSG_ERROR([dlopen() not found])], [])
+
+AC_SUBST(OS_LIBS, "${LIBS}")
+
+
+dnl --- Checks for libraries --------------------------------------------
+dnl
+ROBOT_PATH_INC([portLib], PORTLIB_INC, [portLib.h],
+	       [AC_MSG_ERROR([portLib headers not found.
+Please use --with-portLib-includes option.])],
+	       [$includedir:/usr/include:/usr/local/include])
+ROBOT_PATH_LIB([portLib], PORTLIB_LIB, [libportLib.so],
+	       [AC_MSG_ERROR([portLib libraries not found.
+Please use --with-portLib-libraries option.])],
+	       [$libdir:/usr/lib:/usr/local/lib])
+
+ROBOT_LIB_TCL
+
+
+dnl Create the Makefiles ------------------------------------------------
+dnl
+CFLAGS="${C_DEBUG_FLAGS} ${C_WARNING_FLAGS}"
+
+AC_OUTPUT(
+	config.mk
+	Makefile
+	lib/Makefile
+	src/Makefile
+	include/Makefile
+	canvas/Makefile
+	tclserv/server/Makefile
+	tclserv/client/Makefile
+	doc/user_guide/Makefile
+	emacs/Makefile
+)

@@ -1,0 +1,248 @@
+%
+% Copyright (c) 2001 LAAS/CNRS                                   --  1995
+% All rights reserved.                                        Sara Fleury
+%
+% Redistribution  and  use in source   and binary forms,  with or without
+% modification, are permitted provided that  the following conditions are
+% met:
+%
+%   1. Redistributions  of  source code must  retain  the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%   2. Redistributions in binary form must  reproduce the above copyright
+%      notice,  this list of  conditions and  the following disclaimer in
+%      the  documentation   and/or  other  materials   provided with  the
+%      distribution.
+%
+% THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+% ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+% IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+% PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+% BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+% CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+% SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+% BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+% WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+% OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+% ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+% $Id$
+%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{genom}[1995/08/03 GenoM Documentation Style]
+
+% Page style ------------------------------------------------------------
+
+\overfullrule5pt
+\setcounter{tocdepth}{1}
+
+% Skip an empty page
+\def\clearemptydoublepage{\newpage{\pagestyle{empty}\cleardoublepage}}
+
+% Redefine the page style to be empty for beginning of chapters
+\def\chapter{
+   \if@openright\clearemptydoublepage\else\clearpage\fi
+   \thispagestyle{empty}
+   \global\@topnum\z@
+   \@afterindentfalse
+   \secdef\@chapter\@schapter
+}
+
+% Rounded box
+\newbox\genom@box
+\def\genombox#1{
+   \setbox\genom@box\hbox\bgroup\begin{minipage}{#1}
+}
+\def\endgenombox{
+   \end{minipage}\egroup
+   \psframebox[framearc=.05,framesep=3mm,linewidth=0.5pt]{%
+      \box\genom@box%
+   }
+}
+
+
+% The GenoM logo --------------------------------------------------------
+
+\def\GenoM{{G{\setbox0\hbox{T}%
+         \vbox to\ht0{\hbox{$\m@th$%
+                            \csname S@\f@size\endcsname
+                            \fontsize\sf@size\z@
+                            \math@fontsfalse\selectfont
+                            en}%
+                      \vss}%
+        }%
+        \kern-.1em
+        \hbox{$\m@th$%
+                            \csname S@\f@size\endcsname
+                            \fontsize\sf@size\z@
+                            \math@fontsfalse\selectfont
+                            o}%
+ M}}
+
+
+% -----------------------------------------------------------------------
+% cartouche environmnent: draw rectangle w/rounded corners around argument
+\RequirePackage{calc}
+
+\font\circfont=lcircle10
+\newdimen\circthick
+\newdimen\cartouter\newdimen\cartinner
+\newskip\normbskip\newskip\normpskip\newskip\normlskip
+\circthick=\fontdimen8\circfont
+%
+\def\ctl{{\circfont\char'013\hskip -6pt}}% 6pt from pl file: 1/2charwidth
+\def\ctr{{\hskip 6pt\circfont\char'010}}
+\def\cbl{{\circfont\char'012\hskip -6pt}}
+\def\cbr{{\hskip 6pt\circfont\char'011}}
+\def\carttop{\hbox to \cartouter{\hskip\lskip
+        \ctl\leaders\hrule height\circthick\hfil\ctr
+        \hskip\rskip}}
+\def\cartbot{\hbox to \cartouter{\hskip\lskip
+        \cbl\leaders\hrule height\circthick\hfil\cbr
+        \hskip\rskip}}
+%
+\newskip\lskip\newskip\rskip
+\newlength\normtopsep
+
+%\@listdepth=0
+
+\long\def\cartouche{
+\begingroup
+
+        % Marge gauche depend de l'indentation
+	\setlength{\lskip}{\leftmargin*\@listdepth}
+
+        \rskip=\marginparsep
+	\normtopsep=\topsep
+	\topsep=0pt
+        \leftskip=10pt\rightskip=10pt %we want these *outside*.
+        \cartinner=\hsize \advance\cartinner by-\lskip 
+                          \advance\cartinner by-\rskip
+                          \advance\cartinner by-7pt % Bon, beh on recale
+%                                                     la ligne verticale
+%                                                     droite ...
+%                                                     (pas joli ...)
+        \cartouter=\hsize
+	% longeur des lignes horizontales : 
+        \advance\cartouter by 21pt % allow for 3pt kerns on either
+%                                    side, and for 6pt waste from
+%                                    each corner char
+%                                marge totale: 18pt -> 28pt 
+        \normbskip=\baselineskip \normpskip=\parskip \normlskip=\lineskip
+        \vbox\bgroup
+                \baselineskip=0pt\parskip=0pt\lineskip=0pt
+                \carttop
+                \hbox\bgroup
+                        \hskip\lskip
+                        \vrule\kern13pt % marge gauche: 3pt -> 13pt
+                        \kern-\lskip % on supprime l'indentation suppl
+%                                      pour le texte (qui a sa propre indent.)
+                        \vbox\bgroup
+                                \hsize=\cartinner
+                                \kern3pt % marge en haut
+                                \begingroup
+                                        \baselineskip=\normbskip
+                                        \lineskip=\normlskip
+                                        \parskip=\normpskip
+                                        \vskip -\parskip
+\def\endcartouche{%
+                                \endgroup%
+                                \kern3pt
+                        \egroup%
+                        \kern\lskip % on rajoute l'indentation suppl.
+                        \kern3pt\vrule%
+                        \hskip\rskip%
+                \egroup%
+                \cartbot%
+        \egroup
+	\topsep=\normtopsep
+\endgroup
+}}
+ 
+
+
+
+%-----------------------------------------------------------------------
+% Seulement le haut de la cartouche
+\long\def\cartHaut{
+
+\begingroup
+        \lskip=\leftskip \rskip=\rightskip
+	\normtopsep=\topsep
+	\topsep=0pt
+        \leftskip=10pt\rightskip=10pt %we want these *outside*.
+        \cartinner=\hsize \advance\cartinner by-\lskip 
+                          \advance\cartinner by-\rskip
+        \cartouter=\hsize
+        \advance\cartouter by 28pt % allow for 3pt kerns on either
+%                                    side, and for 6pt waste from
+%                                    each corner char
+        \normbskip=\baselineskip \normpskip=\parskip \normlskip=\lineskip
+        \vbox\bgroup
+                \baselineskip=0pt\parskip=0pt\lineskip=0pt
+                \carttop
+                \hbox\bgroup
+                        \hskip\lskip
+                        \vrule\kern13pt
+                        \vbox\bgroup
+                                \hsize=\cartinner
+                                \kern3pt
+                                \begingroup
+                                        \baselineskip=\normbskip
+                                        \lineskip=\normlskip
+                                        \parskip=\normpskip
+                                        \vskip -\parskip
+\def\endcartHaut{%
+                                \endgroup%
+                                \kern3pt
+                        \egroup%
+                        \kern3pt\vrule%
+                        \hskip\rskip%
+                \egroup%
+        \egroup
+	\topsep=\normtopsep
+\endgroup
+}}
+ 
+
+
+% Seulement le bas de la cartouche
+\long\def\cartBas{
+
+\begingroup
+        \lskip=\leftskip \rskip=\rightskip
+	\normtopsep=\topsep
+	\topsep=0pt
+        \leftskip=10pt\rightskip=10pt %we want these *outside*.
+        \cartinner=\hsize \advance\cartinner by-\lskip 
+                          \advance\cartinner by-\rskip
+        \cartouter=\hsize
+        \advance\cartouter by 28pt % allow for 3pt kerns on either
+%                                    side, and for 6pt waste from
+%                                    each corner char
+        \normbskip=\baselineskip \normpskip=\parskip \normlskip=\lineskip
+        \vbox\bgroup
+                \baselineskip=0pt\parskip=0pt\lineskip=0pt
+                \hbox\bgroup
+                        \hskip\lskip
+                        \vrule\kern13pt
+                        \vbox\bgroup
+                                \hsize=\cartinner
+                                \kern3pt
+                                \begingroup
+                                        \baselineskip=\normbskip
+                                        \lineskip=\normlskip
+                                        \parskip=\normpskip
+                                        \vskip -\parskip
+\def\endcartBas{%
+                                \endgroup%
+                                \kern3pt
+                        \egroup%
+                        \kern3pt\vrule%
+                        \hskip\rskip%
+                \egroup%
+                \cartbot%
+        \egroup
+	\topsep=\normtopsep
+\endgroup
+}}

@@ -1,0 +1,531 @@
+%
+% Copyright (c) 2001 LAAS/CNRS                        --  Tue Oct 30 2001
+% All rights reserved.                                     Anthony Mallet
+%
+% This document is a translation of the French documentation of GenoM,
+% originally written by Sara Fleury and Matthieu Herrb.
+%
+% Redistribution  and  use in source   and binary forms,  with or without
+% modification, are permitted provided that  the following conditions are
+% met:
+%
+%   1. Redistributions  of  source code must  retain  the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%   2. Redistributions in binary form must  reproduce the above copyright
+%      notice,  this list of  conditions and  the following disclaimer in
+%      the  documentation   and/or  other  materials   provided with  the
+%      distribution.
+%
+% THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+% ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+% IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+% PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+% BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+% CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+% SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+% BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+% WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+% OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+% ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+% $Id$
+%
+
+Creating a new module implies writing two distinct parts: the description
+of the module  (the {\tt .gen} file)  and codels. This  chapter describes
+the first part, the {\tt .gen} file.
+
+% -----------------------------------------------------------------------
+\section{Using the XEmacs mode {\tt genom-mode}}
+
+It is strongly advised you use the {\tt genom-mode} under XEmacs to write
+your module.  Besides the syntactic  coloring and automatic  indentation,
+this   mode defines several   commands   that create  \GenoM\  structures
+(requests, posters, \ldots). It also includes on-line help.
+
+Commands can be accessed by three means:
+\begin{itemize}
+\item The (X)Emacs menu bar ({\tt GenoM Mode Commands})
+\item A pop-up menu with button 3 of the mouse
+\item The following keyboard shortcuts, beginning with {\tt C-c} (control-c)
+
+{\small
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\tt C-c C-m & create a new {\bf m}odule  ({\em first command to invoke})\\
+\tt C-c C-i & {\bf i}mport a structure \\
+\tt C-c C-r & create a {\bf r}equest \\
+\tt C-c C-p & create a {\bf p}oster \\
+\tt C-c C-e & create an {\bf e}xecution task\\
+\hline
+\tt C-c C-b & indent whole buffer \\
+\tt C-c C-v & check that every field is filled \\
+\tt C-c C-d & remove optional fields that are empty ({\bf d}elete) \\
+\hline
+\tt C-c C-h \ldots & on-line {\bf h}elp\\
+\hline
+\end{tabular}}
+\end{itemize}
+
+Commands that create a \GenoM\ structure (request, poster, \ldots) prompt
+you  for  a   name in  the   mini-buffer.  Additional   arguments may  be
+requested, depending on the particular structure you  are creating.  Once
+you  have  supplied all the  arguments,  a template  for the structure is
+inserted  in the buffer.   Optional   fields  are surrounded  by   single
+superior and inferior signs ({\tt  $<$} and {\tt $>$}). Mandatory  fields
+are surrounded by two  superior and inferior signs  ({\tt $<<$}  and {\tt
+$>>$}). You  can refer to the  on-line help to know  how to fill in these
+fields.
+
+On-line help can be requested with the {\tt C-c C-h} key sequence,
+followed by one of the following letter:
+
+{\small
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\tt h & lists the available commands of {\tt genom-mode}  \\
+\tt m & describes {\bf m}odules \\
+\tt r & describes {\bf r}equests \\
+\tt p & describes {\bf p}osters \\
+\tt e & describes {\bf e}xecution tasks \\
+\tt i & describes structures {\bf i}mportation \\
+\tt g & describes the module {\bf g}eneration  \\
+\tt c & describes the {\bf c}odels  \\
+\tt C-h & help on help (this list) \\
+\hline
+\end{tabular}}
+
+Help pages are made up of four parts:
+
+\begin{itemize}
+\item {\tt What is a \ldots ?}: general description of the \GenoM\
+structure
+\item {\tt How to create a \ldots ?}: how to create the structure
+\item {\tt How to instantiate the fields ?}: how to fill in the template
+of the structure
+\item {\tt Examples}: some examples.
+\end{itemize}
+
+Last,  active   zones (updated  with   the sequence  {\tt C-button2}) are
+defined for each request and each codel  of the requests. When clicking
+(button 2) on these zones, the file containing the corresponding codel(s)
+is visited  and the point is positioned  onto the function. If the function
+does not exist,  an empty template can  be inserted if  you want so  (the
+module must be generated for this to work).
+
+
+% =======================================================================
+\section{Writing a module}
+
+A  module description contains five   parts. The five section below  will
+describe these parts, and use the {\tt demo} module as an example.
+The five parts are:
+
+\begin{enumerate}
+\item Module declaration
+\item {\tt C} structures and fIDS declaration
+\item Requests definition
+\item Posters definition
+\item Execution tasks declaration
+\end{enumerate}
+
+All the  \GenoM\ structures (module,  request, poster  and task) use  the
+same syntax: a keyword, which characterizes the  structure, followed by a
+name and several fields enclosed between  braces ({\tt \{} and {\tt \}}).
+The keyword is one of {\tt module, import  from, request, poster} or {\tt
+exec\_task}.
+
+In this section, optional  fields are  surrounded  by {\tt $<$} and  {\tt
+$>$}. Mandatory fields are surrounded by  {\tt $<<$} and {\tt $>>$}. {\em
+Optional   fields that are not  instantiated  must  be removed before the
+module is generated}.
+
+% -----------------------------------------------------------------------
+\subsection{Module declaration}
+
+A module declaration looks like this:
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+module <<module-name>> {
+    number:          <<module-number>>;
+    internal_data:   <<SDI-type>>;
+};
+\end{verbatim}\end{cartouche}\end{center}
+
+This part   is  mandatory  and    lets   you  choose a  name   for   your
+module.  Fill-in the field  {\tt $<<$module-name$>>$} and choose a number
+for {\tt  $<<$module-number$>>$}. This number must  be a multiple of $10$
+greater that  $1000$. It should be unique  and no other module should use
+the same one.
+
+The last  field you have  to fill-in  is {\tt  $<<$SDI-type$>>$}, and you
+must choose the name of  a valid {\tt C} type  (this probably should be a
+typedef  for  a   structure type).   This  will  be  the  module internal
+database. {\tt   genom-mode} provides you with  a  default value for this
+field.
+
+% -----------------------------------------------------------------------
+\subsection{{\tt C} structures and fIDS declaration}
+
+Note:  the  {\em functional internal  data  structure} (fIDS, or  SDIf in
+French) is  a {\tt C} structure that  contains all the requests input and
+output data,  as well as the  posters definition.  When writing a module,
+this structure   can  be defined  progressively  by   adding the requests
+parameters each time a new request is added.
+
+\subsubsection{Requests parameters, replies and posters}
+
+These are {\tt  C} structures you should define  in {\tt C} header files.
+You can include  these headers with the {\tt  \#include} directive, as in
+plain {\tt C}.  Since these headers are parts  of the  module definition,
+they should be located in the main directory  of your module, in the same
+place as the {\tt .gen} file.
+
+These structures  will  be  used by other   modules.   Thus, it  is  {\em
+strongly} advised you prefix  their  names with,  e.g., the name  of your
+module (see        the  example      {\tt    demoStruct.h}   in       the
+section~\ref{sec|session|example}).
+
+Lastly, it is also advised you protect your headers of multiple inclusion
+with the standard strategy:
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+#ifndef FILENAME
+#define FILENAME
+...
+#endif  /* FILENAME */
+\end{verbatim}\end{cartouche}\end{center}
+
+You must respect three rules in order to get your header files working
+with \GenoM:
+
+\begin{enumerate}
+\item {\bf Allowed C types}: \GenoM\ can parse {\em nearly} all {\tt C}
+type declarations. The  only unknown type  is {\tt void}  and a few other
+constructions are  forbidden:  {\em i.}   {\tt  union}s,  and  {\em  ii.}
+recursive type definition as   in {\tt typedef B A}   where {\tt A}  is a
+typedef itself. A workaround for the latter is to use a new structure:
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+typedef struct B {
+   A a;
+} B;
+\end{verbatim}\end{cartouche}\end{center}
+
+\item {\bf Limitations on pointers}: Requests parameters, replies and
+posters  will  travel  between  several  processes,  outside  the module,
+possibly on  another machine.  Given that,  the  notion of {\em pointer},
+{\em address} or {\em list} does not make  sense.  They should not appear
+in this context (but  you  can use  such data  types internally in   your
+codels).
+
+\item {\bf Alignment considerations}: The structures you define can
+potentially be transferred across several  platforms.  You must be  aware
+that different systems do not  align data in   the same way. In order  to
+avoid problems, you should  align yourself your data  on {\tt double}s (8
+bytes). The following example illustrates this:
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+typedef struct PILO_MOVE {
+   int    percentSpeed;    /* percentage of max speed */
+   int    padding;         /* ALIGNMENT */
+   double distance;        /* distance to travel */
+} PILO_MOVE;
+\end{verbatim}\end{cartouche}\end{center}
+
+\end{enumerate}
+
+
+\subsubsection{External structures}
+
+It is  possible to   import,  from  other  modules, external    structure
+definitions. The corresponding headers are included with the {\tt
+\#include} directive but, in that case, it has to be put in an {\tt
+import from}    directive.  This tells \GenoM\     from which module  the
+structures come, and  avoid duplication of  the functions that deal  with
+these structures.
+
+In the example  below, the module  {\tt pilo} uses  structures defined in
+the module {\tt loco}:
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+import from loco {
+#include "locoStruct.h"
+};
+#include "piloStruct.h"
+
+typedef struct PILO {
+     PILO_MOVE move;
+     LOCO_REF  reference;
+} PILO;
+\end{verbatim}\end{cartouche}\end{center}
+
+It is  recommended  that you do not  hard-code  the path  to  the external
+headers. Instead, use the option {\tt -I} upon the module generation.
+
+
+\subsubsection{What should (and should not) the fIDS contain?}
+
+Requests parameters, requests replies  and almost every poster  will pass
+through the fIDS: thus, they must be declared in this structure. The fIDS
+is also a way to   exchange data between tasks    (or threads) inside   a
+module. Conversely, data exchanged between codels of  the {\em same} task
+only do not need to be declared here.
+
+
+% -----------------------------------------------------------------------
+\subsection{Requests definition}
+
+There     are  threes   types of      requests:  control, execution   and
+initialization. The three types are  identified  by the field {\tt  type}
+and one of the three keywords {\tt control}, {\tt exec} and {\tt init}.
+
+Examples of requests can be found in the chapter~\ref{cha|session}.
+
+\subsubsection{Control requests}
+
+They are defined with the keyword {\tt control} in the field {\tt type}:
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+request <<request-name>> {
+     doc:                "doc";
+     type:               control;
+     input:              <name>::<sdi-ref>; 
+     input_info:         <default-val>::"<name>", ...;
+     output:             <name>::<sdi-ref>; 
+     c_control_func:     <codel>; 
+     fail_msg:           <msg-name>, ...;
+     incompatible_with:  <exec-rqst-name>, ...;
+};
+\end{verbatim}\end{cartouche}\end{center}
+
+\begin{itemize}
+\item {\tt doc} is a short string that describes the service usage.
+
+\item {\tt input} and {\tt output} define respectively the input
+parameter and the output parameter of the request. {\tt name} is the name
+of this variable and  {\tt sdi-ref} the name  of the corresponding member
+of the fIDS (e.g. {\tt input: position::state.position}).
+
+\item {\tt input\_info} lets you define default values as well as a
+comment for {\em  each}   member  of  the  {\tt  input}  structure.  This
+information is used for interactive  requests invocation.
+
+\item {\tt c\_control\_func} is a codel ({\tt C} function) which is
+executed by the control task and which controls the validity of the input
+parameter.
+
+\item {\tt fail\_msg} is a list of possible reports returned by the
+control codel (the special report "OK" is always implicitly defined).
+
+\item {\tt incompatible\_with} is a list of requests of {\em this module}
+that   are    declared   incompatible  with     this request.  Activities
+corresponding to the listed requests will  be interrupted upon invocation
+of this service.  Two special keywords {\tt  all} and {\tt none} let  you
+declare all requests (or none) to be incompatible with this one.
+\end{itemize}
+
+
+\subsubsection{Execution requests}
+
+They are defined with the keyword {\tt exec} in the field {\tt type}. As
+opposed to the control requests, those requests declare services that
+will be executed and they define a few more fields:
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+request <<request-name>> {
+     doc:                 "doc";
+     type:                exec;
+     exec_task:           <<exec-task-name>>; 
+     input:               <name>::<sdi-ref>; 
+     input_info:          <default-val>::"<name>", ...; 
+     output:              <name>::<sdi-ref>; 
+     c_control_func:      <codel>; 
+     c_exec_func_start:   <codel>; 
+     c_exec_func:         <codel>; 
+     c_exec_func_end:     <codel>; 
+     c_exec_func_inter:   <codel>; 
+     c_exec_func_fail:    <codel>; 
+     fail_msg:            <msg-name>, ... ; 
+     incompatible_with:   <exec-rqst-name>, ... ; 
+};
+\end{verbatim}\end{cartouche}\end{center}
+
+\begin{itemize}
+\item {\tt exec\_task} is the name of the execution task in charge of the
+codels execution.
+
+\item {\tt c\_exec\_func\_start}, {\tt c\_exec\_func}, {\tt
+c\_exec\_func\_end},     {\tt    c\_exec\_func\_inter}    and \\     {\tt
+c\_exec\_func\_fail} are  the  codels of  this  service.  All  fields are
+optional,  but at least one  of  {\tt  func\_start},  {\tt func} or  {\tt
+func\_end}  must  be   defined.    Codels   are  further described     in
+chapter~\ref{cha|codels}.
+
+\item All other fields serve the same purpose  as in control  requests.
+See previous paragraph for a description.
+
+
+\subsubsection{Initialization request}
+
+A special execution request is   the {\em initialization request}. It  is
+identified by the keyword {\tt  init} in the  field {\tt type} (all other
+fields are the same as for execution requests).  This special request can
+be used to perform some initialization upon module  startup. There can be
+at  most one such request   and the module will   not accept to serve any
+other   {\em    execution}  request until   the   {\tt   init}   has been
+invoked.  Control requests will still  be served, and  can be used to set
+several parameters used by the {\tt init} request.
+
+In  order to allow the  invocation  of the init  request  from a standard
+shell (for instance as soon as the  module is spawned), \GenoM\ builds an
+executable called {\tt <module>Init} (where {\tt <module>} is the name of
+the module) in {\tt  auto/\$\{TARGET\}}. This executable takes exactly as
+many parameters as in the structure  declared in the  input field, in the
+same order as they appear in the structure.
+
+\end{itemize}
+
+\subsection{Posters definition}
+
+The  posters let you export   data, either automatically  (you don't have
+anything to do) or ``by hand'' inside  a codel.  Data may  be a member of
+the fIDS or not.
+
+\subsubsection{Data from the fIDS}
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+poster <<poster-name>> {
+     update:             <<update-type>>;
+     data:               <<name>>::<<sdi-ref>>, ... ;
+     exec_task:          <<exec-task-name>>; 
+};
+\end{verbatim}\end{cartouche}\end{center}
+
+\begin{itemize}
+\item {\tt update} indicates whether the poster is updated automatically
+({\tt auto}) or by  a codel ({\tt user}). The  {\tt auto} mode is usually
+chosen for periodical data such as a position.
+
+\item {\tt data} is the list of data you wish to include in the
+poster. It is given in the same way as the input and output parameters of
+the requests: a name, followed by a reference to a member of the fIDS.
+
+\item {\tt exec\_task} is the task which owns the poster. This task is in
+charge of the update of the poster for {\tt auto} posters. Note that only
+the task which owns the poster can change its content.
+\end{itemize}
+
+The data  structure  of the  poster is  a concatenation  of  the  list of
+declared data.  The corresponding  {\tt C} type  is defined by \GenoM\ in
+the     file   {\tt  auto/<module>Poster.h} and     its    name  is  {\tt
+<MODULE>\_<POSTER>\_STR} (all uppercase) where {\tt <MODULE>} is the name
+of the module and {\tt <POSTER>} the name of the poster.
+
+For  instance,   the {\tt  Mobile}  poster  of    the {\tt  demo}  module
+(chapter~\ref{cha|session}) is defined as follow:
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+typedef struct DEMO_MOBILE_POSTER_STR {
+  DEMO_STATE_POSTER_STR state;
+  double ref;
+} DEMO_MOBILE_POSTER_STR;
+\end{verbatim}\end{cartouche}\end{center}
+
+
+\subsubsection{Other data}
+
+Data exported by posters  are not necessarily members  of the fIDS.  This
+can be the case if {\em i.} data structures are big: it is not advised to
+put  them in   the fIDS and   copy them  several times, {\em   ii.}  data
+structures do not have a predefined size, as for lists for instance.
+
+For this kind of posters, two new fields are defined:
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+poster <<poster-name>> {
+     update:             user;
+     type:               <<type-name>>;
+     exec_task:          <<exec-task-name>>; 
+     c_create_func:      <codel>;
+};
+\end{verbatim}\end{cartouche}\end{center}
+
+\begin{itemize}
+\item {\tt type} is the name of the {\tt C} type of the data structure.
+\item {\tt c\_create\_func} optionally designates the name of a {\tt C}
+function which is   used to create the  poster  structure. If  it is  not
+given,  the  module performs the memory  allocation  by itself, using the
+size of the  given {\tt C} type.
+\end{itemize}
+
+
+\subsection{Execution tasks declaration}
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+exec_task <<exec-task-name>> {
+     period:             <number>;
+     delay:              <number>;
+     priority:           <<number>>;
+     stack_size:         <<number>>;
+     c_init_func:        <codel>;
+     c_end_func:         <codel>;
+     c_func:             <codel>;
+     cs_client_from:     <module-name>, ... ;
+     poster_client_from: <module-name>::<poster-name>, ... ;
+     fail_msg:           <msg-name>, ... ;
+};
+\end{verbatim}\end{cartouche}\end{center}
+
+\begin{itemize}
+\item {\tt period} (optional) defines a periodical task. The period is
+given as an integer number in {\tt ticks} (at the moment, a tick is $5ms$
+under VxWorks and $10ms$ under Unix). {\em Take care:} the period must be
+{\em a divisor or a multiple} of $20$. (e.g. 1, 2, 4, 5, 10, 20, 40, 60,
+\ldots). 
+
+\item {\tt delay} (optional integer in {\em ticks}). All periodical
+tasks with the same period  will wake up at the  same time. The delay can
+be used to delay the waking up of a particular task  by the amount of ticks
+specified. {\tt delay} can be {\tt none} for  a-periodical tasks.
+
+\item {\tt priority} is used by the scheduler of the operating system. It
+is an integer  between $0$ (highest) and  $255$ (lowest). Priorities must
+be used to make  sure that tasks  with strong real-time constraints  will
+match their requirements.  A common strategy is to use a priority roughly
+``proportional to the inverse'' of the period.
+
+\item {\tt stack\_size} is the size (in bytes) of the stack for this
+task. The size you  need  depends essentially on   the size of the  local
+variables you  use.  A   stack which  is {\em   too small} will   produce
+unpredictable results, so be sure  to largely {\bf overestimate} what you
+need.   A  good choice is  usually   $20.000$  bytes.  You can  then  use
+utilities   like {\tt checkStack}     for  VxWorks to   obtain a   better
+estimate. Note that under Unix, stack size are not used at this time (the
+stack is grown dynamically).
+
+\item {\tt c\_init\_func} is the initialization codel. It is called only
+once, just before the module is ready to answer requests.  It can be used
+to initialize internal variables (see also  the {\em init request}, which
+can be used if the initialization requires user inputs).
+
+\item {\tt c\_end\_func} is the symmetric of the {\tt c\_init\_func}. It
+is called once, just before the module exits.
+
+\item {\tt c\_func} is a {\em permanent} codel. It is executed each time
+the execution tasks wakes  up. Thus, for  a  periodical task, it is  also
+periodical.
+
+\item {\tt cs\_client\_from} is a list of modules you wish to send
+requests to. It might be deprecated in future releases.
+
+\item {\tt poster\_client\_from} is a list of posters from other modules
+that  you wish  to use  in this  module.  This list is   made  up of coma
+separated items,  where each item is  of the  form <module>::<poster>. It
+might be deprecated in future releases.
+
+\item {\tt fail\_msg} is a list of reports that can be reported by the
+permanent activity {\tt c\_func}. Since  this activity does not belong to
+a request, its  reports are  stored in  the  {\em control poster} of  the
+module.
+\end{itemize}

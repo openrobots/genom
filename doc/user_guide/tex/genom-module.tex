@@ -1,0 +1,186 @@
+%
+% Copyright (c) 2001 LAAS/CNRS                        --  Tue Oct 30 2001
+% All rights reserved.                                     Anthony Mallet
+%
+% This document is a translation of the French documentation of GenoM,
+% originally written by Sara Fleury and Matthieu Herrb.
+%
+% Redistribution  and  use in source   and binary forms,  with or without
+% modification, are permitted provided that  the following conditions are
+% met:
+%
+%   1. Redistributions  of  source code must  retain  the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%   2. Redistributions in binary form must  reproduce the above copyright
+%      notice,  this list of  conditions and  the following disclaimer in
+%      the  documentation   and/or  other  materials   provided with  the
+%      distribution.
+%
+% THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+% ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+% IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+% PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+% BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+% CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+% SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+% BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+% WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+% OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+% ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+% $Id$
+%
+
+This chapter will explain some vocabulary we use in this document, what
+are modules, and how they work.
+
+% -----------------------------------------------------------------------
+
+\section{Vocabulary and general description}
+\label{sec|module|voc}
+
+A module lets  you integrate your  algorithms and functions  as  a set of
+services in a  standard template. It then lets  you access those services
+with a standardized  interface. Produced data can  also be retrieved in a
+standard way.
+
+The services are controlled ({\em  i.e.} parameterized, started or stopped)
+with  {\em   requests},  that  represent  the    visible  part   of   the
+module. Requests  can be used either  by an  operator, another module, or
+any other program.
+
+To each request can  be associated an {\em  input parameter} and an  {\em
+output parameter} ({\tt C} structures as  of today). When a service ends,
+a   {\em  reply} is sent to   the   client who invoked  the corresponding
+request. To  each reply  is  associated an  {\em  execution  report}:  it
+describes the execution of  the service and  lets  the client  know about
+problems that might have occured.
+
+There are two kind of requests: the {\em execution} requests and the {\em
+control} requests. Execution requests  start  an actual service,  whereas
+control requests control the  execution of the services. Control requests
+can set parameters,  interrupt services, and so  on... Each module has  a
+predefined control request whose name  is  {\tt Abort}: it can  interrupt
+any running service as well as the module itself.
+
+The execution time of  a control request  is considered to be zero. Thus,
+they have only one final reply, which is  sent to the client immediately.
+On the other hand, execution requests can last for an arbitrary amount of
+time. Thus they send an {\em intermediate} reply,  as soon as the service
+starts.  The final reply is sent when the service ends.
+
+A running  service is called an   {\em activity}. Some function,  such as
+monitoring services,  can start {\em several}  activity and  execute them
+simultaneously. Other  kind   of function,  such as   servoing functions,
+cannot handle  parallelism  and can only  start  {\em one} activity at  a
+time.
+
+Activities can control a physical   device (sensors, actuators), use  the
+services offered by  other modules (by  the mean of  requests) or produce
+data. These data can  be transfered at the end  of the  execution through
+the final reply, or at any time by the mean of {\em posters}.
+
+A {\em  poster} is a structure ({\tt  C} structure as  of  today) that is
+updated by an activity and shared in the global system. It can be read by
+any other component of the system (a module, an operator, ...).
+
+Every piece  of data that goes through  a module (requests or posters) is
+stored  in an internal database  which is called {\em Functional Internal
+Data Structure} (fIDS  for short --- you might  also find the acronym
+{\em SDIf} which is the French translation of fIDS).
+
+% -----------------------------------------------------------------------
+
+\section{Structure and functioning of modules}
+\label{sec|module|module}
+
+As shown in the figure  \ref{fig|module}, a  module defines two  Internal
+Data Structures:  the functional IDS (fIDS)  and  the control  IDS (cIDS)
+dedicated to the internal routines.  The module also defines {\em  tasks}
+(threads under Unix) that execute code. There are at least two tasks:
+
+\begin{itemize}
+\item One (or several) {\em execution tasks} that run your services and
+the algorithms they are made of,
+\item One {\em control task} that controls the module.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.5\hsize]{fig/module-en}
+\caption{Structure of modules.}
+\label{fig|module}
+\end{figure}
+
+\subsubsection{The control task:}
+
+You normally do not have to care about the control task, but it's a good
+idea to learn what it does. The control task
+
+\begin{enumerate}
+\item receives the requests for the module,
+\item checks the validity of the input parameters and store them in the fIDS,
+\item checks if the module can start a given service (handles conflicts
+between requests),
+\item tells the right execution task to start the service,
+\item and upon the termination of a service it sends back to the client
+any output produced by the service (the execution report and --- if
+needed --- the C structure declared for that service).
+\end{enumerate}
+
+Beside    this, the control task  maintains   a poster  (the {\em control
+poster}) that contains informations on   the current state of the  module
+(running services, activities, and so on).
+
+Conflicts between services are   handled  by the following  procedure:  if
+incompatible  services are to  be run  at the  same  time, {\bf  the last
+request   has  the  highest  priority}. Activities    that  happen to  be
+incompatible  with that request are  interrupted. This strategy matches a
+{\em reactivity} criterion and is systematically applied.
+
+You must  declare  yourself which  services  are incompatible with  which
+services. Note that   a service is  {\em  very often}  incompatible  with
+itself; you must not forget to declare this.
+
+
+\subsubsection{Execution tasks:}
+
+Your own code is executed by the execution(s) task(s).
+
+If  this code is to  be periodical (servoing,  monitoring, filters, ...),
+you will have to use a periodical  execution task and specify its period.
+It   is  also  possible   to use   a-periodical  tasks  and  a  sequential
+scheduling. Tasks are  given priorities (for  VxWorks only at this time),
+depending on their constrains in terms of resources and CPU requirements.
+
+In the  {\tt  demo} example,  there were  only one  execution  task ({\tt
+exec\_task MotionTask}). This   is  usually  sufficient since  a   single
+execution task can handle {\em several}  activities in parallel. However,
+if several  activities require different  priorities or periods, you will
+have to declare several execution tasks.
+
+
+\subsubsection{Interface libraries:}
+
+Modules provide two standard interface libraries:
+
+\begin{itemize}
+\item A service library, which handles requests emission and reception,
+\item A poster library, which contains the necessary functions to read
+the module posters.
+\end{itemize}
+
+
+% -----------------------------------------------------------------------
+
+\section{Integration of the algorithms: the codels}
+\label{sec|module|codels}
+
+In order to associate your code to the requests, you have to tell \GenoM\
+which are the  functions that must be  executed to  handle requests. Your
+algorithms must be split into several parts (startup, main function, end,
+interruption, ...).   Each  of  these   parts  is called  a   {\em codel}
+(elementary code). At this time, codels are {\tt C} functions.
+
+A module is the result of  the link edition between  the code \GenoM\ has
+generated and the codels libraries.

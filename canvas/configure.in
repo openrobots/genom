@@ -1,0 +1,106 @@
+dnl	$LAAS$
+dnl
+dnl configure.in --
+dnl	process this file with autoconf to produce a configure script.
+dnl
+AC_REVISION($LAAS$)
+
+AC_INIT(auto/Makefile)
+AC_CONFIG_AUX_DIR(auto/configure)
+dnl AC_CONFIG_HEADER(../config.h)
+
+
+dnl --- checks for programs ---------------------------------------------
+dnl
+ROBOT_CFLAGS
+ROBOT_PROG_MKDEP
+
+AC_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
+
+dnl Checks for headers --------------------------------------------------
+dnl
+AC_CHECK_HEADERS(sys/cdefs.h)
+
+AC_C_BIGENDIAN([ENDIANNESS=IS_BIG_ENDIAN], [ENDIANNESS=IS_LITTLE_ENDIAN])
+AC_SUBST(ENDIANNESS)
+
+
+dnl --- checks for functions --------------------------------------------
+dnl
+
+LIBS=
+
+AC_CHECK_LIB(pthread, pthread_create, [],
+          [AC_MSG_ERROR([pthread_create() not found])], [])
+AC_SEARCH_LIBS(socket, [socket], [LIBS="${LIBS} -lnsl"],
+	  [AC_MSG_ERROR([socket() not found])], [-lnsl])
+AC_SEARCH_LIBS(clnt_create, [nsl], [],
+	  [AC_MSG_ERROR([clnt_create() not found])], [])
+AC_SEARCH_LIBS(gethostbyname, [nsl], [],
+	  [AC_MSG_ERROR([gethostbyname() not found])], [])
+AC_SEARCH_LIBS(sem_init, [rt], [],
+	  [AC_MSG_ERROR([sem_init() not found])], [])
+AC_SEARCH_LIBS(dlopen, [dl], [],
+	  [AC_MSG_ERROR([dlopen() not found])], [])
+
+AC_SUBST(OS_LIBS, "${LIBS}")
+
+
+dnl --- checks for libraries --------------------------------------------
+dnl
+
+dnl genom
+ROBOT_PATH_INC(
+	[genom], GENOM_INCDIR, [genom/modules.h],
+       	[AC_MSG_ERROR([genom headers not found.
+Please use --with-genom-includes option.])],
+	[`$genomBin$ --includes`:$includedir:/usr/include:/usr/local/include]
+)
+
+ROBOT_PATH_LIB(
+	[genom], GENOM_LIBDIR, [libgenom.a],
+       	[AC_MSG_ERROR([genom libraries not found.
+Please use --with-genom-libraries option.])],
+	[`$genomBin$ --libraries`:$includedir:/usr/include:/usr/local/include]
+)
+
+dnl portLib
+ROBOT_PATH_INC([portLib], PORTLIB_INCDIR, [portLib.h],
+	        [AC_MSG_ERROR([portLib headers not found.
+Please use --with-portLib-includes option.])],
+   		[$includedir:/usr/include:/usr/local/include])
+
+ROBOT_PATH_LIB([portLib], PORTLIB_LIBDIR, [libportLib.so],
+	       [AC_MSG_ERROR([portLib libraries not found.
+Please use --with-portLib-libraries option.])],
+	       [$libdir:/usr/lib:/usr/local/lib])
+
+dnl tcl
+if test "x$genTcl$" = "xyes"; then
+   ROBOT_LIB_TCL
+fi
+
+
+dnl --- create Makefiles ------------------------------------------------
+dnl
+CFLAGS="${C_DEBUG_FLAGS} ${C_WARNING_FLAGS}"
+
+GENOM_INC="-I${GENOM_INCDIR}"
+GENOM_LIB="-L${GENOM_LIBDIR} -R${GENOM_LIBDIR} -lgenom"
+AC_SUBST(GENOM_INC)
+AC_SUBST(GENOM_LIB)
+
+COM_INC="-I${PORTLIB_INCDIR}"
+COM_LIB="-L${PORTLIB_LIBDIR} -R${PORTLIB_LIBDIR}"
+COM_LIB="${COM_LIB} -lposterLib -lerrorLib -lcomLib -lportLib"
+AC_SUBST(COM_INC)
+AC_SUBST(COM_LIB)
+
+AC_CONFIG_FILES(
+	[config.mk:auto/configure/config.mk.in]
+	[Makefile:auto/configure/Makefile.top.in]
+	[auto/Makefile:auto/configure/Makefile.auto.in]
+	[codels/Makefile:auto/configure/Makefile.codels.in]
+)
+AC_OUTPUT

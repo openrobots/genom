@@ -1,0 +1,205 @@
+%
+% Copyright (c) 2001 LAAS/CNRS                        --  Wed Oct 31 2001
+% All rights reserved.                                     Anthony Mallet
+%
+% This document is a translation of the French documentation of GenoM,
+% originally written by Sara Fleury and Matthieu Herrb.
+%
+% Redistribution  and  use in source   and binary forms,  with or without
+% modification, are permitted provided that  the following conditions are
+% met:
+%
+%   1. Redistributions  of  source code must  retain  the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%   2. Redistributions in binary form must  reproduce the above copyright
+%      notice,  this list of  conditions and  the following disclaimer in
+%      the  documentation   and/or  other  materials   provided with  the
+%      distribution.
+%
+% THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+% ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+% IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+% PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+% BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+% CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+% SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+% BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+% WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+% OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+% ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+% $Id$
+%
+
+% =======================================================================
+\section{The {\tt genom} command}
+
+\begin{description}
+
+\item{\bf Synopsis}
+
+{\tt genom [-ictxnd] [-I{\em path}] [-D{\em macro}] <module>[.gen]}
+
+\item{\bf Description}
+
+{\tt genom}  is the  command that  generates a  module. The  {\tt module}
+argument is the name  of the file which  contains the description of  the
+module. The {\tt  .gen} is   optional and  is  automatically appended  if
+omitted.
+
+{\tt genom} accepts the following options:
+
+\begin{tabularx}{\linewidth}{lX}
+{\tt -i} &  {\em Installs the  directory  {\tt codels/}:} you should  use
+this option when  generating the module  for the first time. When  called
+with {\tt -i}, {\tt  genom} will install  the directory {\tt  codels/} as
+well as templates for  the codel files in this  directory.  It  will also
+create  all the {\tt Makefiles}  (in the main directory   and in the {\tt
+codels} directory) used to compile  the module.  If  the files that would
+normally be  installed  are already present, {\tt   genom}  will ask  for
+confirmation before overwriting files.\\
+
+{\tt -c} & {\em Conditional regeneration:} module is regenerated only
+if files from which  it depends have  been modified since last generation
+({\em i.e.} the {\tt .gen} file or files it includes).\\
+
+{\tt -t} &    {\em Tcl libraries  generation:}    Generates Tcl interface
+libraries. They are mandatory  if you wish to  control this module from a
+tcl interpreter (see section~\ref{sec|tcl}).\\
+
+{\tt    -x}  & {\em    Propice   libraries generation:} Generates Propice
+interface libraries.  They are  mandatory  if you   wish to  control this
+module from a Propice program.\\
+
+{\tt -n} & Generates the perl script that is used to generate the module,
+without actually executing it.\\
+
+{\tt -d} & Turns on debugging mode inside the {\em yacc} parser.\\
+
+{\tt -I{\em path}} & Defines paths for included files (same as {\tt
+-I} option of {\tt cc}).\\
+
+{\tt -D{\em macro}} & Defines macros as for {\tt cc}.\\
+\end{tabularx}
+
+Once the module has been installed ({\tt -i} option)  for the first time,
+you just   have to invoke {\tt make}   (GNUmake is required)  in the main
+directory to regenerate or compile the module.
+
+The {\tt -i} option modifies files in the {\tt codels/} directory. Use it
+carefully.  If you wish  to manually  get a  new   template file for  the
+codels, you can find them in the directory {\tt auto/user/}.  These files
+are always  up-to-date. Also consider the  XEmacs  mode {\tt genom-mode},
+which lets  you  insert codel templates  into  existing codel files  (see
+chapter~\ref{cha|edit}).
+
+\end{description}
+
+
+% =======================================================================
+\section{Product of the generation}
+
+The module generation produces files in the two directories {\tt codels/}
+and {\tt auto/}.  The files located  in the  {\tt codels/}  directory are
+described in the next chapter.  This  section describes the files located
+in  the  {\tt auto/} directory.   The {\tt  demo} module   is  used as an
+example: you can always replace the string {\tt demo} by the name of your
+module.
+
+Compiling these files produces binary objects and executables in the {\tt
+\$\{TARGET\}} sub-\-directories. See appendix~\ref{anx|files} for
+information on the file-system hierarchy.
+
+% -----------------------------------------------------------------------
+\subsection{Interface libraries}
+
+\subsubsection{Requests library: {\tt demoMsgLib}}
+
+This library implements  the basic requests  functions (request emission,
+replies reception) and is used by the clients of this module.
+
+The {\tt   C}  source code    of  this  library  can be   found  in  {\tt
+demoMsgLib.c} and the  prototypes in {\tt demoMsgLibProto.h}.  The header
+file {\tt demoMsgLib.h}, which must  be included by clients, contains the
+definitions for the server identification and communication establishment
+(name and size of the mailbox, \ldots).
+
+To use this  library, you must link your  program with {\tt demoMsgLib.o}
+under VxWorks (note that the  library {\tt demoClient.o} already includes
+{\tt demoMsgLib.o}) and {\tt demoClient.a} under Unix.
+
+
+\subsubsection{Posters library: {\tt demoPosterLib}}
+
+This library implements the basic posters functions for this module (read
+and display   functions).  The same    structure as above  is used:  {\tt
+demoPosterLib.c} is  the  source code and  {\tt demoPosterLibProto.h} the
+prototypes definition.  {\tt demoPosterLib.h}   defines the name  of  the
+posters along  with  their data structures.  The  {\em cIDS} structure is
+also defined there\footnote{the structures included by the {\em cIDS} are
+defined in the file {\tt modules.h}, located in the genom source tree.}.
+
+To  use this library,  you must link  with {\tt demoPosterLib.o} (or {\tt
+demoClient.o}  if you  want  to  use   posters and requests),  and   {\tt
+demoClient.a} under Unix.
+
+
+% -----------------------------------------------------------------------
+\subsection{Useful header files}
+
+The file {\tt  demoHeader.h} must  be included  in every  codel file.  It
+contains the definitions of several constants that characterize the module
+(name, period, posters, \ldots)  as well as the two  macros that let  you
+access the {\em IDS} ({\em SDI\_F} and {\em SDI\_C}).
+
+The file  {\tt demoError.h} contains the  definitions of the  error codes
+(reports declared in the {\tt fail\_msg} field) of this module.
+
+The file {\tt  demoType.h} defines the actual {\em  IDS} structure. It is
+not necessarily the same as  in the  {\tt .gen}  file, especially if  the
+module   defines   reentrant   requests   ({\em  i.e.}   compatible  with
+themselves).
+
+% -----------------------------------------------------------------------
+\subsection{Tcl library}
+
+The files  {\tt demoTcl.c} and {\tt demo.tcl}  are used by Tcl to control
+the module. See section~\ref{sec|tcl} in this document.
+
+
+% -----------------------------------------------------------------------
+\subsection{Propice library}
+
+The files located in the {\tt propice/} directory are  used by Propice to
+control the module. See section~\ref{sec|propice} in this document.
+
+
+% -----------------------------------------------------------------------
+\subsection{Executables: server, test program, initialization request}
+
+The executable {\tt demoEssay} is an interactive test program. To use it,
+you just have to  load  {\tt \$\{TARGET\}/demoClient.o} (VxWorks)  or run
+{\tt \$\{TARGET\}/demo\_essay} (Unix).
+
+The  files    {\tt demoCntrlTask.c},   {\tt demoMotionTask.c}    and {\tt
+demoModuleInit.c} contain the module's execution tasks source code.  Once
+compiled, they produce the  files  {\tt demoModule.o} (VxWorks)  and {\tt
+demoServer.a} (Unix).  The   file  {\tt demoModuleInit.c} produces    the
+function {\tt demoTaskInit} which spawns the module.
+
+The file {\tt demoInit.c} contains the code that invokes the {\em
+Initialization} request of the module (if the module defines one). To use
+it, run {\tt demoInit} (under Unix, the executable is in {\tt
+\$\{TARGET\}} and under VxWorks, it is contained in the {\tt
+demoModule.o} object file).
+
+
+% -----------------------------------------------------------------------
+\subsection{Other files}
+
+The  files {\tt demoScan.h} and {\tt  demoPrint.h} contain the definition
+of  the interactive   functions  that scan  the  arguments  of the module
+requests. These functions are used by the test program {\tt demoEssay}.
+
+Appendix~\ref{anx|files} gives an exhaustive list  of the files  produced
+by \GenoM.

@@ -1,0 +1,83 @@
+#	$LAAS$
+
+#
+# Copyright (c) 2002 LAAS/CNRS                        --  Fri Mar 15 2002
+# All rights reserved.
+#
+# Redistribution  and  use in source   and binary forms,  with or without
+# modification, are permitted provided that  the following conditions are
+# met:
+#
+#   1. Redistributions  of  source code must  retain  the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must  reproduce the above copyright
+#      notice,  this list of  conditions and  the following disclaimer in
+#      the  documentation   and/or  other  materials   provided with  the
+#      distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+# ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+# SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+# BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+# --- Version -----------------------------------------------------------
+
+GENOM_MAJOR=	1
+GENOM_MINOR=	0
+
+
+# --- Programs ----------------------------------------------------------
+
+CPP=		@CPP@
+STDINCPP=	@STDINCPP@
+PURIFY=		
+CC=		@CC@
+LTCC=           $(TOPBUILD)/libtool --mode=compile $(CC)
+LTLD=           $(TOPBUILD)/libtool --mode=link $(PURIFY) $(CC)
+MKDEP=		@MKDEP@
+LEX=            @LEX@
+YACC=		@YACC@
+INSTALL=	$(topsrcdir)/install-sh -c
+LTINSTALL=	$(TOPBUILD)/libtool --mode=install $(INSTALL)
+LTINSTALL_DATA=	$(TOPBUILD)/libtool --mode=install $(INSTALL) -m 644
+
+SED=		sed
+LATEX=		@LATEX@
+
+GENOM=		@GENOM@
+TCLSERV=	@TCLSERV@
+LIBGENOM=	lib$(GENOM).la
+LIBTCLCLIENT=	lib$(GENOM)TclClient.la
+
+
+# --- Flags -------------------------------------------------------------
+
+CPPFLAGS=	@CPPFLAGS@
+CFLAGS=		@CFLAGS@
+LDFLAGS=	@LDFLAGS@
+
+OS_LIBS=	@OS_LIBS@
+
+PORTLIB_INC=	@PORTLIB_INC@
+PORTLIB_LIB=	@PORTLIB_LIB@
+
+HAS_TCL=	@HAS_TCL@
+TCL_CPPFLAGS=	@TCL_CPPFLAGS@
+TCL_LDFLAGS=	@TCL_LDFLAGS@ @TCL_LIB_FLAG@ @TCL_LIBS@
+
+ENDIANNESS=	@ENDIANNESS@
+
+LIBTOOL_DEPS=   @LIBTOOL_DEPS@
+
+
+# --- Paths -------------------------------------------------------------
+
+CANVASDIR=	$(datadir)/genom/$(GENOM_MAJOR).$(GENOM_MINOR)

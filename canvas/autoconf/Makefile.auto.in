@@ -1,0 +1,190 @@
+#	$LAAS$
+
+$commentbegin$
+#
+# Copyright (C) 1993-2003 LAAS/CNRS
+# All rights reserved.
+#
+# Redistribution  and  use in source   and binary forms,  with or without
+# modification, are permitted provided that  the following conditions are
+# met:
+#
+#   1. Redistributions  of  source code must  retain  the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must  reproduce the above copyright
+#      notice,  this list of  conditions and  the following disclaimer in
+#      the  documentation   and/or  other  materials   provided with  the
+#      distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+# ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+# SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+# BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+$commentend$
+
+topbuild=..
+include $(topbuild)/config.mk
+
+# --- paths -------------------------------------------------------------
+
+topsrcdir=	@top_srcdir@
+srcdir=		@srcdir@
+
+prefix=		@prefix@
+exec_prefix=	@exec_prefix@
+bindir=		@bindir@
+libdir=		@libdir@
+datadir=	@datadir@/modules
+
+VPATH=		$(srcdir)
+
+
+# --- flags -------------------------------------------------------------
+
+CPPFLAGS+= $genomDefines$ -D$(ENDIANNESS)
+CPPFLAGS+= -I. -I$(topbuild) -I$(srcdir) $serversDir$
+CPPFLAGS+= $(COM_INC) $(GENOM_INC)
+
+
+# --- source files ------------------------------------------------------
+
+module_src= \
+	$module$CntrlTask.c	\
+	$module$ModuleInit.c	\
+$listExecTask_c$
+
+client_src= \
+	$module$Endian.c	\
+	$module$Print.c		\
+	$module$Scan.c		\
+	$module$MsgLib.c	\
+	$module$PosterShowLib.c	\
+	$module$PosterLib.c
+
+init_src= \
+	$module$Init.c
+
+essay_src= \
+	$module$Essay.c
+
+connect_src= \
+	$module$ConnectLib.c
+
+posterwrite_src= \
+	$module$PosterWriteLib.c
+
+tclclient_src= \
+	 $module$Tcl.c		\
+	 $module$PosterLib.c	\
+	 $module$Endian.c
+
+tclclient_tcl= \
+	 $module$Client.tcl
+
+module_obj=	$(module_src:.c=.lo)
+client_obj=	$(client_src:.c=.lo)
+init_obj=	$(init_src:.c=.lo)
+essay_obj=	$(essay_src:.c=.lo)
+connect_obj=	$(connect_src:.c=.lo)
+posterwrite_obj=$(posterwrite_src:.c=.lo)
+tclclient_obj=	$(tclclient_src:.c=.lo)
+
+
+# --- what to do --------------------------------------------------------
+
+all: server client
+
+server: $(MODULE_LIB) $(INIT_BIN) $(POSTERWRITE_LIB)
+
+client: $(ESSAY_BIN) $(CONNECT) $genTcl$ $(TCLCLIENT_LIB)
+
+
+# --- how to do ---------------------------------------------------------
+
+$(INIT_BIN): $(init_obj) $(CLIENT_LIB)
+	$(LTLD) $(CFLAGS) $(init_obj) -o $@ $(LDFLAGS) $(CLIENT_LIB) \
+		$(GENOM_LIB) $(COM_LIB) $(OS_LIBS)
+
+$(ESSAY_BIN): $(essay_obj) $(CLIENT_LIB) $serversLib$
+	$(LTLD) $(CFLAGS) $(essay_obj) -o $@  $(LDFLAGS) $(CLIENT_LIB) \
+		$serversLib$ $(GENOM_LIB) $(COM_LIB) $(OS_LIBS)
+
+$(MODULE_LIB): $(module_obj)
+	$(LTLD) -static $(CFLAGS) $(module_obj) -o $@ $(LDFLAGS) \
+		-rpath $(libdir)
+
+$(CLIENT_LIB): $(client_obj)
+	$(LTLD) $(CFLAGS) $(client_obj) -o $@ $(LDFLAGS) -rpath $(libdir)
+
+$(POSTERWRITE_LIB): $(posterwrite_obj)
+	$(LTLD) -static $(CFLAGS) $(posterwrite_obj) -o $@ $(LDFLAGS) \
+		-rpath $(libdir)
+
+$(TCLCLIENT_LIB): $(tclclient_obj) $serversEndianLib$
+	$(LTLD) $(CFLAGS) $(tclclient_obj) $serversEndianLib$ -o $@	\
+		$(LDFLAGS) $(GENOM_LIB) $(COM_LIB) $(TCL_LDFLAGS)	\
+		$(OS_LIBS) -rpath $(libdir)
+
+
+# --- basic rules -------------------------------------------------------
+
+$(tclclient_obj): %.lo: %.c
+	$(LTCC) -c $(CPPFLAGS) $(TCL_CPPFLAGS) -DDATADIR='"$(datadir)"' \
+		$(CFLAGS) -o $@ $<
+
+%.lo: %.c
+	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
+
+
+# --- install -----------------------------------------------------------
+
+.PHONY: install install-bin install-data
+
+install: all install-bin install-data
+
+install-bin:
+	$(LTINSTALL) $(INIT_BIN) $(bindir)/$(INIT_BIN)
+	$(LTINSTALL) $(ESSAY_BIN) $(bindir)/$(ESSAY_BIN)
+	$(LTINSTALL) $(CLIENT_LIB) $(libdir)/$(CLIENT_LIB)
+	$genTcl$$(LTINSTALL) $(TCLCLIENT_LIB) $(libdir)/$(TCLCLIENT_LIB)
+
+install-data:
+	$genTcl$$(LTINSTALL_DATA) \
+		$(srcdir)/$(tclclient_tcl) $(datadir)/$(tclclient_tcl)
+
+
+# --- clean -------------------------------------------------------------
+
+.PHONY: clean
+
+clean: $(module_obj)
+clean: $(client_obj)
+clean: $(connect_obj)
+clean: $(posterwrite_obj)
+
+clean:
+	$(topbuild)/libtool --mode=clean rm -f $^
+	rm -f dependencies
+
+
+# --- dependencies ------------------------------------------------------
+
+.PHONY: depends
+depends dependencies:: $(tclclient_src)
+	$(MKDEP) -c"$(CC)" -odependencies -t.lo $(CPPFLAGS) $(TCL_CPPFLAGS) $?
+
+depends dependencies:: $(module_src) $(client_src) $(connect_src) \
+		       $(posterwrite_src)
+	$(MKDEP) -c"$(CC)" -odependencies -t.lo $(CPPFLAGS) $?
+
+ifneq (${MAKECMDGOALS},clean)
+-include dependencies
+endif

@@ -1,0 +1,155 @@
+#	$LAAS$
+
+# 
+# Makefile pour $module$
+#
+# Copyright (C) 1993-1997  LAAS/CNRS
+# All rights reserved.
+#
+# Redistribution  and  use in source   and binary forms,  with or without
+# modification, are permitted provided that  the following conditions are
+# met:
+#
+#   1. Redistributions  of  source code must  retain  the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must  reproduce the above copyright
+#      notice,  this list of  conditions and  the following disclaimer in
+#      the  documentation   and/or  other  materials   provided with  the
+#      distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+# ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+# SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+# BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+#---------------------------------------------------------------
+# DEFINITIONS
+#---------------------------------------------------------------
+
+# Target par defaut 
+TARGET=m68k-vxworks
+
+include ../../../Init.make
+include ../../../Init.make.$(TARGET)
+
+RACK=h2
+
+CPPFLAGS += $serversDir$ -I$(DIRHC) -I$(DIRSC) -I$(DIRTIM) \
+	-I$(DIRXES) -I$(DIRCOM) -I$(DIRM)  \
+	-I$(DIRGENOM) -I$(DIRERR) -DRACK=$(RACK) $genomDefines$ \
+	-I$(DIRH2SCOPE)/ihm
+
+$genTcl$CPPFLAGS += -I$(DIRVXTCL) -I$(DIRTCLSERV)
+
+SERV_SRC = \
+$listExecTask_c$	$module$CntrlTask.c \
+	$module$ModuleInit.c \
+	$module$Init.c \
+
+CLIENTLIB_SRC = \
+	$module$Endian.c \
+	$module$MsgLib.c \
+	$module$PosterShowLib.c \
+	$module$PosterLib.c
+
+TEST_SRC = \
+	$module$Print.c \
+	$module$Scan.c \
+	$module$Essay.c
+
+SCOPE_SRC = \
+	$module$ScopeLib.c \
+	$module$ScopeMain.c
+
+CONNECT_SRC = \
+	$module$ConnectLib.c
+
+POSTER_WRITE_SRC = \
+	$module$PosterWriteLib.c
+
+TCL_SRC = \
+$genTcl$	$module$Tcl.c \
+$genTcl$	$module$PosterLib.c
+
+SERV_OBJ = $(SERV_SRC:%.c=$(TARGET)/%.o)
+CLIENTLIB_OBJ = $(CLIENTLIB_SRC:%.c=$(TARGET)/%.o)
+TEST_OBJ = $(TEST_SRC:%.c=$(TARGET)/%.o)
+SCOPE_OBJ = $(SCOPE_SRC:%.c=$(TARGET)/%.o)
+CONNECT_OBJ = $(CONNECT_SRC:%.c=$(TARGET)/%.o)
+POSTER_WRITE_OBJ = $(POSTER_WRITE_SRC:%.c=$(TARGET)/%.o)
+TCL_OBJ = $(TCL_SRC:%.c=$(TARGET)/%.o)
+
+MODULE = $(TARGET)/$module$Module.o
+CLIENTLIB = $(TARGET)/$module$Lib.o
+TEST   = $(TARGET)/$module$Test.o
+CLIENT = $(TARGET)/$module$Client.o
+SCOPE  = $(TARGET)/$module$Scope.o
+$genTcl$TCLSERV = $(TARGET)/$module$TclServ.o
+
+#---------------------------------------------------------------
+#  WHAT TO DO
+#---------------------------------------------------------------
+
+all:	client $(MODULE) $(POSTER_WRITE_OBJ)
+
+client: $(CLIENTLIB) $(TEST) $(CLIENT) $(CONNECT_OBJ) $(SCOPE) $(TCLSERV)
+
+#---------------------------------------------------------------
+#  HOW TO DO
+#---------------------------------------------------------------
+
+$(MODULE): $(SERV_OBJ)
+	$(LD) -r -o $(MODULE) $(SERV_OBJ)
+
+$(CLIENTLIB): $(CLIENTLIB_OBJ)
+	$(LD) -r -o $(CLIENTLIB) $(CLIENTLIB_OBJ)
+
+$(TEST): $(TEST_OBJ)
+	$(LD) -r -o $(TEST) $(TEST_OBJ)
+
+$(CLIENT): $(CLIENTLIB) $(TEST)
+	$(LD) -r -o $(CLIENT) $(CLIENTLIB) $(TEST)
+
+$(TCLSERV): $(TCL_OBJ)
+	$(LD) -r -o $(TCLSERV) $(TCL_OBJ)
+
+$(SCOPE): $(SCOPE_OBJ)
+	$(LD) -r -o $(SCOPE) $(SCOPE_OBJ)
+
+#---------------------------------------------------------------
+#  GENERAL RULES
+#---------------------------------------------------------------
+
+$(TARGET)/%.o:	%.c
+	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) $<
+
+#---------------------------------------------------------------
+#  CLEAN
+#---------------------------------------------------------------
+clean:
+	\rm -r $(TARGET)/*
+
+#---------------------------------------------------------------
+#  DEPEND
+#---------------------------------------------------------------
+
+MKDEPFLAGS = -k -sROOTH2=$(ROOTH2) -i$(DIRVXH) \
+	-c$(CC) -o$(TARGET)/DEPENDANCES $(CPPFLAGS) 
+
+depend $(TARGET)/DEPENDANCES:: $(TEST_SRC) $(CLIENTLIB_SRC) $(SERV_SRC) \
+				$(SCOPE_SRC) $(CONNECT_SRC) \
+				$(POSTER_WRITE_SRC) $(TCL_SRC)
+	@mkdir -p $(TARGET)
+	$(MKDEP) $(MKDEPFLAGS) -d$(TARGET) $?
+
+include $(TARGET)/DEPENDANCES
+
+

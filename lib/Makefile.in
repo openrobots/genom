@@ -1,0 +1,91 @@
+#	$LAAS$
+
+#
+# Copyright (c) 2003 LAAS/CNRS                        --  Mon Aug 18 2003
+# All rights reserved.
+#
+# Redistribution  and  use in source   and binary forms,  with or without
+# modification, are permitted provided that  the following conditions are
+# met:
+#
+#   1. Redistributions  of  source code must  retain  the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#   2. Redistributions in binary form must  reproduce the above copyright
+#      notice,  this list of  conditions and  the following disclaimer in
+#      the  documentation   and/or  other  materials   provided with  the
+#      distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+# ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+# SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+# BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+TOPBUILD=..
+include $(TOPBUILD)/config.mk
+
+topsrcdir=	@top_srcdir@
+srcdir=		@srcdir@
+
+prefix=		@prefix@
+exec_prefix=	@exec_prefix@
+libdir=		@libdir@
+
+VPATH=		$(srcdir)
+
+CPPFLAGS+=	-I$(TOPBUILD) -I$(topsrcdir)/include -I$(srcdir) -I.
+CPPFLAGS+=	-I$(PORTLIB_INC) -D$(ENDIANNESS)
+
+LDFLAGS+=	-L$(PORTLIB_LIB) -R$(PORTLIB_LIB)
+LDFLAGS+=	-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)
+
+
+# -----------------------------------------------------------------------
+
+libsrcs=\
+	scan.c			\
+	print.c			\
+	printScanUtil.c		\
+	printState.c		\
+	moduleEvents.c		\
+	genomReportsLib.c	\
+	essayLib.c		\
+	h2endian.c
+
+libobjs = $(libsrcs:.c=.lo)
+
+# -----------------------------------------------------------------------
+
+.PHONY: all
+all: $(LIBGENOM)
+
+.PHONY: install
+install: all
+	$(LTINSTALL) $(LIBGENOM) $(libdir)/$(LIBGENOM)
+
+$(LIBGENOM): $(libobjs)
+	$(LTLD) $(CFLAGS) $(libobjs) -o $@ $(LDFLAGS) -rpath $(libdir) \
+	   -version-info $(GENOM_MAJOR):$(GENOM_MINOR):0
+
+%.lo: %.c
+	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
+
+.PHONY: clean
+clean:
+	$(TOPBUILD)/libtool --mode=clean rm -f $(libobjs) $(LIBGENOM)
+	rm -f dependencies
+
+.PHONY: depends
+depends dependencies: $(libsrcs)
+	$(MKDEP) -c$(CC) -odependencies -t.lo $(CPPFLAGS) $?
+
+ifneq (${MAKECMDGOALS},clean)
+-include dependencies
+endif
