@@ -35,6 +35,7 @@
 #ifndef $module$_MSG_LIB_H
 #define $module$_MSG_LIB_H
 
+#include "portLib.h"
 #include "csLib.h"
 #include "posterLib.h"
  
