@@ -1,0 +1,60 @@
+#!/usr/bin/env perl
+#
+# Tue un module Genom sous Unix
+#
+# Matthieu Herrb - Fevrier 2001
+#
+# $LAAS$
+#----------------------------------------------------------------------
+#
+# Verifie les arguments
+if ($#ARGV != 0) {
+  print STDERR "syntaxe: $0 <module>\n";
+  exit -1;
+}
+$module = $ARGV[0];
+# Nom de la machine
+$host = `uname -n`;
+chop $host;
+# Nom du fichier contenant le process Id
+$pid_file = "$ENV{'HOME'}/.$module.pid-$host";
+# Ancien nom, utilisé pendant quelques mois
+$pid_file_old = "$ENV{'HOME'}/.$module.pid";
+$me = $ENV{'USER'};
+# Verifie l'existence du fichier pid
+if ( ! -f $pid_file) {
+  if ( -f $pid_file_old) {
+    # Module qui utilise l'ancien nom
+    $pid_file = $pid_file_old;
+  } else {
+    print STDERR "$0: il ne semble pas y avoir de module $module sur $host\n";
+    exit 1;
+  } 
+}
+# Verifie le proprietaire du fichier
+$uid = (stat($pid_file))[4];	# uid numerique du fichier
+$name = (getpwuid($uid))[0];	# transforme en nom 
+if ( $me ne $name ) {
+  print STDERR "$0: le processus $module appartient a $name $me\n";
+  exit -1;
+}
+# Lecture du fichier 
+open PID,"<$pid_file" || die "impossible de lire $pid_file";
+$pid = <PID>;
+if (defined($pid)) {
+  print "pid ".$pid;
+  chop $pid;
+  close PID;
+  # Envoie SIGTERM au processus
+  kill 15, $pid;
+  # Attend un peu
+  select(undef, undef, undef, 2.5);
+}
+# Detruit le fichier de pid
+if (-f $pid_file) {
+  unlink("$pid_file");
+}
+# Nettoye les devices h2 du module
+system("h2 clean '*$module*'");
+# fini
+exit 0;
