@@ -1,7 +1,6 @@
 $LAAS$
 
-genom 1.0A released April 30, 2004
-
+  6. Handle enum types in typeGen() for types declared in the .gen file.
   5. Removed old makefiles from LAAS distribution. Configuring modules
      from within the source directory now works.
   4. Renamed portLib options into pocolibs.  Look for pocolibs in

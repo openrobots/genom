@@ -1643,6 +1643,7 @@ main(int argc, char **argv)
     /*
      * Contruction des donnees
      */
+    strcpy(nomfic, genfile);
 
     upCaseNames();
 

@@ -94,16 +94,26 @@ int typeGen(FILE *out)
 	}
 	l->dcl_nom->flags = 1;
 	fprintf(out, "typedef %s", nom_type(t));
-	if (t->type == STRUCT || t->type == UNION) {
+	if (t->type == STRUCT || t->type == UNION || t->type == ENUM) {
 	    fprintf(out, " {\n");
 	    if (t->members == NULL) {
 		trouve_members(t);
 	    }
 	    for (m = t->members; m != NULL; m = m->next) {
-		dcl_nom_decl(m->dcl_nom, &type, &var);
-		fprintf(out, "\t%s %s;\n", type, var);
-		free(type);
-		free(var);
+	       if (t->type == ENUM) {
+		  if (m->dcl_nom->flags == ENUM_VALUE)
+		     fprintf(out, "\t%s = %d%s\n",
+			     m->dcl_nom->name, m->dcl_nom->pointeur,
+			     m->next?",":"");
+		  else
+		     fprintf(out, "\t%s%s\n", m->dcl_nom->name,
+			     m->next?",":"");
+	       } else {
+		  dcl_nom_decl(m->dcl_nom, &type, &var);
+		  fprintf(out, "\t%s %s;\n", type, var);
+		  free(type);
+		  free(var);
+	       }
 	    } /* for */
 	    fprintf(out, "} ");
 	}
