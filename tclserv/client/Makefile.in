@@ -39,7 +39,6 @@ libdir=		@libdir@
 datadir=	@datadir@
 
 include $(TOPBUILD)/config.mk
-include $(topsrcdir)/config.$(OSAPI).mk
 
 VPATH=		$(srcdir)
 
@@ -77,7 +76,7 @@ $(pkgfile): $(pkgfile).in
 # --- install -----------------------------------------------------------
 
 .PHONY: install
-install: all
+install:: $(pkgfile)
 	@for f in $(tlist); do						\
 		$(LTINSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f;	\
 	done

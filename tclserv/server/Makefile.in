@@ -41,7 +41,6 @@ includedir=	@includedir@/genom
 datadir=	@datadir@/tclserv
 
 include $(TOPBUILD)/config.mk
-include $(topsrcdir)/config.$(OSAPI).mk
 
 VPATH=		$(srcdir)
 
@@ -95,7 +94,7 @@ main.lo: main.c
 # --- install -----------------------------------------------------------
 
 .PHONY: install
-install: all
+install:: $(TCLSERV)
 	$(LTINSTALL) $(TCLSERV) $(bindir)/$(TCLSERV)
 	@for f in $(ilist); do						\
 		$(LTINSTALL_DATA) $(srcdir)/$$f $(includedir)/$$f;	\
