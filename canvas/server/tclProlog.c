@@ -36,7 +36,7 @@
 
 #ifndef VXWORKS
 #include "portLib.h"
-#include "errnoLibProto.h"
+#include "errnoLib.h"
 #else
 #include <vxWorks.h>
 #endif

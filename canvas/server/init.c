@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2004 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -53,7 +53,7 @@
 #include "h2sysLibProto.h"
 #else
 #include "portLib.h"
-#include "errnoLibProto.h"
+#include "errnoLib.h"
 #include "h2initGlob.h"
 #endif
 #include <stdio.h>
