@@ -59,7 +59,7 @@ namespace eval cs {
 	    }
 	}
 
-	::cs::mboxInit tclServ 0 $size
+	::cs::mboxInit tclServ$::port 0 $size
 	set csLibInit $size
 	return "mbox size is $csLibInit"
     }
