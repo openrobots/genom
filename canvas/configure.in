@@ -91,6 +91,17 @@ AC_SUBST(OS_LIBS, "${LIBS}")
 dnl --- checks for libraries --------------------------------------------
 dnl
 
+dnl portLib
+AC_ARG_WITH(pocolibs,
+           AC_HELP_STRING([--with-pocolibs=DIR],
+               [pocolibs are installed in DIR (prefix)]),
+           [opt_pocolibs=$withval],[opt_pocolibs=NONE])
+
+ROBOT_PATH_INC([pocolibs], POCOLIBS_INCDIR, [portLib.h],
+	[AC_MSG_ERROR([please use --with-pocolibs option.])],
+	[$opt_pocolibs/include:`$genomBin$ --includes`:/usr/local/include:/usr/include])
+
+
 dnl genom
 AC_ARG_WITH(genom,
            AC_HELP_STRING([--with-genom=DIR],
@@ -113,22 +124,11 @@ genom_path_lib=$genom_path_lib:/usr/local/lib:/usr/lib
 ROBOT_PATH_INC([genom], GENOM_INCDIR, [genom/modules.h],
 	[AC_MSG_ERROR([please use --with-genom option.])],
 	[$opt_genom/include:`$genomBin$ --includes`:/usr/local/include:/usr/include],
-	[#include "portLib.h"])
+	[#include "portLib.h"], [-I$POCOLIBS_INCDIR] )
 
 ROBOT_PATH_LIB([genom], GENOM_LIBDIR, [genom], [h2GetEvnStateString],
 	[AC_MSG_ERROR([please use --with-genom option.])],
 	[$genom_path_lib])
-
-
-dnl portLib
-AC_ARG_WITH(pocolibs,
-           AC_HELP_STRING([--with-pocolibs=DIR],
-               [pocolibs are installed in DIR (prefix)]),
-           [opt_pocolibs=$withval],[opt_pocolibs=NONE])
-
-ROBOT_PATH_INC([pocolibs], POCOLIBS_INCDIR, [portLib.h],
-	[AC_MSG_ERROR([please use --with-pocolibs option.])],
-	[$opt_pocolibs/include:`$genomBin$ --includes`:/usr/local/include:/usr/include])
 
 
 dnl tcl
