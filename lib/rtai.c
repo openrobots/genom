@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 2003 LAAS/CNRS                       --  Wed Feb 19 2003
+ * Copyright (c) 1994-2004 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -28,23 +28,29 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#ifndef H_GENOM_CONFIG
-#define H_GENOM_CONFIG
+#include "genom-config.h"
+__RCSID("$LAAS$");
 
-/* Do we have the BSD sys/cdefs.h ? */
-#undef HAVE_SYS_CDEFS_H
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/errno.h>
 
-#ifdef HAVE_SYS_CDEFS_H
-#include <sys/cdefs.h>
-#endif
+MODULE_AUTHOR ("LAAS/CNRS");
+MODULE_DESCRIPTION ("libGenoM - common routines for GenoM modules");
+MODULE_LICENSE ("BSD");
 
-#ifndef __RCSID
-#ifdef __GNUC__
-#define __RCSID(id) static const char rcsid[] __attribute__((__unused__)) = id
-#else
-#define __RCSID(id) static const char rcsid[] = id
-#endif /* __GNUC__ */
-#endif
+int
+libgenom_init(void)
+{
+   return 0;
+}
 
-#endif /* H_GENOM_CONFIG */
+void
+libgenom_exit(void)
+{
+   ;
+}
 
+module_init(libgenom_init);
+module_exit(libgenom_exit);

@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2004 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -28,7 +28,7 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#include "config.h"
+#include "genom-config.h"
 __RCSID("$LAAS$");
 
 /*
@@ -52,9 +52,9 @@ __RCSID("$LAAS$");
 #include <taskLib.h>
 #include "h2sysLibProto.h"
 #else
-#include "portLib.h"
+#include <portLib.h>
 #endif
-#include "xes.h"
+/* XXX #include "xes.h" */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -117,7 +117,7 @@ essayInit(int essayNum, char *module, int mboxsize, int abortRqstNum,
   setbuf (stdout, NULL);
 
 
-#ifndef UNIX
+#ifdef VXWORKS
   /* Verifie que xes_host est definie */
   if (xes_get_host() == -1) {
     printf ("xes host not defined (call: xes_set_host \"<host_name>\")\n");

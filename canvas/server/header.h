@@ -1,5 +1,7 @@
 /*	$LAAS$ */
 
+/* --- Generated file, do not edit by hand --------------------------- */
+
 /* 
  * Copyright (c) 1993-2003 LAAS/CNRS
  * All rights reserved.
@@ -29,22 +31,27 @@
  * DAMAGE.
  */
 
-/*------------------  Fichier généré automatiquement ------------------*/
-/*------------------  Ne pas éditer manuellement !!! ------------------*/
-
 /*
  * $module$Header.h 
  *
- * Ce fichier doit etre inclus dans les bibliotheques des codels 
- * du module $module$, mais nulle part ailleurs !
- *
+ * Include this file in codels _only_
  */
 
 #ifndef $module$_HEADER_H
 #define $module$_HEADER_H
 
-#ifndef VXWORKS
-#  include "portLib.h"
+#ifdef VXWORKS
+# include <vxWorks.h>
+#else
+# include <portLib.h>
+#endif
+
+#if defined(__RTAI__) && defined(__KERNEL__)
+# include <linux/kernel.h>
+# include <linux/sched.h>
+#else
+# include <stdio.h>
+# include <string.h>
 #endif
 
 /* Inclusions concernant le module */

@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2004 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -29,23 +29,23 @@
  * DAMAGE.
  */
 
-/*------------------  Fichier généré automatiquement ------------------*/
-/*------------------  Ne pas éditer manuellement !!! ------------------*/
+/* --- Message-based communication for module $module$ --------------- */
 
-/***********************************************************************
- *
- * Bibliothèque de communication par messages du module $module$
- *
- ***********************************************************************/
-#include <stdio.h>
+#ifdef VXWORKS
+# include <vxWorks.h>
+#else
+# include <portLib.h>
+#endif
+
+#if defined(__RTAI__) && defined(__KERNEL__)
+# include <linux/kernel.h>
+#else
+# include <stdio.h>
+#endif
+
 #include <errnoLib.h>
-
 #include "$module$MsgLib.h"
 
-/*---------------- PROTOTYPES DES FONCTIONS EXTERNES ------------------*/
-
-
-/*---------------------- ROUTINES EXPORTEES ----------------------------*/
  
 /*========================================================================
  *

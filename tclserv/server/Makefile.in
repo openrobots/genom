@@ -29,7 +29,6 @@
 #
 
 TOPBUILD=../..
-include $(TOPBUILD)/config.mk
 
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
@@ -40,6 +39,9 @@ bindir=		@bindir@
 libdir=		@libdir@
 includedir=	@includedir@/genom
 datadir=	@datadir@/tclserv
+
+include $(TOPBUILD)/config.mk
+include $(topsrcdir)/config.$(OSAPI).mk
 
 VPATH=		$(srcdir)
 

@@ -30,11 +30,9 @@ $commentbegin$
 #
 $commentend$
 
-topbuild=..
-include $(topbuild)/config.mk
-
 # --- paths -------------------------------------------------------------
 
+topbuild=	..
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
 
@@ -44,7 +42,10 @@ bindir=		@bindir@
 libdir=		@libdir@
 serverdir=	auto
 
-VPATH=		$(srcdir)
+VPATH=		$(srcdir):$(GENFILE_PATH)/codels
+
+include $(topbuild)/config.mk
+include $(topsrcdir)/auto/configure/config.$(OSAPI).mk
 
 
 # --- flags -------------------------------------------------------------
@@ -53,32 +54,40 @@ CPPFLAGS+= $genomDefines$ -D$(ENDIANNESS)
 CPPFLAGS+= -I. -I$(topbuild) -I$(srcdir) -I$(topsrcdir)
 CPPFLAGS+= $serversDir$ $(GENOM_INC) $(COM_INC) $(EXTRA_INCLUDES)
 
+# GenoM flags
+include $(topsrcdir)/auto/configure/genom.mk
 
 # --- source files ------------------------------------------------------
 
 codels_src = \
 $codel_files$
 
-codels_obj=	$(codels_src:.c=.lo)
+codels_obj=	$(codels_src:%.c=$(OBJDIR)/%.lo)
 
 
 # --- compilation -------------------------------------------------------
 
-all: $(MODULE_BIN)
+all: $(OBJDIR) $(MODULE_BIN)
 
 $(MODULE_BIN): $(USER_LIB)
-	$(LTLD) $(CFLAGS) -o $@ $(LDFLAGS) $(EXTRA_LIBS) \
-		$(topbuild)/auto/$(MODULE_LIB) $(USER_LIB) \
-		$(topbuild)/auto/$(POSTERWRITE_LIB) \
-		$(GENOM_LIB) $(COM_LIB) $(OS_LIBS)
+$(MODULE_BIN): $(topbuild)/auto/$(MODULE_LIB)
+$(MODULE_BIN): $(topbuild)/auto/$(POSTERWRITE_LIB)
+
+$(MODULE_BIN):
+	$(LTLD) $(CFLAGS) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT)	\
+		$(topbuild)/auto/$(MODULE_LIB) $(USER_LIB)	\
+		$(topbuild)/auto/$(POSTERWRITE_LIB)		\
+		$(EXTRA_LIBS) $(LTLK_GENOM_LIB)
 
 $(USER_LIB): $(codels_obj)
 	$(LTLD) -static $(CFLAGS) $(codels_obj) -o $@ $(LDFLAGS) \
-		-rpath $(libdir)
+		$(LIBTOOL_LINKOPT)
 
-%.lo: %.c
-	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
+$(OBJDIR)/%.lo: %.c
+	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
 
+$(OBJDIR):
+	mkdir -p $@
 
 # --- install -----------------------------------------------------------
 
@@ -96,14 +105,17 @@ install-bin:
 
 clean: $(codels_obj)
 	$(topbuild)/libtool --mode=clean rm -f $^
-	rm -f dependencies
+	rm -f $(OBJDIR)/dependencies
 
 
 # --- dependencies ------------------------------------------------------
 
-.PHONY: depends
-depends dependencies: $(codels_src)
-	$(MKDEP) -c$(CC) -odependencies -t.lo $(CPPFLAGS) $?
+.PHONY: depend
+depend $(OBJDIR)/dependencies:: $(OBJDIR);
+
+depend $(OBJDIR)/dependencies:: $(codels_src)
+	$(MKDEP) -c$(CC) -o$(OBJDIR)/dependencies -d$(OBJDIR) -t.lo \
+		$(CPPFLAGS) $?
 
 ifneq (${MAKECMDGOALS},clean)
 -include dependencies

@@ -44,9 +44,6 @@ config_files = \
 	$(serverdir)/Makefile	\
 	$(codelsdir)/Makefile	\
 
-#config_headers = \
-#	config.h
-
 # GenoM flags
 include $(topsrcdir)/auto/configure/genom.mk
 
@@ -56,13 +53,27 @@ include $(topsrcdir)/auto/configure/genom.mk
 # order matters!
 SUBDIRS= $(serverdir) $(codelsdir)
 
-make_subdirs= @for d in ${SUBDIRS}; do (cd $$d; ${MAKE} $@ ) || exit 2; done
+# Generic targets
+.PHONY: all install depend
+all install depend: $(config_files)
+	$(MAKE) $@-$(OSAPI)
 
-all install depends: $(config_files) #$(config_headers)
-	$(make_subdirs)
-
+.PHONY: clean
 clean:
-	$(make_subdirs)
+	$(MAKE) $@-$(OSAPI)
+
+
+# OS-specific targets
+
+make_subdirs=\
+  for d in ${SUBDIRS}; do (cd $$d; ${MAKE} OSAPI=$${OSAPI} $* ) || exit 2; done
+
+%-posix:
+	@OSAPI=posix; $(make_subdirs)
+
+%-rtai:
+	@OSAPI=rtai;  $(make_subdirs)
+	@OSAPI=posix; $(make_subdirs)
 
 
 # --- genom -------------------------------------------------------------
@@ -80,6 +91,7 @@ regen: update
 update:
 	(cd $(GENOMWD); $(GENOM) $(forceregen) $(GENFLAGS) $(GENFILE))
 
+
 # --- autoconf/autoheader -----------------------------------------------
 
 LIBTOOL_DEPS=   @LIBTOOL_DEPS@
@@ -90,7 +102,7 @@ LIBTOOL_DEPS=   @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)
 	./config.status --recheck
 
-$(config_files):: update ./config.status
+$(config_files):: ./config.status
 
 config.mk:: $(topsrcdir)/$(serverdir)/configure/config.mk.in
 	CONFIG_FILES='$@:$<' CONFIG_HEADERS= ./config.status

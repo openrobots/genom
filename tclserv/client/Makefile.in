@@ -29,7 +29,6 @@
 #
 
 TOPBUILD=../..
-include $(TOPBUILD)/config.mk
 
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
@@ -38,6 +37,9 @@ prefix=		@prefix@
 exec_prefix=	@exec_prefix@
 libdir=		@libdir@
 datadir=	@datadir@
+
+include $(TOPBUILD)/config.mk
+include $(topsrcdir)/config.$(OSAPI).mk
 
 VPATH=		$(srcdir)
 

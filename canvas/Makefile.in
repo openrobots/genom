@@ -1,7 +1,7 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2003 LAAS/CNRS                        --  Mon Aug 18 2003
+# Copyright (c) 2003-2004 LAAS/CNRS                   --  Mon Aug 18 2003
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -56,6 +56,8 @@ flist=\
 # makefiles
 flist+= \
 	configure/genom.mk		\
+	configure/config.posix.mk	\
+	configure/config.rtai.mk	\
 	configure/config.mk.in		\
 	configure/Makefile.top.in	\
 	configure/Makefile.auto.in	\

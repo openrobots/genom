@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 2003 LAAS/CNRS                       --  Thu Aug 21 2003
+ * Copyright (c) 2003 LAAS/CNRS                       --  Wed Feb 19 2003
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -28,27 +28,22 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#ifndef H_CONFIGUREGEN
-#define H_CONFIGUREGEN
+#ifndef H_GENOM_CONFIG
+#define H_GENOM_CONFIG
 
-#define PROTO_CONFIGURE		"configure/configure" 
-#define PROTO_INSTALL		"configure/install-sh" 
-#define PROTO_CONFIGSUB		"configure/config.sub" 
-#define PROTO_CONFIGGUESS	"configure/config.guess" 
-#define PROTO_LTCONFIG		"configure/ltconfig" 
-#define PROTO_LTCFC		"configure/ltcf-c.sh" 
-#define PROTO_LTMAIN		"configure/ltmain.sh" 
-#define PROTO_CONFIG_MK		"configure/config.mk.in"
-#define PROTO_CONFIG_POSIX_MK	"configure/config.posix.mk"
-#define PROTO_CONFIG_RTAI_MK	"configure/config.rtai.mk"
-#define PROTO_GENOM_MK		"configure/genom.mk"
+/* Do we have the BSD sys/cdefs.h ? */
+#undef HAVE_SYS_CDEFS_H
 
-#define PROTO_MAKEFILE_TOP	"configure/Makefile.top.in"
-#define PROTO_MAKEFILE_AUTO	"configure/Makefile.auto.in"
-#define PROTO_MAKEFILE_CODELS	"configure/Makefile.codels.in"
+#if defined(HAVE_SYS_CDEFS_H) && !defined(__KERNEL__)
+#include <sys/cdefs.h>
+#endif
 
-int configureGen(FILE *out, const char *codelsDir, const char *cmdLine,
-	const char *genomBin, const char *genomFile, const char *genomWd,
-	int genTcl, int genPropice, int genSpy);
+#ifndef __RCSID
+#ifdef __GNUC__
+#define __RCSID(id) static const char rcsid[] __attribute__((__unused__)) = id
+#else
+#define __RCSID(id) static const char rcsid[] = id
+#endif /* __GNUC__ */
+#endif
 
-#endif /* H_CONFIGUREGEN */
+#endif /* H_GENOM_CONFIG */

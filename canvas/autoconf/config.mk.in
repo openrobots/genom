@@ -46,27 +46,36 @@ SED=		sed
 
 # --- Libraries ---------------------------------------------------------
 
-MODULE_BIN=	$module$
-INIT_BIN=	$module$SendInitRqst
-ESSAY_BIN=	$module$Essay
+# executables or modules
+MODULE_BIN=	$(OBJDIR)/$module$$(BINEXT)
+INIT_BIN=	$(OBJDIR)/$module$SendInitRqst$(BINEXT)
+ESSAY_BIN=	$(OBJDIR)/$module$Essay$(BINEXT)
 
-MODULE_LIB=		lib$module$Server.la
-CLIENT_LIB=		lib$module$Client.la
-USER_LIB=		lib$module$Codels.la
-POSTERWRITE_LIB=	lib$module$PosterWrite.la
-TCLCLIENT_LIB=		lib$module$TclServ.la
-PROPICECLIENT_LIB=	lib$module$Propice.la
+# client libraries
+CLIENT_LIB=		$(OBJDIR)/lib$module$Client$(LIBEXT)
+TCLCLIENT_LIB=		$(OBJDIR)/lib$module$TclServ$(LIBEXT)
+PROPICECLIENT_LIB=	$(OBJDIR)/lib$module$Propice$(LIBEXT)
+
+# libtool 'helper' libs -- static archives
+MODULE_LIB=		$(OBJDIR)/lib$module$Server.la
+USER_LIB=		$(OBJDIR)/lib$module$Codels.la
+POSTERWRITE_LIB=	$(OBJDIR)/lib$module$PosterWrite.la
 
 
 # --- Flags -------------------------------------------------------------
 
+OSAPI?=		@OSAPI@
+
+ENDIANNESS=	@ENDIANNESS@
 CPPFLAGS=	@CPPFLAGS@
 CFLAGS=		@CFLAGS@
 LDFLAGS=	@LDFLAGS@
 
-ENDIANNESS=	@ENDIANNESS@
+OBJDIR=		$(OSAPI)-obj
 
 OS_LIBS=	@OS_LIBS@
+
+RTAI_INC=	@RTAI_INC@
 
 TCL_CPPFLAGS=	@TCL_CPPFLAGS@
 TCL_LDFLAGS=	@TCL_LDFLAGS@ @TCL_LIB_FLAG@ @TCL_LIBS@

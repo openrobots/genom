@@ -290,6 +290,7 @@ extern const char *protoDir;
 extern int keyword;	
 extern int num_ligne;
 extern char nomfic[];
+extern char *genfile;
 
 extern MODULE_STR *module;
 extern DCL_NOM_LIST *typedefs;

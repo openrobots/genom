@@ -1,7 +1,8 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2003 LAAS/CNRS                        --  Mon Sep  8 2003
+# Copyright (c) 2004 
+#      Autonomous Systems Lab, Swiss Federal Institute of Technology.
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -28,15 +29,8 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-GENOM=		$genomBin$
+# --- RTAI specific configuration ---------------------------------------
 
-GENOMWD=	$genomWd$
-GENFILE=	$genomFile$
-GENFILE_PATH=	$genomFilePath$
-
-GENFLAGS=	$genomIncludes$ $genomDefines$
-$genTcl$GENFLAGS+=	-t
-$genPropice$GENFLAGS+=	-x
-$genSpy$GENFLAGS+=	-s
-
-
+modsrcs= \
+	printState.c	\
+	rtai.c

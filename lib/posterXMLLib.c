@@ -29,6 +29,8 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+#include "genom-config.h"
+__RCSID("$LAAS$");
 
 /***
  *** Utilities for CGI for pico web that read posters and return

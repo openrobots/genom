@@ -30,12 +30,9 @@ $commentbegin$
 #
 $commentend$
 
-topbuild=..
-include $(topbuild)/config.mk
-
-
 # --- paths -------------------------------------------------------------
 
+topbuild=	..
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
 
@@ -46,6 +43,9 @@ libdir=		@libdir@
 datadir=	@datadir@/modules
 
 VPATH=		$(srcdir)
+
+include $(topbuild)/config.mk
+include $(topsrcdir)/auto/configure/config.$(OSAPI).mk
 
 
 # --- flags -------------------------------------------------------------
@@ -100,19 +100,19 @@ propiceclient_src= \
 	$module$EncodePropice.c \
 	$module$RequestsPropice.c
 
-module_obj=	$(module_src:.c=.lo)
-client_obj=	$(client_src:.c=.lo)
-init_obj=	$(init_src:.c=.lo)
-essay_obj=	$(essay_src:.c=.lo)
-connect_obj=	$(connect_src:.c=.lo)
-posterwrite_obj=$(posterwrite_src:.c=.lo)
-tclclient_obj=	$(tclclient_src:.c=.lo)
-propiceclient_obj=$(propiceclient_src:.c=.lo)
+module_obj=	$(module_src:%.c=$(OBJDIR)/%.lo)
+client_obj=	$(client_src:%.c=$(OBJDIR)/%.lo)
+init_obj=	$(init_src:%.c=$(OBJDIR)/%.lo)
+essay_obj=	$(essay_src:%.c=$(OBJDIR)/%.lo)
+connect_obj=	$(connect_src:%.c=$(OBJDIR)/%.lo)
+posterwrite_obj=$(posterwrite_src:%.c=$(OBJDIR)/%.lo)
+tclclient_obj=	$(tclclient_src:%.c=$(OBJDIR)/%.lo)
+propiceclient_obj=$(propiceclient_src:%.c=$(OBJDIR)/%.lo)
 
 
 # --- what to do --------------------------------------------------------
 
-all: server client
+all: $(OBJDIR) server client
 
 server: $(MODULE_LIB) $(INIT_BIN) $(POSTERWRITE_LIB)
 
@@ -120,46 +120,55 @@ client:: $(ESSAY_BIN) $(CONNECT)
 $genTcl$client:: $(TCLCLIENT_LIB)
 $genPropice$client:: $(PROPICECLIENT_LIB)
 
+$(OBJDIR):
+	mkdir -p $@
 
-# --- how to do ---------------------------------------------------------
 
-$(INIT_BIN): $(init_obj) $(CLIENT_LIB)
-	$(LTLD) $(CFLAGS) $(init_obj) -o $@ $(LDFLAGS) $(CLIENT_LIB) \
-		$(GENOM_LIB) $(COM_LIB) $(OS_LIBS)
-
-$(ESSAY_BIN): $(essay_obj) $(CLIENT_LIB) $serversLib$
-	$(LTLD) $(CFLAGS) $(essay_obj) -o $@  $(LDFLAGS) $(CLIENT_LIB) \
-		$serversLib$ $(GENOM_LIB) $(COM_LIB) $(OS_LIBS)
+# --- libraries ---------------------------------------------------------
 
 $(MODULE_LIB): $(module_obj)
 	$(LTLD) -static $(CFLAGS) $(module_obj) -o $@ $(LDFLAGS) \
-		-rpath $(libdir)
-
-$(CLIENT_LIB): $(client_obj)
-	$(LTLD) $(CFLAGS) $(client_obj) -o $@ $(LDFLAGS) -rpath $(libdir)
+		$(LIBTOOL_LINKOPT)
 
 $(POSTERWRITE_LIB): $(posterwrite_obj)
 	$(LTLD) -static $(CFLAGS) $(posterwrite_obj) -o $@ $(LDFLAGS) \
-		-rpath $(libdir)
+		$(LIBTOOL_LINKOPT)
+
+$(CLIENT_LIB): $(client_obj)
+	$(LTLD) $(CFLAGS) $(client_obj) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT)
+
 
 $(TCLCLIENT_LIB): $(tclclient_obj) $serversEndianLib$
 	$(LTLD) $(CFLAGS) $(tclclient_obj) $serversEndianLib$ -o $@	\
-		$(LDFLAGS) $(GENOM_LIB) $(COM_LIB) $(TCL_LDFLAGS)	\
-		$(OS_LIBS) -rpath $(libdir)
+		$(LIBTOOL_LINKOPT) $(GENOM_LIB)				\
+		$(LDFLAGS) $(TCL_LDFLAGS)
 
 $(PROPICECLIENT_LIB): $(propiceclient_obj)
 	$(LTLD) $(CFLAGS) $(propiceclient_obj) -o $@ $(LDFLAGS)		\
 		$(GENOM_LIB) $(COM_LIB) $(OS_LIBS) -rpath $(libdir)
 
 
+# --- binaries ----------------------------------------------------------
+
+$(INIT_BIN): $(init_obj) $(CLIENT_LIB)
+	$(LTLD) $(CFLAGS) $(init_obj) -o $@ $(LDFLAGS)	\
+		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)	\
+		$(GENOM_LIB)
+
+$(ESSAY_BIN): $(essay_obj) $(CLIENT_LIB) $serversLib$
+	$(LTLD) $(CFLAGS) $(essay_obj) -o $@  $(LDFLAGS) $(CLIENT_LIB) \
+		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)	\
+		$serversLib$ $(GENOM_LIB)
+
+
 # --- basic rules -------------------------------------------------------
 
-$(tclclient_obj): %.lo: %.c
+$(tclclient_obj): $(OBJDIR)/%.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(TCL_CPPFLAGS) -DDATADIR='"$(datadir)"' \
-		$(CFLAGS) -o $@ $<
+		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
-%.lo: %.c
-	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
+$(OBJDIR)/%.lo: %.c
+	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
 
 
 # --- install -----------------------------------------------------------
@@ -183,30 +192,34 @@ install-data:
 
 .PHONY: clean
 
-clean: $(module_obj)
-clean: $(client_obj)
-clean: $(connect_obj)
-clean: $(posterwrite_obj)
-clean: $(propiceclient_obj)
+clean: $(module_obj) $(posterwrite_obj) $(client_obj) $(connect_obj)
+$genPropice$clean: $(propiceclient_obj)
 
 clean:
 	$(topbuild)/libtool --mode=clean rm -f $^
-	rm -f dependencies
+	rm -f $(OBJDIR)/dependencies
 
 
 # --- dependencies ------------------------------------------------------
 
-.PHONY: depends
-$genTcl$depends dependencies:: $(tclclient_src)
-$genTcl$	$(MKDEP) -c"$(CC)" -odependencies -t.lo $(CPPFLAGS) $(TCL_CPPFLAGS) $?
+.PHONY: depend
 
-$genPropice$depends dependencies:: $(propiceclient_src)
-$genPropice$	$(MKDEP) -c"$(CC)" -odependencies -t.lo $(CPPFLAGS) $?
+make_depend=\
+  $(MKDEP) -c"$(CC)" -o$(OBJDIR)/dependencies -d$(OBJDIR) -t.lo $(CPPFLAGS) $?
 
-depends dependencies:: $(module_src) $(client_src) $(connect_src) \
-		       $(posterwrite_src)
-	$(MKDEP) -c"$(CC)" -odependencies -t.lo $(CPPFLAGS) $?
+depend $(OBJDIR)/dependencies:: $(OBJDIR);
+
+depend $(OBJDIR)/dependencies:: $(module_src) $(posterwrite_src)
+	@$(make_depend)
+depend $(OBJDIR)/dependencies::  $(client_src) $(connect_src)
+	@$(make_depend)
+
+$genTcl$depend $(OBJDIR)/dependencies:: $(tclclient_src)
+$genTcl$	@$(make_depend) $(TCL_CPPFLAGS)
+
+$genPropice$depend $(OBJDIR)/dependencies:: $(propiceclient_src)
+$genPropice$	@$(make_depend) $(TCL_CPPFLAGS)
 
 ifneq (${MAKECMDGOALS},clean)
--include dependencies
+-include $(OBJDIR)/dependencies
 endif

@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 2003 LAAS/CNRS
+ * Copyright (c) 2003-2004 LAAS/CNRS
  * Sara Fleury, David Bonnafous -  Thu Jan 9 2003
  * All rights reserved.
  *
@@ -29,7 +29,7 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#include "config.h"
+#include "genom-config.h"
 __RCSID("$LAAS$");
 
 #ifdef VXWORKS
@@ -37,8 +37,6 @@ __RCSID("$LAAS$");
 #endif
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "genom/printScan.h"
 

@@ -1,7 +1,8 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2003 LAAS/CNRS                        --  Mon Sep  8 2003
+# Copyright (c) 2004 
+#      Autonomous Systems Lab, Swiss Federal Institute of Technology.
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -28,15 +29,38 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-GENOM=		$genomBin$
 
-GENOMWD=	$genomWd$
-GENFILE=	$genomFile$
-GENFILE_PATH=	$genomFilePath$
+# --- RTAI-specific configuration ---------------------------------------
 
-GENFLAGS=	$genomIncludes$ $genomDefines$
-$genTcl$GENFLAGS+=	-t
-$genPropice$GENFLAGS+=	-x
-$genSpy$GENFLAGS+=	-s
+moddir=		module
+MOD=		$(moddir)/lib$(BASENAME).o
+MOD_CPPFLAGS+=	-I$(RTAI_INCLUDES) -D__RTAI__ -D__KERNEL__ -DMODULE
 
+modobjs=$(modsrcs:%.c=$(moddir)/%.lo)
 
+# how to build a module
+all-os:	$(moddir) $(MOD)
+
+# relocatable object
+$(MOD): $(modobjs)
+	$(LTLD) -o $@ $(modobjs)
+
+$(moddir)/%.lo: %.c
+	$(LTCC) -prefer-non-pic -c $(CFLAGS) $(CPPFLAGS) $(MOD_CPPFLAGS) \
+		-o $@ $<
+
+# object file directory
+$(moddir):
+	mkdir -p $@
+
+# module dependencies
+depend $(moddir)/dependencies:: $(moddir)
+depend $(moddir)/dependencies:: $(modsrcs)
+	$(MKDEP) -c$(CC) -o$(moddir)/dependencies -t.lo \
+		$(CPPFLAGS) $(MOD_CPPFLAGS) $?
+
+ifneq (,$(modsrcs))
+ifneq (distclean,$(MAKECMDGOALS))
+include $(moddir)/dependencies
+endif
+endif

@@ -1,5 +1,6 @@
 $LAAS$
 
+  8. Added RTAI support.
   7. Renamed config.h to genom-config.h in order to avoid name clashes
      with <linux/config.h> when compiling for RTAI.
   6. Handle enum types in typeGen() for types declared in the .gen file.

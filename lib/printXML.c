@@ -29,6 +29,8 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+#include "genom-config.h"
+__RCSID("$LAAS$");
 
 /***
  *** Print des types de base utilise's par les modules generator

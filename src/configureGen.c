@@ -1,7 +1,9 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 2003 LAAS/CNRS                       --  Thu Aug 21 2003
+ * Copyright (c) 2004 
+ *      Autonomous Systems Lab, Swiss Federal Institute of Technology.
+ * Copyright (c) 2003 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -28,12 +30,13 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#include "config.h"
+#include "genom-config.h"
 __RCSID("$LAAS$");
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libgen.h>
 
 #include "genom.h"
 #include "configureGen.h"
@@ -62,6 +65,8 @@ configureGen(FILE *out,
       PROTO_LTCFC,
       PROTO_LTMAIN,
       PROTO_CONFIG_MK,
+      PROTO_CONFIG_POSIX_MK,
+      PROTO_CONFIG_RTAI_MK,
       NULL
    };
       
@@ -80,6 +85,7 @@ configureGen(FILE *out,
    subst_begin(out, PROTO_GENOM_MK);
    print_sed_subst(out, "genomBin", genomBin);
    print_sed_subst(out, "genomFile", genomFile);
+   print_sed_subst(out, "genomFilePath", dirname(genomFile));
    print_sed_subst(out, "genomWd", genomWd);
 
    print_sed_subst(out, "genTcl", genTcl ? "" : "#");

@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1994-2003 LAAS/CNRS
+ * Copyright (c) 1994-2004 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -28,7 +28,7 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#include "config.h"
+#include "genom-config.h"
 __RCSID("$LAAS$");
 
 /**
@@ -39,12 +39,16 @@ __RCSID("$LAAS$");
  **/
 
 #ifdef VXWORKS
-#  include <vxWorks.h>
+# include <vxWorks.h>
 #else
-#  include <portLib.h>
+# include <portLib.h>
 #endif
 
-#include <stdio.h>
+#if defined(__RTAI__) && defined(__KERNEL__)
+# include <linux/kernel.h>
+#else
+# include <stdio.h>
+#endif
 
 #include "genom/modules.h"
 

@@ -1,5 +1,6 @@
 /*	$LAAS$ */
 
+$commentend$
 /* 
  * Copyright (c) 1993-2003 LAAS/CNRS
  * All rights reserved.
@@ -28,6 +29,7 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+$commentend$
 
 /**
  **  Emission/reception de la requete d'execution $module$Essay$request$

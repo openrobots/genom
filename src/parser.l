@@ -29,7 +29,7 @@
  * DAMAGE.
  */
 %{
-#include "config.h"
+#include "genom-config.h"
 __RCSID("$LAAS$");
 %}
 
@@ -181,8 +181,10 @@ WC      {W}*\:
    /* Ecrase le guillemet fermant, car le format %s ci-dessus l'a lu  */
    tmpfic[strlen(tmpfic) - 1] = '\0';
 
-   if (tmpfic[0] != '<') /* deal with gcc strangeness */
+   if (tmpfic[0] != '<') /* skip weird statements */
       strcpy(nomfic, tmpfic);
+   else
+      strcpy(nomfic, genfile);
 
    /* on stocke ce nom de fichier dans allIncludeFiles */
    {

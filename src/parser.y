@@ -38,7 +38,7 @@
  ***/
 
 %{
-#include "config.h"
+#include "genom-config.h"
 __RCSID("$LAAS$");
 
 #include <stdio.h>
@@ -107,6 +107,7 @@ extern int yylex(void);
 int keyword = 1;
 int num_ligne = 1;
 char nomfic[MAXPATHLEN];        /* nom du fichier en cours de traitement */
+char *genfile;
 FILE *sortie;
 int enumValue = 0;
 
@@ -1366,7 +1367,6 @@ main(int argc, char **argv)
     static const char *nomstamp = ".gen_stamp";
     FILE *stamp;
     ID_LIST *il;
-    char *genfile;
     int installUserPart = 0;
     char *cmdLine=NULL;
     int i;

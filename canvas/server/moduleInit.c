@@ -1,7 +1,11 @@
 /*	$LAAS$ */
 
+/* --- GENERATED FILE, DO NOT EDIT BY HAND --------------------------- */
+
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 2004 
+ *      Autonomous Systems Lab, Swiss Federal Institute of Technology.
+ * Copyright (c) 1993-2004 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -29,63 +33,55 @@
  * DAMAGE.
  */
 
-/*------------------  Fichier généré automatiquement ------------------*/
-/*------------------  Ne pas éditer manuellement !!! ------------------*/
- 
-/****************************************************************************/
-/*   LABORATOIRE D'AUTOMATIQUE ET D'ANALYSE DE SYSTEMES - LAAS / CNRS       */
-/*   PROJET HILARE II - INITIALISATION DU MODULE $MODULE$                   */
-/*   FICHIER SOURCE : "$module$TaskInit.c"                                  */
-/****************************************************************************/
-
-/* VERSION ACTUELLE / HISTORIQUE DES MODIFICATIONS :
-   version ; date; auteur;
-*/
-
-/* DESCRIPTION :
-   Routine d'initialisation du module $module$, qui doit etre appelee
-   au moment du boot.
-*/
+/* module $module$ initialization routines */
 
 #ifdef VXWORKS
-#  include <vxWorks.h>
+# include <vxWorks.h>
 #else
-#  include <sys/param.h>
-#  include <portLib.h>
+# include <portLib.h>
 #endif
-#include <stdio.h>
-#include <stdlib.h>
+
+#if defined(__RTAI__) && defined(__KERNEL__)
+# include <linux/init.h>
+# include <linux/module.h>
+# include <linux/kernel.h>
+# include <linux/sched.h>
+
+#else
+# include <stdio.h>
+
+# ifndef VXWORKS
+#  include <sys/param.h>
+#  include <stdlib.h>
+#  include <signal.h>
+#  include <fcntl.h>
+#  include <string.h>
+#  include <errno.h>
+#  include <unistd.h>
+#  include <sys/utsname.h>
+
+#  include "shellLib.h"
+#  include "h2initGlob.h"
+
+#  define PID_FILE	".$module$.pid"
+# endif /* VXWORKS */
+#endif /* RTAI && KERNEL */
 
 #include <taskLib.h>
 #include <errnoLib.h>
-
-#ifndef VXWORKS
-#include "shellLib.h"
-#include "h2initGlob.h"
-#include <signal.h>
-#include <fcntl.h>
-#include <string.h>
-#include <errno.h>
-#include <unistd.h>
-#include <sys/utsname.h>
-#endif
+#include <h2evnLib.h>
 
 #include "$module$Header.h"
-#include "h2evnLib.h"
 #include "commonStructLib.h"
 #include "$module$MsgLib.h"
-
-#ifndef VXWORKS
-#define PID_FILE ".$module$.pid"
-#endif
 
 #define CNTRL_TASK_MIN_STACK_SIZE 4096
 #define EXEC_TASK_MIN_STACK_SIZE  4096
 
 
-/*----------------------- VARIABLES GLOBALES ------------------------------*/
+/* --- Global variables ---------------------------------------------- */
 
-/* Semaphores d'initialisation */
+/* Initialization semaphores */
 SEM_ID sem$module$CntrlTaskInit;
 SEM_ID sem$module$InitExecTab[$MODULE$_NB_EXEC_TASK];
 
@@ -93,12 +89,12 @@ SEM_ID sem$module$InitExecTab[$MODULE$_NB_EXEC_TASK];
 void $module$CntrlTask ();
 $execTaskTabDescribe$
 
-/* Declaration des SDI */
-$internalDataType$ *$module$DataStrId;
-$MODULE$_CNTRL_STR *$module$CntrlStrId;
+/* Internal data structures */
+$internalDataType$ *$module$DataStrId = NULL;
+$MODULE$_CNTRL_STR *$module$CntrlStrId = NULL;
 
-#ifndef VXWORKS
-/* Nom du fichier contenant le numero de processus */
+#ifdef PID_FILE
+/* name of the file containing module's PID */
 char pidFilePath[MAXPATHLEN];
 #endif
 
@@ -113,163 +109,211 @@ char pidFilePath[MAXPATHLEN];
 *  Retourne: OK ou ERROR
 */
 
-
-STATUS $module$TaskInit ()
-
+STATUS
+$module$TaskInit()
 {
   int i;
-#ifndef VXWORKS
+#ifdef PID_FILE
   FILE* pidFile;
   int pidFileFd;
   char *home;
   struct utsname uts;
-#endif
+#endif /* PID_FILE */
 
-  /* Allouer la structure commune des donnees */
+  /*
+   * Create internal data structures
+   */
+
+  /* SDI_f */
   if (commonStructCreate (sizeof ($internalDataType$), 
 			  (void *) &$module$DataStrId) 
       != OK)  {
     h2perror ("$module$TaskInit: cannot create the Functional Data Base");
-    return (ERROR);
+    goto error;
   }
   
-  /* Allouer la structure commune de controle */
+  /* SDI_c */
   if (commonStructCreate (sizeof ($MODULE$_CNTRL_STR), 
 			  (void *) &$module$CntrlStrId) 
       != OK)  {
     h2perror ("$module$TaskInit: cannot create the Control Data Base");
-    return (ERROR);
+    goto error;
   }
 
-#ifndef VXWORKS
-  /* Creation du fichier de pid */
+#ifdef PID_FILE
+  /*
+   * Create pid file
+   */
   home = getenv("HOME");
   if (home == NULL) {
       home = "/tmp";
   }
   if (uname(&uts) == -1) {
       errnoSet(errno);
-      return ERROR;
+      goto error;
   }
   snprintf(pidFilePath, MAXPATHLEN, "%s/%s-%s", home, PID_FILE, uts.nodename);
   pidFileFd = open(pidFilePath, O_CREAT|O_EXCL|O_WRONLY, 0644);
   if (pidFileFd < 0) {
       fprintf(stderr, "$module$: error creating %s: %s\n",
 	      pidFilePath, strerror(errno));
-      return ERROR;
+      goto error;
   }
   pidFile = fdopen(pidFileFd, "w");
   if (pidFile == NULL) {
       perror("$module$: error opening pid file");
-      return(ERROR);
+      goto error;
   }
   fprintf(pidFile, "%d ", getpid());
-#endif /* UNIX */
-  /* 
-   * Lancement de la tache de controle 
-   */
-  printf ("\n$MODULE$ :\nSpawn control task ... ");
-#ifndef VXWORKS
-  fflush (stdout);
-#endif
-  if ((sem$module$CntrlTaskInit = semBCreate (SEM_Q_PRIORITY, SEM_EMPTY)) 
-      == NULL) {
-    h2perror ("$module$TaskInit: cannot create control semaphore");
-    return (ERROR); 
-  }
-  
-  if (taskSpawn ("$module$CntrlTask", 10 /* priorite */, 
-		 VX_FP_TASK,
-		 $MODULE$_MAX_RQST_SIZE + CNTRL_TASK_MIN_STACK_SIZE /* size */, 
-		 (FUNCPTR)$module$CntrlTask) == ERROR) {
-    h2perror ("$module$TaskInit: cannot spawn $module$CntrlTask");
-    return (ERROR);
-  }
-  
-  /* Attendre le semaphore de fin d'initialisation */
-  if (semTake ( sem$module$CntrlTaskInit, WAIT_FOREVER ) != OK)
-    return (ERROR);
-  
-  /* Destruction du semaphore */
-  semDelete (sem$module$CntrlTaskInit);
-  
-  /* Verifier si la tache a bien ete lancee */
-  if (CNTRL_TASK_STATUS == ERROR) {
-    errnoSet(CNTRL_TASK_BILAN);
-    h2perror ("$module$: Control task failed");
-    return (ERROR);
-  }
-  printf ("OK\n");
+#endif /* PID_FILE */
 
   /* 
-   * Lancement des taches d'execution 
+   * Spawn control task
+   */
+  logMsg("$module$: spawning control task.\n");
+
+  sem$module$CntrlTaskInit = semBCreate(SEM_Q_PRIORITY, SEM_EMPTY);
+  if (sem$module$CntrlTaskInit == NULL) {
+     h2perror("$module$TaskInit: cannot create control semaphore");
+     goto error; 
+  }
+  
+  if (taskSpawn("$module$CntrlTask", 10 /* priorite */, VX_FP_TASK,
+		$MODULE$_MAX_RQST_SIZE + CNTRL_TASK_MIN_STACK_SIZE /*size*/, 
+		(FUNCPTR)$module$CntrlTask) == ERROR) {
+     h2perror("$module$TaskInit: cannot spawn $module$CntrlTask");
+     goto error;
+  }
+  /* wait for initialization */
+  if (semTake(sem$module$CntrlTaskInit, WAIT_FOREVER) != OK)
+     goto error;
+  
+  semDelete(sem$module$CntrlTaskInit);
+  sem$module$CntrlTaskInit = NULL;
+
+  /* check task status */
+  if (CNTRL_TASK_STATUS == ERROR) {
+     errnoSet(CNTRL_TASK_BILAN);
+     h2perror("$module$: Control task failed");
+     goto error;
+  }
+
+  /* 
+   * Spawn execution tasks
    */
   for (i=0; i<$MODULE$_NB_EXEC_TASK; i++) {
+    logMsg("$module$: spawning task %s.\n", $module$ExecTaskTab[i].name);
 
-    printf ("Spawn task %s ... ", $module$ExecTaskTab[i].name);
-#ifndef VXWORKS
-    fflush (stdout);
-#endif
+    sem$module$InitExecTab[i] = semBCreate(SEM_Q_PRIORITY, SEM_EMPTY);
+    if (sem$module$InitExecTab[i] == NULL) {
+       h2perror("$module$TaskInit: cannot create init semaphore");
+       goto error; 
+    }
+    
+    if (taskSpawn($module$ExecTaskTab[i].name, 
+		  $module$ExecTaskTab[i].priority, VX_FP_TASK, 
+		  $module$ExecTaskTab[i].size + EXEC_TASK_MIN_STACK_SIZE, 
+		  (FUNCPTR)$module$ExecTaskTab[i].func) == ERROR) {
+       h2perror("$module$TaskInit: cannot spawn exec task");
+       goto error;
+    }
+    /* wait for initialization */
+    if (semTake(sem$module$InitExecTab[i], WAIT_FOREVER) != OK) {
+       h2perror("$module$TaskInit: semTake init sem");
+       goto error;
+    }
+    
+    semDelete(sem$module$InitExecTab[i]);
+    sem$module$InitExecTab[i] = NULL;
 
-    /* Creation du semaphore d'init */
-    if ((sem$module$InitExecTab[i] = semBCreate (SEM_Q_PRIORITY, SEM_EMPTY)) 
-	== NULL) {
-      h2perror ("$module$TaskInit: cannot create init semaphore");
-      return (ERROR); 
-    }
-    
-    /* Lancer la tache d'execution */
-    if (taskSpawn ($module$ExecTaskTab[i].name, 
-		   $module$ExecTaskTab[i].priority, 
-		   VX_FP_TASK, 
-		   $module$ExecTaskTab[i].size + EXEC_TASK_MIN_STACK_SIZE, 
-		   (FUNCPTR)$module$ExecTaskTab[i].func) == ERROR) {
-      printf ("$module$TaskInit: cannot spawn task %s\n",
-	      $module$ExecTaskTab[i].name);
-      h2perror ("$module$TaskInit: taskSpawn");
-      return (ERROR);
-    }
-    
-    /* Attendre le semaphore de fin d'initialisation */
-    if (semTake (sem$module$InitExecTab[i], WAIT_FOREVER ) != OK) {
-      h2perror ("$module$TaskInit: semTake init sem");
-      return (ERROR);
-    }
-    
-    /* Destruction du semaphore */
-    semDelete (sem$module$InitExecTab[i]);
-    
-    /* Verifier si la tache a ete bien lancee */
+    /* check task status */
     if (EXEC_TASK_STATUS(i) == ERROR) {
-      printf ("$module$TaskInit: Exec task %s failed : %s\n", 
-	      $module$ExecTaskTab[i].name, 
-	      h2getMsgErrno(EXEC_TASK_BILAN(i)));
-      errnoSet(EXEC_TASK_BILAN(i));
-      return (ERROR);
+       logMsg("$module$TaskInit: Exec task %s failed : %s\n", 
+	      $module$ExecTaskTab[i].name, h2getMsgErrno(EXEC_TASK_BILAN(i)));
+       errnoSet(EXEC_TASK_BILAN(i));
+       goto error;
     }
-    printf ("OK\n");
   }
 
-  /* Faire faire 1 boucle a la tache de controle (init poster) */
+  /* wake up control task once for poster initialization */
   h2evnSignal(CNTRL_TASK_ID);
 
-  /**** Toutes les taches sont lancees  ****/
-  printf ("$module$: All tasks are spawned\n\n");
+  /*
+   * Module is ready
+   */
+  logMsg("$module$: all tasks are spawned\n");
 
-#ifndef VXWORKS
+#ifdef PID_FILE
   fputc('\n', pidFile);
   fclose(pidFile);
-#endif /* UNIX */
+#endif /* PID_FILE */
 
-  return (OK);
+  return OK;
+
+  error:
+  /* Destroy initialization semaphores */
+  for (i=0; i<$MODULE$_NB_EXEC_TASK; i++) if (sem$module$InitExecTab[i]) {
+     semDelete(sem$module$InitExecTab[i]);
+     sem$module$InitExecTab[i] = NULL;
+  }
+
+  if (sem$module$CntrlTaskInit) {
+     semDelete(sem$module$CntrlTaskInit);
+     sem$module$CntrlTaskInit = NULL;
+  }
+
+  /* Destroy internal data structures */
+  if ($module$CntrlStrId) {
+     commonStructDelete($module$CntrlStrId);
+     $module$CntrlStrId = NULL;
+  }
+
+  if ($module$DataStrId) {
+     commonStructDelete($module$DataStrId);
+     $module$DataStrId = NULL;
+  }
+  return ERROR;
 }
 
-/***********************************************************************
- *
- * main pour UNIX
+
+#if defined(__RTAI__) && defined(__KERNEL__)
+
+/*
+ * --- Module initialization for RTAI -----------------------------------
  *
  */
-#ifndef VXWORKS
+
+MODULE_DESCRIPTION("$module$ module");
+
+int
+$module$_module_init(void)
+{
+   if ($module$TaskInit() == ERROR) {
+      /* we don't report an error to insmod: there might still be
+       * suspended tasks lying around and the module's code must remain
+       * in memory. */
+      h2perror("Error moduleInit");
+   }
+
+   return 0;
+}
+
+void
+$module$_module_exit(void)
+{
+   ;
+}
+
+module_init($module$_module_init);
+module_exit($module$_module_exit);
+
+#endif /* RTAI && KERNEL */
+
+
+#if !defined(VXWORKS) && !defined(__KERNEL__)
+/*
+ * --- main for unix ----------------------------------------------------
+ */
 static char *prompt = "$module$> ";
 extern char *optarg;
 extern int optind;

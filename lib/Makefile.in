@@ -1,7 +1,9 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2003 LAAS/CNRS                        --  Mon Aug 18 2003
+# Copyright (c) 2004 
+#      Autonomous Systems Lab, Swiss Federal Institute of Technology.
+# Copyright (c) 2003-2004 LAAS/CNRS
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -28,9 +30,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-TOPBUILD=..
-include $(TOPBUILD)/config.mk
-
+TOPBUILD=	..
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
 
@@ -38,52 +38,59 @@ prefix=		@prefix@
 exec_prefix=	@exec_prefix@
 libdir=		@libdir@
 
+include $(TOPBUILD)/config.mk
+
 VPATH=		$(srcdir)
 
 CPPFLAGS+=	-I$(TOPBUILD) -I$(topsrcdir)/include -I$(srcdir) -I.
 CPPFLAGS+=	-I$(PORTLIB_INC) -D$(ENDIANNESS)
 
-LDFLAGS+=	-L$(PORTLIB_LIB) -R$(PORTLIB_LIB)
-LDFLAGS+=	-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)
-
 SHLIB_MAJOR=	1
 SHLIB_MINOR=	0
 
+BASENAME=	$(GENOM)
+LIB=		lib$(BASENAME).la
+
+-include $(srcdir)/Makefile.$(OSAPI).mk
+
 # -----------------------------------------------------------------------
 
-libsrcs=\
+libsrcs+= \
+	printState.c		\
+	essayLib.c		\
+	genomReportsLib.c	\
+	h2endian.c		\
+	moduleEvents.c		\
 	scan.c			\
+	posterXMLLib.c		\
 	print.c			\
 	printXML.c		\
-	printScanUtil.c		\
-	printState.c		\
-	moduleEvents.c		\
-	genomReportsLib.c	\
-	essayLib.c		\
-	posterXMLLib.c		\
-	h2endian.c
+	printScanUtil.c
 
 libobjs = $(libsrcs:.c=.lo)
 
 # -----------------------------------------------------------------------
 
-.PHONY: all
-all: $(LIBGENOM)
+.PHONY: all all-os
+all: all-os $(LIB)
 
 .PHONY: install
 install: all
-	$(LTINSTALL) $(LIBGENOM) $(libdir)/$(LIBGENOM)
+	$(LTINSTALL) $(LIB) $(libdir)/$(LIB)
 
-$(LIBGENOM): $(libobjs)
-	$(LTLD) $(CFLAGS) $(libobjs) -o $@ $(LDFLAGS) -rpath $(libdir) \
-	   -version-info $(SHLIB_MAJOR):$(SHLIB_MINOR)
+$(LIB): $(libobjs)
+	$(LTLD) $(CFLAGS) $(libobjs) -o $@ $(LDFLAGS)			\
+		-L$(PORTLIB_LIB) -R$(PORTLIB_LIB)			\
+		-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)	\
+		-version-info $(SHLIB_MAJOR):$(SHLIB_MINOR)		\
+		-rpath $(libdir) -R$(libdir)
 
 %.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
 
 .PHONY: clean
 clean:
-	$(TOPBUILD)/libtool --mode=clean rm -f $(libobjs) $(LIBGENOM)
+	$(TOPBUILD)/libtool --mode=clean rm -f $(libobjs) $(LIB)
 	rm -f dependencies
 
 .PHONY: depends
@@ -93,3 +100,6 @@ depends dependencies: $(libsrcs)
 ifneq (${MAKECMDGOALS},clean)
 -include dependencies
 endif
+
+# os-specific rules
+include $(topsrcdir)/config.$(OSAPI).mk

@@ -29,7 +29,7 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#include "config.h"
+#include "genom-config.h"
 __RCSID("$LAAS$");
 
 #include <stdio.h>
@@ -143,7 +143,7 @@ execTaskGen(FILE *out)
 		}
 		bufcat(&str, "    sizeof(%s),\n", p->type->name);
 		bufcat(&str, "    &(EXEC_TASK_POSTER_ID(%d)[%d])) != OK) {\n"
-		       "     printf (\"%s%sInitTaskFunc: cannot create poster %s\\\\n\");\n"
+		       "     logMsg(\"%s%sInitTaskFunc: cannot create poster %s\\\\n\");\n"
 		       "     return(ERROR);\n    }\n", 
 		       t->num, i,
 		       module->name, t->name, p->name);
@@ -238,7 +238,7 @@ execTaskGen(FILE *out)
 	    str = NULL;
 	    for (ln = t->poster_client_from; ln != NULL; ln = ln->next) {
 		bufcat(&str, "  if (%sPosterInit() == ERROR) {\n"
-		       "     printf (\"%s%sInitTaskFunc: %sPosterInit failed\\\\n\");\n"
+		       "     logMsg(\"%s%sInitTaskFunc: %sPosterInit failed\\\\n\");\n"
 		       "     return(ERROR);\n   }\n", 
 		       ln->name, module->name, t->name, ln->name);
 	    }

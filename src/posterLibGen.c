@@ -29,7 +29,7 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#include "config.h"
+#include "genom-config.h"
 __RCSID("$LAAS$");
 
 /***
@@ -519,18 +519,17 @@ int posterLibGen(FILE *out)
     script_open(out);
     cat_begin(out);
 
-    fprintf(out, "/*------------------  Fichier généré automatiquement ------------------*/\n");
-    fprintf(out, "/*------------------  Ne pas éditer manuellement !!! ------------------*/\n\n");
+    fprintf(out,
+	    "/* ---"
+	    " Generated file, do not edit by hand "
+	    "--------------------------- */\n");
 
     fprintf(out, "#ifdef VXWORKS\n");
-    fprintf(out, "#include <vxWorks.h>\n");
+    fprintf(out, "# include <vxWorks.h>\n");
     fprintf(out, "#else\n");
-    fprintf(out, "#include <portLib.h>\n");
-    fprintf(out, "#endif\n");
-    fprintf(out, "#include <stdio.h>\n");
-    fprintf(out, "#include <stdlib.h>\n");
-    fprintf(out, "#include \"posterLib.h\"\n");
-    fprintf(out, "#include \"%sPrint.h\"\n\n", module->name);
+    fprintf(out, "# include <portLib.h>\n");
+    fprintf(out, "#endif\n\n");
+    fprintf(out, "#include \"%sPosterLib.h\"\n\n", module->name);
 
     /*
      * Fonction d'écriture des posters
@@ -834,7 +833,7 @@ static void posterWriteLibMemberGen(FILE *out, POSTER_LIST *p, int protos)
 
 	  fprintf(out, "STATUS %s%s%sPosterWrite (POSTER_ID pid, %s *%s /* %s */)\n{\n",
 		  module->name, p->name, n->name, type, n->name, addrstr);
-	  fprintf(out, "  %s *x = NULL;\n", p->type->name);
+	  fprintf(out, "  %s *x = 0;\n", p->type->name);
 	  fprintf(out, "  int size = sizeof(x->%s);\n", n->name);
 	  fprintf(out, "  return (posterWrite(pid, (int)&x->%s - (int)x, "
 		  "(char *)(%s), size) \n\t== size ? OK : ERROR);\n}\n\n",

@@ -1,7 +1,11 @@
 /*	$LAAS$ */
 
+/* --- GENERATED FILE, DO NOT EDIT BY HAND --------------------------- */
+
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 2004 
+ *      Autonomous Systems Lab, Swiss Federal Institute of Technology.
+ * Copyright (c) 1993-2004 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -29,44 +33,46 @@
  * DAMAGE.
  */
 
-/*------------------  Fichier généré automatiquement ------------------*/
-/*------------------  Ne pas éditer manuellement !!! ------------------*/
- 
-/****************************************************************************
- *   LABORATOIRE D'AUTOMATIQUE ET D'ANALYSE DE SYSTEMES - LAAS / CNRS       
- *   PROJET HILARE II - TACHE DE CONTROLE DU MODULE  $MODULE$               
- *   FICHIER SOURCE: $module$CntrlTask.c                                    
- ****************************************************************************/
+/*
+ * Control task body
+ */
 
-/* VERSION ACTUELLE / HISTORIQUE DES MODIFICATIONS :
-   version ; auteur ; date;
-*/
+#ifdef VXWORKS
+# include <vxWorks.h>
+#else
+# include <portLib.h>
+#endif
 
-/* DESCRIPTION :
-   Fichier source de la tache de controle du module.
-*/
+#if defined(__RTAI__) && defined(__KERNEL__)
+# define exit(x)	taskDelete(0)
+#else
+# include <unistd.h>
+# ifndef VXWORKS
+#  define PID_FILE
+# endif
+#endif
 
-
-/*------------------------- INCLUSIONS -------------------------------------*/
 #include "$module$Header.h"
-#include "$module$MsgLib.h"
-
-#include "commonStructLib.h"
-#include "h2evnLib.h"
-#include "h2timerLib.h"
 
 #include <taskLib.h> 
 #include <errnoLib.h>
+#include <commonStructLib.h>
+#include <h2evnLib.h>
+#include <h2timerLib.h>
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#ifndef VXWORKS
-#include <unistd.h>
-#endif
+#include "$module$MsgLib.h"
 
 #ifdef MODULE_EVENT
 #include "moduleEvents.h"
+#endif
+
+/* Print debugging information */
+#define GENOM_DEBUG_CNTRLTASK
+
+#ifdef GENOM_DEBUG_CNTRLTASK
+# define LOGDBG(x)	logMsg x
+#else
+# define LOGDBG(x)
 #endif
 
 /*-------------------- VARIABLES IMPORTEES ---------------------------------*/
@@ -74,9 +80,10 @@
 /* Semaphores d'initialisation et de debug */
 extern SEM_ID sem$module$CntrlTaskInit;   
 
-#ifndef VXWORKS
+#ifdef PID_FILE
 extern char pidFilePath[];
 #endif
+
 /*-------------------- VARIABLES GLOBALES ---------------------------------*/
 
 /* Nombre d'activites ZOMBIE */
@@ -130,22 +137,25 @@ static void   $module$ReplyAndSuspend   (SERV_ID servId, int rqstId,
  *   Cette tache boucle a jamais.
  */
 
-
-void $module$CntrlTask ()
-
+void
+$module$CntrlTask()
 {
   static SERV_ID $module$ServId;              /* Id du serveur */
 
   /* Routine d'initialisation */
   CNTRL_TASK_STATUS = $module$CntrlInitTask (&$module$ServId);
-  CNTRL_TASK_BILAN = errnoGet();
+  if (CNTRL_TASK_STATUS == ERROR)
+     CNTRL_TASK_BILAN = errnoGet();
+  else
+     CNTRL_TASK_BILAN = OK;
   
   /* Donner le sem de fin d'initialisation */
   semGive (sem$module$CntrlTaskInit) ;
 
   /* Se suspendre en cas de probleme */
-  if (CNTRL_TASK_STATUS == ERROR)
-    $module$CntrlTaskSuspend (FALSE);
+  if (CNTRL_TASK_STATUS == ERROR) {
+     $module$CntrlTaskSuspend(FALSE);
+  }
 
 #ifdef MODULE_EVENT
   moduleEventCntrl.moduleNum = $numModule$;
@@ -363,8 +373,8 @@ $tabRequestFuncDeclare$
  */
 
 
-static STATUS $module$CntrlInitTask (SERV_ID *$module$ServId)
-
+static STATUS
+$module$CntrlInitTask(SERV_ID *$module$ServId)
 {
   int i;
 
@@ -372,10 +382,11 @@ static STATUS $module$CntrlInitTask (SERV_ID *$module$ServId)
   if (csMboxInit ($MODULE$_MBOX_NAME, 
 		  $MODULE$_MBOX_RQST_SIZE, 0)
       != OK) {
-    printf("$module$CntrlTask/csMboxInit: ");
+    logMsg("$module$CntrlTask: csMboxInit: ");
     h2printErrno(errnoGet());
     return (ERROR);
   }
+  LOGDBG(("$module$CntrlInitTask: created mailbox\n"));
   
   /* S'initialiser comme serveur */
   if (csServInitN ($MODULE$_MAX_RQST_SIZE, 
@@ -384,29 +395,32 @@ static STATUS $module$CntrlInitTask (SERV_ID *$module$ServId)
 		  NB_RQST_TYPE,
 		  $module$ServId) 
       != OK) { 
-    printf("$module$CntrlTask/csServInit: ");
+    logMsg("$module$CntrlTask: csServInit: ");
     h2printErrno(errnoGet());
     return (ERROR);
   }
+  LOGDBG(("$module$CntrlInitTask: initialized mailbox as a server\n"));
   
   /* Installer les routines de traitement des requetes */
   for (i=0; i<NB_RQST_TYPE-1; i++) {
     if (csServFuncInstall (*$module$ServId, $module$TabRequestNum[i], 
 			   (FUNCPTR) $module$TabRequestFunc[i]) != OK) {
-      printf("$module$CntrlTask/csServFuncInstall: ");
+      logMsg("$module$CntrlTask: csServFuncInstall: ");
       h2printErrno(errnoGet());
       return (ERROR);
     }
   }
+  LOGDBG(("$module$CntrlInitTask: installed requests\n"));
 
   /* Installer la requete abort
      (c'est le parser qui attribue le premier numero libre de requete ) */
   if (csServFuncInstall (*$module$ServId, $abortRequestNum$, 
 			 (FUNCPTR) $module$RqstAbortActivity) != OK) {
-    printf("$module$CntrlTask/csServFuncInstall: ");
+    logMsg("$module$CntrlTask: csServFuncInstall: ");
     h2printErrno(errnoGet());
     return (ERROR);
   }
+  LOGDBG(("$module$CntrlInitTask: installed abort request\n"));
   
   /* Initialiser la structure de controle */
   STOP_MODULE_FLAG = FALSE;
@@ -426,10 +440,11 @@ static STATUS $module$CntrlInitTask (SERV_ID *$module$ServId)
   /* Creer le poster de controle */
   if (posterCreate ($MODULE$_CNTRL_POSTER_NAME, sizeof ($MODULE$_CNTRL_STR), 
                     &$module$CntrlPosterId) != OK) {
-    printf("Error $module$CntrlTask/posterCreate: ");
+    logMsg("$module$CntrlTask: posterCreate: ");
     h2printErrno(errnoGet());
     return (ERROR);
   }
+  LOGDBG(("$module$CntrlInitTask: created control poster\n"));
  
   /* Obtenir son propre identificateur de tache */
   CNTRL_TASK_ID = taskIdSelf ();
@@ -711,7 +726,7 @@ static void $module$SendFinalReply (SERV_ID servId,
 
     /* Impossible termination event */
   default:
-    printf("$module$CntrlTask: activity %d state %d event %d !?! \n", 
+    logMsg("$module$CntrlTask: activity %d state %d event %d !?! \n", 
 	   activity, ACTIVITY_STATUS(activity), ACTIVITY_EVN(activity));
     errnoSet(S_$module$CntrlTask_FORBIDDEN_ACTIVITY_TRANSITION);
     bilan = S_$module$CntrlTask_FORBIDDEN_ACTIVITY_TRANSITION;
@@ -753,7 +768,7 @@ static void $module$CntrlTaskSuspend (BOOL giveFlag)
   CNTRL_TASK_STATUS = ERROR;
   CNTRL_TASK_BILAN = errnoGet();
 
-  printf ("$module$CntrlTaskSuspend: %s\n", h2getMsgErrno(CNTRL_TASK_BILAN));
+  logMsg("$module$CntrlTaskSuspend: %s\n", h2getMsgErrno(CNTRL_TASK_BILAN));
 
   /* Mettre a jour le poster de controle */
   if (posterWrite ($module$CntrlPosterId, 0, (void *) $module$CntrlStrId,
@@ -788,7 +803,7 @@ static void $module$ReplyAndSuspend (SERV_ID servId,
   CNTRL_TASK_STATUS = ERROR;
   CNTRL_TASK_BILAN = errnoGet();
 
-  printf ("$module$CntrlTaskReplyAndSuspend: %s\n", 
+  logMsg("$module$CntrlTaskReplyAndSuspend: %s\n", 
 	  h2getMsgErrno(CNTRL_TASK_BILAN));
 
   /* Mettre a jour le poster de controle */
@@ -872,7 +887,7 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 
 	  /* Interrompt les taches d'exec */
 	  for (i=$MODULE$_NB_EXEC_TASK-1; i > -1; i--) {
-	    printf ("Killing task %s ... \n", $module$ExecTaskNameTab[i]);
+	    logMsg("Killing task %s ... \n", $module$ExecTaskNameTab[i]);
 	    taskResume(EXEC_TASK_ID(i));
 	    h2evnSignal(EXEC_TASK_ID(i));
 	  }
@@ -881,7 +896,7 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 	  for (i=$MODULE$_NB_EXEC_TASK-1; i > -1; i--) {
 	    while (EXEC_TASK_WAKE_UP_FLAG(i))
 	      h2evnSusp(0);
-	    printf ("    ... task %s killed\n", $module$ExecTaskNameTab[i]);
+	    logMsg("    ... task %s killed\n", $module$ExecTaskNameTab[i]);
 	  }
 
 	  /* Envoie la réplique finale */
@@ -894,8 +909,8 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 	  commonStructDelete ((void *) $module$DataStrId);
 	  commonStructDelete ((void *) $module$CntrlStrId);
 	  posterDelete($module$CntrlPosterId);
-	  printf ("$module$CntrlTask ended\n");
-#ifndef VXWORKS
+	  logMsg("$module$CntrlTask ended\n");
+#ifdef PID_FILE
 	  /* Detruit le fichier de PID */
 	  unlink(pidFilePath);
 #endif

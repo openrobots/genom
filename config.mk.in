@@ -31,7 +31,7 @@
 # --- Version -----------------------------------------------------------
 
 GENOM_MAJOR=	1
-GENOM_MINOR=	0B
+GENOM_MINOR=	0C
 
 
 # --- Programs ----------------------------------------------------------
@@ -54,8 +54,7 @@ LATEX=		@LATEX@
 
 GENOM=		@GENOM@
 TCLSERV=	@TCLSERV@
-LIBGENOM=	lib$(GENOM).la
-LIBTCLCLIENT=	lib$(GENOM)TclClient.la
+LIBTCLCLIENT=	lib@GENOM@TclClient$(LIBEXT)
 
 
 # --- Flags -------------------------------------------------------------
@@ -64,10 +63,13 @@ CPPFLAGS=	@CPPFLAGS@
 CFLAGS=		@CFLAGS@
 LDFLAGS=	@LDFLAGS@
 
+OSAPI=		@OSAPI@
 OS_LIBS=	@OS_LIBS@
 
 PORTLIB_INC=	@PORTLIB_INC@
 PORTLIB_LIB=	@PORTLIB_LIB@
+
+RTAI_INC=	@RTAI_INC@
 
 HAS_TCL=	@HAS_TCL@
 TCL_CPPFLAGS=	@TCL_CPPFLAGS@

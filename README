@@ -6,7 +6,7 @@ Copyright (c) 1993-2004 LAAS/CNRS
 --- PREREQUISITES -------------------------------------------------------
 
 You need the following tools installed on the system before you can
-compile eltclsh:
+compile genom:
 
 - pocolibs library.
   (<http://softs.laas.fr/openrobots/libs/pocolibs.php>). 

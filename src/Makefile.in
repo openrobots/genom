@@ -1,7 +1,7 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2003 LAAS/CNRS                        --  Mon Aug 18 2003
+# Copyright (c) 2003 LAAS/CNRS
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -29,7 +29,6 @@
 #
 
 TOPBUILD=..
-include $(TOPBUILD)/config.mk
 
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
@@ -40,6 +39,8 @@ bindir=		@bindir@
 libdir=		@libdir@
 includedir=	@includedir@
 datadir=	@datadir@
+
+include $(TOPBUILD)/config.mk
 
 VPATH=		$(srcdir)
 
@@ -101,9 +102,9 @@ all: $(GENOM)
 install: all
 	$(LTINSTALL) $(GENOM) $(bindir)/$(GENOM)
 
-$(GENOM): $(binobjs) $(TOPBUILD)/lib/$(LIBGENOM)
+$(GENOM): $(binobjs) ../lib/lib$(GENOM).la
 	$(LTLD) -static $(CFLAGS) $(binobjs) -o $@ \
-		$(TOPBUILD)/lib/$(LIBGENOM) $(LDFLAGS)
+		../lib/lib$(GENOM).la $(LDFLAGS)
 
 parser.tab.lo: parser.tab.c
 	$(LTCC) -static -c $(CPPFLAGS)  $(CFLAGS)	\

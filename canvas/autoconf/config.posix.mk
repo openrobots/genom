@@ -1,7 +1,8 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2003 LAAS/CNRS                        --  Mon Sep  8 2003
+# Copyright (c) 2004 
+#      Autonomous Systems Lab, Swiss Federal Institute of Technology.
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -28,15 +29,18 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-GENOM=		$genomBin$
+# --- posix specific configuration --------------------------------------
 
-GENOMWD=	$genomWd$
-GENFILE=	$genomFile$
-GENFILE_PATH=	$genomFilePath$
+# produce shared libraries
+BINEXT=
+LIBEXT=.la
+LIBTOOL_COPT=
+LIBTOOL_LINKOPT= -rpath $(libdir)
 
-GENFLAGS=	$genomIncludes$ $genomDefines$
-$genTcl$GENFLAGS+=	-t
-$genPropice$GENFLAGS+=	-x
-$genSpy$GENFLAGS+=	-s
+LIBTOOL_LINKPORTLIB=	-lportLib
+LIBTOOL_LINKERRORLIB=	-lerrorLib
+LIBTOOL_LINKCOMLIB=	-lcomLib
+LIBTOOL_LINKPOSTERLIB=	-lposterLib
 
-
+LTLK_GENOM_LIB=		$(GENOM_LIB)
+LTLK_CLIENT_LIB=	$(CLIENT_LIB)

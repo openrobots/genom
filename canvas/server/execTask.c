@@ -1,7 +1,11 @@
 /*	$LAAS$ */
 
+/* --- GENERATED FILE, DO NOT EDIT BY HAND --------------------------- */
+
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 2004 
+ *      Autonomous Systems Lab, Swiss Federal Institute of Technology.
+ * Copyright (c) 1993-2004 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -29,49 +33,45 @@
  * DAMAGE.
  */
 
-/*------------------  Fichier généré automatiquement ------------------*/
-/*------------------  Ne pas éditer manuellement !!! ------------------*/
- 
-/****************************************************************************/
-/*   LABORATOIRE D'AUTOMATIQUE ET D'ANALYSE DE SYSTEMES - LAAS / CNRS       */
-/*   PROJET HILARE II - TACHE D'EXECUTION $execTaskName$ DU MODULE $MODULE$ */
-/*   FICHIER SOURCE "$module$$execTaskName$.c"                              */
-/****************************************************************************/
+/*
+ * Execution task body
+ */
 
-/* VERSION ACTUELLE / HISTORIQUE DES MODIFICATIONS :
-*/
+#include "$module$Header.h"
 
-/* DESCRIPTION :
-*/
-
-/*------------------------- INCLUSIONS -------------------------------------*/
-
-#ifdef VXWORKS
-#  include <vxWorks.h>
-#  define HAS_POSIX_CLOCK
-#else /* UNIX */
-#  include "portLib.h"
-#endif
-
-#include <stdio.h>
-#ifdef HAS_POSIX_CLOCK
-#include <time.h>
+#if defined(__RTAI__) && defined(__KERNEL__)
+# include <linux/time.h>
+# define gettimeofday(x,y)	do_gettimeofday(x)
 #else
-#include <sys/time.h>
-#endif
+# ifdef VXWORKS
+#  define HAS_POSIX_CLOCK
+#  include <time.h>
+# else
+# include <sys/time.h>
+# endif /* VXWORKS */
+#endif /* RTAI && KERNEL */
+
 #include <taskLib.h>
 #include <errnoLib.h>
 
-/* Bibliotheques Hilare2 */
-#include "commonStructLib.h"
-#include "h2evnLib.h"
-#include "h2timerLib.h"
+#include <commonStructLib.h>
+#include <h2evnLib.h>
+#include <h2timerLib.h>
+
 #ifdef MODULE_EVENT
 #include "moduleEvents.h"
 #endif
 
 /* En-tete du module */
-#include "$module$Header.h"
+
+/* Print debugging information */
+#define GENOM_DEBUG_EXECTASK
+
+#ifdef GENOM_DEBUG_EXECTASK
+# define LOGDBG(x)	logMsg x
+#else
+# define LOGDBG(x)
+#endif
 
 /* Taille de la bal de reception des repliques des serveurs */
 #define $MODULE$_$EXECTASKNAME$_MBOX_REPLY_SIZE $maxMboxReplySize$
@@ -150,7 +150,7 @@ void $module$$execTaskName$ (void)
   struct timeval tv;
 #endif /* HAS_POSIX_CLOCK */
 #endif
-  u_long msec0=0, msec1, msec2;
+  unsigned long msec0=0, msec1, msec2;
   int firstChrono=TRUE;
 
   /* Initialisation de la tache */
@@ -175,7 +175,7 @@ void $module$$execTaskName$ (void)
 #if($periodFlag$ /* Periodique */)
     /* Attendre le declenchement du timer d'asservissement */
     if (h2timerPause ($module$$execTaskName$TimerId) != OK) {
-      printf ("$module$$execTaskName$: h2timerPause error\n");
+      logMsg("$module$$execTaskName$: h2timerPause error\n");
       $module$$execTaskName$Suspend (FALSE);
     }
 #else
@@ -234,7 +234,7 @@ void $module$$execTaskName$ (void)
 #endif
       if (commonStructTake ($module$CntrlStrId) != OK ||
 	  commonStructTake ($module$DataStrId) != OK) {
-	printf ("$module$$execTaskName$: commonStructTake error\n");
+	logMsg("$module$$execTaskName$: commonStructTake error\n");
 	$module$$execTaskName$Suspend (FALSE);
       }
 #ifdef SDI_UNLOCKABLE
@@ -261,7 +261,7 @@ void $module$$execTaskName$ (void)
     CURRENT_ACTIVITY_NUM($execTaskNum$) = -1;
     EXEC_TASK_BILAN($execTaskNum$) = OK;
     if ($cFuncExecName$ (&EXEC_TASK_BILAN($execTaskNum$)) != OK) {
-      printf ("$module$$execTaskName$: permanente activity error\n");
+      logMsg("$module$$execTaskName$: permanent activity error\n");
       $module$$execTaskName$Suspend (TRUE);
     }
 #  ifdef MODULE_EVENT
@@ -330,7 +330,7 @@ void $module$$execTaskName$ (void)
 	  break;
 	  
 	default:
-	  printf ("$module$$execTaskName$, activity %d: incoherent evn %s\n",
+	  logMsg("$module$$execTaskName$, activity %d: incoherent evn %s\n",
 		  i, h2GetEvnStateString (ACTIVITY_EVN(i)));
 	  $module$$execTaskName$Suspend (TRUE);
 	}           /* switch evn */ 
@@ -338,7 +338,7 @@ void $module$$execTaskName$ (void)
     
     /*****XXXX Test provisoire */
     if (nb != nbActi)
-      printf ("$module$$execTaskName$: invalid number of activities %d (expected %d) !\n", nb, nbActi);
+      logMsg("$module$$execTaskName$: invalid number of activities %d (expected %d) !\n", nb, nbActi);
 
     CURRENT_ACTIVITY_NUM($execTaskNum$) = -2;
     /* Mise a jour des posters auto */
@@ -380,7 +380,7 @@ void $module$$execTaskName$ (void)
 #endif
       if (commonStructGive ($module$DataStrId) != OK ||
 	  commonStructGive ($module$CntrlStrId) != OK) {
-	printf ("$module$$execTaskName$: commonStructGive error\n");
+	logMsg("$module$$execTaskName$: commonStructGive error\n");
 	$module$$execTaskName$Suspend (FALSE);
       }
 #ifdef SDI_UNLOCKABLE
@@ -429,7 +429,7 @@ static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId)
   $listServerClientInit$
 #endif
 
-#if($periodFlag$) /* Periodique */
+#if($periodFlag$) /* Periodic */
 
     /*** XXXX
       Passer la periode en milliseconde. Verifier que c'est un
@@ -442,19 +442,22 @@ static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId)
     h2perror("$module$$execTaskName$InitTaskFunc: h2timerAlloc");
     return (ERROR);
   }
+  LOGDBG(("$module$$execTaskName$InitTaskFunc: timer allocated\n"));
 
   /* Demarrer le timer d'asservissement */
   if (h2timerStart (*execTimerId, $period$, $delay$) != OK) {
     h2perror("$module$$execTaskName$InitTaskFunc: h2timerStart");
     return (ERROR);
   }
+  LOGDBG(("$module$$execTaskName$InitTaskFunc: timer started\n"));
   
   /* Obtenir la periode d'asservissement */
   EXEC_TASK_PERIOD($execTaskNum$) = 
     ((double) $period$ / (double) NTICKS_PER_SEC);
 #else
   EXEC_TASK_PERIOD($execTaskNum$) = 0;
-#endif
+#endif /* Periodic */
+
   EXEC_TASK_MAX_PERIOD($execTaskNum$) = 0;
   EXEC_TASK_ON_PERIOD($execTaskNum$) = 0;
   EXEC_TASK_WAKE_UP_FLAG($execTaskNum$) = FALSE;
@@ -463,9 +466,11 @@ static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId)
 #endif
   /* Creer le poster */
   $listPosterCreate$
+  LOGDBG(("$module$$execTaskName$InitTaskFunc: posters created\n"));
       
   /* S'initialiser comme client des Posters */
   $listPosterInit$
+  LOGDBG(("$module$$execTaskName$InitTaskFunc: client posters initialized\n"));
 
   /* Enregister le nom de la tache */
 /*  strcpy (EXEC_TASK_NAME($execTaskNum$), "execTaskName"); */
@@ -480,6 +485,7 @@ static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId)
 #endif
 
    /* Donner le sem de fin d'initialisation */
+  LOGDBG(("$module$$execTaskName$InitTaskFunc: ok\n"));
   return (OK);
 }
 
@@ -502,7 +508,7 @@ static void $module$$execTaskName$Suspend (BOOL giveFlag)
   if (EXEC_TASK_BILAN($execTaskNum$) == OK)
     EXEC_TASK_BILAN($execTaskNum$) = errnoGet();
 
-  printf ("Suspend $module$$execTaskName$: %s\n", 
+  logMsg("Suspend $module$$execTaskName$: %s\n", 
 	  h2getMsgErrno(EXEC_TASK_BILAN($execTaskNum$)));
 
   /* Eveiller la tache de controle */
@@ -645,7 +651,7 @@ static ACTIVITY_EVENT execTaskCallUserFunc (ACTIVITY_STATE state,
 
     /* Etats impossibles: ZOMBIE ETHER INIT et autres */
   default:
-    printf ("$module$$execTaskName$: Activity %d status %s incoherent\n",
+    logMsg("$module$$execTaskName$: Activity %d status %s incoherent\n",
 	    activityId, h2GetEvnStateString(state));
     $module$$execTaskName$Suspend (TRUE);
     return(ZOMBIE);
@@ -693,7 +699,7 @@ static BOOL filterAndSendEvn (ACTIVITY_STATE state,
       transition = TRUE;
     break;
   default:
-    printf ("$module$$execTaskName$: status %s incoherent\n",
+    logMsg("$module$$execTaskName$: status %s incoherent\n",
 	    h2GetEvnStateString(state));
     $module$$execTaskName$Suspend (TRUE);  
   } 
@@ -715,9 +721,9 @@ static BOOL filterAndSendEvn (ACTIVITY_STATE state,
 
   /* Transition interdite */
   else {
-    /* Ne pas appeler 2 fois la fonction h2GetEvnStateString dans le printf */
-    printf ("$module$$execTaskName$: event %s ", h2GetEvnStateString(evn));
-    printf ("from state %s not allowed\n", h2GetEvnStateString(state)); 
+    /* Ne pas appeler 2 fois la fonction h2GetEvnStateString dans le logMsg */
+    logMsg("$module$$execTaskName$: event %s ", h2GetEvnStateString(evn));
+    logMsg("from state %s not allowed\n", h2GetEvnStateString(state)); 
     $module$$execTaskName$Suspend (TRUE);
   }
   return wakeUpCntrlTask;

@@ -11,23 +11,15 @@
  **/
 
 /* Indiquer le chargement du fichier */
-#ifndef  MODULES_H
-#define  MODULES_H
+#ifndef H_GENOM_MODULE
+#define H_GENOM_MODULE
 
 #ifndef NEW_MODULES
 #define NEW_MODULES
 #endif
 
-#ifdef VXWORKS
-#include <vxWorks.h>
-#include <string.h>
-#include <memLib.h>
-#else
-#include <semLib.h>
-#endif
-
-#include "csLib.h"   /* Pour SERV_NMAX_RQST_ID (seule reference a csLib !) */
-#include "posterLib.h" /* Pour POSTER_ID */
+#include <csLib.h>   /* Pour SERV_NMAX_RQST_ID (seule reference a csLib !) */
+#include <posterLib.h> /* Pour POSTER_ID */
 
 /**
  ** Etats et transitions des activites.
@@ -175,4 +167,4 @@ typedef struct {
 #define M_CNTRL_NB_EXEC_TASKS(p)    ((p)->cntrlTask.nbExecTasks)
  
 
-#endif  /* MODULES_H */
+#endif /* H_GENOM_MODULE */
