@@ -37,6 +37,7 @@
  * Bibliothèque de communication par messages du module $module$
  *
  ***********************************************************************/
+#include <stdio.h>
 #include <errnoLib.h>
 
 #include "$module$MsgLib.h"
