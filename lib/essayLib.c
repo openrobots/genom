@@ -895,7 +895,7 @@ essayConfirmCntrlRqst(ESSAY_STR *eid)
 {
   char yesChar;
 
-  printf ("(To abort type \"a\") ");
+  printf ("(`enter' to send, `a' to abort) ");
   h2scanf ("%c", &yesChar);
   printf ("\n");
   if (yesChar == 'a') {
