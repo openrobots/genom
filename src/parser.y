@@ -1698,17 +1698,21 @@ main(int argc, char **argv)
         exit(2);
     }
 
-    fprintf(sortie, "#!/usr/bin/env perl\n");
+    fprintf(sortie, 
+	"#!/usr/bin/env perl -w\n"
+	"use strict;\n"
+	"my $commentMode;\n");
     fprintf(sortie, "# Generateur du module %s\n\n", module->name);
 
     /* Variables generales pour perl */
+    fprintf(sortie, "use vars qw($module $genPropice $codelsDir $autoconfDir $serverDir $installUserPart);\n");
     fprintf(sortie, "$module=\"%s\";\n", module->name);
-    fprintf(sortie, "$genPropice=\"%d\";\n", genPropice);
+    fprintf(sortie, "$genPropice=%d;\n", genPropice);
 
     fprintf(sortie, "$codelsDir=\"%s\";\n\n", codelsDir);
     fprintf(sortie, "$autoconfDir=\"%s\";\n\n", autoconfDir);
     fprintf(sortie, "$serverDir=\"%s\";\n\n", autoDir);
-    fprintf(sortie, "$installUserPart=\"%d\";\n\n", installUserPart);
+    fprintf(sortie, "$installUserPart=%d;\n\n", installUserPart);
 
     /* Debut du fichier perl */
     script_do(sortie, protoDir, "start.pl");
@@ -1768,7 +1772,7 @@ main(int argc, char **argv)
 	    exit(1);
 	}
 	if (!noExecFlag) {
-	     sprintf(cmdout, "perl %s\n", nomout);
+	     sprintf(cmdout, "perl -w %s\n", nomout);
 	     fprintf(stderr,"%s", cmdout);
 	     status = system(cmdout);
 	    unlink(nomout);

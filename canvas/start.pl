@@ -32,13 +32,14 @@
 # Debut du script de generation des sources d'un module genom
 #----------------------------------------------------------------------
 
+use strict;
 
 # add newline on print
 $\ = "\n";
 
 # Definition de $MAKE
 # (utilisation de gnumake car problemes de compatibilite de make avec gnumake)
-$MAKE = "gnumake";
+my $MAKE = "gnumake";
 
 # move_if_change
 sub move_if_change {
@@ -57,10 +58,10 @@ sub move_if_change {
 }
 
 sub mirror_dir {
-  local ($srcdir, $dstdir, $include, $exclude, $confirm) = @_;
+  my ($srcdir, $dstdir, $include, $exclude, $confirm) = @_;
 
   if (! -d "$dstdir") {
-    $agree='y';
+    my $agree='y';
     if ($confirm) {
       printf ("create $dstdir (y/n)? ");
       chomp($agree=<STDIN>);
@@ -73,8 +74,8 @@ sub mirror_dir {
   opendir(DIR, $srcdir);
   foreach(readdir(DIR)) {
     # skip unwanted files
-    if (!$exclude eq "") { if (/$exclude/) { next; } }
-    if (!$include eq "") { if (!/$include/) { next; } }
+    if ($exclude ne "") { if (/$exclude/) { next; } }
+    if ($include ne "") { if (!/$include/) { next; } }
     if (! -f "$srcdir/$_") { next; }
 
     if (! -f "$dstdir/$_") {
@@ -85,6 +86,7 @@ sub mirror_dir {
       # file exists and is different
       if ($confirm) {
 	printf ("overwrite $dstdir/$_ (y/n)? ");
+	my $agree;
 	chomp($agree=<STDIN>);
 	if ($agree eq 'y') {
 	  printf ("save $dstdir/$_ in $dstdir/$_.genomsave\n");
@@ -94,7 +96,7 @@ sub mirror_dir {
 	  next;
 	}
       }
-      system ("cp $srcdir/$_ $dstdir/$_");
+      system ("'cp' -f $srcdir/$_ $dstdir/$_");
     }
   }
   closedir(DIR);
@@ -141,7 +143,6 @@ if ($genPropice == 1) {
     chmod 04775, 'propice';
   }
 }
-
 
 #---------------------------------------------------------------
 

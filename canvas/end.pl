@@ -28,6 +28,8 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+use strict;
+
 #----------------------------------------------------------------------
 # End of script for module generation
 #----------------------------------------------------------------------
@@ -38,8 +40,8 @@ if ($installUserPart == 1) {
   mirror_dir("codels", "../$codelsDir", "", "", 1);
   mirror_dir("autoconf", "../$autoconfDir", "", "^configure", 1);
 
-  mirror_dir(".", "..", "^configure", "", 1);
   mirror_dir(".", "..", "^aclocal.m4", "", 1);
+  mirror_dir(".", "..", "^configure", "", 1);
   mirror_dir(".", "..", "^Makefile.in", "", 1);
 
 } else {

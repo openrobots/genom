@@ -1728,7 +1728,7 @@ subst_begin(FILE *out, const char *protoName)
     fprintf(out, "open (IN,\"%s/%s\") \n\t|| die \"Can't open skeleton %s/%s\";\n", 
 	    protoDir, protoName, protoDir, protoName);
     fprintf(out,
-	    "my $commentMode;\n"
+	    "$commentMode = 0;\n"
 	    "while (<IN>) {\n"
 	    "   chop;\n"
 	    "   s/\\$commentbegin\\$.*$// and $commentMode = 1;\n"
