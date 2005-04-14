@@ -38,7 +38,6 @@ if ($installUserPart == 1) {
   # Install user files
 
   mirror_dir("codels", "../$codelsDir", "", "", 1);
-  mirror_dir("autoconf", "../$autoconfDir", "", "^configure", 1);
 
   mirror_dir(".", "..", "^aclocal.m4", "", 1);
   mirror_dir(".", "..", "^configure", "", 1);
@@ -47,6 +46,7 @@ if ($installUserPart == 1) {
 } else {
   # Install server files
 
-  mirror_dir("server", "../$serverDir", "", 0);
-  mirror_dir("autoconf", "../$autoconfDir", "^genom.mk", "", 1);
+  mirror_dir("server", "../$serverDir", "", "", 0);
+  mirror_dir("autoconf", "../$autoconfDir", "", "^configure", 1);
 }
+
