@@ -136,8 +136,9 @@ $(OBJDIR)/$(POSTERWRITE_LIB): $(posterwrite_obj)
 	$(LTLD) -static $(CFLAGS) $(posterwrite_obj) -o $@ $(LDFLAGS) \
 		$(LIBTOOL_LINKOPT)
 
-$(OBJDIR)/$(CLIENT_LIB): $(client_obj)
-	$(LTLD) $(CFLAGS) $(client_obj) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT)
+$(OBJDIR)/$(CLIENT_LIB): $(client_obj) $serversLib$
+	$(LTLD) $(CFLAGS) $(client_obj) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT) \
+		$serversLib$
 
 
 $(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj) $serversEndianLib$

@@ -277,28 +277,28 @@ configureServerGen(FILE *out,
       t = lt->exec_task;
       /* cs client */
       for (ln = t->cs_client_from; ln != NULL; ln = ln->next) {
-	 bufcatIfNotIn(&str, "-I\\$(%s) ", ln->NAME);
-	 bufcatIfNotIn(&str1, "\\$(%s)/server/\\$(TARGET)/%sClient.a ", 
+	 bufcatIfNotIn(&str, "-I\\$(MODULES_ROOT)/\\$(%s) ", ln->NAME);
+	 bufcatIfNotIn(&str1, "\\$(libdir)/\\$(%s)/lib%sClient\\$(LIBEXT) ", 
 		       ln->NAME, ln->name);
       } /* for */
 	/* poster client */
       for (ln = t->poster_client_from; ln != NULL; ln = ln->next) {
-	 bufcatIfNotIn(&str, "-I\\$(%s) ", ln->NAME);
-	 bufcatIfNotIn(&str1, "\\$(%s)/server/\\$(TARGET)/%sClient.a ", 
+	 bufcatIfNotIn(&str, "-I\\$(MODULES_ROOT)/\\$(%s) ", ln->NAME);
+	 bufcatIfNotIn(&str1, "\\$(libdir)/\\$(%s)/lib%sClient\\$(LIBEXT) ", 
 		       ln->NAME, ln->name);
-	 bufcatIfNotIn(&str3, "\\$(%s)/server/\\$(TARGET)-shared/%sEndian.o ", 
-		       ln->NAME, ln->name);
+/*	 bufcatIfNotIn(&str3, "\\$(%s)/server/\\$(TARGET)-shared/%sEndian.o ", 
+		       ln->NAME, ln->name);*/
       } /* for */
    } /* for */
    /* other */
    for (ln = externLibs; ln != NULL; ln = ln->next) {
-      bufcatIfNotIn(&str, "-I\\$(%s) ", ln->NAME);
-      bufcatIfNotIn(&str1, "\\$(%s)/server/\\$(TARGET)/%sClient.a ", 
+      bufcatIfNotIn(&str, "-I\\$(MODULES_ROOT)/\\$(%s) ", ln->NAME);
+      bufcatIfNotIn(&str1, "\\$(libdir)/\\$(%s)/lib%sClient\\$(LIBEXT) ", 
 		    ln->NAME, ln->name);
-      bufcatIfNotIn(&str2, "\\$(%s)/server/\\$(TARGET)/lib%sScope.so ", 
+/*      bufcatIfNotIn(&str2, "\\$(%s)/server/\\$(TARGET)/lib%sScope.so ", 
 		    ln->NAME, ln->name);
       bufcatIfNotIn(&str3, "\\$(%s)/server/\\$(TARGET)-shared/%sEndian.o ", 
-		    ln->NAME, ln->name);
+		    ln->NAME, ln->name);*/
    }
    for (ln = externPathMacro; ln != NULL; ln = ln->next) {
       bufcatIfNotIn(&str, "-I\\$(%s) ", ln->name);

@@ -73,10 +73,18 @@ POSTERWRITE_LIB=	lib$module$PosterWrite.la
 
 OSAPI?=		@OSAPI@
 
+ifeq ($(OSAPI),vxworks)
+OSDEF = VXWORKS
+else 
+OSDEF = UNIX
+endif
+
+MODULES_ROOT=   @abs_top_srcdir@/..
+
 ENDIANNESS=	@ENDIANNESS@
 GENOM_DEFINES=  $genomDefines$
 GENOM_INCLUDES= $genomIncludes$
-CPPFLAGS=	@CPPFLAGS@
+CPPFLAGS=	@CPPFLAGS@ -D$(OSDEF)
 CFLAGS=		@CFLAGS@
 LDFLAGS=	@LDFLAGS@
 
@@ -97,3 +105,6 @@ GENOM_LIB=	@GENOM_LIB@
 
 EXTRA_INCLUDES=	@EXTRA_INCLUDES@
 EXTRA_LIBS=	@EXTRA_LIBS@
+
+-include @abs_top_srcdir@/$(autoconfdir)/local.mk
+
