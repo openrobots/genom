@@ -247,9 +247,9 @@ AC_DEFUN(ROBOT_PATH_INC,
         AC_LANG_POP
     ])
    if test "x$ac_cv_path_found" = "xyes"; then
-      if test -n "[$]$2"; then
+      if test -n "$ac_cv_path_h_$2"; then
         $2="-I$ac_cv_path_h_$2"
-        AC_MSG_RESULT([$]$2)
+        AC_MSG_RESULT($ac_cv_path_h_$2)
       else
         AC_MSG_RESULT(found)
       fi
@@ -289,9 +289,9 @@ AC_DEFUN(ROBOT_PATH_LIB,
         AC_LANG_POP
     ])
    if test "x$ac_cv_path_found" = "xyes"; then
-      if test -n "[$]$2"; then
+      if test -n "$ac_cv_path_l_$2"; then
         $2="-L$ac_cv_path_l_$2 -R$ac_cv_path_l_$2"
-        AC_MSG_RESULT([$]$2)
+        AC_MSG_RESULT($ac_cv_path_l_$2)
       else
         AC_MSG_RESULT(found)
       fi
