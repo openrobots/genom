@@ -65,12 +65,12 @@ tlist=\
 	server.tcl	\
 	pkgIndex.tcl
 
-binsrcs=\
+SRCS = \
 	main.c		\
 	tcl_cs.c	\
 	tcl_enum.c
 
-binobjs = $(binsrcs:.c=.lo)
+OBJS = $(SRCS:.c=.lo)
 
 
 # -----------------------------------------------------------------------
@@ -78,8 +78,8 @@ binobjs = $(binsrcs:.c=.lo)
 .PHONY: all
 all: $(TCLSERV)
 
-$(TCLSERV): $(binobjs)
-	$(LTLD) -export-dynamic $(CFLAGS) $(binobjs) -o $@	\
+$(TCLSERV): $(OBJS)
+	$(LTLD) -export-dynamic $(CFLAGS) $(OBJS) -o $@	\
 		$(LDFLAGS) $(TCL_LDFLAGS)
 
 main.lo: main.c
@@ -108,7 +108,7 @@ install:: $(TCLSERV)
 
 .PHONY: clean
 clean:
-	$(TOPBUILD)/libtool --mode=clean rm -f $(binobjs) $(TCLSERV)
+	$(TOPBUILD)/libtool --mode=clean rm -f $(OBJS) $(TCLSERV)
 
 distclean: clean
 	rm -f DEPENDANCES Makefile
@@ -118,7 +118,7 @@ distclean: clean
 
 ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 depend DEPENDANCES:: $(SRCS)
-	$(MKDEP) -c$(CC) -oDEPENDANCES -t.lo $(CPPFLAGS) $?
+	$(MKDEP) -c$(CC) -oDEPENDANCES -t.lo $(CPPFLAGS) $(TCL_CPPFLAGS) $?
 
 include DEPENDANCES
 endif
