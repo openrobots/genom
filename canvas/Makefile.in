@@ -144,5 +144,8 @@ install: all
 		$(LTINSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/$$f;	\
 	done
 
-.PHONY: clean depends
-clean depends:;
+.PHONY: clean distclean
+clean:;
+
+distclean: clean
+	rm -f Makefile

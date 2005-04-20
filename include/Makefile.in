@@ -69,5 +69,9 @@ install: all
 		$(LTINSTALL_DATA) $(srcdir)/$$f $(includedir)/$$f;	\
 	done
 
-.PHONY: clean depends
-clean depends:;
+.PHONY: clean
+clean:;
+
+distclean: clean
+	rm -f Makefile
+	

@@ -43,10 +43,10 @@ include $(TOPBUILD)/config.mk
 VPATH=		$(srcdir)
 
 CPPFLAGS+=	-I$(TOPBUILD) -I$(topsrcdir)/include -I$(srcdir) -I.
-CPPFLAGS+=	-I$(PORTLIB_INC)
+CPPFLAGS+=	$(PORTLIB_CFLAGS)
 CPPFLAGS+=	-D$(ENDIANNESS)
 
-LDFLAGS+=	-L$(PORTLIB_LIB) -R$(PORTLIB_LIB)
+LDFLAGS+=	$(PORTLIB_LDFLAGS)
 LDFLAGS+=	-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)
 
 
@@ -87,9 +87,10 @@ install:: $(pkgfile)
 
 .PHONY: clean
 clean:
+	rm -f pkgIndex.tcl
 
+distclean:
+	rm -f Makefile
 
 # --- dependencies ------------------------------------------------------
 
-.PHONY: depends
-depends:

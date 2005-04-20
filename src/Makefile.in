@@ -45,18 +45,18 @@ include $(TOPBUILD)/config.mk
 VPATH=		$(srcdir)
 
 CPPFLAGS+=	-I$(TOPBUILD) -I$(topsrcdir)/include -I$(srcdir) -I.
-CPPFLAGS+=	-I$(PORTLIB_INC)
+CPPFLAGS+=	$(PORTLIB_CFLAGS)
 
 LDFLAGS+=	@LEXLIB@
 
 # -----------------------------------------------------------------------
 
-lexsrcs=  parser.l
-yaccsrcs= parser.y
+SRCS_LEX=  parser.l
+SRCS_YACC= parser.y
 
-binsrcs=\
-	$(yaccsrcs:.y=.tab.c)	\
-	$(lexsrcs:.l=.lex.c)	\
+SRCS = \
+	$(SRCS_YACC:.y=.tab.c)	\
+	$(SRCS_LEX:.l=.lex.c)	\
 	genom.c			\
 	cntrlTaskGen.c		\
 	errorGen.c		\
@@ -86,21 +86,19 @@ binsrcs=\
 	userStartGen.c		\
 	configureGen.c	
 
-binobjs = $(binsrcs:.c=.lo)
+OBJS = $(SRCS:.c=.lo)
 
-.PRECIOUS: $(yaccsrcs:%.y=%.tab.h)
+.PRECIOUS: $(SRCS_YACC:%.y=%.tab.h)
 
 # -----------------------------------------------------------------------
 
-.PHONY: all
 all: $(GENOM)
 
-.PHONY: install
 install: all
 	$(LTINSTALL) $(GENOM) $(bindir)/$(GENOM)
 
-$(GENOM): $(binobjs) ../lib/lib$(GENOM).la
-	$(LTLD) -static $(CFLAGS) $(binobjs) -o $@ \
+$(GENOM): $(OBJS) ../lib/lib$(GENOM).la
+	$(LTLD) -static $(CFLAGS) $(OBJS) -o $@ \
 		../lib/lib$(GENOM).la $(LDFLAGS)
 
 parser.tab.lo: parser.tab.c
@@ -120,17 +118,18 @@ parser.tab.lo: parser.tab.c
 %.tab.c %.tab.h: %.y
 	$(YACC) -v -d -b $* $<
 
-.PHONY: clean
 clean:
-	$(TOPBUILD)/libtool --mode=clean rm -f $(binobjs) $(GENOM)
-	rm -f $(yaccsrcs:%.y=%.tab.h) $(yaccsrcs:%.y=%.tab.c)
-	rm -f $(lexsrcs:%.l=%.lex.c)
-	rm -f dependencies
+	$(TOPBUILD)/libtool --mode=clean rm -f $(OBJS) $(GENOM)
+	rm -f $(SRCS_YACC:%.y=%.tab.h) $(SRCS_YACC:%.y=%.tab.c) parser.output
+	rm -f $(SRCS_LEX:%.l=%.lex.c)
 
-.PHONY: depends
-depends dependencies: $(binsrcs)
-	$(MKDEP) -c$(CC) -odependencies -t.lo $(CPPFLAGS) $?
+distclean: clean
+	rm -f DEPENDANCES Makefile
 
-ifneq (${MAKECMDGOALS},clean)
--include dependencies
+ifeq ($(findstring clean,$(MAKECMDGOALS)),)
+depend DEPENDANCES:: $(SRCS)
+	$(MKDEP) -c$(CC) -oDEPENDANCES -t.lo $(CPPFLAGS) $?
+
+include DEPENDANCES
 endif
+

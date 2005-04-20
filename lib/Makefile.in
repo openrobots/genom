@@ -43,7 +43,7 @@ include $(TOPBUILD)/config.mk
 VPATH=		$(srcdir)
 
 CPPFLAGS+=	-I$(TOPBUILD) -I$(topsrcdir)/include -I$(srcdir) -I.
-CPPFLAGS+=	-I$(PORTLIB_INC) -D$(ENDIANNESS)
+CPPFLAGS+= $(PORTLIB_CFLAGS) -D$(ENDIANNESS)
 
 SHLIB_MAJOR=	1
 SHLIB_MINOR=	0
@@ -55,7 +55,7 @@ LIB=		lib$(BASENAME).la
 
 # -----------------------------------------------------------------------
 
-libsrcs+= \
+SRCS += \
 	printState.c		\
 	essayLib.c		\
 	genomReportsLib.c	\
@@ -67,7 +67,7 @@ libsrcs+= \
 	printXML.c		\
 	printScanUtil.c
 
-libobjs = $(libsrcs:.c=.lo)
+OBJS = $(SRCS:.c=.lo)
 
 # -----------------------------------------------------------------------
 
@@ -78,9 +78,9 @@ all: all-os $(LIB)
 install:: $(LIB)
 	$(LTINSTALL) $(LIB) $(libdir)/$(LIB)
 
-$(LIB): $(libobjs)
-	$(LTLD) $(CFLAGS) $(libobjs) -o $@ $(LDFLAGS)			\
-		-L$(PORTLIB_LIB) -R$(PORTLIB_LIB)			\
+$(LIB): $(OBJS)
+	$(LTLD) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)			\
+		$(PORTLIB_LDFLAGS) \
 		-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)	\
 		-version-info $(SHLIB_MAJOR):$(SHLIB_MINOR)		\
 		-rpath $(libdir) -R$(libdir)
@@ -88,18 +88,19 @@ $(LIB): $(libobjs)
 %.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
 
-.PHONY: clean
 clean:
-	$(TOPBUILD)/libtool --mode=clean rm -f $(libobjs) $(LIB)
-	rm -f dependencies
+	$(TOPBUILD)/libtool --mode=clean rm -f $(OBJS) $(LIB)
 
-.PHONY: depends
-depends dependencies: $(libsrcs)
-	$(MKDEP) -c$(CC) -odependencies -t.lo $(CPPFLAGS) $?
+distclean: clean
+	rm -f DEPENDANCES Makefile
 
-ifneq (${MAKECMDGOALS},clean)
--include dependencies
+ifeq ($(findstring clean,${MAKECMDGOALS}),)
+depend DEPENDANCES:: $(SRCS)
+	$(MKDEP) -c$(CC) -oDEPENDANCES -t.lo $(CPPFLAGS) $?
+
+include DEPENDANCES
 endif
 
 # os-specific rules
 include $(topsrcdir)/config.$(OSAPI).mk
+

@@ -228,24 +228,31 @@ dnl
 AC_DEFUN(ROBOT_PATH_INC,
 [
    AC_MSG_CHECKING([for $1 headers])
+   $2=""
    AC_CACHE_VAL(ac_cv_path_h_$2,
     [
+        AC_LANG_PUSH(C)
+        ac_cv_path_found=no
 	ac_save_cppflags=$CPPFLAGS
 	ac_save_ifs=$IFS; IFS=":"
-        eval ac_tmppath="$5"
+        eval ac_tmppath=":$5"
         for ac_dir in $ac_tmppath; do 
 	    IFS=$ac_save_ifs
-            test -z "$ac_dir" && ac_dir=.
-
-	    CPPFLAGS="-I$ac_dir"
+            test -z "$ac_dir" || CPPFLAGS="-I$ac_dir"
+	    
 	    AC_COMPILE_IFELSE([#include "$3"],
-			      [eval ac_cv_path_h_$2="$ac_dir"; break])
+			      [eval ac_cv_path_h_$2="$ac_dir"; ac_cv_path_found="yes"; break])
 	done
 	CPPFLAGS=$ac_save_cppflags
+        AC_LANG_POP
     ])
-   $2="$ac_cv_path_h_$2"
-   if test -n "[$]$2"; then
-      AC_MSG_RESULT([$]$2)
+   if test "x$ac_cv_path_found" = "xyes"; then
+      if test -n "[$]$2"; then
+        $2="-I$ac_cv_path_h_$2"
+        AC_MSG_RESULT([$]$2)
+      else
+        AC_MSG_RESULT(found)
+      fi
    else
       AC_MSG_RESULT([not found])
       ifelse([$4], , , $4)
@@ -259,29 +266,35 @@ dnl ROBOT_PATH_LIB(PACKAGE, VARIABLE, LIB, FNCT [,VALUE-IF-NOT-FOUND [,PATH]])
 dnl
 AC_DEFUN(ROBOT_PATH_LIB,
 [
-   AC_MSG_CHECKING([for $1 librairies])
+   AC_MSG_CHECKING([for $1 libraries])
+   $2=""
    AC_CACHE_VAL(ac_cv_path_l_$2,
     [
-	AC_LANG_C
+	AC_LANG_PUSH(C)
+        ac_cv_path_found=no
 	ac_save_ldflags=$LDFLAGS
 	ac_save_libs=$LIBS
         LIBS="-l$3 $ac_save_libs"
 	ac_save_ifs=$IFS; IFS=":"
-        eval ac_tmppath="$6"
+        eval ac_tmppath=":$6"
         for ac_dir in $ac_tmppath; do 
             IFS=$ac_save_ifs
-            test -z "$ac_dir" && ac_dir=.
-
-	    LDFLAGS="-L$ac_dir $ac_save_ldflags"
+            test -z "$ac_dir" || LDFLAGS="-L$ac_dir $ac_save_ldflags"
+	    
 	    AC_LINK_IFELSE(AC_LANG_CALL([], [$4]),
-			   [eval ac_cv_path_l_$2=$ac_dir; break])
+			   [eval ac_cv_path_l_$2=$ac_dir ; ac_cv_path_found="yes"; break])
  	done
         LIBS=$ac_save_libs
 	LDFLAGS=$ac_save_ldflags
+        AC_LANG_POP
     ])
-   $2="$ac_cv_path_l_$2"
-   if test -n "[$]$2"; then
-      AC_MSG_RESULT([$]$2)
+   if test "x$ac_cv_path_found" = "xyes"; then
+      if test -n "[$]$2"; then
+        $2="-L$ac_cv_path_l_$2 -R$ac_cv_path_l_$2"
+        AC_MSG_RESULT([$]$2)
+      else
+        AC_MSG_RESULT(found)
+      fi
    else
       AC_MSG_RESULT(no)
       ifelse([$5], , , $5)

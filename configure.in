@@ -119,11 +119,11 @@ AC_ARG_WITH(pocolibs-exec-prefix,
                [pocolibs libraries are installed in DIR (exec-prefix)]),
            [opt_pocolibs_eprefix=$withval],[opt_pocolibs_eprefix=$exec_prefix])
 
-ROBOT_PATH_INC([pocolibs], PORTLIB_INC, [portLib.h],
+ROBOT_PATH_INC([pocolibs], PORTLIB_CFLAGS, [portLib.h],
 	[AC_MSG_ERROR([please use --with-pocolibs option.])],
 	[$opt_pocolibs/include:/usr/local/include:/usr/include])
 
-ROBOT_PATH_LIB([pocolibs], PORTLIB_LIB, [portLib], [osInit],
+ROBOT_PATH_LIB([pocolibs], PORTLIB_LDFLAGS, [portLib], [osInit],
 	[AC_MSG_ERROR([please use --with-pocolibs option.])],
 	[$opt_pocolibs_eprefix/lib:$opt_pocolibs/lib:/usr/local/lib:/usr/lib])
 

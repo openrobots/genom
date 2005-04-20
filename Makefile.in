@@ -76,11 +76,15 @@ SUBDIRS+= include
 
 make_subdirs= @for d in ${SUBDIRS}; do (cd $$d; ${MAKE} $@ ) || exit 2; done
 
-all install depends: $(config_files) $(config_headers)
+all install: $(config_files) $(config_headers)
 	$(make_subdirs)
 
-clean distclean:
+clean: 
 	$(make_subdirs)
+
+distclean: 
+	$(make_subdirs)
+	rm -f Makefile genom-config.h config.status config.log config.mk libtool
 
 
 # --- build distribution ------------------------------------------------
@@ -109,3 +113,4 @@ $(config_files): %: $(topsrcdir)/%.in config.status
 $(config_headers): %: $(topsrcdir)/%.in config.status
 	CONFIG_FILES= CONFIG_HEADERS=$@ ./config.status
 	touch $@
+

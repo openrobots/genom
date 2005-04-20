@@ -45,10 +45,10 @@ include $(TOPBUILD)/config.mk
 VPATH=		$(srcdir)
 
 CPPFLAGS+=	-I$(TOPBUILD) -I$(topsrcdir)/include -I$(srcdir) -I.
-CPPFLAGS+=	-I$(PORTLIB_INC)
+CPPFLAGS+=	$(PORTLIB_CFLAGS)
 CPPFLAGS+=	-D$(ENDIANNESS)
 
-LDFLAGS+=	-L$(PORTLIB_LIB) -R$(PORTLIB_LIB)
+LDFLAGS+=	$(PORTLIB_LDFLAGS)
 LDFLAGS+=	-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)
 
 
@@ -109,15 +109,17 @@ install:: $(TCLSERV)
 .PHONY: clean
 clean:
 	$(TOPBUILD)/libtool --mode=clean rm -f $(binobjs) $(TCLSERV)
-	rm -f dependencies
+
+distclean: clean
+	rm -f DEPENDANCES Makefile
 
 
 # --- dependencies ------------------------------------------------------
 
-.PHONY: depends
-depends dependencies: $(binsrcs)
-	$(MKDEP) -c$(CC) -odependencies -t.lo $(CPPFLAGS) $(TCL_CPPFLAGS) $?
+ifeq ($(findstring clean,$(MAKECMDGOALS)),)
+depend DEPENDANCES:: $(SRCS)
+	$(MKDEP) -c$(CC) -oDEPENDANCES -t.lo $(CPPFLAGS) $?
 
-ifneq (${MAKECMDGOALS},clean)
--include dependencies
+include DEPENDANCES
 endif
+
