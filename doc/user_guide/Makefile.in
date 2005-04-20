@@ -84,7 +84,7 @@ endif
 
 .PHONY: clean
 clean:
-	rm -f $(genom_doc) genom.toc genom.aux genom.loc genom.out
+	rm -f $(genom_doc) genom.toc genom.aux genom.log genom.out
 
 distclean: clean
 	rm -f Makefile
