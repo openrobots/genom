@@ -65,7 +65,7 @@ int getPosterXML(FILE *stream, int argc, char **argv, char **argn,
 		 int nbPostersData,
 		 GENOM_POSTER_XML posterXML[])
 {
-  int i=1,j;
+  int i=1, j=0;
   char * name=NULL;
   char * value;
   static char *cmds[] = POSTER_XML_CMDS;

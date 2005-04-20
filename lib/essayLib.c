@@ -67,6 +67,8 @@ __RCSID("$LAAS$");
 #include "genom/genomReportsLib.h"
 #include "genom/essayLib.h"
 
+#include <xes.h>
+
 /*-------------------- PROTOTYPES FONCTIONS LOCALES -----------------------*/
 static int  essayGetMenuSizes     (ESSAY_STR *eid, int *nblin, int *colwidth);
 static int  essayPrintMainMenu    (ESSAY_STR *eid,

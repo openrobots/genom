@@ -356,7 +356,7 @@ tclGen(FILE *out)
 static int
 tclArgNumber(DCL_NOM_STR *nom)
 {
-   int n;
+   int n = -1; /* -1 is used as error value */
 
    switch (nom->type->type) {
 

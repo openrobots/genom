@@ -397,9 +397,9 @@ resolveTypes(void)
     TYPE_LIST *ltt;
     TYPE_LIST *t;
     char buf[80];
-    DCL_NOM_LIST *m, *last, *lastData;
+    DCL_NOM_LIST *m, *last, *lastData = 0;
     DCL_NOM_STR *n;
-    STR_REF_LIST *lm, *lastType;
+    STR_REF_LIST *lm, *lastType = 0;
     POSTER_LIST *p;
     POSTERS_INPUT_LIST *p_in;
     int i;

@@ -125,6 +125,11 @@ tclClientGen(FILE *out)
 	 if (buf != NULL) free(buf); buf = NULL;
 
 	 n = tclArgNumberGen(rqst->rqst->input->dcl_nom);
+	 if (n < 0) {
+	    fprintf(stderr,
+		    "Error: could not enumerate input of %s.\n", rqst->name);
+	    return -1;
+	 }
 	 print_sed_subst(out, "argNumber", "%d", n);
 
 	 tclUsageGen(&buf, rqst->rqst->input->dcl_nom, NULL);
@@ -455,7 +460,7 @@ tclOutputFormatGen(char **buf, char *name, DCL_NOM_STR *nom)
 static int
 tclArgNumberGen(DCL_NOM_STR *nom)
 {
-   int n;
+   int n = -1;
 
    switch (nom->type->type) {
 
