@@ -126,6 +126,8 @@ ID_LIST *includeFiles = NULL; /* Fichiers inclus dans .gen */
 ID_LIST *allIncludeFiles = NULL; /* Tous les fichiers inclus (trouves par cpp) */
 ID_LIST *externLibs = NULL;
 ID_LIST *externPathMacro = NULL;
+ID_LIST *externPathMacroPath = NULL;
+ID_LIST *externPath = NULL;
 
 #define MAX_CPP_OPT 20
 
@@ -1409,6 +1411,7 @@ main(int argc, char **argv)
     static const char *nomstamp = "genom-stamp";
     FILE *stamp;
     ID_LIST *il;
+    ID_LIST *il2;
     int installUserPart = 0;
     char *cmdLine=NULL;
     int i;
@@ -1473,6 +1476,10 @@ main(int argc, char **argv)
 		fprintf(stderr, "%s: too many options for cpp\n", argv[0]);
 		exit(-1);
 	    }
+	    il2 = STR_ALLOC(ID_LIST);
+	    il2->name = strdup(path);
+	    il2->next = externPath;
+	    externPath = il2;
 	    break;
 	  case 'J':
 	    if (!(equal = strstr(optarg, "=")))
@@ -1496,11 +1503,15 @@ main(int argc, char **argv)
 		exit(-1);
 	    }
 
-	    /* keep macro name for makefiles */
+	    /* keep macro name and path for makefiles */
 	    il = STR_ALLOC(ID_LIST);
 	    il->name = strdup(pathmacro);
 	    il->next = externPathMacro;
 	    externPathMacro = il;
+	    il2 = STR_ALLOC(ID_LIST);
+	    il2->name = strdup(path);
+	    il2->next = externPathMacroPath;
+	    externPathMacroPath = il2;
 
 	    break;
 	  case 'd':

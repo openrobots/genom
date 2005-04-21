@@ -311,7 +311,9 @@ extern int nbExecTask;
 extern ID_LIST *includeFiles;
 extern ID_LIST *allIncludeFiles;
 extern ID_LIST *externLibs;
-extern ID_LIST *externPathMacro;
+extern ID_LIST *externPathMacro;  /* variables name from -J */
+extern ID_LIST *externPathMacroPath;  /* all the path from -J */
+extern ID_LIST *externPath;       /* all the path from -I */
 extern POSTER_LIST *posters;
 extern POSTERS_INPUT_LIST *posters_input;
 extern int initRequest;
