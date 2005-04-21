@@ -48,10 +48,10 @@ configureGen(FILE *out,
 	     int genTcl, int genPropice)
 {
    const char **p;
-   char *str, *str1;
+   char *str, *str1, *str2, *str3, *str4;
    EXEC_TASK_LIST *lt;
    EXEC_TASK_STR *t;
-   ID_LIST *ln;
+   ID_LIST *ln, *ln2;
    int i;
 
    /* --- `configure' scripts ---------------------------------------- */
@@ -170,7 +170,8 @@ configureGen(FILE *out,
    print_sed_subst(out, "genTcl", genTcl?"yes":"no");
    print_sed_subst(out, "genomBin", genomBin);
    print_sed_subst(out, "codelsDir", codelsDir);
-   /* GenoM options */
+
+   /* GenoM -D options */
    str = NULL;
    for (i = 0; i < nCppOptions; i++) {
       if (strncmp(cppOptions[i], "-D", 2) == 0) {
@@ -184,12 +185,109 @@ configureGen(FILE *out,
       print_sed_subst(out, "genomDefines", "");
    }
 
+   /* GenoM -J options */
+   str = NULL;
+   str1 = NULL;
+   str2 = NULL;
+   str4 = NULL;
+   for (ln = externPathMacro, ln2 = externPathMacroPath; 
+	ln != NULL; 
+	ln = ln->next, ln2 = ln2->next) {
+     bufcatIfNotIn(&str2, "\n%s=\t%s", ln->name, ln2->name);
+     bufcatIfNotIn(&str, " -I\\$(%s)", ln->name);
+   }
+
+   /* import from modules servers (for variables not in -J) */
+   for (lt = taches; lt != NULL; lt = lt->next) {
+      t = lt->exec_task;
+
+      /* cs_client_from */
+      for (ln = t->cs_client_from; ln != NULL; ln = ln->next) {
+	/* test if already defined (with -J) */
+	str3 = NULL;
+	bufcat(&str3, "\n%s=", ln->NAME);
+	if (str2 == NULL || strstr(str2, str3) == NULL) {
+	  bufcat(&str2, "\n%s=\t\\$(includedir)/%s", ln->NAME, ln->name);
+	  bufcat(&str, " -I\\$(%s)", ln->NAME);
+	}
+	free(str3);
+	bufcatIfNotIn(&str4, "\\$(%s)/lib%sClient\\$(LIBEXT) ", 
+		      ln->NAME, ln->name); 
+/* 	bufcatIfNotIn(&str1, "\\$(%s)/server/\\$(TARGET)-shared/%sEndian.o ",  */
+/* 		      ln->NAME, ln->name); */
+      } /* for */
+
+      /* poster_client_from */
+      for (ln = t->poster_client_from; ln != NULL; ln = ln->next) {
+	/* test if already defined (with -J) */
+	str3 = NULL;
+	bufcat(&str3, "\n%s=", ln->NAME);
+	if (str2 == NULL || strstr(str2, str3) == NULL) {
+	  bufcat(&str2, "\n%s=\t\\$(includedir)/%s", ln->NAME, ln->name);
+	  bufcat(&str, " -I\\$(%s)", ln->NAME);
+	}
+	free(str3);
+	bufcatIfNotIn(&str4, "\\$(libdir)/lib%sClient\\$(LIBEXT) ", 
+		      ln->name); 
+/* 	bufcatIfNotIn(&str1, "\\$(%s)/server/\\$(TARGET)-shared/%sEndian.o ",  */
+/* 		      ln->NAME, ln->name); */
+      } /* for */
+   } /* for */
+
+   /* import from */
+   for (ln = externLibs; ln != NULL; ln = ln->next) {
+	/* test if already defined (with -J) */
+	str3 = NULL;
+	bufcat(&str3, "\n%s=", ln->NAME);
+	if (str2 == NULL || strstr(str2, str3) == NULL) {
+	  bufcat(&str2, "\n%s=\t\\$(includedir)/%s", ln->NAME, ln->name);
+	  bufcat(&str, " -I\\$(%s)", ln->NAME);
+	}
+	free(str3);
+	bufcatIfNotIn(&str4, "\\$(libdir)/lib%sClient\\$(LIBEXT) ", 
+		      ln->name); 
+/* 	bufcatIfNotIn(&str1, "\\$(%s)/server/\\$(TARGET)-shared/%sEndian.o ",  */
+/* 		      ln->NAME, ln->name); */
+   }
+
+   if (str2 != NULL) {
+      print_sed_subst(out, "genomJOptionsAndServers", str2);
+      free(str2);
+   } else {
+      print_sed_subst(out, "genomJOptionsAndServers", "");
+   }
+
+   if (str4 != NULL) {
+      print_sed_subst(out, "serversClientLib", str4);
+      free(str4);
+   } else {
+      print_sed_subst(out, "serversClientLib", "");
+   }
+
+/*    if (str1 != NULL) { */
+/*       print_sed_subst(out, "serversEndianLib", str1); */
+/*       free(str1); */
+/*    } else { */
+/*       print_sed_subst(out, "serversEndianLib", ""); */
+/*    } */
+
+#if 0
+   /* GenoM -I options */
    str = NULL;
    for (i = 0; i < nCppOptions; i++) {
       if (strncmp(cppOptions[i], "-I", 2) == 0) {
 	 bufcat(&str, "%s ", cppOptions[i]);
       }
    } /* for */
+#else
+   /* options in -I not in -J */
+   if (ln2) {
+     for (; ln2 != NULL; ln2 = ln2->next) {
+       bufcatIfNotIn(&str, "-I%s ", ln2->name);
+     }
+   }
+#endif
+
    if (str != NULL) {
       print_sed_subst(out, "genomIncludes", str);
       free(str);
@@ -218,7 +316,7 @@ configureServerGen(FILE *out,
    char *str, *str1, *str2, *str3;
    EXEC_TASK_LIST *lt;
    EXEC_TASK_STR *t;
-   ID_LIST *ln;
+   ID_LIST *ln, *ln2;
    int i;
 
    /* --- genom.mk --------------------------------------------------- */
@@ -231,6 +329,8 @@ configureServerGen(FILE *out,
    print_sed_subst(out, "genPropice", genPropice ? "" : "#");
 
    /* GenoM options */
+
+   /* -D */
    str = NULL;
    for (i = 0; i < nCppOptions; i++) {
       if (strncmp(cppOptions[i], "-D", 2) == 0) {
@@ -244,12 +344,21 @@ configureServerGen(FILE *out,
       print_sed_subst(out, "genomDefines", "");
    }
 
+   /* GenoM -J options */
    str = NULL;
-   for (i = 0; i < nCppOptions; i++) {
-      if (strncmp(cppOptions[i], "-I", 2) == 0) {
-	 bufcat(&str, "%s ", cppOptions[i]);
-      }
-   } /* for */
+   for (ln = externPathMacro, ln2 = externPathMacroPath; 
+	ln != NULL; 
+	ln = ln->next, ln2 = ln2->next) {
+     bufcatIfNotIn(&str, "-J%s=%s ", ln->name, ln2->name);
+   }
+
+   /* GenoM -I options */
+   if (ln2) {
+     for (; ln2 != NULL; ln2 = ln2->next) {
+       bufcatIfNotIn(&str, "-I%s ", ln2->name);
+     }
+   }
+
    if (str != NULL) {
       print_sed_subst(out, "genomIncludes", str);
       free(str);
@@ -271,6 +380,18 @@ configureServerGen(FILE *out,
    print_sed_subst(out, "genTcl", genTcl ? "" : "#");
    print_sed_subst(out, "genPropice", genPropice ? "" : "#");
 
+   str = NULL;
+   for (ln = includeFiles; ln != NULL; ln = ln->next) {
+     /* Will install only .h files used by .gen file that are located 
+	in the main module directory */
+     if (strstr(ln->name, "..") == NULL && ln->name[0] != '/') {
+       bufcat(&str, "\t%s \\\\\n", ln->name);
+     }
+    } /* for */
+    print_sed_subst(out, "listIncludesInDotGen", str);
+    free(str);
+
+#if 0
    /* servers */
    str = str1 = str2 = str3 = NULL;
    for (lt = taches; lt != NULL; lt = lt->next) {
@@ -302,6 +423,8 @@ configureServerGen(FILE *out,
    }
    for (ln = externPathMacro; ln != NULL; ln = ln->next) {
       bufcatIfNotIn(&str, "-I\\$(%s) ", ln->name);
+
+/*       bufcatIfNotIn(&str3, "%s=\t\\$(includedir)", ln->name); */
    } /* for */
 
    if (str != NULL) {
@@ -322,6 +445,7 @@ configureServerGen(FILE *out,
    } else {
       print_sed_subst(out, "externScopeLibs", "");
    }
+#endif
 
    /* execution tasks */
    str = NULL;
