@@ -40,9 +40,12 @@ prefix=		@prefix@
 exec_prefix=	@exec_prefix@
 bindir=		@bindir@
 libdir=		@libdir@
+includedir=	@includedir@
 datadir=	@datadir@/modules
 
 VPATH=		$(srcdir)
+
+
 
 include $(topbuild)/config.mk
 include $(topsrcdir)/$(autoconfdir)/config.$(OSAPI).mk
@@ -51,7 +54,7 @@ include $(topsrcdir)/$(autoconfdir)/config.$(OSAPI).mk
 # --- flags -------------------------------------------------------------
 
 CPPFLAGS+= $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
-CPPFLAGS+= -I. -I$(topsrcdir) -I$(srcdir) $serversDir$
+CPPFLAGS+= -I. -I$(topsrcdir) -I$(srcdir)
 CPPFLAGS+= $(POCOLIBS_INC) $(GENOM_INC)
 
 # GenoM flags
@@ -74,6 +77,34 @@ client_src= \
 	$module$PosterShowLib.c	\
 	$module$PosterXMLLib.c	\
 	$module$PosterLib.c
+
+client_includes = \
+	server/$module$Type.h \
+	server/$module$ScopeLibProto.h \
+	server/$module$ScopeLib.h \
+	server/$module$ScanProto.h \
+	server/$module$Scan.h \
+	server/$module$Reports.h \
+	server/$module$PrintXMLProto.h \
+	server/$module$PrintXML.h \
+	server/$module$PrintProto.h \
+	server/$module$Print.h \
+	server/$module$PosterXMLLibProto.h \
+	server/$module$PosterXMLLib.h \
+	server/$module$PosterWriteLibProto.h \
+	server/$module$PosterShowLibProto.h \
+	server/$module$PosterShowLib.h \
+	server/$module$PosterReadLibProto.h \
+	server/$module$PosterLibStruct.h \
+	server/$module$PosterLibProto.h \
+	server/$module$PosterLib.h \
+	server/$module$MsgLibProto.h \
+	server/$module$MsgLib.h \
+	server/$module$InitProto.h \
+	server/$module$Error.h \
+	server/$module$EndianProto.h \
+	server/$module$Endian.h \
+$listIncludesInDotGen$
 
 init_src= \
 	$module$Init.c
@@ -136,13 +167,12 @@ $(OBJDIR)/$(POSTERWRITE_LIB): $(posterwrite_obj)
 	$(LTLD) -static $(CFLAGS) $(posterwrite_obj) -o $@ $(LDFLAGS) \
 		$(LIBTOOL_LINKOPT)
 
-$(OBJDIR)/$(CLIENT_LIB): $(client_obj) $serversLib$
+$(OBJDIR)/$(CLIENT_LIB): $(client_obj) $(SERVERS_CLIENT_LIB)
 	$(LTLD) $(CFLAGS) $(client_obj) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT) \
-		$serversLib$
+		$(SERVERS_CLIENT_LIB)
 
-
-$(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj) $serversEndianLib$
-	$(LTLD) $(CFLAGS) $(tclclient_obj) $serversEndianLib$ -o $@	\
+$(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj) $(SERVERS_ENDIAN_LIB)
+	$(LTLD) $(CFLAGS) $(tclclient_obj) $(SERVERS_ENDIAN_LIB) -o $@	\
 		$(LIBTOOL_LINKOPT) $(GENOM_LIB)				\
 		$(LDFLAGS) $(TCL_LDFLAGS)
 
@@ -158,10 +188,10 @@ $(OBJDIR)/$(INIT_BIN): $(init_obj) $(OBJDIR)/$(CLIENT_LIB)
 		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)	\
 		$(GENOM_LIB)
 
-$(OBJDIR)/$(ESSAY_BIN): $(essay_obj) $(OBJDIR)/$(CLIENT_LIB) $serversLib$
+$(OBJDIR)/$(ESSAY_BIN): $(essay_obj) $(OBJDIR)/$(CLIENT_LIB) $(SERVERS_CLIENT_LIB)
 	$(LTLD) $(CFLAGS) $(essay_obj) -o $@  $(LDFLAGS) 	\
 		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)		\
-		$serversLib$ $(GENOM_LIB)
+		$(SERVERS_CLIENT_LIB) $(GENOM_LIB)
 
 
 # --- basic rules -------------------------------------------------------
@@ -181,12 +211,15 @@ $(OBJDIR)/%.lo: %.c
 install: all install-bin install-data
 
 install-bin:
-	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$module$/$(INIT_BIN)
-	$(LTINSTALL) $(OBJDIR)/$(ESSAY_BIN) $(bindir)/$module$/$(ESSAY_BIN)
-	$(LTINSTALL) $(OBJDIR)/$(CLIENT_LIB) $(libdir)/$module$/$(CLIENT_LIB)
-	$genTcl$$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/$module$/$(TCLCLIENT_LIB)
+	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
+	$(LTINSTALL) $(OBJDIR)/$(ESSAY_BIN) $(bindir)/$(ESSAY_BIN)
+	$(LTINSTALL) $(OBJDIR)/$(CLIENT_LIB) $(libdir)/$(CLIENT_LIB)
+	$genTcl$$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/tclserv/$(TCLCLIENT_LIB)
 
 install-data:
+	@for f in $(client_includes); do				\
+		$(LTINSTALL_DATA) $(srcdir)/../$$f $(includedir)/$module$/$$f;\
+	done
 	$genTcl$$(LTINSTALL_DATA) \
 		$(srcdir)/$(tclclient_tcl) $(datadir)/$(tclclient_tcl)
 
@@ -215,15 +248,15 @@ make_depend=\
 depend $(OBJDIR)/dependencies:: $(OBJDIR);
 
 depend $(OBJDIR)/dependencies:: $(module_src) $(posterwrite_src)
-	@$(make_depend) $?
+	$(make_depend) $?
 depend $(OBJDIR)/dependencies::  $(client_src) $(connect_src)
-	@$(make_depend) $?
+	$(make_depend) $?
 
 $genTcl$depend $(OBJDIR)/dependencies:: $(tclclient_src)
-$genTcl$	@$(make_depend) $(TCL_CPPFLAGS) $?
+$genTcl$	$(make_depend) $(TCL_CPPFLAGS) $?
 
 $genPropice$depend $(OBJDIR)/dependencies:: $(propiceclient_src)
-$genPropice$	@$(make_depend) $(TCL_CPPFLAGS) $?
+$genPropice$	$(make_depend) $(TCL_CPPFLAGS) $?
 
 ifneq (${MAKECMDGOALS},clean)
 -include $(OBJDIR)/dependencies
