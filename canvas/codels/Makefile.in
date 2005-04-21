@@ -40,6 +40,7 @@ prefix=		@prefix@
 exec_prefix=	@exec_prefix@
 bindir=		@bindir@
 libdir=		@libdir@
+includedir=	@includedir@
 
 VPATH=		$(srcdir):$(GENFILE_PATH)/$(codelsdir)
 
