@@ -45,7 +45,7 @@ int
 configureGen(FILE *out,
 	     const char *codelsDir, const char *cmdLine,
 	     const char *genomBin, const char *genomFile, const char *genomWd,
-	     int genTcl, int genPropice)
+	     int genTcl, int genOpenprs)
 {
    const char **p;
    char *str, *str1, *str2, *str3, *str4;
@@ -311,7 +311,7 @@ configureGen(FILE *out,
 int
 configureServerGen(FILE *out, 
 		   const char *genomBin, const char *genomFile,
-		   int genTcl, int genPropice)
+		   int genTcl, int genOpenprs)
 {
    char *str, *str1, *str2, *str3;
    EXEC_TASK_LIST *lt;
@@ -326,7 +326,7 @@ configureServerGen(FILE *out,
    print_sed_subst(out, "genomFile", genomFile);
 
    print_sed_subst(out, "genTcl", genTcl ? "" : "#");
-   print_sed_subst(out, "genPropice", genPropice ? "" : "#");
+   print_sed_subst(out, "genOpenprs", genOpenprs ? "" : "#");
 
    /* GenoM options */
 
@@ -378,7 +378,7 @@ configureServerGen(FILE *out,
    print_sed_subst(out, "MODULE", module->NAME);
 
    print_sed_subst(out, "genTcl", genTcl ? "" : "#");
-   print_sed_subst(out, "genPropice", genPropice ? "" : "#");
+   print_sed_subst(out, "genOpenprs", genOpenprs ? "" : "#");
 
    str = NULL;
    for (ln = includeFiles; ln != NULL; ln = ln->next) {

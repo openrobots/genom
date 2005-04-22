@@ -132,15 +132,27 @@ else {
     chmod 04775, 'server';
 }
 
-# Creation du repertoire propice
+# Creation du repertoire openprs
 #
-if ($genPropice == 1) {
-  if (! -d "propice") {
-    print "directory propice created";
-    mkdir "propice", 04775;
+if ($genTcl == 1) {
+  if (! -d "$tclDir") {
+    print "directory $tclDir created";
+    mkdir "$tclDir", 04775;
   }
   else {
-    chmod 04775, 'propice';
+    chmod 04775, "$tclDir";
+  }
+}
+
+# Creation du repertoire openprs
+#
+if ($genOpenprs == 1) {
+  if (! -d "$openprsDir") {
+    print "directory $openprsDir created";
+    mkdir "$openprsDir", 04775;
+  }
+  else {
+    chmod 04775, "$openprsDir";
   }
 }
 

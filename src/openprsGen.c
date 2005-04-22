@@ -39,8 +39,8 @@ __RCSID("$LAAS$");
 #include <string.h>
 #include "genom.h"
 #include "parser.tab.h"
-#include "propiceGen.h"
-#include "propiceGenProto.h"
+#include "openprsGen.h"
+#include "openprsGenProto.h"
 
 static void declareRequests(FILE *out);
 static void declareAtoms(FILE *out);
@@ -61,7 +61,7 @@ static int declareCStruct(FILE *out, DCL_NOM_STR *dcl, int level)
 	  if (dcl->type->members)
 	       fprintf(out, "declare function %s\n",  dcl->type->name);
 	  else
-	       fprintf(out, "declare function %s\n",  getPropiceTYPE(dcl->type));
+	       fprintf(out, "declare function %s\n",  getOpenprsTYPE(dcl->type));
      } else
 	       fprintf(out, "declare function %s\n",  dcl->name);
 
@@ -96,11 +96,11 @@ static int declareCStruct(FILE *out, DCL_NOM_STR *dcl, int level)
 
 
 /***
- *** Ge'ne'ration de l'interface PROPICE du module
+ *** Ge'ne'ration de l'interface OPENPRS du module
  ***/
 
 int 
-propiceGen(FILE *out)
+openprsGen(FILE *out)
 {
      RQST_LIST *rl;
      RQST_STR *rqst;
@@ -171,7 +171,7 @@ propiceGen(FILE *out)
      cat_end(out);
 
   
-     script_close(out, "propice/%sPropice.sym", module->name);
+     script_close(out, "server/openprs/%sOpenprs.sym", module->name);
   
      /* ------------------------------------------------------------
       *  LES INC
@@ -181,31 +181,31 @@ propiceGen(FILE *out)
      /* Entete */
      cat_begin(out);
      fprintf(out, file_header_op);
-     fprintf(out, "include \"server/propice/%sPropice.sym\"\n", module->name);
-     fprintf(out, "load opf \"server/propice/%sPropice.opf\"\n", module->name);
+     fprintf(out, "include \"server/openprs/%sOpenprs.sym\"\n", module->name);
+     fprintf(out, "load opf \"server/openprs/%sOpenprs.opf\"\n", module->name);
      cat_end(out);
   
-     script_close(out, "propice/%sPropice.inc", module->name);
+     script_close(out, "server/openprs/%sOpenprs.inc", module->name);
   
      /* ------------------------------------------------------------
       *  LES MAKEFILES
       */
-     propiceMakeGen(out);
+     openprsMakeGen(out);
  
      /* ------------------------------------------------------------
-      *  L'ENCODAGE DES STRUCTURES (propice -> genom)
+      *  L'ENCODAGE DES STRUCTURES (openprs -> genom)
       */
-     propiceEncodeGen(out);
+     openprsEncodeGen(out);
 
      /* ------------------------------------------------------------
-      *  LE DECODAGE DES STRUCTURES (genom -> propice)
+      *  LE DECODAGE DES STRUCTURES (genom -> openprs)
       */
-     propiceDecodeGen(out);
+     openprsDecodeGen(out);
 
      /* ------------------------------------------------------------
       *  LES OP pour les requetes et les posters.
       */
-     propiceOpGen(out);
+     openprsOpGen(out);
 
      /* ------------------------------------------------------------
       *  DECLARATION DES REQUETES, DES POSTERS ET DES ATOMS
@@ -213,7 +213,7 @@ propiceGen(FILE *out)
      script_open(out);
   
      /* Entete du fichier */
-     subst_begin(out, PROTO_PROPICE_C);
+     subst_begin(out, PROTO_OPENPRS_C);
      print_sed_subst(out, "module", module->name);
      print_sed_subst(out, "MODULE", module->NAME);
      subst_end(out);
@@ -231,22 +231,22 @@ propiceGen(FILE *out)
 
      /* FIN */
      cat_end(out);
-     script_close(out, "propice/%sRequestsPropice.c", module->name);
+     script_close(out, "server/openprs/%sRequestsOpenprs.c", module->name);
 
      /* ------------------------------------------------------------
       *  LES PROTOS
       */
      script_open(out);
-     subst_begin(out, PROTO_PROPICE_PROTO);
+     subst_begin(out, PROTO_OPENPRS_PROTO);
      print_sed_subst(out, "module", module->name);
      print_sed_subst(out, "MODULE", module->NAME);
      subst_end(out);
-     script_close(out, "propice/%sRequestsPropiceProto.h", module->name);
+     script_close(out, "server/openprs/%sRequestsOpenprsProto.h", module->name);
 
     
      return 0;
 
-} /* propiceGen */
+} /* openprsGen */
 
 
  
@@ -281,7 +281,7 @@ static void declareRequests(FILE *out)
 	    "  init_rqst_type(\"%s_%s\", %s_%s_RQST,\n",
 	    module->NAME, rqst->NAME, module->NAME, rqst->NAME);
 
-    /* Selection de la fonction d'encode pour INPUTS (PROPICE -> C) */
+    /* Selection de la fonction d'encode pour INPUTS (OPENPRS -> C) */
     if (rqst->input == NULL) {
       fprintf(out, "               null_encode, 0,\n");
     }
@@ -300,7 +300,7 @@ static void declareRequests(FILE *out)
       }
     }
 
-    /* Selection de la fonction de decode pour OUTPUTS  (C -> PROPICE) */
+    /* Selection de la fonction de decode pour OUTPUTS  (C -> OPENPRS) */
     if (rqst->output == NULL) {
       fprintf(out, "               null_decode, 0);\n");
     }

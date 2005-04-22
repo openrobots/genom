@@ -39,8 +39,8 @@ __RCSID("$LAAS$");
 #include <string.h>
 #include "genom.h"
 #include "parser.tab.h"
-#include "propiceGen.h"
-#include "propiceGenProto.h"
+#include "openprsGen.h"
+#include "openprsGenProto.h"
 
 /* Production des OP */
 static int breakUpCStruct(DCL_NOM_STR *dcl, int *level, int *numvar);
@@ -52,12 +52,12 @@ char *docString=NULL;
 
 
 /***
- *** Ge'ne'ration de l'interface PROPICE du module
+ *** Ge'ne'ration de l'interface OPENPRS du module
  ***/
 
 
 int 
-propiceOpGen(FILE *out)
+openprsOpGen(FILE *out)
 {
   RQST_LIST *l;
   RQST_STR *rqst;
@@ -89,7 +89,7 @@ propiceOpGen(FILE *out)
   /* Chaque requete */
   for (l = requetes; l != NULL; l = l->next) {
     rqst = l->rqst;
-    subst_begin(out, PROTO_PROPICE_RQST_OP);
+    subst_begin(out, PROTO_OPENPRS_RQST_OP);
     
     /* Nom du  module, requete */
     print_sed_subst(out, "module", module->name);
@@ -107,7 +107,7 @@ propiceOpGen(FILE *out)
       dcl = rqst->input->dcl_nom;
       if (breakUpCStruct (dcl, &level, &numvar) != 0) {
 	subst_end(out);
-	script_close(out, "propice/%sPropice.opf", module->name);
+	script_close(out, "server/openprs/%sOpenprs.opf", module->name);
 	return -1;
       }
       print_sed_subst(out, "INPUTS", "%s", opParamsString);
@@ -126,7 +126,7 @@ propiceOpGen(FILE *out)
       dcl = rqst->output->dcl_nom;
       if (breakUpCStruct (dcl, &level, &numvar) != 0) {
 	subst_end(out);
-	script_close(out, "propice/%sPropice.opf", module->name);
+	script_close(out, "server/openprs/%sOpenprs.opf", module->name);
 	return -1;
       }
       print_sed_subst(out, "OUTPUTS", "%s", opParamsString);
@@ -152,7 +152,7 @@ propiceOpGen(FILE *out)
 
   /* abort request */
 
-    subst_begin(out, PROTO_PROPICE_RQST_OP);
+    subst_begin(out, PROTO_OPENPRS_RQST_OP);
     
     /* Nom du  module, requete */
     print_sed_subst(out, "module", module->name);
@@ -177,7 +177,7 @@ propiceOpGen(FILE *out)
        DCL_NOM_STR *n;
        STR_REF_LIST *l;
 
-       subst_begin(out, PROTO_PROPICE_PSTR_OP);
+       subst_begin(out, PROTO_OPENPRS_PSTR_OP);
 
        print_sed_subst(out, "MODULE", module->NAME);
        print_sed_subst(out, "module", module->name);
@@ -189,7 +189,7 @@ propiceOpGen(FILE *out)
        dcl = post->type->name;
        if (breakUpCStruct (dcl, &level, &numvar) != 0) {
 	    subst_end(out);
-	    script_close(out, "propice/%sPropice.opf", module->name);
+	    script_close(out, "server/openprs/%sOpenprs.opf", module->name);
 	    return -1;
        }
 	 
@@ -211,7 +211,7 @@ propiceOpGen(FILE *out)
 		 NAME[i] = toupper(n->name[i]), i++);
 
 	  
-	    subst_begin(out, PROTO_PROPICE_PSTR_OP);
+	    subst_begin(out, PROTO_OPENPRS_PSTR_OP);
 
 	    print_sed_subst(out, "MODULE", module->NAME);
 	    print_sed_subst(out, "module", module->name);
@@ -225,7 +225,7 @@ propiceOpGen(FILE *out)
 	    dcl = foo;
 	    if (breakUpCStruct (dcl, &level, &numvar) != 0) {
 		 subst_end(out);
-		 script_close(out, "propice/%sPropice.opf", module->name);
+		 script_close(out, "server/openprs/%sOpenprs.opf", module->name);
 		 return -1;
 	    }
 	 
@@ -245,10 +245,10 @@ propiceOpGen(FILE *out)
   fprintf(out, "\n)\n");
   cat_end(out);
   
-  script_close(out, "propice/%sPropice.opf", module->name);
+  script_close(out, "server/openprs/%sOpenprs.opf", module->name);
 
   return 0;
-} /* propiceGen */
+} /* openprsGen */
 
 
 /*======================================================================*/
@@ -278,7 +278,7 @@ static int breakUpCStruct(DCL_NOM_STR *dcl, int *level, int *numvar)
        if (dcl->type->members)
 	    bufcat (&opParamsString,  "(%s ",  dcl->type->name);
        else
-	    bufcat (&opParamsString,  "(%s ", getPropiceTYPE(dcl->type));
+	    bufcat (&opParamsString,  "(%s ", getOpenprsTYPE(dcl->type));
   } else
        bufcat (&opParamsString,  "(%s ", dcl->name);
 
@@ -355,7 +355,7 @@ static int addOpParams (DCL_NOM_STR *dcl_nom, int *numvar)
     /* Autre variable ou tableau de variables */
     else {
       bufcat(&opParamsString, " \\$%s-%d",  
-	     getPropiceTYPE(dcl_nom->type), *numvar);
+	     getOpenprsTYPE(dcl_nom->type), *numvar);
     } 
 
     /* Incremente le numero de l'element */
@@ -379,10 +379,10 @@ static void  makeEnumDoc(DCL_NOM_STR *dcl_nom, char **docString)
 }
 
 /**--------------------------------------------------------------------
- **  getPropiceTYPE - 
+ **  getOpenprsTYPE - 
  **/
 
-char *getPropiceTYPE(TYPE_STR *type)
+char *getOpenprsTYPE(TYPE_STR *type)
 {
   switch (type->type) {
   case CHAR:

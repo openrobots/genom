@@ -30,11 +30,11 @@ $commentbegin$
 #
 $commentend$
 
-topbuild=.
-include $(topbuild)/config.mk
-
+topbuilddir=.
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
+
+include $(topbuilddir)/config.mk
 
 SUBDIRS= $(serverdir) $(codelsdir)
 

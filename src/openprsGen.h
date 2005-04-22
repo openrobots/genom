@@ -1,7 +1,8 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1999-2003 LAAS/CNRS
+ * Sara Fleury -   Apr  1 1999
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -28,6 +29,30 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+#ifndef _OPENPRSGEN_H
+#define _OPENPRSGEN_H
 
-/* propiceGen.c */
-extern int propiceGen(FILE *out);
+/* Canevas utilisé par openprsGen */
+#define PROTO_OPENPRS_C         "server/openprs/openprs.c"
+#define PROTO_OPENPRS_PROTO     "server/openprs/openprsProto.h"
+
+/* Canevas utilisé par openprsDecodeGen */
+#define PROTO_OPENPRS_RQST_OP   "server/openprs/openprsRqst.op"
+#define PROTO_OPENPRS_PSTR_OP   "server/openprs/openprsPoster.op"
+
+/* Canevas utilisé par openprsDecodeGen */
+#define PROTO_OPENPRS_DECODE_C  "server/openprs/openprsDecode.c"
+#define PROTO_OPENPRS_DECODE_H  "server/openprs/openprsDecode.h"
+
+/* Canevas utilisé par openprsEncodeGen */
+#define PROTO_OPENPRS_ENCODE_C  "server/openprs/openprsEncode.c"
+#define PROTO_OPENPRS_ENCODE_H  "server/openprs/openprsEncode.h"
+
+/* Prototypes des fonctions de generation */
+#include "openprsGenProto.h"
+#include "openprsMakeGenProto.h"
+#include "openprsEncodeGenProto.h"
+#include "openprsDecodeGenProto.h"
+#include "openprsOpGenProto.h"
+
+#endif

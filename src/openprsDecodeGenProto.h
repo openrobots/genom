@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1999-2003 LAAS/CNRS
+ * Copyright (c) 1993-2003 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -28,49 +28,9 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+#ifndef H_OPENPRSDECODEGENPROTO
+#define H_OPENPRSDECODEGENPROTO
 
-/*----------------------------------------------------------------------
- *   Automatically generated: do not edit by hand.
- *----------------------------------------------------------------------*/
+extern int openprsDecodeGen ( FILE *out );
 
-#ifndef UNIX
-#include <vxWorks.h>
-#else
-#include <portLib.h>
-#endif
-
-#ifdef UNIX
-#include <stdlib.h>
-#else
-#include <taskLib.h>
-#endif
-
-#include "$module$MsgLib.h"
-#undef FREE
-
-#include "macro-pub.h"
-#include "opaque-pub.h"
-#include "constant-pub.h"
-#include "propice-type-pub.h"
-#include "pu-mk-term_f.h"
-#include "pu-parse-tl_f.h"
-
-#include "propice-type_f-pub.h"
-#include "propice-sprint_f-pub.h"
-
-#include "user-decl-propice-post_f.h"
-#include "user-decl-propice-com_f.h"
-
-#include "propice-com.h"
-#include "propice-com_f.h"
-#include "propice-post_f.h"
-
-#include "pu-enum_f.h"
-#include "pu-genom_f.h"
-
-#include "$module$Error.h"
-#include "$module$MsgLib.h"
-#include "$module$PosterLib.h"
-
-#include "propice/$module$DecodePropice.h"
-#include "propice/$module$EncodePropice.h"
+#endif /* H_OPENPRSDECODEGENPROTO */

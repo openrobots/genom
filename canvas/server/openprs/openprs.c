@@ -33,15 +33,48 @@
  *   Automatically generated: do not edit by hand.
  *----------------------------------------------------------------------*/
 
-#ifndef $MODULE$_PROPICE_ENCODE_H
-#define $MODULE$_PROPICE_ENCODE_H
+#ifndef UNIX
+#include <vxWorks.h>
+#else
+#include <portLib.h>
+#endif
 
-/* Structures definies par d'autres modules */
-$externPropiceEncodeLibs$
+#ifdef UNIX
+#include <stdlib.h>
+#else
+#include <taskLib.h>
+#endif
 
-/* Structures du module */
+#include "$module$MsgLib.h"
+#undef FREE
+
+#include <openprs/macro-pub.h>
+#include <openprs/opaque-pub.h>
+#include <openprs/constant-pub.h>
+#include <openprs/oprs-type-pub.h>
+#include <openprs/pu-mk-term_f.h>
+#include <openprs/pu-parse-tl_f.h>
+
+#include <openprs/oprs-type_f-pub.h>
+#include <openprs/oprs-sprint_f-pub.h>
+
+/*
+#include <user-decl-openprs-post_f.h>
+#include <user-decl-openprs-com_f.h>
+*/
+
+/*
+#include <openprs/openprs-com.h>
+#include <openprs/openprs-com_f.h>
+#include <openprs/openprs-post_f.h>
+*/
+
+#include <openprs/pu-enum_f.h>
+#include <openprs/pu-genom_f.h>
+
+#include "$module$Error.h"
+#include "$module$MsgLib.h"
 #include "$module$PosterLib.h"
 
-#include "propice/$module$EncodePropiceProto.h"
-
-#endif /* $MODULE$_PROPICE_ENCODE_H */
+#include "openprs/$module$DecodeOpenprs.h"
+#include "openprs/$module$EncodeOpenprs.h"

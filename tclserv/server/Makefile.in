@@ -28,23 +28,23 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-TOPBUILD=../..
+topsrcdir=	 @top_srcdir@
+srcdir=		   @srcdir@
+topbuilddir= @top_builddir@
 
-topsrcdir=	@top_srcdir@
-srcdir=		@srcdir@
-
-prefix=		@prefix@
+prefix=		    @prefix@
 exec_prefix=	@exec_prefix@
-bindir=		@bindir@
-libdir=		@libdir@
+bindir=		  @bindir@
+libdir=		  @libdir@
 includedir=	@includedir@/genom
-datadir=	@datadir@/tclserv
+datadir=	  @datadir@/tclserv
 
-include $(TOPBUILD)/config.mk
-
+INSTALL=  @INSTALL@
 VPATH=		$(srcdir)
 
-CPPFLAGS+=	-I$(TOPBUILD) -I$(topsrcdir)/include -I$(srcdir) -I.
+include $(topbuilddir)/config.mk
+
+CPPFLAGS+=	-I$(topbuilddir) -I$(topsrcdir)/include -I$(srcdir) -I.
 CPPFLAGS+=	$(PORTLIB_CFLAGS)
 CPPFLAGS+=	-D$(ENDIANNESS)
 
@@ -95,12 +95,15 @@ main.lo: main.c
 
 .PHONY: install
 install:: $(TCLSERV)
+	$(MKINSTALLDIRS) $(bindir)
 	$(LTINSTALL) $(TCLSERV) $(bindir)/$(TCLSERV)
+	$(MKINSTALLDIRS) $(includedir)
 	@for f in $(ilist); do						\
-		$(LTINSTALL_DATA) $(srcdir)/$$f $(includedir)/$$f;	\
+		$(INSTALL_DATA) $(srcdir)/$$f $(includedir)/$$f;	\
 	done
+	$(MKINSTALLDIRS) $(datadir)
 	@for f in $(tlist); do						\
-		$(LTINSTALL_DATA) $(srcdir)/$$f $(datadir)/$$f;		\
+		$(INSTALL_DATA) $(srcdir)/$$f $(datadir)/$$f;		\
 	done
 
 
@@ -108,7 +111,7 @@ install:: $(TCLSERV)
 
 .PHONY: clean
 clean:
-	$(TOPBUILD)/libtool --mode=clean rm -f $(OBJS) $(TCLSERV)
+	$(topbuilddir)/libtool --mode=clean rm -f $(OBJS) $(TCLSERV)
 
 distclean: clean
 	rm -f DEPENDANCES Makefile

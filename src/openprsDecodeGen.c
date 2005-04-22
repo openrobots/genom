@@ -2,7 +2,7 @@
 
 /* 
  * Copyright (c) 1999-2003 LAAS/CNRS
- * Sara Fleury - Mon Jun  7 1999
+ * Sara Fleury - Fri Jun  4 1999
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -38,137 +38,129 @@ __RCSID("$LAAS$");
 
 #include "genom.h"
 #include "parser.tab.h"
-#include "propiceGen.h"
+#include "openprsGen.h"
 
-static void genEncodeTerm(FILE *out, DCL_NOM_STR *n, int typedefFlag, int numTerm);
-static void genEncodeEnum (FILE *out, DCL_NOM_LIST *members, char *name) ;
-
-static void genPropiceEncode (FILE *out, int proto);
-
+static void genDecodeTerm(FILE *out, DCL_NOM_STR *n, int typedefFlag);
+static void genDecodeEnum (FILE *out, DCL_NOM_LIST *members, char *name, char *name1) ;
+static void genOpenprsDecode (FILE *out, int protos);
 
 static const char *func_header_proto = 
-"extern PBoolean pu_encode_genom_%s ( char *name, Expression *tc,\n"
-"             %s *str, int tabsize );\n";
+"extern Term *pu_decode_genom_%s(char *name, %s *str, int tabsize);\n";
 
 static const char *func_header = 
-"PBoolean pu_encode_genom_%s(char *name, Expression *tc,\n"
-"                 %s *str, int tabsize)\n{\n"
-"  if (!pu_check_ttc_name(tc, name,\"%s\"))\n"
-"    return FALSE;\n"
-"  else {\n"
-"    int elt;\n"
-"    for(elt=0;elt<tabsize;elt++) {\n";
+"Term *pu_decode_genom_%s(char *name, %s *str, int tabsize)\n{\n"
+"  Pred_Func_Rec *fr = find_or_create_pred_func(declare_atom((name?name:\"%s\")));\n"
+"  TermList tl = sl_make_slist();\n"
+"  int elt;\n"
+"  for(elt=0;elt<tabsize;elt++) {\n";
 
 static const char *func_tail =  
-"    }\n"
 "  }\n"
-" return TRUE;\n"
+" return build_term_expr(build_expr_pfr_terms(fr, tl));\n"
 "}\n\n";
 
 static const char *func_td_header_proto = 
-"extern PBoolean pu_encode_genom_%s ( char *name, Expression *tc,\n"
-"                 %s *str, int tabsize );\n";
+"extern Term *pu_decode_genom_%s(char *name, %s *str, int tabsize);\n";
 
 static const char *func_td_header = 
-"PBoolean pu_encode_genom_%s(char *name, Expression *tc,\n"
-"                 %s *str, int tabsize)\n{\n";
+"Term *pu_decode_genom_%s(char *name, %s *str, int tabsize)\n{\n";
 
 static const char *func_td_tail =  
 "}\n\n";
 
 /*** 
- *** Génération des fonctions d'encodage des structures (Propice -> C)
+ *** Génération des fonctions de decodage des structures (C -> Openprs)
  ***/
 
 int
-propiceEncodeGen(FILE *out)
+openprsDecodeGen(FILE *out)
 {
-  char *str;
-  ID_LIST *ln;
+    char *str;
+    ID_LIST *ln;
 
     /* ------------------------------------------------------------
-     *  Generation du fichier source totoEncodePropice.c
+     *  LES FICHERS SOURCES
      */
     script_open(out);
     
     /* Entete */
-    subst_begin(out, PROTO_PROPICE_ENCODE_C);
+    subst_begin(out, PROTO_OPENPRS_DECODE_C);
     print_sed_subst(out, "module", module->name);
     print_sed_subst(out, "MODULE", module->NAME);
     subst_end(out);
     
     cat_begin(out);
+    genOpenprsDecode(out, 0 /* ! protos */);
 
-    genPropiceEncode (out, 0 /* ! protos */);
     cat_end(out);
-    script_close(out, "propice/%sEncodePropice.c", module->name);
+    script_close(out, "server/openprs/%sDecodeOpenprs.c", module->name);
 
     /* ------------------------------------------------------------
      *  PROTO
      */
     script_open(out);
     cat_begin(out);
-    genPropiceEncode(out, 1 /* ! protos */);
+    genOpenprsDecode(out, 1 /* ! protos */);
 
     cat_end(out);
-    script_close(out, "propice/%sEncodePropiceProto.h", module->name);
+    script_close(out, "server/openprs/%sDecodeOpenprsProto.h", module->name);
 
     /* ---------------------------------------------------------------------
      * Generation fichier header
      */
     script_open(out);
-    subst_begin(out, PROTO_PROPICE_ENCODE_H);
+    subst_begin(out, PROTO_OPENPRS_DECODE_H);
 
     /* Structures importees d'autres modules */
     str = NULL;
     for (ln = externLibs; ln != NULL; ln = ln->next) {
-      bufcat(&str, "\n#include \"auto/propice/%sEncodePropice.h\"\n", ln->name);
+      bufcat(&str, "\n#include \"auto/openprs/%sDecodeOpenprs.h\"\n", ln->name);
     } /* for */
     if (str != NULL) {
-      print_sed_subst(out, "externPropiceEncodeLibs", str);
+      print_sed_subst(out, "externOpenprsDecodeLibs", str);
       free(str);
     } else {
-      print_sed_subst(out, "externPropiceEncodeLibs", "");
+      print_sed_subst(out, "externOpenprsDecodeLibs", "");
     }
 
     print_sed_subst(out, "module", module->name);
     print_sed_subst(out, "MODULE", module->NAME);
 
     subst_end(out);
-    script_close(out, "propice/%sEncodePropice.h", module->name);
+    script_close(out, "server/openprs/%sDecodeOpenprs.h", module->name);
 
     return(0);
-
-} /* propiceEncodeGen */
+} /* scanGen */
 
 
 
 /*-------------------------------------------------------------------------*/
 /*                          FONCTIONS LOCALES                              */
 /*-------------------------------------------------------------------------*/
-
-static void genPropiceEncode (FILE *out, int protos)
+static void genOpenprsDecode (FILE *out, int protos)
 {
-  TYPE_LIST *l;
-  TYPE_STR *t;
-  DCL_NOM_LIST *m, *ltypedefs;
-  int numTerm;
+    TYPE_LIST *l;
+    TYPE_STR *t;
+    DCL_NOM_LIST *m, *ltypedefs;
+    int numTerm;
 
-  /* Generation des fonctions d'encodage */
-  for (l = types; l != NULL; l = l->next) {
-    t = l->type;
-    if (/* t->used == 0 ||*/ (t->flags & TYPE_IMPORT) 
-	|| (t->flags & TYPE_INTERNAL_DATA))
-      continue;
-    
-    numTerm = 1;
-    
-    if (protos) {
-      fprintf(out, func_header_proto, nom_type1(t), nom_type(t), t->name);
-    }
-  
-    else {
-        fprintf(out, func_header, nom_type1(t), nom_type(t), t->name);
+    /* Generation des fonctions d'encodage */
+    for (l = types; l != NULL; l = l->next) {
+      t = l->type;
+      if (/* t->used == 0 ||*/ (t->flags & TYPE_IMPORT) 
+	  || (t->flags & TYPE_INTERNAL_DATA))
+	continue;
+
+      numTerm = 1;
+      
+      if (protos) {
+	/* Entete de la fonction */
+	fprintf(out, func_header_proto, nom_type1(t), nom_type(t), t->name);
+      }
+      else {
+
+	/* Entete de la fonction */
+	fprintf(out, func_header, nom_type1(t), nom_type(t), t->name);
 
 	/* Corps de la fonction */
 	switch (t->type) {
@@ -179,23 +171,21 @@ static void genPropiceEncode (FILE *out, int protos)
 	case INT:
 	case FLOAT:
 	case DOUBLE:
-	  fprintf(stdout, "propiceEncodeGen error while parsing %s\n", 
+	  fprintf(stdout, "server/openprsDecodeGen error while parsing %s\n", 
 		  nom_type1(t));
 	  break;
 
 	  /* Structure: on traite chaque membre */
 	case STRUCT:
 	case UNION:
-	  fprintf(out,
-		  "    Expression *tc_tmp;\n");
 	  for (m = t->members; m != NULL; m = m->next) {
-	    genEncodeTerm(out, m->dcl_nom,  0, numTerm++);
+	    genDecodeTerm(out, m->dcl_nom,  0);
 	  }
 	  break;
 
 	  /* Affichage en clair des symboles de l'enum */
 	case ENUM:
-	  genEncodeEnum(out, t->members, nom_type(t));
+	  genDecodeEnum(out, t->members, nom_type(t), t->name);
 	  break;
 
 	case TYPEDEF:
@@ -205,48 +195,46 @@ static void genPropiceEncode (FILE *out, int protos)
 
 	/* Termine la fonction */
 	fprintf(out, func_tail);
+      }
     }
-  }
 
-  /* 
-   * Manipulation des typedef (utilise les fonctions precedement produites)
-   */
-  fprintf(out, "\n/* ======================== ENCODE TYPEDEF ============================= */\n\n");
-  for (ltypedefs = typedefs; ltypedefs != NULL; 
-       ltypedefs = ltypedefs->next) {
-    
-    if (/* ltypedefs->dcl_nom->type->used == 0
-	   ||*/ (ltypedefs->dcl_nom->type->flags & TYPE_IMPORT)
-		|| (ltypedefs->dcl_nom->type->flags & TYPE_INTERNAL_DATA))
-      continue;
+    /* 
+     * Manipulation des typedef (utilise les fonctions precedement produites)
+     */
+    fprintf(out, "\n/* ======================== DECODE TYPEDEF ============================= */\n\n");
+    for (ltypedefs = typedefs; ltypedefs != NULL; 
+	 ltypedefs = ltypedefs->next) {
 
-    if (protos) {
-      fprintf(out, func_td_header_proto, ltypedefs->dcl_nom->name, 
-	      ltypedefs->dcl_nom->name);
-    }
-    else {
-      fprintf(out, func_td_header, ltypedefs->dcl_nom->name, 
-	      ltypedefs->dcl_nom->name);
-      ltypedefs->dcl_nom->pointeur++;
-
-	
-      fprintf(out, 
-	      "      return pu_encode_genom_%s(name, tc, str, tabsize);\n",
-	      nom_type1(ltypedefs->dcl_nom->type));
+      if (/* ltypedefs->dcl_nom->type->used == 0
+	     ||*/ (ltypedefs->dcl_nom->type->flags & TYPE_IMPORT)
+		  || (ltypedefs->dcl_nom->type->flags & TYPE_INTERNAL_DATA))
+	continue;
       
-      /* 	genEncodeTerm(out, ltypedefs->dcl_nom, 1, 1);*/
+      if (protos) {
+	fprintf(out, func_td_header_proto, ltypedefs->dcl_nom->name, 
+		ltypedefs->dcl_nom->name);
+      }
+      else {
+	fprintf(out, func_td_header, ltypedefs->dcl_nom->name, 
+		ltypedefs->dcl_nom->name);
 
-      ltypedefs->dcl_nom->pointeur--;
-      /* Termine la fonction */
-      fprintf(out, func_td_tail);
+	ltypedefs->dcl_nom->pointeur++;
+
+	fprintf(out, 
+		"      return  pu_decode_genom_%s(name, str, tabsize);\n",
+		nom_type1(ltypedefs->dcl_nom->type));
+
+
+/* 	genDecodeTerm(out, ltypedefs->dcl_nom, 1); */
+	ltypedefs->dcl_nom->pointeur--;
+	/* Termine la fonction */
+	fprintf(out, func_td_tail);
+      }
     }
-  }
 }
 
-/*----------------------------------------------------------------------*/
-
 static void
-genEncodeTerm(FILE *out, DCL_NOM_STR *dclDesc, int typedefFlag, int numTerm)
+genDecodeTerm(FILE *out, DCL_NOM_STR *dclDesc, int typedefFlag)
 {
     char *addrstr=NULL;
     char *var, *type1;
@@ -284,10 +272,7 @@ genEncodeTerm(FILE *out, DCL_NOM_STR *dclDesc, int typedefFlag, int numTerm)
 
     /* Debut de la fonction */
     fprintf(out, 
-	    "      if (! PUGetPropiceTermCompSpecArg(tc, elt*tabsize+%d, EXPRESSION, &tc_tmp))\n"
-	    "         return FALSE;\n"
-	    "      if (! pu_encode_genom_%s(\"%s\", tc_tmp, ",
-	    numTerm, 
+	    "      sl_add_to_tail(tl, pu_decode_genom_%s(\"%s\", ",
 	    type1, dclDesc->name);
 	    
     /* Prefixe selon type de la variable: Pointeur? Tableau? ... */
@@ -305,59 +290,52 @@ genEncodeTerm(FILE *out, DCL_NOM_STR *dclDesc, int typedefFlag, int numTerm)
 
 
     /* La fin de la fonction */
+    /* La fin de la fonction */
     if(dclDesc->flags & STRING)
       fprintf(out,
-	      ", %d, %d))\n" 
-	      "         return FALSE;\n\n",
+	       ", %d, %d));\n",
 	      nbelts, maxLength);
     else
-      fprintf(out,
-	      ", %d))\n" 
-	      "         return FALSE;\n\n",
-	      nbelts);
-
+	 fprintf(out,
+		 ", %d));\n",
+		 nbelts);
+    
     free(type1);
     free(var);
     free(addrstr);
     addrstr = NULL;
 
-} /* genEncodeTerm */
+} /* genDecodeTerm */
 
 /*----------------------------------------------------------------------*/
 
 static void 
-genEncodeEnum (FILE *out, DCL_NOM_LIST *members, char *type) 
+genDecodeEnum (FILE *out, DCL_NOM_LIST *members, char *type, char *type1) 
 
 {
   DCL_NOM_LIST *m;
-
-  fprintf(out, 
-"      Symbol val;\n"
-"      if (!PUGetPropiceTermCompSpecArg(tc, elt+1, ATOM, &val))\n"
-"	   return FALSE;\n");
-
 
   m = members;
 
   /* Cherche l'enum correspondant  (test le premier) */
   fprintf(out, 
-	  "      if (strcmp(val,\"%s\")==0) *(str+elt) = %s;\n",
+	  "      if (*(str+elt) == %s) add_to_tail(tl, PUMakeTermAtom(\"%s\"));\n",
 	  m->dcl_nom->name, m->dcl_nom->name);
 
   /* Cherche l'enum correspondant (test les suivants) */
   if (m->next != NULL) 
-    for (m = members->next; m != NULL; m = m->next) 
-      fprintf(out, 
-	      "      else if (strcmp(val,\"%s\")==0) *(str+elt) = %s;\n",
-	      m->dcl_nom->name, m->dcl_nom->name);
-
+       for (m = members->next; m != NULL; m = m->next) 
+	    fprintf(out, 
+		    "      else if (*(str+elt) == %s) add_to_tail(tl, PUMakeTermAtom(\"%s\"));\n",
+		    m->dcl_nom->name, m->dcl_nom->name);
+  
   /* Pas trouve */
   fprintf(out, 
 	  "      else {\n"
-	  "        fprintf(stdout, \"Not valid value %%s for %s\", val);\n"
-	  "        return FALSE;\n"
+	  "        fprintf(stdout, \"Not valid value %%d for %s\\n\", *(str+elt));\n"
+	  "        add_to_tail(tl, PUMakeTermAtom(\"UNKNOWN_%s_ENUM_VALUE\"));\n"
 	  "      }\n",
-	  type);
+	  type,type1);
 }
 
 

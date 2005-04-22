@@ -30,6 +30,8 @@
 
 host_cpu=	@host_cpu@
 
+abs_top_srcdir=   @abs_top_srcdir@
+abs_top_builddir= @abs_top_builddir@
 module=		$module$
 codelsdir=	$codelsDir$
 serverdir=	server
@@ -41,14 +43,15 @@ autoconfdir=	autoconf
 CPP=		@CPP@
 PURIFY=		
 CC=		@CC@
-LTCC=           $(topbuild)/libtool --mode=compile $(CC)
-LTLD=           $(topbuild)/libtool --mode=link $(PURIFY) $(CC)
+SED=		  sed
+
+LTCC=     $(topbuilddir)/libtool --mode=compile $(CC)
+LTLD=     $(topbuilddir)/libtool --mode=link $(PURIFY) $(CC)
 MKDEP=		@MKDEP@
 INSTALL=	$(topsrcdir)/$(autoconfdir)/install-sh -c
-LTINSTALL=	$(topbuild)/libtool --mode=install $(INSTALL)
-LTINSTALL_DATA=	$(topbuild)/libtool --mode=install $(INSTALL) -m 644
-
-SED=		sed
+LTINSTALL=	    $(topbuilddir)/libtool --mode=install $(INSTALL)
+INSTALL_DATA=	$(topbuilddir)/libtool --mode=install $(INSTALL) -m 644
+LTRM=     $(topbuilddir)/libtool --mode=clean rm -f
 
 # --- Libraries ---------------------------------------------------------
 
@@ -60,7 +63,7 @@ ESSAY_BIN=	$module$Essay$(BINEXT)
 # client libraries
 CLIENT_LIB=		lib$module$Client$(LIBEXT)
 TCLCLIENT_LIB=		lib$module$TclServ$(LIBEXT)
-PROPICECLIENT_LIB=	lib$module$Propice$(LIBEXT)
+PRSCLIENT_LIB=	lib$module$Openprs$(LIBEXT)
 
 # libtool 'helper' libs -- static archives
 MODULE_LIB=		lib$module$Server.la
@@ -85,7 +88,7 @@ else
 OSDEF = UNIX
 endif
 
-MODULES_ROOT=   @abs_top_srcdir@/..
+abs_top_srcdir= @abs_top_srcdir@
 
 ENDIANNESS=	@ENDIANNESS@
 
@@ -113,5 +116,5 @@ GENOM_LIB=	@GENOM_LIB@
 EXTRA_INCLUDES=	@EXTRA_INCLUDES@
 EXTRA_LIBS=	@EXTRA_LIBS@
 
--include @abs_top_srcdir@/$(autoconfdir)/local.mk
+-include $(abs_top_srcdir)/$(autoconfdir)/local.mk
 

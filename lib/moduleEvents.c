@@ -52,7 +52,7 @@ __RCSID("$LAAS$");
 #include "../h2Clock/h2Clock.h" /* XXX utilise -I$(ROOTH2)/xxx/ */
 #endif
 
-#include "moduleEvents.h"
+#include "genom/moduleEvents.h"
 
 /*----------------------------------------------------------------------*/
 

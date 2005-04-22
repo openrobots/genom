@@ -72,7 +72,7 @@ __RCSID("$LAAS$");
 #include "essayGen.h"
 #include "initGen.h"
 
-#include "propiceGen.h"
+#include "openprsGen.h"
 
 #include "tclGen.h"
 #include "tclClientGen.h"
@@ -1405,7 +1405,7 @@ main(int argc, char **argv)
 
     int genIfChange = 0;
     int genTcl = 0;
-    int genPropice = 0;
+    int genOpenprs = 0;
     int upToDate;
     struct stat statfile, statstamp, statgen;
     static const char *nomstamp = "genom-stamp";
@@ -1420,6 +1420,8 @@ main(int argc, char **argv)
     char codelsDir[MAXPATHLEN] = "codels";
     char autoDir[MAXPATHLEN] = "server";
     char autoconfDir[MAXPATHLEN] = "autoconf";
+    char tclDir[MAXPATHLEN] = "server/tcl";
+    char openprsDir[MAXPATHLEN] = "server/openprs";
 
     static const char *usage = 
       "Usage: \n  genom [-i] [-c] [-d] [-n] [-p protoDir] [-s] [-t] "
@@ -1435,7 +1437,7 @@ main(int argc, char **argv)
       "     -n: produces \".pl\" without execution  \n"
       "     -p: changes the path for prototype files (canvas) \n"
       "     -t: produces on-board tcl client code\n"
-      "     -x: produces propice interfaces\n\n"
+      "     -x: produces openprs interfaces\n\n"
       "     --includes:  print path to libgenom includes\n"
       "     --libraries: print path to libgenom libraries\n";
 
@@ -1538,7 +1540,7 @@ main(int argc, char **argv)
 	    genTcl = 1;
 	    break;
 	  case 'x':
-	    genPropice = 1;
+	    genOpenprs = 1;
 	    break;
 
 	  case '-':
@@ -1716,13 +1718,16 @@ main(int argc, char **argv)
     fprintf(sortie, "# Generateur du module %s\n\n", module->name);
 
     /* Variables generales pour perl */
-    fprintf(sortie, "use vars qw($module $genPropice $codelsDir $autoconfDir $serverDir $installUserPart);\n");
+    fprintf(sortie, "use vars qw($module $genOpenprs $genTcl $codelsDir $autoconfDir $serverDir $installUserPart $openprsDir $tclDir);\n");
     fprintf(sortie, "$module=\"%s\";\n", module->name);
-    fprintf(sortie, "$genPropice=%d;\n", genPropice);
+    fprintf(sortie, "$genOpenprs=%d;\n", genOpenprs);
+    fprintf(sortie, "$genTcl=%d;\n", genOpenprs);
 
     fprintf(sortie, "$codelsDir=\"%s\";\n\n", codelsDir);
     fprintf(sortie, "$autoconfDir=\"%s\";\n\n", autoconfDir);
     fprintf(sortie, "$serverDir=\"%s\";\n\n", autoDir);
+    fprintf(sortie, "$openprsDir=\"%s\";\n\n", openprsDir);
+    fprintf(sortie, "$tclDir=\"%s\";\n\n", tclDir);
     fprintf(sortie, "$installUserPart=%d;\n\n", installUserPart);
 
     /* Debut du fichier perl */
@@ -1734,7 +1739,7 @@ main(int argc, char **argv)
     if (installUserPart) goto userPart;
 
     fatalError |= (configureServerGen(sortie, argv[0], genfile,
-				      genTcl, genPropice)!=0);
+				      genTcl, genOpenprs)!=0);
     fatalError |= (typeGen(sortie) != 0);
     fatalError |= (errorGen(sortie) != 0);
     fatalError |= (msgLibGen(sortie) != 0);
@@ -1752,8 +1757,8 @@ main(int argc, char **argv)
     fatalError |= (initGen(sortie) != 0);
     fatalError |= (reportsGen(sortie) != 0);
 
-    if (genPropice)
-      fatalError |= (propiceGen(sortie) != 0); 
+    if (genOpenprs)
+      fatalError |= (openprsGen(sortie) != 0); 
     if (genTcl) {
        fatalError |= (tclGen(sortie) != 0);
        fatalError |= (tclClientGen(sortie) != 0);
@@ -1767,7 +1772,7 @@ main(int argc, char **argv)
     /* building environment */
     fatalError |= (configureGen(sortie,
 				codelsDir, cmdLine, argv[0], genfile, cwd,
-				genTcl, genPropice) != 0);
+				genTcl, genOpenprs) != 0);
 
     /* On termine */
     script_do(sortie, protoDir, "end.pl");

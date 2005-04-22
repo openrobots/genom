@@ -32,7 +32,7 @@ $commentend$
 
 # --- paths -------------------------------------------------------------
 
-topbuild=	..
+topbuilddir=	  @top_builddir@
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
 
@@ -42,16 +42,17 @@ bindir=		@bindir@
 libdir=		@libdir@
 includedir=	@includedir@
 
+INSTALL=  @INSTALL@
 VPATH=		$(srcdir):$(GENFILE_PATH)/$(codelsdir)
 
-include $(topbuild)/config.mk
+include $(topbuilddir)/config.mk
 include $(topsrcdir)/$(autoconfdir)/config.$(OSAPI).mk
 
 
 # --- flags -------------------------------------------------------------
 
 CPPFLAGS+= $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
-CPPFLAGS+= -I. -I$(topbuild) -I$(srcdir) -I$(topsrcdir)
+CPPFLAGS+= -I. -I$(topbuilddir) -I$(srcdir) -I$(topsrcdir)
 CPPFLAGS+= $serversDir$ $(GENOM_INC) $(POCOLIBS_INC) $(EXTRA_INCLUDES)
 
 # GenoM flags
@@ -70,14 +71,14 @@ codels_obj=	$(codels_src:%.c=$(OBJDIR)/%.lo)
 all: $(OBJDIR) $(OBJDIR)/$(MODULE_BIN)
 
 $(OBJDIR)/$(MODULE_BIN): $(OBJDIR)/$(USER_LIB)
-$(OBJDIR)/$(MODULE_BIN): $(topbuild)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)
-$(OBJDIR)/$(MODULE_BIN): $(topbuild)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LIB)
+$(OBJDIR)/$(MODULE_BIN): $(topbuilddir)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)
+$(OBJDIR)/$(MODULE_BIN): $(topbuilddir)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LIB)
 
 $(OBJDIR)/$(MODULE_BIN):
 	$(LTLD) $(CFLAGS) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT)		\
-		$(topbuild)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)	\
+		$(topbuilddir)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)	\
 		$(OBJDIR)/$(USER_LIB)					\
-		$(topbuild)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LIB)	\
+		$(topbuilddir)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LIB)	\
 		$(EXTRA_LIBS) $(LTLK_GENOM_LIB)
 
 $(OBJDIR)/$(USER_LIB): $(codels_obj)
@@ -97,7 +98,7 @@ $(OBJDIR):
 install: all install-bin
 
 install-bin:
-	$(LTINSTALL) $(OBJDIR)/$(MODULE_BIN) $(bindir)/$module$/$(MODULE_BIN)
+	$(LTINSTALL) $(OBJDIR)/$(MODULE_BIN) $(bindir)/$(MODULE_BIN)
 
 
 # --- clean -------------------------------------------------------------
@@ -105,7 +106,7 @@ install-bin:
 .PHONY: clean
 
 clean: $(codels_obj)
-	$(topbuild)/libtool --mode=clean rm -f $^
+	$(topbuilddir)/libtool --mode=clean rm -f $^
 	rm -f $(OBJDIR)/$(MODULE_BIN)
 	rm -f $(OBJDIR)/dependencies
 

@@ -2,7 +2,6 @@
 
 /* 
  * Copyright (c) 1999-2003 LAAS/CNRS
- * Sara Fleury -   Apr  1 1999
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -29,36 +28,43 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#ifndef _PROPICEGEN_H
-#define _PROPICEGEN_H
 
-/* Canevas utilisé par propiceGen */
-#define PROTO_PROPICE_C         "propice/propice.c"
-#define PROTO_PROPICE_PROTO     "propice/propiceProto.h"
+/*----------------------------------------------------------------------
+ *   Automatically generated: do not edit by hand.
+ *----------------------------------------------------------------------*/
 
-/* Canevas utilisé par propiceDecodeGen */
-#define PROTO_PROPICE_RQST_OP   "propice/propiceRqst.op"
-#define PROTO_PROPICE_PSTR_OP   "propice/propicePoster.op"
-
-/* Canevas utilisé par propiceMakeGen */
-#define PROTO_PROPICE_MAKEFILE      "propice/Makefile"
-#define PROTO_PROPICE_MAKEFILE_PROTOS      "propice/Makefile.protos"
-#define PROTO_PROPICE_MAKEFILE_UNIX "propice/Makefile.unix"
-#define PROTO_PROPICE_MAKEFILE_VX   "propice/Makefile.vxworks"
-
-/* Canevas utilisé par propiceDecodeGen */
-#define PROTO_PROPICE_DECODE_C  "propice/propiceDecode.c"
-#define PROTO_PROPICE_DECODE_H  "propice/propiceDecode.h"
-
-/* Canevas utilisé par propiceEncodeGen */
-#define PROTO_PROPICE_ENCODE_C  "propice/propiceEncode.c"
-#define PROTO_PROPICE_ENCODE_H  "propice/propiceEncode.h"
-
-/* Prototypes des fonctions de generation */
-#include "propiceGenProto.h"
-#include "propiceMakeGenProto.h"
-#include "propiceEncodeGenProto.h"
-#include "propiceDecodeGenProto.h"
-#include "propiceOpGenProto.h"
-
+#ifndef UNIX
+#include <vxWorks.h>
+#else
+#include <portLib.h>
 #endif
+
+#ifdef UNIX
+#include <stdlib.h>
+#else
+#include <taskLib.h>
+#endif
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <string.h>
+
+#undef FREE
+
+#include <openprs/macro-pub.h>
+#include <openprs/opaque-pub.h>
+#include <openprs/constant-pub.h>
+#include <openprs/oprs-type-pub.h>
+#include <openprs/pu-mk-term_f.h>
+#include <openprs/pu-parse-tl_f.h>
+
+#include <openprs/oprs-type_f-pub.h>
+
+#include <openprs/pu-enum_f.h>
+#include <openprs/pu-genom_f.h>
+#include "$module$Type.h"
+
+
+#include "$module$PosterLib.h"
+
+#include "openprs/$module$DecodeOpenprs.h"

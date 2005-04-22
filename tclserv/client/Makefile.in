@@ -28,21 +28,21 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-TOPBUILD=../..
-
 topsrcdir=	@top_srcdir@
 srcdir=		@srcdir@
+topbuilddir= @top_builddir@
 
 prefix=		@prefix@
 exec_prefix=	@exec_prefix@
 libdir=		@libdir@
 datadir=	@datadir@
 
-include $(TOPBUILD)/config.mk
-
+INSTALL=  @INSTALL@
 VPATH=		$(srcdir)
 
-CPPFLAGS+=	-I$(TOPBUILD) -I$(topsrcdir)/include -I$(srcdir) -I.
+include $(topbuilddir)/config.mk
+
+CPPFLAGS+=	-I$(topbuilddir) -I$(topsrcdir)/include -I$(srcdir) -I.
 CPPFLAGS+=	$(PORTLIB_CFLAGS)
 CPPFLAGS+=	-D$(ENDIANNESS)
 
@@ -77,10 +77,15 @@ $(pkgfile): $(pkgfile).in
 
 .PHONY: install
 install:: $(pkgfile)
+	$(MKINSTALLDIRS) $(CANVASDIR)/tcl
 	@for f in $(tlist); do						\
-		$(LTINSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f;	\
+		if ! $(CMP) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f; then \
+				echo "$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f"; \
+				$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f;	\
+		fi; \
 	done
-	$(LTINSTALL_DATA) $(pkgfile) $(datadir)/genom/$(pkgfile)
+	$(MKINSTALLDIRS) $(datadir)/genom
+	$(INSTALL_DATA) $(pkgfile) $(datadir)/genom/$(pkgfile)
 
 
 # --- clean -------------------------------------------------------------

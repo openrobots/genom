@@ -27,7 +27,7 @@
  
 #include "h2errorLib.h"
 #include "genom/genomReportsLib.h"
-#include "genomReportsStd.h"
+#include "genom/genomReportsStd.h"
 
 /*------------------------- VARIABLES GLOBALES --------------------------*/
 /* message d'erreur */

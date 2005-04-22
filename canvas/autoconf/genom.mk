@@ -33,7 +33,7 @@ GENFILE=	$genomFile$
 
 GENFLAGS=	$genomIncludes$ $genomDefines$
 $genTcl$GENFLAGS+=	-t
-$genPropice$GENFLAGS+=	-x
+$genOpenprs$GENFLAGS+=	-x
 $genSpy$GENFLAGS+=	-s
 
 

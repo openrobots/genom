@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1999-2003 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -29,6 +29,19 @@
  * DAMAGE.
  */
 
-/* propiceOpGen.c */
-extern int propiceOpGen(FILE *out);
-extern char *getPropiceTYPE(TYPE_STR *type);
+/*----------------------------------------------------------------------
+ *   Automatically generated: do not edit by hand.
+ *----------------------------------------------------------------------*/
+
+#ifndef $MODULE$_OPENPRS_ENCODE_H
+#define $MODULE$_OPENPRS_ENCODE_H
+
+/* Structures definies par d'autres modules */
+$externOpenprsEncodeLibs$
+
+/* Structures du module */
+#include "$module$PosterLib.h"
+
+#include "openprs/$module$EncodeOpenprsProto.h"
+
+#endif /* $MODULE$_OPENPRS_ENCODE_H */

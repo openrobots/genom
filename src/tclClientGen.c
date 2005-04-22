@@ -235,7 +235,7 @@ tclClientGen(FILE *out)
       }
    }
 
-   script_close(out, "server/%sClient.tcl", module->name);
+   script_close(out, "server/tcl/%sClient.tcl", module->name);
    return 0;
 }
 

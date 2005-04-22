@@ -31,10 +31,10 @@
 #ifndef _TCLGEN_H
 #define _TCLGEN_H
 
-#define PROTO_TCL_PROLOG	"server/tclProlog.c" 
-#define PROTO_TCL_RQST		"server/tclRqst.c" 
-#define PROTO_TCL_POSTER	"server/tclPoster.c" 
-#define PROTO_TCL_EPILOG	"server/tclEpilog.c" 
+#define PROTO_TCL_PROLOG	"server/tcl/tclProlog.c" 
+#define PROTO_TCL_RQST		"server/tcl/tclRqst.c" 
+#define PROTO_TCL_POSTER	"server/tcl/tclPoster.c" 
+#define PROTO_TCL_EPILOG	"server/tcl/tclEpilog.c" 
 
 #include "tclGenProto.h"
 

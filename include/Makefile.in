@@ -28,36 +28,37 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-TOPBUILD=..
-include $(TOPBUILD)/config.mk
+topsrcdir=	 @top_srcdir@
+srcdir=		   @srcdir@
+topbuilddir= @top_builddir@
 
-topsrcdir=	@top_srcdir@
-srcdir=		@srcdir@
+prefix=		   @prefix@
+exec_prefix= @exec_prefix@
+includedir=	 @includedir@
 
-prefix=		@prefix@
-exec_prefix=	@exec_prefix@
-includedir=	@includedir@
-
+INSTALL=  @INSTALL@
 VPATH=		$(srcdir)
 
+include $(topbuilddir)/config.mk
 
 # -----------------------------------------------------------------------
-
-flist=\
-	genom/essayLib.h		\
-	genom/essayLibProto.h		\
-	genom/genomReportsLib.h		\
-	genom/genomReportsLibProto.h	\
-	genom/h2endian.h		\
-	genom/h2endianProto.h		\
-	genom/modules.h			\
-	genom/printScan.h		\
-	genom/printProto.h		\
-	genom/printXMLProto.h		\
-	genom/posterXMLLib.h		\
-	genom/scanProto.h
-
-
+flist = \
+				genom/essayLib.h \
+				genom/essayLibProto.h \
+				genom/genomReportsLib.h \
+				genom/genomReportsLibProto.h \
+				genom/genomReportsStd.h \
+				genom/h2endian.h \
+				genom/h2endianProto.h \
+				genom/moduleEvents.h \
+				genom/modules.h \
+				genom/posterXMLLib.h \
+				genom/printProto.h \
+				genom/printScan.h \
+				genom/printStateProto.h \
+				genom/printXMLProto.h \
+				genom/scanProto.h
+				
 # -----------------------------------------------------------------------
 
 .PHONY: all
@@ -65,8 +66,11 @@ all:;
 
 .PHONY: install
 install: all
+	$(MKINSTALLDIRS) $(includedir)/genom
 	@for f in $(flist); do						\
-		$(LTINSTALL_DATA) $(srcdir)/$$f $(includedir)/$$f;	\
+		if ! cmp -s $(srcdir)/$$f $(includedir)/$$f; then \
+				$(INSTALL_DATA) $(srcdir)/$$f $(includedir)/$$f;	\
+		fi; \
 	done
 
 .PHONY: clean

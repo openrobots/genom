@@ -134,6 +134,15 @@ ROBOT_PATH_LIB([genom], GENOM_LIBDIR, [genom], [h2GetEvnStateString],
 dnl tcl
 ROBOT_LIB_TCL
 
+AC_ARG_WITH(openprs,
+    AC_HELP_STRING([--with-openprs=path], [path to the OpenPRS installation]),
+    [
+     if test "x$withval" != "xno" -a "x$withval" != "x"; then
+         OPENPRS_CFLAGS="-I$withval/include"
+     fi
+    ]
+)
+
 
 dnl --- Check for extra software ----------------------------------------
 
@@ -174,4 +183,5 @@ AC_CONFIG_FILES(
 	[codels/Makefile]
 	[server/Makefile]
 )
+
 AC_OUTPUT

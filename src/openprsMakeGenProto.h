@@ -28,9 +28,9 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#ifndef H_PROPICEMAKEGENPROTO
-#define H_PROPICEMAKEGENPROTO
+#ifndef H_OPENPRSMAKEGENPROTO
+#define H_OPENPRSMAKEGENPROTO
 
-extern int propiceMakeGen ( FILE *out );
+extern int openprsMakeGen ( FILE *out );
 
-#endif /* H_PROPICEMAKEGENPROTO */
+#endif /* H_OPENPRSMAKEGENPROTO */

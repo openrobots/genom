@@ -28,9 +28,6 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#ifndef H_PROPICEENCODEGENPROTO
-#define H_PROPICEENCODEGENPROTO
 
-extern int propiceEncodeGen ( FILE *out );
-
-#endif /* H_PROPICEENCODEGENPROTO */
+/* openprsGen.c */
+extern int openprsGen(FILE *out);

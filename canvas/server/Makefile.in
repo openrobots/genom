@@ -32,9 +32,9 @@ $commentend$
 
 # --- paths -------------------------------------------------------------
 
-topbuild=	..
-topsrcdir=	@top_srcdir@
-srcdir=		@srcdir@
+topbuilddir=  @top_builddir@
+topsrcdir=	  @top_srcdir@
+srcdir=		    @srcdir@
 
 prefix=		@prefix@
 exec_prefix=	@exec_prefix@
@@ -43,11 +43,10 @@ libdir=		@libdir@
 includedir=	@includedir@
 datadir=	@datadir@/modules
 
+INSTALL=  @INSTALL@
 VPATH=		$(srcdir)
 
-
-
-include $(topbuild)/config.mk
+include $(topbuilddir)/config.mk
 include $(topsrcdir)/$(autoconfdir)/config.$(OSAPI).mk
 
 
@@ -118,32 +117,46 @@ connect_src= \
 posterwrite_src= \
 	$module$PosterWriteLib.c
 
-tclclient_src= \
-	$module$Tcl.c		\
-	$module$PosterLib.c	\
-	$module$Endian.c
-
-tclclient_tcl= \
-	$module$Client.tcl
-
-propiceclient_src= \
-	$module$DecodePropice.c \
-	$module$EncodePropice.c \
-	$module$RequestsPropice.c
-
 module_obj=	$(module_src:%.c=$(OBJDIR)/%.lo)
 client_obj=	$(client_src:%.c=$(OBJDIR)/%.lo)
 init_obj=	$(init_src:%.c=$(OBJDIR)/%.lo)
 essay_obj=	$(essay_src:%.c=$(OBJDIR)/%.lo)
 connect_obj=	$(connect_src:%.c=$(OBJDIR)/%.lo)
 posterwrite_obj=$(posterwrite_src:%.c=$(OBJDIR)/%.lo)
-tclclient_obj=	$(tclclient_src:%.c=$(OBJDIR)/%.lo)
-propiceclient_obj=$(propiceclient_src:%.c=$(OBJDIR)/%.lo)
+
+
+$genTcl$tclclient_src= \
+$genTcl$	tcl/$module$Tcl.c		\
+$genTcl$	$module$PosterLib.c	\
+$genTcl$	$module$Endian.c
+$genTcl$tclclient_obj=	$(tclclient_src:%.c=$(OBJDIR)/%.lo)
+$genTcl$
+$genTcl$tclclient_tcl= \
+$genTcl$	tcl/$module$Client.tcl
+
+$genOpenprs$openprsclient_src= \
+$genOpenprs$	openprs/$module$DecodeOpenprs.c \
+$genOpenprs$	openprs/$module$EncodeOpenprs.c \
+$genOpenprs$	openprs/$module$RequestsOpenprs.c
+$genOpenprs$openprsclient_obj=$(openprsclient_src:%.c=$(OBJDIR)/%.lo)
 
 
 # --- what to do --------------------------------------------------------
 
-all: $(OBJDIR) server client
+all: dirs server client
+
+dirs: $(OBJDIR)
+$genTcl$dirs: $(OBJDIR)/tcl
+$genOpenprs$dirs: $(OBJDIR)/openprs
+
+$(OBJDIR):
+	mkdir -p $@
+
+$(OBJDIR)/tcl:
+	mkdir -p $@
+
+$(OBJDIR)/openprs:
+	mkdir -p $@
 
 server: $(OBJDIR)/$(MODULE_LIB)
 server: $(OBJDIR)/$(INIT_BIN)
@@ -151,10 +164,7 @@ server: $(OBJDIR)/$(POSTERWRITE_LIB)
 
 client:: $(OBJDIR)/$(ESSAY_BIN) $(OBJDIR)/$(CONNECT)
 $genTcl$client:: $(OBJDIR)/$(TCLCLIENT_LIB)
-$genPropice$client:: $(OBJDIR)/$(PROPICECLIENT_LIB)
-
-$(OBJDIR):
-	mkdir -p $@
+$genOpenprs$client:: $(OBJDIR)/$(OPENPRSCLIENT_LIB)
 
 
 # --- libraries ---------------------------------------------------------
@@ -171,14 +181,14 @@ $(OBJDIR)/$(CLIENT_LIB): $(client_obj) $(SERVERS_CLIENT_LIB)
 	$(LTLD) $(CFLAGS) $(client_obj) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT) \
 		$(SERVERS_CLIENT_LIB)
 
-$(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj) $(SERVERS_ENDIAN_LIB)
-	$(LTLD) $(CFLAGS) $(tclclient_obj) $(SERVERS_ENDIAN_LIB) -o $@	\
-		$(LIBTOOL_LINKOPT) $(GENOM_LIB)				\
-		$(LDFLAGS) $(TCL_LDFLAGS)
+$genTcl$$(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj) $(SERVERS_ENDIAN_LIB)
+$genTcl$	$(LTLD) $(CFLAGS) $(tclclient_obj) $(SERVERS_ENDIAN_LIB) -o $@	\
+$genTcl$		$(LIBTOOL_LINKOPT) $(GENOM_LIB)				\
+$genTcl$		$(LDFLAGS) $(TCL_LDFLAGS)
 
-$(OBJDIR)/$(PROPICECLIENT_LIB): $(propiceclient_obj)
-	$(LTLD) $(CFLAGS) $(propiceclient_obj) -o $@ $(LDFLAGS)		\
-		$(GENOM_LIB) $(COM_LIB) $(OS_LIBS) -rpath $(libdir)
+$genOpenprs$$(OBJDIR)/$(OPENPRSCLIENT_LIB): $(openprsclient_obj)
+$genOpenprs$	$(LTLD) $(CFLAGS) $(openprsclient_obj) -o $@ $(LDFLAGS)		\
+$genOpenprs$		$(GENOM_LIB) $(COM_LIB) $(OS_LIBS) -rpath $(libdir)
 
 
 # --- binaries ----------------------------------------------------------
@@ -196,9 +206,9 @@ $(OBJDIR)/$(ESSAY_BIN): $(essay_obj) $(OBJDIR)/$(CLIENT_LIB) $(SERVERS_CLIENT_LI
 
 # --- basic rules -------------------------------------------------------
 
-$(tclclient_obj): $(OBJDIR)/%.lo: %.c
-	$(LTCC) -c $(CPPFLAGS) $(TCL_CPPFLAGS) -DDATADIR='"$(datadir)"' \
-		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
+$genTcl$$(tclclient_obj): $(OBJDIR)/%.lo: %.c
+$genTcl$	$(LTCC) -c $(CPPFLAGS) $(TCL_CPPFLAGS) -DDATADIR='"$(datadir)"' \
+$genTcl$		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
 $(OBJDIR)/%.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
@@ -220,7 +230,7 @@ install-data:
 	@for f in $(client_includes); do				\
 		$(LTINSTALL_DATA) $(srcdir)/../$$f $(includedir)/$module$/$$f;\
 	done
-	$genTcl$$(LTINSTALL_DATA) \
+	$genTcl$$(INSTALL_DATA) \
 		$(srcdir)/$(tclclient_tcl) $(datadir)/$(tclclient_tcl)
 
 
@@ -230,12 +240,15 @@ install-data:
 
 clean: $(module_obj) $(posterwrite_obj) $(client_obj) $(connect_obj)
 clean: $(init_obj) $(essay_obj)
-$genTcl$: $(tclclient_obj)
-$genPropice$clean: $(propiceclient_obj)
+$genTcl$clean: $(tclclient_obj)
+$genOpenprs$clean: $(openprsclient_obj)
 
 clean:
-	$(topbuild)/libtool --mode=clean rm -f $^
+	$(LTRM) $^
 	rm -f $(OBJDIR)/dependencies
+
+distclean: clean
+	rm -f Makefile
 
 
 # --- dependencies ------------------------------------------------------
@@ -255,8 +268,8 @@ depend $(OBJDIR)/dependencies::  $(client_src) $(connect_src)
 $genTcl$depend $(OBJDIR)/dependencies:: $(tclclient_src)
 $genTcl$	$(make_depend) $(TCL_CPPFLAGS) $?
 
-$genPropice$depend $(OBJDIR)/dependencies:: $(propiceclient_src)
-$genPropice$	$(make_depend) $(TCL_CPPFLAGS) $?
+$genOpenprs$depend $(OBJDIR)/dependencies:: $(openprsclient_src)
+$genOpenprs$	@$(make_depend) $(TCL_CPPFLAGS) $?
 
 ifneq (${MAKECMDGOALS},clean)
 -include $(OBJDIR)/dependencies

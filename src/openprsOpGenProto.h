@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1999-2003 LAAS/CNRS
+ * Copyright (c) 1993-2003 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -29,42 +29,6 @@
  * DAMAGE.
  */
 
-/*----------------------------------------------------------------------
- *   Automatically generated: do not edit by hand.
- *----------------------------------------------------------------------*/
-
-#ifndef UNIX
-#include <vxWorks.h>
-#else
-#include <portLib.h>
-#endif
-
-#ifdef UNIX
-#include <stdlib.h>
-#else
-#include <taskLib.h>
-#endif
-
-#include <stdio.h>
-#include <sys/types.h>
-#include <string.h>
-
-#undef FREE
-
-#include "macro-pub.h"
-#include "opaque-pub.h"
-#include "constant-pub.h"
-#include "propice-type-pub.h"
-#include "pu-mk-term_f.h"
-#include "pu-parse-tl_f.h"
-
-#include "propice-type_f-pub.h"
-
-#include "pu-enum_f.h"
-#include "pu-genom_f.h"
-#include "$module$Type.h"
-
-
-#include "$module$PosterLib.h"
-
-#include "propice/$module$DecodePropice.h"
+/* openprsOpGen.c */
+extern int openprsOpGen(FILE *out);
+extern char *getOpenprsTYPE(TYPE_STR *type);

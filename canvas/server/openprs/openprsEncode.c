@@ -33,15 +33,34 @@
  *   Automatically generated: do not edit by hand.
  *----------------------------------------------------------------------*/
 
-#ifndef $MODULE$_PROPICE_DECODE_H
-#define $MODULE$_PROPICE_DECODE_H
+#ifndef UNIX
+#include <vxWorks.h>
+#else
+#include <portLib.h>
+#endif
 
-/* Structures definies par d'autres modules */
-$externPropiceDecodeLibs$
+#ifdef UNIX
+#include <stdlib.h>
+#else
+#include <taskLib.h>
+#endif
+#include <stdio.h>
+#include <sys/types.h>
+#include <string.h>
 
-/* Structures du module */
+#undef FREE
+
+#include <openprs/macro-pub.h>
+#include <openprs/opaque-pub.h>
+#include <openprs/constant-pub.h>
+#include <openprs/oprs-type-pub.h>
+#include <openprs/pu-mk-term_f.h>
+#include <openprs/pu-parse-tl_f.h>
+
+#include <openprs/pu-enum_f.h>
+#include <openprs/pu-genom_f.h>
+
+#include "$module$Type.h"
 #include "$module$PosterLib.h"
+#include "openprs/$module$EncodeOpenprs.h"
 
-#include "propice/$module$DecodePropiceProto.h"
-
-#endif /* $MODULE$_PROPICE_DECODE_H */

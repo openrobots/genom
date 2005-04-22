@@ -43,10 +43,11 @@ if ($installUserPart == 1) {
   mirror_dir(".", "..", "^configure", "", 1);
   mirror_dir(".", "..", "^Makefile.in", "", 1);
 
-} else {
-  # Install server files
+} 
 
-  mirror_dir("server", "../$serverDir", "", "", 0);
-  mirror_dir("autoconf", "../$autoconfDir", "", "^configure", 1);
-}
+# Install server files
+mirror_dir("server", "../$serverDir", "", "", 0);
+mirror_dir("server/tcl", "../$tclDir", "", "", 0) if ($genTcl == 1); 
+mirror_dir("server/openprs", "../$openprsDir", "", "", 0) if ($genOpenprs == 1);
+mirror_dir("autoconf", "../$autoconfDir", "", "^configure", 1);
 

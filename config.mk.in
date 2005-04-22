@@ -43,14 +43,15 @@ CPP=		@CPP@
 STDINCPP=	@STDINCPP@
 PURIFY=		
 CC=		@CC@
-LTCC=           $(TOPBUILD)/libtool --mode=compile $(CC)
-LTLD=           $(TOPBUILD)/libtool --mode=link $(PURIFY) $(CC)
+LTCC=           $(topbuilddir)/libtool --mode=compile $(CC)
+LTLD=           $(topbuilddir)/libtool --mode=link $(PURIFY) $(CC)
 MKDEP=		@MKDEP@
 LEX=            @LEX@
 YACC=		@YACC@
-INSTALL=	$(topsrcdir)/install-sh -c
-LTINSTALL=	$(TOPBUILD)/libtool --mode=install $(INSTALL)
-LTINSTALL_DATA=	$(TOPBUILD)/libtool --mode=install $(INSTALL) -m 644
+LTINSTALL=	$(topbuilddir)/libtool --mode=install $(INSTALL)
+INSTALL_DATA=	$(INSTALL) -m 644
+MKINSTALLDIRS= $(topsrcdir)/mkinstalldirs
+CMP=cmp -s
 
 SED=		sed
 LATEX=		@LATEX@
