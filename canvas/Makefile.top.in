@@ -76,7 +76,7 @@ make_subdirs=\
 
 .PHONY: regen
 regen:
-	(cd $(topsrcdir); $(GENOM) $(GENFLAGS) $(GENFILE))
+	(cd $(topsrcdir); $(GENOM) $(GENFLAGS) $(GENFILE) $(NEWARGS))
 	./config.status
 
 
