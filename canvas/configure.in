@@ -13,11 +13,12 @@ AC_CANONICAL_HOST
 
 dnl --- checks for programs ---------------------------------------------
 dnl
-ROBOT_CFLAGS
-ROBOT_PROG_MKDEP
-
+AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
+
+ROBOT_CFLAGS
+ROBOT_PROG_MKDEP
 
 dnl Checks for headers --------------------------------------------------
 dnl
