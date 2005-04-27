@@ -28,8 +28,8 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-topbuilddir= @top_builddir@
-topsrcdir=	 @top_srcdir@
+top_builddir= @top_builddir@
+top_srcdir=	 @top_srcdir@
 srcdir=		   @srcdir@
 
 prefix=		@prefix@
@@ -39,13 +39,14 @@ datadir=	@datadir@
 INSTALL=  @INSTALL@
 VPATH=		$(srcdir)
 
-include $(topbuilddir)/config.mk
+include $(top_builddir)/config.mk
 
 # -----------------------------------------------------------------------
 
 # autoconf/libtool
 flist=\
 	autoconf/install-sh		\
+	autoconf/mkinstalldirs		\
 	autoconf/config.sub		\
 	autoconf/config.guess		\
 	autoconf/ltmain.sh		\
@@ -54,7 +55,9 @@ flist=\
 	autoconf/genom.mk		\
 	autoconf/config.posix.mk	\
 	autoconf/config.rtai.mk		\
-	autoconf/config.mk.in
+	autoconf/config.mk.in           \
+	autoconf/codels.mk		\
+	autoconf/local.mk
 
 # server templates
 flist+=\
@@ -128,6 +131,7 @@ flist+=\
 	configure			\
 	configure.in			\
 	aclocal.m4			\
+	acinclude.m4			\
 	start.pl			\
 	end.pl
 
@@ -141,14 +145,13 @@ all:;
 .PHONY: install
 install: all
 	@for d in $(dirs); do \
-		$(MKINSTALLDIRS) $(CANVASDIR)/$$d; \
-  done
-
+	    $(MKINSTALLDIRS) $(CANVASDIR)/$$d; \
+	done
 	@for f in $(flist); do						\
-		if ! $(CMP) $(srcdir)/$$f $(CANVASDIR)/$$f; then \
-				echo "$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/$$f";	\
-				$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/$$f;	\
-		fi; \
+	    if ! $(CMP) $(srcdir)/$$f $(CANVASDIR)/$$f; then \
+		echo "$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/$$f";	\
+		$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/$$f;	\
+	    fi; \
 	done
 
 .PHONY: clean distclean

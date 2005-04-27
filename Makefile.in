@@ -30,9 +30,9 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-topsrcdir=	@top_srcdir@
+top_srcdir=	@top_srcdir@
 srcdir=		@srcdir@
-topbuilddir=.
+top_builddir=.
 
 include config.mk
 
@@ -92,7 +92,7 @@ distclean:
 
 dist:
 	mkdir -p $(dist_path)
-	(cd $(topsrcdir); tar cf - .) | (cd $(dist_path); tar xpf -)
+	(cd $(top_srcdir); tar cf - .) | (cd $(dist_path); tar xpf -)
 	find $(dist_path) -name "CVS" | xargs rm -rf
 	find $(dist_path) -name "*~" | xargs rm -rf
 	find $(dist_path) -name "autom4te.cache" | xargs rm -rf
@@ -102,16 +102,16 @@ dist:
 
 # --- autoconf/autoheader -----------------------------------------------
 
-config.status: $(topsrcdir)/configure
+config.status: $(top_srcdir)/configure
 	./config.status --recheck
 
 libtool: $(LIBTOOL_DEPS)
 	./config.status --recheck
 
-$(config_files): %: $(topsrcdir)/%.in config.status
+$(config_files): %: $(top_srcdir)/%.in config.status
 	CONFIG_FILES=$@ CONFIG_HEADERS= ./config.status
 
-$(config_headers): %: $(topsrcdir)/%.in config.status
+$(config_headers): %: $(top_srcdir)/%.in config.status
 	CONFIG_FILES= CONFIG_HEADERS=$@ ./config.status
 	touch $@
 

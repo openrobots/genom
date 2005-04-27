@@ -29,9 +29,9 @@
 #
 
 
-topsrcdir=	 @top_srcdir@
+top_srcdir=	 @top_srcdir@
 srcdir=		   @srcdir@
-topbuilddir= @top_builddir@
+top_builddir= @top_builddir@
 
 prefix=		   @prefix@
 exec_prefix= @exec_prefix@
@@ -40,7 +40,7 @@ datadir=	   @datadir@/genom
 INSTALL=  @INSTALL@
 VPATH=		$(srcdir)
 
-include $(topbuilddir)/config.mk
+include $(top_builddir)/config.mk
 
 # -----------------------------------------------------------------------
 

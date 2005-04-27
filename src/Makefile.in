@@ -28,9 +28,9 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-topsrcdir=	 @top_srcdir@
+top_srcdir=	 @top_srcdir@
 srcdir=	 	   @srcdir@
-topbuilddir= @top_builddir@
+top_builddir= @top_builddir@
 
 prefix=		@prefix@
 exec_prefix=	@exec_prefix@
@@ -42,9 +42,9 @@ datadir=	@datadir@
 INSTALL=  @INSTALL@
 VPATH=		$(srcdir)
 
-include $(topbuilddir)/config.mk
+include $(top_builddir)/config.mk
 
-CPPFLAGS+=	-I$(topbuilddir) -I$(topsrcdir)/include -I$(srcdir) -I.
+CPPFLAGS+=	-I$(top_builddir) -I$(top_srcdir)/include -I$(srcdir) -I.
 CPPFLAGS+=	$(PORTLIB_CFLAGS)
 
 LDFLAGS+=	@LEXLIB@
@@ -120,7 +120,7 @@ parser.tab.lo: parser.tab.c
 	$(YACC) -v -d -b $* $<
 
 clean:
-	$(topbuilddir)/libtool --mode=clean rm -f $(OBJS) $(GENOM)
+	$(top_builddir)/libtool --mode=clean rm -f $(OBJS) $(GENOM)
 	rm -f $(SRCS_YACC:%.y=%.tab.h) $(SRCS_YACC:%.y=%.tab.c) parser.output
 	rm -f $(SRCS_LEX:%.l=%.lex.c)
 

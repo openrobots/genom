@@ -32,94 +32,22 @@ $commentend$
 
 # --- paths -------------------------------------------------------------
 
-topbuilddir=	  @top_builddir@
-topsrcdir=	@top_srcdir@
+top_builddir=	@top_builddir@
+top_srcdir=	@top_srcdir@
 srcdir=		@srcdir@
+builddir=       @builddir@
 
-prefix=		@prefix@
-exec_prefix=	@exec_prefix@
-bindir=		@bindir@
-libdir=		@libdir@
-includedir=	@includedir@
+INSTALL=  	@INSTALL@
+VPATH=	  	$(srcdir)
 
-INSTALL=  @INSTALL@
-VPATH=		$(srcdir):$(GENFILE_PATH)/$(codelsdir)
-
-include $(topbuilddir)/config.mk
-include $(topsrcdir)/$(autoconfdir)/config.$(OSAPI).mk
-
-
-# --- flags -------------------------------------------------------------
-
-CPPFLAGS+= $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
-CPPFLAGS+= -I. -I$(topbuilddir) -I$(srcdir) -I$(topsrcdir)
-CPPFLAGS+= $serversDir$ $(GENOM_INC) $(POCOLIBS_INC) $(EXTRA_INCLUDES)
-
-# GenoM flags
-include $(topsrcdir)/$(autoconfdir)/genom.mk
-
+include $(top_builddir)/config.mk
 # --- source files ------------------------------------------------------
 
 codels_src = \
 $codel_files$
 
-codels_obj=	$(codels_src:%.c=$(OBJDIR)/%.lo)
-
-
 # --- compilation -------------------------------------------------------
-
-all: $(OBJDIR) $(OBJDIR)/$(MODULE_BIN)
-
-$(OBJDIR)/$(MODULE_BIN): $(OBJDIR)/$(USER_LIB)
-$(OBJDIR)/$(MODULE_BIN): $(topbuilddir)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)
-$(OBJDIR)/$(MODULE_BIN): $(topbuilddir)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LIB)
-
-$(OBJDIR)/$(MODULE_BIN):
-	$(LTLD) $(CFLAGS) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT)		\
-		$(topbuilddir)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)	\
-		$(OBJDIR)/$(USER_LIB)					\
-		$(topbuilddir)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LIB)	\
-		$(EXTRA_LIBS) $(LTLK_GENOM_LIB)
-
-$(OBJDIR)/$(USER_LIB): $(codels_obj)
-	$(LTLD) -static $(CFLAGS) $(codels_obj) -o $@ $(LDFLAGS) \
-		$(LIBTOOL_LINKOPT)
-
-$(OBJDIR)/%.lo: %.c
-	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
-
-$(OBJDIR):
-	mkdir -p $@
-
-# --- install -----------------------------------------------------------
-
-.PHONY: install install-bin
-
-install: all install-bin
-
-install-bin:
-	$(LTINSTALL) $(OBJDIR)/$(MODULE_BIN) $(bindir)/$(MODULE_BIN)
+include $(top_srcdir)/$(autoconfdir)/codels.mk
+include $(top_srcdir)/$(autoconfdir)/config.$(OSAPI).mk
 
 
-# --- clean -------------------------------------------------------------
-
-.PHONY: clean
-
-clean: $(codels_obj)
-	$(topbuilddir)/libtool --mode=clean rm -f $^
-	rm -f $(OBJDIR)/$(MODULE_BIN)
-	rm -f $(OBJDIR)/dependencies
-
-
-# --- dependencies ------------------------------------------------------
-
-.PHONY: depend
-depend $(OBJDIR)/dependencies:: $(OBJDIR);
-
-depend $(OBJDIR)/dependencies:: $(codels_src)
-	$(MKDEP) -c$(CC) -o$(OBJDIR)/dependencies -d$(OBJDIR) -t.lo \
-		$(CPPFLAGS) $?
-
-ifneq (${MAKECMDGOALS},clean)
--include $(OBJDIR)/dependencies
-endif

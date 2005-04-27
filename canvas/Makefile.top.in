@@ -30,21 +30,20 @@ $commentbegin$
 #
 $commentend$
 
-topbuilddir=.
-topsrcdir=	@top_srcdir@
+top_builddir=.
+top_srcdir=	@top_srcdir@
 srcdir=		@srcdir@
 
-include $(topbuilddir)/config.mk
+include $(top_builddir)/config.mk
 
-SUBDIRS= $(serverdir) $(codelsdir)
+SUBDIRS= $(serverdir) $(codelsdir
 
 config_files = \
-	Makefile		\
-	$(serverdir)/Makefile	\
-	$(codelsdir)/Makefile
+	Makefile \
+	$(addsuffix /Makefile,$(SUBDIRS))
 
 # GenoM flags
-include $(topsrcdir)/$(autoconfdir)/genom.mk
+include $(top_srcdir)/$(autoconfdir)/genom.mk
 
 
 # --- Directory recursion -----------------------------------------------
@@ -74,9 +73,13 @@ make_subdirs=\
 
 # --- genom -------------------------------------------------------------
 
-.PHONY: regen
+.PHONY: regen regen-user
+regen-user:
+	(cd $(top_srcdir); $(GENOM) -i $(GENFLAGS) $(GENFILE) $(NEWARGS))
+	./config.status
+
 regen:
-	(cd $(topsrcdir); $(GENOM) $(GENFLAGS) $(GENFILE) $(NEWARGS))
+	(cd $(top_srcdir); $(GENOM) $(GENFLAGS) $(GENFILE) $(NEWARGS))
 	./config.status
 
 
@@ -84,14 +87,20 @@ regen:
 
 LIBTOOL_DEPS=   @LIBTOOL_DEPS@
 
-./config.status: $(topsrcdir)/configure
+./config.status: $(top_srcdir)/configure
 	./config.status --recheck
 
 libtool: $(LIBTOOL_DEPS)
 	./config.status --recheck
 
-config.mk: $(topsrcdir)/$(autoconfdir)/config.mk.in
+config.mk: $(top_srcdir)/$(autoconfdir)/config.mk.in
 	CONFIG_FILES='$@:$<' CONFIG_HEADERS= ./config.status
 
-$(config_files): %: $(topsrcdir)/%.in config.status
+# config_files contains Makefile
+# If we do not disable this in regen* targets, --recheck
+# gets called before the regen
+ifeq ($(findstring $(MAKECMDGOALS),regen),)
+$(config_files): %: $(top_srcdir)/%.in config.status
 	CONFIG_FILES=$@ CONFIG_HEADERS= ./config.status
+endif
+
