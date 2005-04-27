@@ -34,6 +34,8 @@ use strict;
 # End of script for module generation
 #----------------------------------------------------------------------
 
+# mirror_dir source dest include exclude confirm
+
 if ($installUserPart == 1) {
   # Install user files
 
@@ -42,12 +44,13 @@ if ($installUserPart == 1) {
   mirror_dir(".", "..", "^aclocal.m4", "", 1);
   mirror_dir(".", "..", "^configure", "", 1);
   mirror_dir(".", "..", "^Makefile.in", "", 1);
-
+  mirror_dir("autoconf", "../$autoconfDir", "^(?:local\.mk)", 1);
 } 
 
 # Install server files
 mirror_dir("server", "../$serverDir", "", "", 0);
 mirror_dir("server/tcl", "../$tclDir", "", "", 0) if ($genTcl == 1); 
 mirror_dir("server/openprs", "../$openprsDir", "", "", 0) if ($genOpenprs == 1);
-mirror_dir("autoconf", "../$autoconfDir", "", "^configure", 1);
+mirror_dir("autoconf", "../$autoconfDir", "", "^(?:configure|local.mk)", 0);
+mirror_dir(".", "..", "^acinclude.m4", "", 1);
 
