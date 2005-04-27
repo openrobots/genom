@@ -34,6 +34,7 @@
 #define PROTO_CONFIGURE		"configure" 
 #define PROTO_CONFIGURE_IN	"configure.in" 
 #define PROTO_INSTALL		"autoconf/install-sh" 
+#define PROTO_MKINSTALLDIRS	"autoconf/mkinstalldirs" 
 #define PROTO_CONFIGSUB		"autoconf/config.sub" 
 #define PROTO_CONFIGGUESS	"autoconf/config.guess" 
 #define PROTO_LTMAIN		"autoconf/ltmain.sh" 
@@ -41,10 +42,13 @@
 #define PROTO_ROBOTS_M4		"autoconf/robots.m4" 
 #define PROTO_LIBTOOL_M4	"autoconf/libtool.m4" 
 #define PROTO_ACLOCAL_M4	"aclocal.m4" 
+#define PROTO_ACINCLUDE_M4	"acinclude.m4" 
 
 #define PROTO_CONFIG_MK		"autoconf/config.mk.in"
 #define PROTO_CONFIG_POSIX_MK	"autoconf/config.posix.mk"
 #define PROTO_CONFIG_RTAI_MK	"autoconf/config.rtai.mk"
+#define PROTO_CONFIG_LOCAL_MK   "autoconf/local.mk"
+#define PROTO_CONFIG_CODELS_MK	"autoconf/codels.mk"
 #define PROTO_GENOM_MK		"autoconf/genom.mk"
 
 #define PROTO_MAKEFILE_TOP	"Makefile.top.in"

@@ -1374,6 +1374,8 @@ identificateur:
  ***/
 
 int yydebug;
+/*----------------------------------------------------------------------*/
+
 static char *callCpp(char *nomFic, char *cppOptions[]);
 
 /**
@@ -1411,7 +1413,6 @@ main(int argc, char **argv)
     static const char *nomstamp = "genom-stamp";
     FILE *stamp;
     ID_LIST *il;
-    ID_LIST *il2;
     int installUserPart = 0;
     char *cmdLine=NULL;
     int i;
@@ -1478,10 +1479,10 @@ main(int argc, char **argv)
 		fprintf(stderr, "%s: too many options for cpp\n", argv[0]);
 		exit(-1);
 	    }
-	    il2 = STR_ALLOC(ID_LIST);
-	    il2->name = strdup(path);
-	    il2->next = externPath;
-	    externPath = il2;
+	    il = STR_ALLOC(ID_LIST);
+	    il->name = strdup(optarg);
+	    il->next = externPath;
+	    externPath = il;
 	    break;
 	  case 'J':
 	    if (!(equal = strstr(optarg, "=")))
@@ -1497,7 +1498,7 @@ main(int argc, char **argv)
 	    pathmacro[equal-optarg] = '\0';
 
 	    /* make option for cpp with the path */
-	    sprintf(nomout, "-I%s", path);
+	    sprintf(nomout, "-I%s/include/%s", path, pathmacro);
 	    if (nCppOptions < MAX_CPP_OPT - 1) {
 		cppOptions[nCppOptions++] = strdup(nomout);
 	    } else {
@@ -1510,10 +1511,10 @@ main(int argc, char **argv)
 	    il->name = strdup(pathmacro);
 	    il->next = externPathMacro;
 	    externPathMacro = il;
-	    il2 = STR_ALLOC(ID_LIST);
-	    il2->name = strdup(path);
-	    il2->next = externPathMacroPath;
-	    externPathMacroPath = il2;
+	    il = STR_ALLOC(ID_LIST);
+	    il->name = strdup(path);
+	    il->next = externPathMacroPath;
+	    externPathMacroPath = il;
 
 	    break;
 	  case 'd':
@@ -1721,7 +1722,7 @@ main(int argc, char **argv)
     fprintf(sortie, "use vars qw($module $genOpenprs $genTcl $codelsDir $autoconfDir $serverDir $installUserPart $openprsDir $tclDir);\n");
     fprintf(sortie, "$module=\"%s\";\n", module->name);
     fprintf(sortie, "$genOpenprs=%d;\n", genOpenprs);
-    fprintf(sortie, "$genTcl=%d;\n", genOpenprs);
+    fprintf(sortie, "$genTcl=%d;\n", genTcl);
 
     fprintf(sortie, "$codelsDir=\"%s\";\n\n", codelsDir);
     fprintf(sortie, "$autoconfDir=\"%s\";\n\n", autoconfDir);
@@ -1889,6 +1890,7 @@ callCpp(char *nomFic, char *cppOptions[])
        }
     }
 
+    fputs("Running cpp with options ", stderr);
     for(j=0; cppOptions[j] != NULL;) {
        if (i > MAX_CPP_OPT) {
 	  fputs("too many options to cpp\n", stderr);
@@ -1896,6 +1898,7 @@ callCpp(char *nomFic, char *cppOptions[])
 	  exit(2);
        }
 
+        fputs(cppOptions[j], stderr);
        cppArg[i++] = cppOptions[j++];
     }
 
@@ -1926,5 +1929,4 @@ callCpp(char *nomFic, char *cppOptions[])
     }
     return(tmpName);
 } /* callCpp */
-    
-/*----------------------------------------------------------------------*/
+

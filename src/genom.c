@@ -54,6 +54,16 @@ POSTERS_INPUT_LIST *posters_input=NULL;
  ***/
 /*----------------------------------------------------------------------*/
 
+static char* strcpytoupper(char const* value)
+{
+    char* result = (char*)xalloc(strlen(value) + 1);
+    int i;
+    for (i = 0; value[i] != '\0'; 
+            result[i] = toupper(value[i]), i++);
+    result[i] = '\0';
+    return result;
+}
+
 /**
  ** Conversion des noms de module, de taches, de posters et de requetes
  ** en majuscules 
@@ -84,59 +94,30 @@ upCaseNames(void)
     /* Noms des taches d'execution */
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
-	t->NAME = (ID_STR *)xalloc(strlen(t->name) + 1);
-	for (i = 0; t->name[i] != '\0'; 
-	     t->NAME[i] = toupper(t->name[i]), i++);
-	t->NAME[i] = '\0';
-	/* noms des modules serveurs */
-	for (ln = t->cs_client_from; ln != NULL; ln = ln->next) {
-	    ln->NAME = (ID_STR *)xalloc(strlen(ln->name) + 1);
-	    for (i = 0; ln->name[i] != '\0'; 
-		 ln->NAME[i] = toupper(ln->name[i]), i++);
-	    ln->NAME[i] = '\0';
-	} /* for */
-
-	/* noms des modules posters */
-	for (ln = t->poster_client_from; ln != NULL; ln = ln->next) {
-	    ln->NAME = (ID_STR *)xalloc(strlen(ln->name) + 1);
-	    for (i = 0; ln->name[i] != '\0'; 
-		 ln->NAME[i] = toupper(ln->name[i]), i++);
-	    ln->NAME[i] = '\0';
-	} /* for */
+        t->NAME = strcpytoupper(t->name);
     } /* for */
 
     /* Noms des requetes */
     for (lr = requetes; lr != NULL; lr = lr->next) {
 	r = lr->rqst;
-	r->NAME = (ID_STR *)xalloc(strlen(r->name) + 1);
-	for (i = 0; r->name[i] != '\0';
-	     r->NAME[i] = toupper(r->name[i]), i++);
-	r->NAME[i] = '\0';
+        r->NAME = strcpytoupper(r->name);
     } /* for */
     
     /* Noms des posters */
-    for (p = posters; p != NULL; p = p->next) {
-	p->NAME = (ID_STR *)xalloc(strlen(p->name) + 1);
-	for (i = 0; p->name[i] != '\0';
-	     p->NAME[i] = toupper(p->name[i]), i++);
-	p->NAME[i] = '\0';
-    } /* for */
+    for (p = posters; p != NULL; p = p->next)
+        p->NAME = strcpytoupper(p->name);
 
-    /* Noms des posters IN */
-    for (p_in = posters_input; p_in != NULL; p_in = p_in->next) {
-	p_in->NAME = (ID_STR *)xalloc(strlen(p_in->name) + 1);
-	for (i = 0; p_in->name[i] != '\0';
-	     p_in->NAME[i] = toupper(p_in->name[i]), i++);
-	p_in->NAME[i] = '\0';
-    } /* for */
+    /* Posters_input */
+    for (p_in = posters_input; p_in != NULL; p_in = p_in->next)
+        p_in->NAME = strcpytoupper(p_in->name);
+
+    /* -J */
+    for (ln = externPathMacro; ln != NULL; ln = ln->next)
+        ln->NAME = strcpytoupper(ln->name);
 
     /* Noms des bibliotheques exterieures */
-    for (ln = externLibs; ln != NULL; ln = ln->next) {
-	ln->NAME = (ID_STR *)xalloc(strlen(ln->name) + 1);
-	for (i = 0; ln->name[i] != '\0'; 
-		    ln->NAME[i] = toupper(ln->name[i]), i++);
-	ln->NAME[i] = '\0';
-    } /* for */
+    for (ln = externLibs; ln != NULL; ln = ln->next)
+        ln->NAME = strcpytoupper(ln->name);
 	
 } /* upCaseNames */
 
