@@ -35,7 +35,7 @@
 BINEXT=
 LIBEXT=.la
 LIBTOOL_COPT=
-LIBTOOL_LINKOPT= -rpath $(libdir)/$(module)
+LIBTOOL_LINKOPT= -rpath $(libdir)
 
 LIBTOOL_LINKPORTLIB=	-lportLib
 LIBTOOL_LINKERRORLIB=	-lerrorLib
