@@ -37,21 +37,32 @@ codelsdir=	$codelsDir$
 serverdir=	server
 autoconfdir=	autoconf
 
+prefix=         @prefix@
+exec_prefix=    @exec_prefix@
+
+prefix=		@prefix@
+exec_prefix=	@exec_prefix@
+bindir=		@bindir@
+libdir=		@libdir@
+includedir=	@includedir@/$module$
+datadir=	@datadir@/modules
 
 # --- Programs ----------------------------------------------------------
 
 CPP=		@CPP@
 PURIFY=		
 CC=		@CC@
-SED=		  sed
-
-LTCC=     $(topbuilddir)/libtool --mode=compile $(CC)
-LTLD=     $(topbuilddir)/libtool --mode=link $(PURIFY) $(CC)
+SED=		sed
 MKDEP=		@MKDEP@
-INSTALL=	$(topsrcdir)/$(autoconfdir)/install-sh -c
-LTINSTALL=	    $(topbuilddir)/libtool --mode=install $(INSTALL)
-INSTALL_DATA=	$(topbuilddir)/libtool --mode=install $(INSTALL) -m 644
-LTRM=     $(topbuilddir)/libtool --mode=clean rm -f
+MKINSTALLDIRS=  $(top_srcdir)/autoconf/mkinstalldirs
+
+LIBTOOL=        @LIBTOOL@ 
+LTCC=           $(LIBTOOL) --mode=compile $(CC)
+LTLD=           $(LIBTOOL) --mode=link $(PURIFY) $(CC)
+LTRM=           $(LIBTOOL) --mode=clean rm -f
+LTINSTALL=	$(LIBTOOL) --mode=install $(INSTALL)
+
+INSTALL_DATA=	$(INSTALL) -m 644
 
 # --- Libraries ---------------------------------------------------------
 
@@ -62,6 +73,7 @@ ESSAY_BIN=	$module$Essay$(BINEXT)
 
 # client libraries
 CLIENT_LIB=		lib$module$Client$(LIBEXT)
+MY_CLIENT_LIB=          $(GENOM_LIB) $(abs_top_builddir)/server/$(OBJDIR)/$(CLIENT_LIB)
 TCLCLIENT_LIB=		lib$module$TclServ$(LIBEXT)
 PRSCLIENT_LIB=	lib$module$Openprs$(LIBEXT)
 
