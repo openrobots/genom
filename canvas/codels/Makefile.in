@@ -46,6 +46,9 @@ include $(top_builddir)/config.mk
 codels_src = \
 $codel_files$
 
+# EXTRA_INCLUDES +=
+# EXTRA_LIBS +=
+
 # --- compilation -------------------------------------------------------
 include $(top_srcdir)/$(autoconfdir)/codels.mk
 include $(top_srcdir)/$(autoconfdir)/config.$(OSAPI).mk
