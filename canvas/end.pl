@@ -29,6 +29,7 @@
 #
 
 use strict;
+use File::stat;
 
 #----------------------------------------------------------------------
 # End of script for module generation
@@ -41,9 +42,8 @@ if ($installUserPart == 1) {
 
   mirror_dir("codels", "../$codelsDir", "", "", 1);
 
-  mirror_dir(".", "..", "^aclocal.m4", "", 1);
-  mirror_dir(".", "..", "^configure", "", 1);
   mirror_dir(".", "..", "^Makefile.in", "", 1);
+  mirror_dir(".", "..", "^configure.in.in", "", 1);
   mirror_dir("autoconf", "../$autoconfDir", "^(?:local\.mk)", 1);
 } 
 
@@ -51,6 +51,70 @@ if ($installUserPart == 1) {
 mirror_dir("server", "../$serverDir", "", "", 0);
 mirror_dir("server/tcl", "../$tclDir", "", "", 0) if ($genTcl == 1); 
 mirror_dir("server/openprs", "../$openprsDir", "", "", 0) if ($genOpenprs == 1);
-mirror_dir("autoconf", "../$autoconfDir", "", "^(?:configure|local.mk)", 0);
+mirror_dir("autoconf", "../$autoconfDir", "", "^(?:local.mk)", 0);
 mirror_dir(".", "..", "^acinclude.m4", "", 1);
+mirror_dir(".", "..", "^autogen.sh", "", 0);
+
+
+
+# Do +x on autogen.sh
+my $autogen = "../autogen.sh";
+my $autogen_mode = stat($autogen)->mode & 07777;
+
+chmod ((0111|$autogen_mode), $autogen);
+
+
+
+
+# Checks if configure is up to date
+sub is_autoconf_fresh() {
+    #  the configure script
+    my $autoconf_dst = "../configure";
+    #  its sources
+    my @autoconf_src = 
+    (
+        "../$autoconfDir/configure.begin.in",
+        "../$autoconfDir/configure.end.in",
+        "../configure.in.in", 
+        "../acinclude.m4"
+    );
+
+    my $aconf_regen = 0;
+
+    if ( -r $autoconf_dst)
+    {
+        my $configure = stat($autoconf_dst);
+        foreach my $source (@autoconf_src)
+        {
+            next if ( ! -r $source );
+            my $mtime = stat($source)->mtime;
+
+            if ( $mtime > $configure->mtime )
+            {
+                print "\n$source $mtime\n";
+                $aconf_regen = 1;
+                last;
+            }
+        }
+    }
+    else
+    {
+        $aconf_regen = 1;
+    }
+
+    return $aconf_regen;
+
+}
+
+my $aconf_regen = is_autoconf_fresh;
+if ($aconf_regen)
+{
+    print "
+    Some files related to the configure environment
+    have changed. Running autogen.sh
+    ";
+
+    chdir "..";
+    exec "./autogen.sh";
+}
 

@@ -36,7 +36,7 @@ srcdir=		@srcdir@
 
 include $(top_builddir)/config.mk
 
-SUBDIRS= $(serverdir) $(codelsdir
+SUBDIRS= $(serverdir) $(codelsdir)
 
 config_files = \
 	Makefile \
@@ -75,12 +75,18 @@ make_subdirs=\
 
 .PHONY: regen regen-user
 regen-user:
-	(cd $(top_srcdir); $(GENOM) -i $(GENFLAGS) $(GENFILE) $(NEWARGS))
-	./config.status
+	( cd $(top_srcdir) && $(GENOM) -i $(GENFLAGS) $(GENFILE) $(NEWARGS) )
+	@if test $(top_srcdir)/configure -nt ./config.status; then \
+	    ./config.status --recheck; \
+	fi
+	@./config.status
 
 regen:
-	(cd $(top_srcdir); $(GENOM) $(GENFLAGS) $(GENFILE) $(NEWARGS))
-	./config.status
+	( cd $(top_srcdir) && $(GENOM) $(GENFLAGS) $(GENFILE) $(NEWARGS) )
+	@if test $(top_srcdir)/configure -nt ./config.status; then \
+	    ./config.status --recheck; \
+	fi
+	@./config.status
 
 
 # --- autoconf/autoheader -----------------------------------------------

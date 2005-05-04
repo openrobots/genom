@@ -83,11 +83,11 @@ USER_LIB=		lib$module$Codels.la
 POSTERWRITE_LIB=	lib$module$PosterWrite.la
 
 # --- Servers -----------------------------------------------------------
-$genomJOptionsAndServers$
+$genomPackages$
 
 # --- Libraries required ------------------------------------------------
 
-SERVERS_CLIENT_LIB=  $serversClientLib$
+SERVERS_CLIENT_LIB=  $serverLibs$
 SERVERS_ENDIAN_LIB=  $(SERVERS_CLIENT_LIB)
 
 # --- Flags -------------------------------------------------------------
@@ -113,6 +113,7 @@ LDFLAGS=	@LDFLAGS@
 OBJDIR=		$(OSAPI)-obj
 
 OS_LIBS=	@OS_LIBS@
+LIBMATH=        @LIBMATH@
 
 RTAI_INC=	@RTAI_INC@
 KERNEL_INC=	@KERNEL_INC@

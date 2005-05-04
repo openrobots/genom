@@ -1,0 +1,8 @@
+AC_CONFIG_FILES(
+	[config.mk:autoconf/config.mk.in]
+	[Makefile]
+	[codels/Makefile]
+	[server/Makefile]
+)
+
+AC_OUTPUT

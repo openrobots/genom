@@ -28,9 +28,10 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-top_builddir= @top_builddir@
-top_srcdir=	 @top_srcdir@
-srcdir=		   @srcdir@
+top_builddir=   @top_builddir@
+top_srcdir=	@top_srcdir@
+srcdir=		@srcdir@
+builddir=	@builddir@
 
 prefix=		@prefix@
 exec_prefix=	@exec_prefix@
@@ -45,6 +46,7 @@ include $(top_builddir)/config.mk
 
 # autoconf/libtool
 flist=\
+	autoconf/acinclude.m4		\
 	autoconf/install-sh		\
 	autoconf/mkinstalldirs		\
 	autoconf/config.sub		\
@@ -127,13 +129,18 @@ flist+=\
 
 # top level templates
 flist+=\
+	configure.in.in			\
 	Makefile.top.in			\
-	configure			\
-	configure.in			\
-	aclocal.m4			\
+	autogen.sh			\
 	acinclude.m4			\
 	start.pl			\
-	end.pl
+	end.pl				
+
+# These are searched in builddir instead of srcdir
+genlist = \
+	autoconf/configure.begin.in \
+	autoconf/configure.end.in
+	  
 
 dirs=autoconf codels openprs server server/tcl server/openprs
 
@@ -153,6 +160,15 @@ install: all
 		$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/$$f;	\
 	    fi; \
 	done
+
+	@for f in $(genlist); do						\
+	    if ! $(CMP) $(builddir)/$$f $(CANVASDIR)/$$f; then \
+		echo "$(INSTALL_DATA) $(builddir)/$$f $(CANVASDIR)/$$f";	\
+		$(INSTALL_DATA) $(builddir)/$$f $(CANVASDIR)/$$f;	\
+	    fi; \
+	done
+
+	chmod +x $(CANVASDIR)/autogen.sh
 
 .PHONY: clean distclean
 clean:;

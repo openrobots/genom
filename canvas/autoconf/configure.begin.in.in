@@ -5,7 +5,7 @@ dnl	process this file with autoconf to produce a configure script.
 dnl
 AC_REVISION($LAAS$)
 
-AC_INIT(server/$module$Header.h)
+AC_INIT($module$, $version$, $email$)
 AC_CONFIG_AUX_DIR(autoconf)
 dnl AC_CONFIG_HEADER(../config.h)
 
@@ -18,6 +18,7 @@ AC_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
 
 ROBOT_CFLAGS
+CFLAGS="${C_DEBUG_FLAGS} ${C_WARNING_FLAGS}"
 ROBOT_PROG_MKDEP
 
 dnl Checks for headers --------------------------------------------------
@@ -83,10 +84,10 @@ dnl         [AC_MSG_ERROR([dlopen() not found])], [])
 dnl AC_SEARCH_LIBS([timer_create], [rt], [],
 dnl         [AC_MSG_ERROR([timer_create() not found])], [])
 
-dnl AC_SEARCH_LIBS([fabs], [m])
-dnl AC_SEARCH_LIBS([atan], [m])
-
-AC_SUBST(OS_LIBS, "${LIBS}")
+LIBS=
+AC_SEARCH_LIBS([fabs], [m])
+AC_SEARCH_LIBS([atan], [m])
+AC_SUBST(LIBMATH, "${LIBS}")
 
 
 dnl --- checks for libraries --------------------------------------------
@@ -100,7 +101,11 @@ AC_ARG_WITH(pocolibs,
 
 ROBOT_PATH_INC([pocolibs], POCOLIBS_INCDIR, [portLib.h],
 	[AC_MSG_ERROR([please use --with-pocolibs option.])],
-	[$opt_pocolibs/include:`$genomBin$ --includes`:/usr/local/include:/usr/include])
+	[@POCOLIBS_INCLUDE_PATH@:$opt_pocolibs/include:`$genomBin$ --includes`:/usr/local/include:/usr/include])
+
+POCOLIBS_INC="-I${POCOLIBS_INCDIR}"
+AC_SUBST(POCOLIBS_INC)
+
 
 
 dnl genom
@@ -131,9 +136,15 @@ ROBOT_PATH_LIB([genom], GENOM_LIBDIR, [genom], [h2GetEvnStateString],
 	[AC_MSG_ERROR([please use --with-genom option.])],
 	[$genom_path_lib])
 
+GENOM_INC="-I${GENOM_INCDIR}"
+GENOM_LIB="-L${GENOM_LIBDIR} -R${GENOM_LIBDIR} -lgenom"
+AC_SUBST(GENOM_INC)
+AC_SUBST(GENOM_LIB)
+
+
 
 dnl tcl
-ROBOT_LIB_TCL
+ROBOT_LIB_TCL(@TCL_CONFIG_PATH@)
 
 AC_ARG_WITH(openprs,
     AC_HELP_STRING([--with-openprs=path], [path to the OpenPRS installation]),
@@ -165,24 +176,6 @@ AC_ARG_WITH(libraries,
    ], [EXTRA_LIBS=])
 AC_SUBST(EXTRA_LIBS)
 
+$genomPackages$
 
-dnl --- create Makefiles ------------------------------------------------
-dnl
-CFLAGS="${C_DEBUG_FLAGS} ${C_WARNING_FLAGS}"
 
-GENOM_INC="-I${GENOM_INCDIR}"
-GENOM_LIB="-L${GENOM_LIBDIR} -R${GENOM_LIBDIR} -lgenom"
-AC_SUBST(GENOM_INC)
-AC_SUBST(GENOM_LIB)
-
-POCOLIBS_INC="-I${POCOLIBS_INCDIR}"
-AC_SUBST(POCOLIBS_INC)
-
-AC_CONFIG_FILES(
-	[config.mk:autoconf/config.mk.in]
-	[Makefile]
-	[codels/Makefile]
-	[server/Makefile]
-)
-
-AC_OUTPUT

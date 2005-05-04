@@ -1,3 +1,1 @@
-builtin(include,autoconf/libtool.m4)
-builtin(include,autoconf/robots.m4)
-
+dnl Add your macro definitions for configure.in.in here
