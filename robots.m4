@@ -249,6 +249,7 @@ AC_DEFUN(ROBOT_PATH_INC,
    if test "x$ac_cv_path_found" = "xyes"; then
       if test -n "$ac_cv_path_h_$2"; then
         $2="-I$ac_cv_path_h_$2"
+        $1_INCLUDE_PATH="$ac_cv_path_h_$2"
         AC_MSG_RESULT($ac_cv_path_h_$2)
       else
         AC_MSG_RESULT(found)
@@ -291,6 +292,7 @@ AC_DEFUN(ROBOT_PATH_LIB,
    if test "x$ac_cv_path_found" = "xyes"; then
       if test -n "$ac_cv_path_l_$2"; then
         $2="-L$ac_cv_path_l_$2 -R$ac_cv_path_l_$2"
+        $1_LIB_PATH=$ac_cv_path_l_$2
         AC_MSG_RESULT($ac_cv_path_l_$2)
       else
         AC_MSG_RESULT(found)
@@ -372,6 +374,7 @@ AC_DEFUN(ROBOT_LIB_TCL,
       AC_MSG_RESULT([Please use --with-tcl to specify a valid path to your tclConfig.sh file]) 
    else
 
+   TCL_CONFIG_PATH=${tcl_prefix}
    file=${tcl_prefix}/tclConfig.sh
    . $file
    AC_MSG_RESULT("${tcl_prefix}/tclConfig.sh")
@@ -443,6 +446,7 @@ AC_DEFUN(ROBOT_LIB_TCL,
    fi # --with-tcl=no
 
    AC_SUBST(HAS_TCL)
+   AC_SUBST(TCL_CONFIG_PATH)
    AC_SUBST(TCL_CPPFLAGS)
    AC_SUBST(TCL_LDFLAGS)
    AC_SUBST(TCL_LIBS)

@@ -125,8 +125,8 @@ POSTER_LIST *posters = NULL;
 ID_LIST *includeFiles = NULL; /* Fichiers inclus dans .gen */
 ID_LIST *allIncludeFiles = NULL; /* Tous les fichiers inclus (trouves par cpp) */
 ID_LIST *externLibs = NULL;
-ID_LIST *externPathMacro = NULL;
-ID_LIST *externPathMacroPath = NULL;
+ID_LIST *packages = NULL;
+ID_LIST *packagesPrefix = NULL;
 ID_LIST *externPath = NULL;
 
 #define MAX_CPP_OPT 20
@@ -1373,10 +1373,24 @@ identificateur:
  *** Le code C
  ***/
 
-int yydebug;
+int yydebug = 0;
+int verbose = 0;
 /*----------------------------------------------------------------------*/
 
 static char *callCpp(char *nomFic, char *cppOptions[]);
+
+static ID_LIST* push_back(ID_LIST* list, ID_LIST* item)
+{
+    item->next = 0;
+    if (! list)
+        return item;
+        
+    ID_LIST* last = 0;
+    for (last = list; last->next != 0; last=last->next);
+
+    last->next = item;
+    return list;
+}
 
 /**
  ** Programme principal
@@ -1426,19 +1440,22 @@ main(int argc, char **argv)
 
     static const char *usage = 
       "Usage: \n  genom [-i] [-c] [-d] [-n] [-p protoDir] [-s] [-t] "
-      "[-u codelsDir] [-x]\n\t[-Ddefine] [-Ipath] [-Jvar=path] module[.gen]\n"
+      "[-u codelsDir] [-x]\n\t[-Ddefine] [-Ipath] [-Ppackage[=prefix]] module[.gen]\n"
       "with:\n"
       "     -i: installs new templates for codels and makefiles (new module)\n"
-      "     -D: compilation flags\n"
-      "     -I: path for included file\n"
-      "     -J: make variable path name + path for included file (eg, -JFLAT=$(FLAT)\n"
-      "     -c: generates if changes only  \n"
-      "     -u: specifies the name of the codels directory\n"
-      "     -d: debug \n"
-      "     -n: produces \".pl\" without execution  \n"
-      "     -p: changes the path for prototype files (canvas) \n"
       "     -t: produces on-board tcl client code\n"
       "     -x: produces openprs interfaces\n\n"
+      "     -u: specifies the name of the codels directory\n"
+      "     -p: changes the path for prototype files (canvas) \n"
+      "     -D: define a preprocessor symbol\n"
+      "     -P: declare a package on which this module is dependent.\n"
+      "         Use -Ppackage=PREFIX to define a prefix.\n"
+      "     -I: path for included file. $(PACKAGE_PREFIX)\n"
+      "         reuses a prefix defined with -P\n"
+      "     -c: generates if changes only  \n"
+      "     -d: debug \n"
+      "     -v: verbose (for debugging pruposes)\n"
+      "     -n: produces \".pl\" without execution (for debugging purposes)\n"
       "     --includes:  print path to libgenom includes\n"
       "     --libraries: print path to libgenom libraries\n";
 
@@ -1457,7 +1474,7 @@ main(int argc, char **argv)
     memset(cppOptions, 0, sizeof(cppOptions));
     nopt = argc;
 
-    while ((opt = getopt(argc, argv, "D:I:J:dnp:ciu:txs-:")) != -1) {
+    while ((opt = getopt(argc, argv, "D:I:P:dnp:ciu:txs-:")) != -1) {
 
 	switch (opt) {
 	  case 'D':
@@ -1470,7 +1487,7 @@ main(int argc, char **argv)
 		exit(-1);
 	    }
 	    break;
-	  case 'I':
+	  case 'I': /* add an include, may use $(PACKAGE_PREFIX) */
 	    sprintf(nomout, "-%c%s", opt, optarg);
 	    bufcat(&cmdLine, "-I%s ", optarg);
 	    if (nCppOptions < MAX_CPP_OPT - 1) {
@@ -1479,43 +1496,55 @@ main(int argc, char **argv)
 		fprintf(stderr, "%s: too many options for cpp\n", argv[0]);
 		exit(-1);
 	    }
+
+            /* Cannot add the element at the head of the list
+             because it leads to different generated files (configure.begin.in,
+             config.mk.in, genom.mk) at each generation */
 	    il = STR_ALLOC(ID_LIST);
 	    il->name = strdup(optarg);
-	    il->next = externPath;
-	    externPath = il;
+	    il->next = 0;
+            externPath = push_back(externPath, il);
 	    break;
-	  case 'J':
-	    if (!(equal = strstr(optarg, "=")))
-	      {
-		fprintf(stderr, "%s: bad format for option -J\n", argv[0]);
-		exit(-1);
-	      }
-	    bufcat(&cmdLine, "-J%s ", optarg);
+	  case 'P': /* define a package */
+	    bufcat(&cmdLine, "-P%s ", optarg);
+            equal = strstr(optarg, "=");
 
-	    /* separation between macro and path */
-	    strcpy(path, equal+1);
-	    strncpy(pathmacro, optarg, equal-optarg);
-	    pathmacro[equal-optarg] = '\0';
+            /* Check if there is a path */
+            if (equal == 0)
+            {
+                strcpy(pathmacro, optarg);
+                *path = 0;
+            }
+            else
+            {
+                /* separation between macro and path */
+                strncpy(pathmacro, optarg, equal-optarg);
+                pathmacro[equal-optarg] = '\0';
+                strcpy (path, equal+1);
 
-	    /* make option for cpp with the path */
-	    sprintf(nomout, "-I%s/include/%s", path, pathmacro);
-	    if (nCppOptions < MAX_CPP_OPT - 1) {
-		cppOptions[nCppOptions++] = strdup(nomout);
-	    } else {
-		fprintf(stderr, "%s: too many options for cpp\n", argv[0]);
-		exit(-1);
-	    }
+                /* make option for cpp with the path */
+                sprintf(nomout, "-I%s/include/%s", path, pathmacro);
+                if (nCppOptions < MAX_CPP_OPT - 1) {
+                    cppOptions[nCppOptions++] = strdup(nomout);
+                } else {
+                    fprintf(stderr, "%s: too many options for cpp\n", argv[0]);
+                    exit(-1);
+                }
+            }
 
 	    /* keep macro name and path for makefiles */
 	    il = STR_ALLOC(ID_LIST);
 	    il->name = strdup(pathmacro);
-	    il->next = externPathMacro;
-	    externPathMacro = il;
+	    il->next = 0;
+	    packages = push_back(packages, il);
 	    il = STR_ALLOC(ID_LIST);
 	    il->name = strdup(path);
-	    il->next = externPathMacroPath;
-	    externPathMacroPath = il;
+	    il->next = 0;
+	    packagesPrefix = push_back(packagesPrefix, il);
 
+	    break;
+	  case 'v':
+	    verbose = 1;
 	    break;
 	  case 'd':
 	    yydebug = 1;
@@ -1584,9 +1613,34 @@ main(int argc, char **argv)
 	strcat(nomfic, extention);
     }
 
+    upCaseArguments();
+
     /* Traitement des options de cpp */
     for (i = 0; i<nCppOptions; i++) {
 	if (cppOptions[i][0] == '-' && cppOptions[i][1] == 'I') {
+            /* Check for $(MACRO_PREFIX) where MACRO is one of the -P */
+            ID_LIST* ln, * ln2;
+            for (ln = packages, ln2 = packagesPrefix; 
+                    ln != NULL;
+                    ln = ln->next, ln2 = ln2->next)
+            {
+                char* pattern = 0, *found;
+                bufcat(&pattern, "@%s_PREFIX@", ln->NAME);
+
+                found = strstr(cppOptions[i], pattern); 
+                if (found)
+                {
+                    char* begin = strdup(cppOptions[i]);
+                    begin[ found - cppOptions[i] ] = 0;
+                    sprintf(nomout, "%s%s%s", begin, ln2->name, found + strlen(pattern));
+                    free(cppOptions[i]);
+                    free(begin);
+                    cppOptions[i] = strdup(nomout);
+                }
+                free(pattern);
+            }
+                
+
 	    if (cppOptions[i][2] != '/' && chDir[0] != '\0') {
 		/* chemin relatif et on a changé de répertoire */
 		sprintf(nomout, "-I%s%s", chDir, &cppOptions[i][2]);
@@ -1889,8 +1943,10 @@ callCpp(char *nomFic, char *cppOptions[])
 	  cpp += strspn(cpp, " \t");
        }
     }
+    
+    if (verbose)
+        fputs("Running cpp with options ", stderr);
 
-    fputs("Running cpp with options ", stderr);
     for(j=0; cppOptions[j] != NULL;) {
        if (i > MAX_CPP_OPT) {
 	  fputs("too many options to cpp\n", stderr);
@@ -1898,7 +1954,9 @@ callCpp(char *nomFic, char *cppOptions[])
 	  exit(2);
        }
 
-        fputs(cppOptions[j], stderr);
+        
+       if (verbose)
+           fputs(cppOptions[j], stderr);
        cppArg[i++] = cppOptions[j++];
     }
 

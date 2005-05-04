@@ -64,6 +64,16 @@ static char* strcpytoupper(char const* value)
     return result;
 }
 
+void
+upCaseArguments(void)
+{
+    ID_LIST *ln;
+
+    /* -P */
+    for (ln = packages; ln != NULL; ln = ln->next)
+        ln->NAME = strcpytoupper(ln->name);
+}
+	
 /**
  ** Conversion des noms de module, de taches, de posters et de requetes
  ** en majuscules 
@@ -76,9 +86,9 @@ upCaseNames(void)
     EXEC_TASK_STR *t;
     RQST_LIST *lr;
     RQST_STR *r;
-    ID_LIST *ln;
     POSTER_LIST *p;
     POSTERS_INPUT_LIST *p_in;
+    ID_LIST *ln;
 
     /* nom du module */
     if (module->name != NULL) {
@@ -90,6 +100,10 @@ upCaseNames(void)
 	fprintf(stderr, "%s: no module name\n", nomfic);
 	exit(2);
     }
+
+    /* Import from */
+    for (ln = externLibs; ln != NULL; ln = ln->next)
+        ln->NAME = strcpytoupper(ln->name);
 
     /* Noms des taches d'execution */
     for (lt = taches; lt != NULL; lt = lt->next) {
@@ -111,14 +125,7 @@ upCaseNames(void)
     for (p_in = posters_input; p_in != NULL; p_in = p_in->next)
         p_in->NAME = strcpytoupper(p_in->name);
 
-    /* -J */
-    for (ln = externPathMacro; ln != NULL; ln = ln->next)
-        ln->NAME = strcpytoupper(ln->name);
 
-    /* Noms des bibliotheques exterieures */
-    for (ln = externLibs; ln != NULL; ln = ln->next)
-        ln->NAME = strcpytoupper(ln->name);
-	
 } /* upCaseNames */
 
 /*----------------------------------------------------------------------*/
@@ -381,10 +388,10 @@ resolveTypes(void)
     DCL_NOM_LIST *m, *last, *lastData = 0;
     DCL_NOM_STR *n;
     STR_REF_LIST *lm, *lastType = 0;
-    POSTER_LIST *p;
-    POSTERS_INPUT_LIST *p_in;
     int i;
     EXEC_TASK_LIST *le;
+    POSTER_LIST *p;
+    POSTERS_INPUT_LIST *p_in;
 
     /* Type de la structure interne du module */
     t_sdi = module->internal_data;

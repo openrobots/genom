@@ -69,6 +69,7 @@ extern TYPE_STR * trouve_type ( TYPE_STR *t );
 extern DCL_NOM_STR * trouve_typedef ( TYPE_STR *t );
 extern int trouve_value ( char *symbole, int *pVal );
 extern void upCaseNames ( void );
+extern void upCaseArguments ( void );
 extern void * xalloc ( size_t n );
 extern void * xrealloc ( void *p, size_t n );
 

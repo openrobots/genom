@@ -31,8 +31,11 @@
 #ifndef H_CONFIGUREGEN
 #define H_CONFIGUREGEN
 
-#define PROTO_CONFIGURE		"configure" 
-#define PROTO_CONFIGURE_IN	"configure.in" 
+#define PROTO_USER_ACINCLUDE_M4        "acinclude.m4"
+#define PROTO_AUTOGEN_SH	"autogen.sh" 
+#define PROTO_CONFIGURE_IN_IN   "configure.in.in"
+#define PROTO_CONFIGURE_BEGIN   "autoconf/configure.begin.in"
+#define PROTO_CONFIGURE_END     "autoconf/configure.end.in"
 #define PROTO_INSTALL		"autoconf/install-sh" 
 #define PROTO_MKINSTALLDIRS	"autoconf/mkinstalldirs" 
 #define PROTO_CONFIGSUB		"autoconf/config.sub" 
@@ -41,8 +44,7 @@
 
 #define PROTO_ROBOTS_M4		"autoconf/robots.m4" 
 #define PROTO_LIBTOOL_M4	"autoconf/libtool.m4" 
-#define PROTO_ACLOCAL_M4	"aclocal.m4" 
-#define PROTO_ACINCLUDE_M4	"acinclude.m4" 
+#define PROTO_ACINCLUDE_M4	"autoconf/acinclude.m4" 
 
 #define PROTO_CONFIG_MK		"autoconf/config.mk.in"
 #define PROTO_CONFIG_POSIX_MK	"autoconf/config.posix.mk"
