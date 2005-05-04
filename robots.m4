@@ -400,7 +400,7 @@ AC_DEFUN(ROBOT_LIB_TCL,
       fi
    done
    if test "x$ac_tcl_includes" = "x"; then
-      AC_MSG_RESULT([not found (fatal)])
+      AC_MSG_ERROR([not found (fatal)])
    else
 
    AC_MSG_RESULT($ac_tcl_includes)
