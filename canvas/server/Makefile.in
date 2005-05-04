@@ -216,19 +216,20 @@ $(OBJDIR)/%.lo: %.c
 
 install: all install-bin install-data
 
+# Install libraries first
 install-bin:
-	$(MKINSTALLDIRS) $(bindir)
-	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
-	$(LTINSTALL) $(OBJDIR)/$(ESSAY_BIN) $(bindir)/$(ESSAY_BIN)
 	$(MKINSTALLDIRS) $(libdir)
 	$(LTINSTALL) $(OBJDIR)/$(CLIENT_LIB) $(libdir)/$(CLIENT_LIB)
 	$genTcl$$(MKINSTALLDIRS) $(libdir)/tclserv
 	$genTcl$$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/tclserv/$(TCLCLIENT_LIB)
+	$(MKINSTALLDIRS) $(bindir)
+	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
+	$(LTINSTALL) $(OBJDIR)/$(ESSAY_BIN) $(bindir)/$(ESSAY_BIN)
 
 install-data:
-	$(MKINSTALLDIRS) $(includedir)/$module$/server
+	$(MKINSTALLDIRS) $(includedir)/server
 	@for f in $(client_includes); do				\
-		$(INSTALL_DATA) $(top_srcdir)/$$f $(includedir)/$module$/$$f;\
+		$(INSTALL_DATA) $(top_srcdir)/$$f $(includedir)/$$f;\
 	done
 	$genTcl$$(MKINSTALLDIRS) $(datadir)/tcl
 	$genTcl$$(INSTALL_DATA) $(srcdir)/$(tclclient_tcl) $(datadir)/$(tclclient_tcl)
