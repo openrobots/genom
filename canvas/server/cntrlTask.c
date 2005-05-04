@@ -46,6 +46,7 @@
 #if defined(__RTAI__) && defined(__KERNEL__)
 # define exit(x)	taskDelete(0)
 #else
+# include <stdlib.h>
 # include <unistd.h>
 # ifndef VXWORKS
 #  define PID_FILE
@@ -61,10 +62,7 @@
 #include <h2timerLib.h>
 
 #include "$module$MsgLib.h"
-
-#ifdef MODULE_EVENT
-#include "moduleEvents.h"
-#endif
+#include "genom/moduleEvents.h"
 
 /* Print debugging information */
 #define GENOM_DEBUG_CNTRLTASK
@@ -96,9 +94,7 @@ $execTaskNameTabDeclare$
 
 #define TIMEOUT_CNTRL_TASK 2000 /* 10 sec (pas encore utilise) */
 
-#ifdef MODULE_EVENT
 static MODULE_EVENT_STR moduleEventCntrl;
-#endif
 
 /*---------------- PROTOTYPES DES FONCTIONS LOCALES ------------------------*/
 
@@ -157,9 +153,7 @@ $module$CntrlTask()
      $module$CntrlTaskSuspend(FALSE);
   }
 
-#ifdef MODULE_EVENT
   moduleEventCntrl.moduleNum = $numModule$;
-#endif
 
   /* Boucler indefiniment */
   FOREVER
@@ -741,15 +735,12 @@ static void $module$SendFinalReply (SERV_ID servId,
 		       ACTIVITY_OUTPUT_SIZE(activity), (FUNCPTR) NULL) != OK)
     $module$CntrlTaskSuspend (TRUE);
 
-#ifdef MODULE_EVENT
   moduleEventCntrl.eventType = STATE_END_EVENT;
   moduleEventCntrl.activityNum = activity;
   moduleEventCntrl.activityState = ACTIVITY_EVN(activity);
   moduleEventCntrl.rqstType = ACTIVITY_RQST_TYPE(activity);
   moduleEventCntrl.taskNum = ACTIVITY_TASK_NUM(activity);
   sendModuleEvent(&moduleEventCntrl);
-#endif	  
-
 }
 
 

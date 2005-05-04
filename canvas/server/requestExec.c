@@ -134,14 +134,12 @@ static void $module$Cntrl$request$ (SERV_ID servId, int rqstId)
   ACTIVITY_OUTPUT_SIZE(activity) = $outputSize$;
 #endif          
 
-#ifdef MODULE_EVENT
   moduleEventCntrl.eventType = STATE_START_EVENT;
   moduleEventCntrl.activityNum = activity;
   moduleEventCntrl.activityState = INIT;
   moduleEventCntrl.rqstType = $requestNum$;
   moduleEventCntrl.taskNum = $execTaskNum$;
   sendModuleEvent(&moduleEventCntrl);
-#endif	  
 
   /*-------------------------------------------------------------
    * Interruption of the incompatible activities

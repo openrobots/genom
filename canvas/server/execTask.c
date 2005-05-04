@@ -61,9 +61,7 @@
 #include <h2evnLib.h>
 #include <h2timerLib.h>
 
-#ifdef MODULE_EVENT
-#include "moduleEvents.h"
-#endif
+#include "genom/moduleEvents.h"
 
 /* En-tete du module */
 
@@ -144,15 +142,14 @@ void $module$$execTaskName$ (void)
 #if($csServersFlag$ /* tache cliente */)
   int extEvn;
 #endif
-#ifdef MODULE_EVENT
+
   MODULE_EVENT_STR moduleEvent;
-#else
 #ifdef HAS_POSIX_CLOCK
   struct timespec tp; /*  mesure du temps */
 #else
   struct timeval tv;
 #endif /* HAS_POSIX_CLOCK */
-#endif
+
   unsigned long msec0=0, msec1, msec2;
   int firstChrono=TRUE;
 
@@ -168,10 +165,8 @@ void $module$$execTaskName$ (void)
   /* Se suspendre en cas de probleme */
   if(EXEC_TASK_STATUS($execTaskNum$) != OK)
     $module$$execTaskName$Suspend (FALSE);
-#ifdef MODULE_EVENT
   moduleEvent.moduleNum = $numModule$;
   moduleEvent.taskNum = $execTaskNum$;
-#endif
 
   /* Boucler indefiniment */
   FOREVER {
@@ -187,10 +182,9 @@ void $module$$execTaskName$ (void)
 #endif
 
     /* Lecture du temps */
-#ifdef MODULE_EVENT
     moduleEvent.eventType = EXEC_START_EVENT;
-    msec1 = sendModuleEvent(&moduleEvent);
-#else
+    sendModuleEvent(&moduleEvent);
+
 #ifdef HAS_POSIX_CLOCK
     clock_gettime(CLOCK_REALTIME, &tp);
     msec1 = (tp.tv_nsec / 1000000) + (tp.tv_sec * 1000);
@@ -198,7 +192,7 @@ void $module$$execTaskName$ (void)
     gettimeofday(&tv, NULL);
     msec1 = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
 #endif /* HAS_POSIX_CLOCK */
-#endif
+
     if(firstChrono) {firstChrono=FALSE; msec0=msec1;}
 
 #if($periodFlag$ /* tache periodique */)
@@ -255,22 +249,20 @@ void $module$$execTaskName$ (void)
 
     /* Activite permanente */
 #if ($cFuncExecFlag$) 
-#  ifdef MODULE_EVENT
     moduleEvent.eventType = STATE_START_EVENT;
     moduleEvent.activityNum = -1;
     moduleEvent.activityState = EXEC;
     sendModuleEvent(&moduleEvent);    
-#  endif
+
     CURRENT_ACTIVITY_NUM($execTaskNum$) = -1;
     EXEC_TASK_BILAN($execTaskNum$) = OK;
     if ($cFuncExecName$ (&EXEC_TASK_BILAN($execTaskNum$)) != OK) {
       logMsg("$module$$execTaskName$: permanent activity error\n");
       $module$$execTaskName$Suspend (TRUE);
     }
-#  ifdef MODULE_EVENT
+
     moduleEvent.eventType = STATE_END_EVENT;
     sendModuleEvent(&moduleEvent);   
-#  endif
 #endif
 
     /* Recherche des activites */
@@ -308,13 +300,12 @@ void $module$$execTaskName$ (void)
 	case END:
 	case FAIL:
 	case INTER:
-#ifdef MODULE_EVENT	  
 	  moduleEvent.eventType = STATE_START_EVENT;
 	  moduleEvent.activityNum = i;
 	  moduleEvent.activityState = ACTIVITY_EVN(i);
 	  moduleEvent.rqstType = ACTIVITY_RQST_TYPE(i);
 	  sendModuleEvent(&moduleEvent);
-#endif	  
+
 	  /* On enregistre le nouvel etat */
 	  ACTIVITY_STATUS(i) = (ACTIVITY_STATE) ACTIVITY_EVN(i);
 	  
@@ -326,10 +317,8 @@ void $module$$execTaskName$ (void)
 	  if(filterAndSendEvn(ACTIVITY_STATUS(i), ACTIVITY_EVN(i)))
 	    wakeUpCntrlTask = TRUE;
 
-#ifdef MODULE_EVENT	  
 	  moduleEvent.eventType = STATE_END_EVENT;
 	  sendModuleEvent(&moduleEvent);
-#endif	  
 	  break;
 	  
 	default:
@@ -348,10 +337,9 @@ void $module$$execTaskName$ (void)
     $listPosterUpdateFunc$
     
     /* Temps ecoule depuis la precedente lecture */
-#ifdef MODULE_EVENT	  
     moduleEvent.eventType = EXEC_END_EVENT;
-    msec2 = sendModuleEvent(&moduleEvent);
-#else
+    sendModuleEvent(&moduleEvent);
+
 #ifdef HAS_POSIX_CLOCK
     clock_gettime(CLOCK_REALTIME, &tp);
     msec2 = (tp.tv_nsec / 1000000) + (tp.tv_sec * 1000);
@@ -359,7 +347,6 @@ void $module$$execTaskName$ (void)
     gettimeofday(&tv, NULL);
     msec2 = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
 #endif /* HAS_POSIX_CLOCK */
-#endif
 
 #if (!$periodFlag$)
     EXEC_TASK_ON_PERIOD($execTaskNum$) = msec2 - msec1;
