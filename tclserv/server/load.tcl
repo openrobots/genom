@@ -66,6 +66,11 @@ namespace eval modules {
 	# load the encode / decode procs
 	if { [lsearch -exact $list $name] == -1 } {
 
+            set temp $path
+            foreach dir $temp {
+                set path "$path ${dir}/lib/tclserv";
+            }
+
 	    set found 0
 	    foreach dir $path {
 		set file "${dir}/lib${name}TclServ[info sharedlibextension]"

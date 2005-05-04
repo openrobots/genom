@@ -53,12 +53,16 @@ proc lm { name args } {
 	
 	} elseif { "$arg" == "on" } {
 	    set server [shift args]
+        } elseif { "$arg" == "path" } {
+            set path "[shift args]"
+            set remotepath "\"$path\""
+            set localpath "$path";
 	} elseif { "$arg" == "rpath" } {
 	    set remotepath "\"[shift args]\""
 	} elseif { "$arg" == "lpath" } {
 	    set localpath "[shift args]"
 	} else {
-	    error {lm <module> [as <alias>] [on <server>] [rpath <remotepath>] [lpath <path>]}
+	    error {lm <module> [as <alias>] [on <server>] [path <common path> | [rpath <remotepath>] [lpath <path>]]}
 	}
     }
 
@@ -75,8 +79,8 @@ proc lm { name args } {
     if { [ file readable ${localpath}/${name}Client.tcl] } {
 	source ${localpath}/${name}Client.tcl
 	interp invoke {} ${name}Install $alias
-    } elseif { [ file readable ${localpath}/share/module/${name}Client.tcl] } {
-	source ${localpath}/share/module/${name}Client.tcl
+    } elseif { [ file readable ${localpath}/share/modules/tcl/${name}Client.tcl] } {
+	source ${localpath}/share/modules/tcl/${name}Client.tcl
 	interp invoke {} ${name}Install $alias
     } else {
 	error "cannot find client code in ${localpath}/${name}Client.tcl"
