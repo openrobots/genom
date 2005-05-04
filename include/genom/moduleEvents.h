@@ -54,6 +54,6 @@ typedef struct MODULE_EVENT_STR {
 
 
 /* Sends module event (returns usec) */
-extern unsigned long sendModulesEvent(MODULE_EVENT_STR *moduleEvent);
+extern void sendModuleEvent(MODULE_EVENT_STR *moduleEvent);
 
 #endif
