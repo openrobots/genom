@@ -327,17 +327,19 @@ AC_DEFUN(ROBOT_PATH_FILE,
 
 
 dnl --- Look for tcl ----------------------------------------------------
-dnl
+dnl ROBOT_LIB_TCL EXTRA_DIRECTORY
 AC_DEFUN(ROBOT_LIB_TCL,
 [
    AC_ARG_WITH(tcl,
       AC_HELP_STRING([--with-tcl=DIR], [directory containing tclConfig.sh]),
       [tcl_prefix=$withval],
       [for ac_dir in \
+         $1 \
          ${exec_prefix}/lib      \
-         /usr/local/lib/tcl8.3   \
+         /usr/local/lib/tcl8.4   \
          /usr/local/lib          \
          /usr/pkg/lib            \
+         /usr/lib/tcl8.4         \
          /usr/lib                \
         ; \
        do
