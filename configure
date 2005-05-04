@@ -464,7 +464,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os LIBSONLY GENOM TCLSERV CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CPP CXX CXXFLAGS ac_ct_CXX CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL LIBTOOL_DEPS LEX LEXLIB LEX_OUTPUT_ROOT YACC INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LATEX STDINCPP MKDEP RTAI_INC LNXKERN_INC OSAPI OS_LIBS ENDIANNESS PORTLIB_CFLAGS PORTLIB_LDFLAGS HAS_TCL TCL_CPPFLAGS TCL_LDFLAGS TCL_LIBS TCL_LIB_FLAG TCL_LIB_SPEC LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os LIBSONLY GENOM TCLSERV CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP CPP CXX CXXFLAGS ac_ct_CXX CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL LIBTOOL_DEPS LEX LEXLIB LEX_OUTPUT_ROOT YACC INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LATEX STDINCPP MKDEP RTAI_INC LNXKERN_INC OSAPI OS_LIBS ENDIANNESS PORTLIB_CFLAGS PORTLIB_LDFLAGS POCOLIBS_INCLUDE_PATH POCOLIBS_LIB_PATH HAS_TCL TCL_CONFIG_PATH TCL_CPPFLAGS TCL_LDFLAGS TCL_LIBS TCL_LIB_FLAG TCL_LIB_SPEC LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -21571,6 +21571,7 @@ fi
    if test "x$ac_cv_path_found" = "xyes"; then
       if test -n "$ac_cv_path_h_PORTLIB_CFLAGS"; then
         PORTLIB_CFLAGS="-I$ac_cv_path_h_PORTLIB_CFLAGS"
+        pocolibs_INCLUDE_PATH="$ac_cv_path_h_PORTLIB_CFLAGS"
         echo "$as_me:$LINENO: result: $ac_cv_path_h_PORTLIB_CFLAGS" >&5
 echo "${ECHO_T}$ac_cv_path_h_PORTLIB_CFLAGS" >&6
       else
@@ -21677,6 +21678,7 @@ fi
    if test "x$ac_cv_path_found" = "xyes"; then
       if test -n "$ac_cv_path_l_PORTLIB_LDFLAGS"; then
         PORTLIB_LDFLAGS="-L$ac_cv_path_l_PORTLIB_LDFLAGS -R$ac_cv_path_l_PORTLIB_LDFLAGS"
+        pocolibs_LIB_PATH=$ac_cv_path_l_PORTLIB_LDFLAGS
         echo "$as_me:$LINENO: result: $ac_cv_path_l_PORTLIB_LDFLAGS" >&5
 echo "${ECHO_T}$ac_cv_path_l_PORTLIB_LDFLAGS" >&6
       else
@@ -21691,6 +21693,11 @@ echo "$as_me: error: please use --with-pocolibs option." >&2;}
    { (exit 1); exit 1; }; }
    fi
 
+
+
+POCOLIBS_INCLUDE_PATH=$pocolibs_INCLUDE_PATH
+
+POCOLIBS_LIB_PATH=$pocolibs_LIB_PATH
 
 
 
@@ -21731,6 +21738,7 @@ echo "${ECHO_T}not found: DISABLING tclServ compilation" >&6
 echo "${ECHO_T}Please use --with-tcl to specify a valid path to your tclConfig.sh file" >&6
    else
 
+   TCL_CONFIG_PATH=${tcl_prefix}
    file=${tcl_prefix}/tclConfig.sh
    . $file
    echo "$as_me:$LINENO: result: \"${tcl_prefix}/tclConfig.sh\"" >&5
@@ -21816,9 +21824,10 @@ echo "${ECHO_T}$ac_tcl_libs/$TCL_LIB_FILE" >&6
 
 
 
+
 CFLAGS="${C_DEBUG_FLAGS} ${C_WARNING_FLAGS} ${CFLAGS}"
 
-                                                                                                              ac_config_files="$ac_config_files config.mk Makefile lib/Makefile src/Makefile include/Makefile canvas/Makefile tclserv/server/Makefile tclserv/client/Makefile doc/user_guide/Makefile emacs/Makefile scripts/Makefile"
+                                                                                                                                  ac_config_files="$ac_config_files config.mk Makefile lib/Makefile src/Makefile include/Makefile canvas/Makefile canvas/autoconf/configure.begin.in canvas/autoconf/configure.end.in tclserv/server/Makefile tclserv/client/Makefile doc/user_guide/Makefile emacs/Makefile scripts/Makefile"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -22350,6 +22359,8 @@ do
   "src/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
   "include/Makefile" ) CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
   "canvas/Makefile" ) CONFIG_FILES="$CONFIG_FILES canvas/Makefile" ;;
+  "canvas/autoconf/configure.begin.in" ) CONFIG_FILES="$CONFIG_FILES canvas/autoconf/configure.begin.in" ;;
+  "canvas/autoconf/configure.end.in" ) CONFIG_FILES="$CONFIG_FILES canvas/autoconf/configure.end.in" ;;
   "tclserv/server/Makefile" ) CONFIG_FILES="$CONFIG_FILES tclserv/server/Makefile" ;;
   "tclserv/client/Makefile" ) CONFIG_FILES="$CONFIG_FILES tclserv/client/Makefile" ;;
   "doc/user_guide/Makefile" ) CONFIG_FILES="$CONFIG_FILES doc/user_guide/Makefile" ;;
@@ -22494,7 +22505,10 @@ s,@OS_LIBS@,$OS_LIBS,;t t
 s,@ENDIANNESS@,$ENDIANNESS,;t t
 s,@PORTLIB_CFLAGS@,$PORTLIB_CFLAGS,;t t
 s,@PORTLIB_LDFLAGS@,$PORTLIB_LDFLAGS,;t t
+s,@POCOLIBS_INCLUDE_PATH@,$POCOLIBS_INCLUDE_PATH,;t t
+s,@POCOLIBS_LIB_PATH@,$POCOLIBS_LIB_PATH,;t t
 s,@HAS_TCL@,$HAS_TCL,;t t
+s,@TCL_CONFIG_PATH@,$TCL_CONFIG_PATH,;t t
 s,@TCL_CPPFLAGS@,$TCL_CPPFLAGS,;t t
 s,@TCL_LDFLAGS@,$TCL_LDFLAGS,;t t
 s,@TCL_LIBS@,$TCL_LIBS,;t t
