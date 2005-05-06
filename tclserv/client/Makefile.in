@@ -53,7 +53,6 @@ LDFLAGS+=	-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)
 # -----------------------------------------------------------------------
 
 tlist=\
-	init.tcl	\
 	cs.tcl		\
 	load.tcl	\
 	misc.tcl	\
