@@ -168,8 +168,6 @@ install: all
 	    fi; \
 	done
 
-	chmod +x $(CANVASDIR)/autogen.sh
-
 .PHONY: clean distclean
 clean:;
 
