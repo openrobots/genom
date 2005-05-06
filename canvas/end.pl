@@ -63,7 +63,15 @@ my $autogen_mode = stat($autogen)->mode & 07777;
 
 chmod ((0111|$autogen_mode), $autogen);
 
-
+# Do not regenerate if one of server or codels is missing
+if ( ! -d "../$serverDir" || ! -d "../$codelsDir" )
+{
+    print "
+    One of server/ or codels/ is not generated 
+    yet, I won't run autogen.sh
+    ";
+    exit;
+}
 
 
 # Checks if configure is up to date

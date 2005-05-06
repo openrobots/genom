@@ -46,8 +46,16 @@ include $(top_builddir)/config.mk
 codels_src = \
 $codel_files$
 
+# Add extra flags for the preprocessor (external libraries, ...)
 # EXTRA_INCLUDES +=
+#
+# Add extra link flags (external libraries, ...)
 # EXTRA_LIBS +=
+#
+# Install files here (any header that is not included in the .gen for instance)
+# Files that are included in the GenoM file are automatically installed
+# use $(includedir) to install headers
+# user-install: 
 
 # --- compilation -------------------------------------------------------
 include $(top_srcdir)/$(autoconfdir)/codels.mk
