@@ -36,4 +36,22 @@ $genTcl$GENFLAGS+=	-t
 $genOpenprs$GENFLAGS+=	-x
 $genSpy$GENFLAGS+=	-s
 
+# --- genom -------------------------------------------------------------
+
+.PHONY: regen regen-user
+ifeq ($(top_srcdir),)
+# We consider that we are in standalone mode
+# i.e. not included in one of the module Makefiles
+top_srcdir=.
+regen: standalone-regen
+regen-user: standalone-regen-user
+endif
+
+standalone-regen-user:
+	( cd $(top_srcdir) && $(GENOM) -i $(GENFLAGS) $(GENFILE) $(NEWARGS) )
+
+standalone-regen:
+	( cd $(top_srcdir) && $(GENOM) $(GENFLAGS) $(GENFILE) $(NEWARGS) )
+
+
 

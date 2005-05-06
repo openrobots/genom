@@ -42,12 +42,6 @@ config_files = \
 	Makefile \
 	$(addsuffix /Makefile,$(SUBDIRS))
 
-# GenoM flags
-include $(top_srcdir)/$(autoconfdir)/genom.mk
-
-
-# --- Directory recursion -----------------------------------------------
-
 # Generic targets
 .PHONY: all install depend
 all install depend: $(config_files)
@@ -57,6 +51,12 @@ all install depend: $(config_files)
 clean:
 	$(MAKE) $@-$(OSAPI)
 
+
+# GenoM flags
+include $(top_srcdir)/$(autoconfdir)/genom.mk
+
+
+# --- Directory recursion -----------------------------------------------
 
 # OS-specific targets
 
@@ -70,24 +70,18 @@ make_subdirs=\
 	@OSAPI=rtai;  $(make_subdirs)
 	@OSAPI=posix; $(make_subdirs)
 
-
 # --- genom -------------------------------------------------------------
-
-.PHONY: regen regen-user
-regen-user:
-	( cd $(top_srcdir) && $(GENOM) -i $(GENFLAGS) $(GENFILE) $(NEWARGS) )
+regen-user: standalone-regen-user
 	@if test $(top_srcdir)/configure -nt ./config.status; then \
 	    ./config.status --recheck; \
 	fi
 	@./config.status
 
-regen:
-	( cd $(top_srcdir) && $(GENOM) $(GENFLAGS) $(GENFILE) $(NEWARGS) )
+regen: standalone-regen
 	@if test $(top_srcdir)/configure -nt ./config.status; then \
 	    ./config.status --recheck; \
 	fi
 	@./config.status
-
 
 # --- autoconf/autoheader -----------------------------------------------
 
