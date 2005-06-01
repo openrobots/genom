@@ -79,8 +79,8 @@ proc lm { name args } {
     if { [ file readable ${localpath}/${name}Client.tcl] } {
 	source ${localpath}/${name}Client.tcl
 	interp invoke {} ${name}Install $alias
-    } elseif { [ file readable ${localpath}/share/modules/tcl/${name}Client.tcl] } {
-	source ${localpath}/share/modules/tcl/${name}Client.tcl
+    } elseif { [ file readable ${localpath}/tcl/${name}Client.tcl] } {
+	source ${localpath}/tcl/${name}Client.tcl
 	interp invoke {} ${name}Install $alias
     } else {
 	error "cannot find client code in ${localpath}/${name}Client.tcl"

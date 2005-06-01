@@ -84,7 +84,7 @@ $(TCLSERV): $(OBJS)
 
 main.lo: main.c
 	$(LTCC) -static -c $(CPPFLAGS) $(TCL_CPPFLAGS)			\
-	  -DTCLSERV_LIBDIR='"${libdir}"' -DTCLSERV_DATA='"${datadir}"'	\
+	  -DTCLSERV_LIBDIR='"${libdir}/tclserv"' -DTCLSERV_DATA='"${datadir}"'	\
 	  $(CFLAGS) -o $@ $<
 
 %.lo: %.c
