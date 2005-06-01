@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1999-2003 LAAS/CNRS                  --  Thu Feb  4 1999
+ * Copyright (c) 1999-2005 LAAS/CNRS                  --  Thu Feb  4 1999
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -117,7 +117,7 @@ Tcl_AppInit(Tcl_Interp *interp)
    Tcl_SetVar(interp, "tclserv_moduledir", TCLSERV_LIBDIR, TCL_GLOBAL_ONLY);
 
    if (xes_verbose) {
-      printf("\n\ttclServ - Copyright (C) 1999-2003 LAAS-CNRS\n\n");
+      printf("\n\ttclServ - Copyright (C) 1999-2005 LAAS-CNRS\n\n");
    }
 
 
