@@ -1,4 +1,7 @@
 
+###### Default target
+all: $(OBJDIR) $(OBJDIR)/$(MODULE_BIN)
+	
 ###### GenoM flags
 include $(top_srcdir)/$(autoconfdir)/genom.mk
 
@@ -10,7 +13,6 @@ codels_obj= $(codels_src:%.c=$(OBJDIR)/%.lo)
 
 
 ###### Build
-all: $(OBJDIR) $(OBJDIR)/$(MODULE_BIN)
 
 $(OBJDIR)/$(MODULE_BIN): $(OBJDIR)/$(USER_LIB)
 $(OBJDIR)/$(MODULE_BIN): $(top_builddir)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)
