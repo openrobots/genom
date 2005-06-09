@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -111,6 +111,11 @@ int enumValue = 0;
 static int import_flag = 0;
 
 static void yyerror(char *s);
+
+#ifndef GENOM_VERSION
+# error GENOM_VERSION not defined!
+#endif
+const char genomVersion[] = GENOM_VERSION;
 
 MODULE_STR *module;
 RQST_LIST *requetes = NULL;
@@ -1580,6 +1585,9 @@ main(int argc, char **argv)
 	     } else if (!strcmp("libraries", optarg)) {
 		puts(libraryDir);
 		exit(0);
+	     } else if (!strcmp("version", optarg)) {
+	        printf("genom version %s\n", genomVersion);
+	        exit(0);
 	     }
 
 	     /* FALLTROUGH */
@@ -1828,6 +1836,8 @@ main(int argc, char **argv)
     fatalError |= (configureGen(sortie,
 				codelsDir, cmdLine, argv[0], genfile, cwd,
 				genTcl, genOpenprs) != 0);
+    /* pkgconfig data file */
+    fatalError |= (pkgconfigGen(sortie) != 0);
 
     /* On termine */
     script_do(sortie, protoDir, "end.pl");
