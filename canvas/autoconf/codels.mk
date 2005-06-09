@@ -1,13 +1,13 @@
 
 ###### Default target
 all: $(OBJDIR) $(OBJDIR)/$(MODULE_BIN)
-	
+
 ###### GenoM flags
 include $(top_srcdir)/$(autoconfdir)/genom.mk
 
 CPPFLAGS += $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
 CPPFLAGS += -I. -I$(top_builddir) -I$(srcdir) -I$(top_srcdir)
-CPPFLAGS += $(GENOM_INC) $(POCOLIBS_INC) $(EXTRA_INCLUDES)
+CPPFLAGS += $(GENOM_CFLAGS) $(EXTRA_INCLUDES)
 
 codels_obj= $(codels_src:%.c=$(OBJDIR)/%.lo)
 
@@ -25,7 +25,7 @@ $(OBJDIR)/$(MODULE_BIN):
 		$(top_builddir)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)	\
 		$(OBJDIR)/$(USER_LIB)					\
 		$(top_builddir)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LIB)	\
-		$(LTLK_GENOM_LIB)
+		$(GENOM_LIBS)
 
 $(OBJDIR)/$(USER_LIB): $(codels_obj)
 	$(LTLD) -static $(CFLAGS) $(codels_obj) -o $@ $(LDFLAGS) \
