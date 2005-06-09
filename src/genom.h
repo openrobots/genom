@@ -321,6 +321,8 @@ extern int initRequest;
 extern char *cppOptions[];
 extern int nCppOptions;
 
+extern const char genomVersion[];
+
 #include "genomProto.h"
 
 #endif
