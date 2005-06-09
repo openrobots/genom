@@ -94,19 +94,19 @@ dnl --- checks for libraries --------------------------------------------
 dnl
 
 dnl portLib
-AC_ARG_WITH(pocolibs,
-           AC_HELP_STRING([--with-pocolibs=DIR],
-               [pocolibs are installed in DIR (prefix)]),
-           [opt_pocolibs=$withval],[opt_pocolibs=NONE])
+dnl AC_ARG_WITH(pocolibs,
+dnl            AC_HELP_STRING([--with-pocolibs=DIR],
+dnl                [pocolibs are installed in DIR (prefix)]),
+dnl            [opt_pocolibs=$withval],[opt_pocolibs=NONE])
+dnl 
+dnl ROBOT_PATH_INC([pocolibs], POCOLIBS_INCDIR, [portLib.h],
+dnl 	[AC_MSG_ERROR([please use --with-pocolibs option.])],
+dnl 	[@POCOLIBS_INCLUDE_PATH@:$opt_pocolibs/include:`$genomBin$ --includes`:/usr/local/include:/usr/include])
 
-ROBOT_PATH_INC([pocolibs], POCOLIBS_INCDIR, [portLib.h],
-	[AC_MSG_ERROR([please use --with-pocolibs option.])],
-	[@POCOLIBS_INCLUDE_PATH@:$opt_pocolibs/include:`$genomBin$ --includes`:/usr/local/include:/usr/include])
+PKG_CHECK_MODULES(POCOLIBS, pocolibs >= 2.0)
 
-POCOLIBS_INC="-I${POCOLIBS_INCDIR}"
-AC_SUBST(POCOLIBS_INC)
-
-
+AC_SUBST(POCOLIBS_CFLAGS)
+AC_SUBST(POCOLIBS_LIBS)
 
 dnl genom
 AC_ARG_WITH(genom,
@@ -127,19 +127,22 @@ else
 fi
 genom_path_lib=$genom_path_lib:/usr/local/lib:/usr/lib
 
-ROBOT_PATH_INC([genom], GENOM_INCDIR, [genom/modules.h],
-	[AC_MSG_ERROR([please use --with-genom option.])],
-	[$opt_genom/include:`$genomBin$ --includes`:/usr/local/include:/usr/include],
-	[#include "portLib.h"], [-I$POCOLIBS_INCDIR] )
+dnl ROBOT_PATH_INC([genom], GENOM_INCDIR, [genom/modules.h],
+dnl	[AC_MSG_ERROR([please use --with-genom option.])],
+dnl	[$opt_genom/include:`$genomBin$ --includes`:/usr/local/include:/usr/include],
+dnl	[#include "portLib.h"], [-I$POCOLIBS_INCDIR] )
+dnl
+dnl ROBOT_PATH_LIB([genom], GENOM_LIBDIR, [genom], [h2GetEvnStateString],
+dnl	[AC_MSG_ERROR([please use --with-genom option.])],
+dnl	[$genom_path_lib])
+dnl GENOM_INC="-I${GENOM_INCDIR}"
+dnl GENOM_LIB="-L${GENOM_LIBDIR} -R${GENOM_LIBDIR} -lgenom"
+dnl AC_SUBST(GENOM_INC)
+dnl AC_SUBST(GENOM_LIB)
 
-ROBOT_PATH_LIB([genom], GENOM_LIBDIR, [genom], [h2GetEvnStateString],
-	[AC_MSG_ERROR([please use --with-genom option.])],
-	[$genom_path_lib])
-
-GENOM_INC="-I${GENOM_INCDIR}"
-GENOM_LIB="-L${GENOM_LIBDIR} -R${GENOM_LIBDIR} -lgenom"
-AC_SUBST(GENOM_INC)
-AC_SUBST(GENOM_LIB)
+PKG_CHECK_MODULES(GENOM, genom >= 1.5 pocolibs >= 2.0)
+AC_SUBST(GENOM_CFLAGS)
+AC_SUBST(GENOM_LIBS)
 
 
 
