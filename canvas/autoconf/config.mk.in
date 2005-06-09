@@ -37,9 +37,6 @@ codelsdir=	$codelsDir$
 serverdir=	server
 autoconfdir=	autoconf
 
-prefix=         @prefix@
-exec_prefix=    @exec_prefix@
-
 prefix=		@prefix@
 exec_prefix=	@exec_prefix@
 bindir=		@bindir@
@@ -121,10 +118,10 @@ KERNEL_INC=	@KERNEL_INC@
 TCL_CPPFLAGS=	@TCL_CPPFLAGS@
 TCL_LDFLAGS=	@TCL_LDFLAGS@ @TCL_LIB_FLAG@ @TCL_LIBS@
 
-POCOLIBS_INC=	@POCOLIBS_INC@
+POCOLIBS_CFLAGS=	@POCOLIBS_CFLAGS@
 
-GENOM_INC=	@GENOM_INC@
-GENOM_LIB=	@GENOM_LIB@
+GENOM_CFLAGS=	@GENOM_CFLAGS@
+GENOM_LIBS=	@GENOM_LIBS@
 
 EXTRA_INCLUDES=	@EXTRA_INCLUDES@
 EXTRA_LIBS=	@EXTRA_LIBS@
