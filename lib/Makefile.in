@@ -82,7 +82,7 @@ install:: $(LIB)
 
 $(LIB): $(OBJS)
 	$(LTLD) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)			\
-		$(PORTLIB_LDFLAGS) \
+		$(PORTLIB_LIBS) \
 		-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)	\
 		-version-info $(SHLIB_MAJOR):$(SHLIB_MINOR)		\
 		-rpath $(libdir) -R$(libdir)
