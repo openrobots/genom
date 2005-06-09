@@ -7,7 +7,6 @@ AC_REVISION($LAAS$)
 
 AC_INIT($module$, $version$, $email$)
 AC_CONFIG_AUX_DIR(autoconf)
-dnl AC_CONFIG_HEADER(../config.h)
 
 AC_CANONICAL_HOST
 
@@ -66,25 +65,6 @@ dnl --- checks for functions --------------------------------------------
 dnl
 
 LIBS=
-
-dnl AC_CHECK_PTHREADS
-
-dnl AC_SEARCH_LIBS(socket, [socket], [],
-dnl 	  [AC_MSG_ERROR([socket() not found])], [-lnsl])
-dnl AC_SEARCH_LIBS(socket, [nsl], [],
-dnl 	  [AC_MSG_ERROR([socket() not found])], [])
-dnl AC_SEARCH_LIBS(clnt_create, [nsl], [],
-dnl 	  [AC_MSG_ERROR([clnt_create() not found])], [])
-dnl AC_SEARCH_LIBS(gethostbyname, [nsl], [],
-dnl         [AC_MSG_ERROR([gethostbyname() not found])], [])
-dnl AC_SEARCH_LIBS(sem_init, [rt], [],
-dnl         [AC_MSG_ERROR([sem_init() not found])], [])
-dnl AC_SEARCH_LIBS(dlopen, [dl], [],
-dnl         [AC_MSG_ERROR([dlopen() not found])], [])
-dnl AC_SEARCH_LIBS([timer_create], [rt], [],
-dnl         [AC_MSG_ERROR([timer_create() not found])], [])
-
-LIBS=
 AC_SEARCH_LIBS([fabs], [m])
 AC_SEARCH_LIBS([atan], [m])
 AC_SUBST(LIBMATH, "${LIBS}")
@@ -93,15 +73,6 @@ AC_SUBST(LIBMATH, "${LIBS}")
 dnl --- checks for libraries --------------------------------------------
 dnl
 
-dnl portLib
-dnl AC_ARG_WITH(pocolibs,
-dnl            AC_HELP_STRING([--with-pocolibs=DIR],
-dnl                [pocolibs are installed in DIR (prefix)]),
-dnl            [opt_pocolibs=$withval],[opt_pocolibs=NONE])
-dnl 
-dnl ROBOT_PATH_INC([pocolibs], POCOLIBS_INCDIR, [portLib.h],
-dnl 	[AC_MSG_ERROR([please use --with-pocolibs option.])],
-dnl 	[@POCOLIBS_INCLUDE_PATH@:$opt_pocolibs/include:`$genomBin$ --includes`:/usr/local/include:/usr/include])
 
 PKG_CHECK_MODULES(POCOLIBS, pocolibs >= 2.0)
 
