@@ -70,7 +70,7 @@ ESSAY_BIN=	$module$Essay$(BINEXT)
 
 # client libraries
 CLIENT_LIB=		lib$module$Client$(LIBEXT)
-MY_CLIENT_LIB=          $(GENOM_LIB) $(abs_top_builddir)/server/$(OBJDIR)/$(CLIENT_LIB)
+MY_CLIENT_LIB=          $(GENOM_LIBS) $(abs_top_builddir)/server/$(OBJDIR)/$(CLIENT_LIB)
 TCLCLIENT_LIB=		lib$module$TclServ$(LIBEXT)
 PRSCLIENT_LIB=	lib$module$Openprs$(LIBEXT)
 
