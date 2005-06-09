@@ -34,7 +34,6 @@ GENFILE=	$genomFile$
 GENFLAGS=	$genomIncludes$ $genomDefines$
 $genTcl$GENFLAGS+=	-t
 $genOpenprs$GENFLAGS+=	-x
-$genSpy$GENFLAGS+=	-s
 
 # --- genom -------------------------------------------------------------
 
