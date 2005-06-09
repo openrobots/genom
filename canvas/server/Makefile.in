@@ -48,7 +48,7 @@ include $(top_srcdir)/$(autoconfdir)/config.$(OSAPI).mk
 
 CPPFLAGS+= $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
 CPPFLAGS+= -I. -I$(top_srcdir) -I$(srcdir)
-CPPFLAGS+= $(POCOLIBS_INC) $(GENOM_INC)
+CPPFLAGS+= $(POCOLIBS_CFLAGS) $(GENOM_CFLAGS)
 
 # GenoM flags
 include $(top_srcdir)/$(autoconfdir)/genom.mk
@@ -174,17 +174,16 @@ $(OBJDIR)/$(POSTERWRITE_LIB): $(posterwrite_obj)
 
 $(OBJDIR)/$(CLIENT_LIB): $(client_obj)
 	$(LTLD) -o $@ $(LDFLAGS) $(client_obj) $(SERVERS_CLIENT_LIB) \
-		$(LIBTOOL_LINKOPT) $(GENOM_LIB)
-		
+		$(LIBTOOL_LINKOPT) $(GENOM_LIBS)
 
 $genTcl$$(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj)
 $genTcl$	$(LTLD) $(CFLAGS) $(tclclient_obj) $(SERVERS_ENDIAN_LIB) -o $@	\
-$genTcl$		$(LIBTOOL_LINKOPT) $(GENOM_LIB)				\
+$genTcl$		$(LIBTOOL_LINKOPT) $(GENOM_LIBS)			\
 $genTcl$		$(LDFLAGS) $(TCL_LDFLAGS)
 
 $genOpenprs$$(OBJDIR)/$(OPENPRSCLIENT_LIB): $(openprsclient_obj)
 $genOpenprs$	$(LTLD) $(CFLAGS) $(openprsclient_obj) -o $@ $(LDFLAGS)		\
-$genOpenprs$		$(GENOM_LIB) $(COM_LIB) $(OS_LIBS) -rpath $(libdir)
+$genOpenprs$		$(GENOM_LIBS) -rpath $(libdir)
 
 
 # --- binaries ----------------------------------------------------------
@@ -192,12 +191,12 @@ $genOpenprs$		$(GENOM_LIB) $(COM_LIB) $(OS_LIBS) -rpath $(libdir)
 $(OBJDIR)/$(INIT_BIN): $(init_obj) $(OBJDIR)/$(CLIENT_LIB)
 	$(LTLD) $(CFLAGS) $(init_obj) -o $@ $(LDFLAGS)	\
 		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)	\
-		$(GENOM_LIB)
+		$(GENOM_LIBS)
 
 $(OBJDIR)/$(ESSAY_BIN): $(essay_obj) $(OBJDIR)/$(CLIENT_LIB)
 	$(LTLD) $(CFLAGS) $(essay_obj) -o $@  $(LDFLAGS) 	\
 		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)		\
-		$(SERVERS_CLIENT_LIB) $(GENOM_LIB)
+		$(SERVERS_CLIENT_LIB) $(GENOM_LIBS)
 
 
 # --- basic rules -------------------------------------------------------
