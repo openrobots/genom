@@ -32,9 +32,9 @@ host_cpu=	@host_cpu@
 
 # --- Version -----------------------------------------------------------
 
-GENOM_MAJOR=	1
-GENOM_MINOR=	1
-GENOM_REV=	B
+GENOM_MAJOR=	@GENOM_MAJOR@
+GENOM_MINOR=	@GENOM_MINOR@
+GENOM_REV=	@GENOM_REV@
 
 
 # --- Programs ----------------------------------------------------------
