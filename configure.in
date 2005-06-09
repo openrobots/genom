@@ -9,7 +9,7 @@ AC_INIT(src/genom.c)
 AC_CONFIG_HEADER(genom-config.h)
 
 PACKAGE=genom
-VERSION=1.5
+VERSION=1.1B
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
 
@@ -84,25 +84,8 @@ AC_SUBST(OSAPI)
 
 dnl --- Checks for functions --------------------------------------------
 dnl
-LIBS=
 
 AC_CHECK_PTHREADS
-
-AC_SEARCH_LIBS(socket, [socket], [],
-        [AC_MSG_ERROR([socket() not found])], [-lnsl])
-AC_SEARCH_LIBS(bind, [nsl], [],
-        [AC_MSG_ERROR([socket() not found])], [])
-AC_SEARCH_LIBS(clnt_create, [nsl], [],
-        [AC_MSG_ERROR([clnt_create() not found])], [])
-AC_SEARCH_LIBS(gethostbyname, [nsl], [],
-        [AC_MSG_ERROR([gethostbyname() not found])], [])
-AC_SEARCH_LIBS(dlopen, [dl], [],
-        [AC_MSG_ERROR([dlopen() not found])], [])
-AC_SEARCH_LIBS([timer_create], [rt], [],
-        [AC_MSG_ERROR([timer_create() not found])], [])
-
-AC_SUBST(OS_LIBS, "${LIBS}")
-
 
 dnl ---- Checks for headers ---------------------------------------------
 dnl
@@ -124,19 +107,6 @@ AC_ARG_WITH(pocolibs-exec-prefix,
            AC_HELP_STRING([--with-pocolibs-exec-prefix=DIR],
                [pocolibs libraries are installed in DIR (exec-prefix)]),
            [opt_pocolibs_eprefix=$withval],[opt_pocolibs_eprefix=$exec_prefix])
-
-dnl ROBOT_PATH_INC([pocolibs], PORTLIB_CFLAGS, [portLib.h],
-dnl	[AC_MSG_ERROR([please use --with-pocolibs option.])],
-dnl	[$opt_pocolibs/include:/usr/local/include:/usr/include])
-
-dnl ROBOT_PATH_LIB([pocolibs], PORTLIB_LDFLAGS, [portLib], [osInit],
-dnl	[AC_MSG_ERROR([please use --with-pocolibs option.])],
-dnl	[$opt_pocolibs_eprefix/lib:$opt_pocolibs/lib:/usr/local/lib:/usr/lib])
-
-dnl POCOLIBS_INCLUDE_PATH=$pocolibs_INCLUDE_PATH
-dnl AC_SUBST(POCOLIBS_INCLUDE_PATH)
-dnl POCOLIBS_LIB_PATH=$pocolibs_LIB_PATH
-dnl AC_SUBST(POCOLIBS_LIB_PATH)
 
 PKG_CHECK_MODULES(PORTLIB, pocolibs >= 2.0)
 AC_SUBST(PORTLIB_CFLAGS)
