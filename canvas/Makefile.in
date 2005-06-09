@@ -133,14 +133,14 @@ flist+=\
 	Makefile.top.in			\
 	autogen.sh			\
 	acinclude.m4			\
+	module.pc.in			\
 	start.pl			\
-	end.pl				
+	end.pl
 
 # These are searched in builddir instead of srcdir
 genlist = \
 	autoconf/configure.begin.in \
 	autoconf/configure.end.in
-	  
 
 dirs=autoconf codels openprs server server/tcl server/openprs
 
