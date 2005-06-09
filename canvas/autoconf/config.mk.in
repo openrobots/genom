@@ -97,8 +97,6 @@ else
 OSDEF = UNIX
 endif
 
-abs_top_srcdir= @abs_top_srcdir@
-
 ENDIANNESS=	@ENDIANNESS@
 
 GENOM_DEFINES=  $genomDefines$
