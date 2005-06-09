@@ -47,8 +47,6 @@ CPPFLAGS+=	$(PORTLIB_CFLAGS)
 CPPFLAGS+=	-D$(ENDIANNESS)
 
 LDFLAGS+=	$(PORTLIB_LIBS)
-LDFLAGS+=	-lposterLib -lerrorLib -lcomLib -lportLib $(OS_LIBS)
-
 
 # -----------------------------------------------------------------------
 
