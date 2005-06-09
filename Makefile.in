@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2004 
 #      Autonomous Systems Lab, Swiss Federal Institute of Technology.
-# Copyright (c) 2003 LAAS/CNRS
+# Copyright (c) 2003-2005 LAAS/CNRS
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -32,7 +32,13 @@
 
 top_srcdir=	@top_srcdir@
 srcdir=		@srcdir@
-top_builddir=.
+top_builddir=	.
+
+prefix=		@prefix@
+exec_prefix=	@exec_prefix@
+libdir=		@libdir@
+
+INSTALL=	@INSTALL@
 
 include config.mk
 
@@ -77,8 +83,15 @@ SUBDIRS+= include
 
 make_subdirs= @for d in ${SUBDIRS}; do (cd $$d; ${MAKE} $@ ) || exit 2; done
 
-all install: $(config_files) $(config_headers)
+all: $(config_files) $(config_headers)
 	$(make_subdirs)
+
+install:: all
+	$(make_subdirs)
+
+install::  genom.pc
+	$(MKINSTALLDIRS) $(libdir)/pkgconfig
+	$(INSTALL) genom.pc $(libdir)/pkgconfig
 
 clean: 
 	$(make_subdirs)
