@@ -54,7 +54,7 @@ mirror_dir("server/openprs", "../$openprsDir", "", "", 0) if ($genOpenprs == 1);
 mirror_dir("autoconf", "../$autoconfDir", "", "^(?:local.mk)", 0);
 mirror_dir(".", "..", "^acinclude.m4", "", 1);
 mirror_dir(".", "..", "^autogen.sh", "", 0);
-
+mirror_dir(".", "..", "^$module.pc", "", 0);
 
 
 # Do +x on autogen.sh
