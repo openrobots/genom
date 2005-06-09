@@ -57,10 +57,13 @@
 #define PROTO_MAKEFILE_SERVER	"server/Makefile.in"
 #define PROTO_MAKEFILE_CODELS	"codels/Makefile.in"
 
+#define PROTO_PKGCONFIG_IN	"module.pc.in"
+
 int configureGen(FILE *out, const char *codelsDir, const char *cmdLine,
 	const char *genomBin, const char *genomFile, const char *genomWd,
 	int genTcl, int genOpenprs);
 int configureServerGen(FILE *out, const char *genomBin,
 	const char *genomFile, int genTcl, int genOpenprs);
+int pkgconfigGen(FILE *out);
 
 #endif /* H_CONFIGUREGEN */

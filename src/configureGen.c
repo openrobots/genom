@@ -369,3 +369,15 @@ configureServerGen(FILE *out,
 
     return 0;
 }
+/*----------------------------------------------------------------------*/
+
+int pkgconfigGen(FILE *out)
+{
+	script_open(out);
+	subst_begin(out, PROTO_PKGCONFIG_IN);
+	print_sed_subst(out, "module", module->name);
+	print_sed_subst(out, "genomVersion", genomVersion);
+	subst_end(out);
+	script_close(out, "%s.pc.in", module->name);
+	return 0;
+}
