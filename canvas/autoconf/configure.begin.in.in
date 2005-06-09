@@ -127,7 +127,7 @@ else
 fi
 genom_path_lib=$genom_path_lib:/usr/local/lib:/usr/lib
 
-PKG_CHECK_MODULES(GENOM, genom >= 1.5 pocolibs >= 2.0)
+PKG_CHECK_MODULES(GENOM, genom >= 1.1 pocolibs >= 2.0)
 AC_SUBST(GENOM_CFLAGS)
 AC_SUBST(GENOM_LIBS)
 
