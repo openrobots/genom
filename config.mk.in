@@ -1,7 +1,7 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2002 LAAS/CNRS                        --  Fri Mar 15 2002
+# Copyright (c) 2002-2005/CNRS                        --  Fri Mar 15 2002
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -73,7 +73,7 @@ OSAPI=		@OSAPI@
 OS_LIBS=	@OS_LIBS@
 
 PORTLIB_CFLAGS=	@PORTLIB_CFLAGS@
-PORTLIB_LDFLAGS=	@PORTLIB_LDFLAGS@
+PORTLIB_LIBS=	@PORTLIB_LIBS@
 
 RTAI_INC=	@RTAI_INC@
 LNXKERN_INC=	@LNXKERN_INC@
