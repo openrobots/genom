@@ -50,6 +50,9 @@ CPPFLAGS+= $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
 CPPFLAGS+= -I. -I$(top_srcdir) -I$(srcdir)
 CPPFLAGS+= $(POCOLIBS_CFLAGS) $(GENOM_CFLAGS)
 
+# Put this BEFORE including genom.mk since genom.mk defines the regen and regen-user targets
+all: dirs server client
+
 # GenoM flags
 include $(top_srcdir)/$(autoconfdir)/genom.mk
 
@@ -138,7 +141,6 @@ $genOpenprs$openprsclient_obj=$(openprsclient_src:%.c=$(OBJDIR)/%.lo)
 
 # --- what to do --------------------------------------------------------
 
-all: dirs server client
 
 dirs: $(OBJDIR)
 $genTcl$dirs: $(OBJDIR)/tcl
