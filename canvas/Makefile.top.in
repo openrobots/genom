@@ -87,6 +87,7 @@ regen: standalone-regen
 
 # --- pkgconfig ---------------------------------------------------------
 install:: $module$.pc
+	$(MKINSTALLDIRS) $(libdir)/pkgconfig
 	$(INSTALL) $module$.pc $(libdir)/pkgconfig
 
 # --- autoconf/autoheader -----------------------------------------------
