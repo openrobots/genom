@@ -155,14 +155,16 @@ install: all
 	    $(MKINSTALLDIRS) $(CANVASDIR)/$$d; \
 	done
 	@for f in $(flist); do						\
-	    if ! $(CMP) $(srcdir)/$$f $(CANVASDIR)/$$f; then \
+	    $(CMP) $(srcdir)/$$f $(CANVASDIR)/$$f ; \
+	    if test $$? != 0  ; then \
 		echo "$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/$$f";	\
 		$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/$$f;	\
 	    fi; \
 	done
 
 	@for f in $(genlist); do						\
-	    if ! $(CMP) $(builddir)/$$f $(CANVASDIR)/$$f; then \
+	    $(CMP) $(builddir)/$$f $(CANVASDIR)/$$f ; \
+	    if test $$? != 0 ; then \
 		echo "$(INSTALL_DATA) $(builddir)/$$f $(CANVASDIR)/$$f";	\
 		$(INSTALL_DATA) $(builddir)/$$f $(CANVASDIR)/$$f;	\
 	    fi; \
