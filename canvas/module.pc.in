@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: $module$
 Description: $module$ Genom module
 Version: @PACKAGE_VERSION@
-Requires: genom >= $genomVersion$
+Requires: genom >= $genomMajor$.$genomMinor$
 Libs: -L${libdir} -l$module$Client
 Cflags: -I${includedir}

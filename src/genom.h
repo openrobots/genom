@@ -322,6 +322,8 @@ extern char *cppOptions[];
 extern int nCppOptions;
 
 extern const char genomVersion[];
+extern const char genomMajor[];
+extern const char genomMinor[];
 
 #include "genomProto.h"
 
