@@ -1,2 +1,2 @@
-builtin(include,robots.m4)
-builtin(include,libtool.m4)
+m4_include(robots.m4)
+m4_include(libtool.m4)
