@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: $module$
-Description: $module$ module
+Description: $module$ Genom module
 Version: @PACKAGE_VERSION@
 Requires: genom >= $genomVersion$
 Libs: -L${libdir} -l$module$Client
