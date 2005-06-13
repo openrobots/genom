@@ -30,7 +30,7 @@
 
 dnl --- Compute CFLAGS --------------------------------------------------
 
-AC_DEFUN(ROBOT_CFLAGS,
+AC_DEFUN([ROBOT_CFLAGS],
 [
    C_DEBUG_FLAGS=-g
 
@@ -43,7 +43,7 @@ AC_DEFUN(ROBOT_CFLAGS,
 
 dnl --- Test that CPP accepts '-' as a file name ------------------------
 
-AC_DEFUN(ROBOT_CPP_USES_STDIN,
+AC_DEFUN([ROBOT_CPP_USES_STDIN],
 [
    AC_REQUIRE_CPP()
 
@@ -73,7 +73,7 @@ AC_DEFUN(ROBOT_CPP_USES_STDIN,
 
 dnl --- Look for the laas mkdep executable ------------------------------
 
-AC_DEFUN(ROBOT_PROG_MKDEP,
+AC_DEFUN([ROBOT_PROG_MKDEP],
 [
    AC_PATH_PROG(MKDEP, mkdep, no, $exec_prefix/bin:$prefix/bin:$PATH)
    if test "$MKDEP" = "no"; then
@@ -98,7 +98,7 @@ AC_DEFUN(ROBOT_PROG_MKDEP,
 dnl --- Check for pthread support ---------------------------------------
 dnl
 dnl AC_CHECK_PTHREADS_LINK(action ok, action not ok, action cross-compiling)
-AC_DEFUN(AC_CHECK_PTHREADS_LINK,
+AC_DEFUN([AC_CHECK_PTHREADS_LINK],
 [
 	AC_LANG_SAVE
 	AC_LANG_C
@@ -225,7 +225,7 @@ AC_DEFUN([AC_CHECK_LINUXKERNEL_INCLUDES],
 dnl --- Look for includes in a path ------------------------------------
 dnl ROBOT_PATH_INC(PACKAGE, VARIABLE, INC, [, VALUE-IF-NOT-FOUND, [, PATH]])
 dnl
-AC_DEFUN(ROBOT_PATH_INC,
+AC_DEFUN([ROBOT_PATH_INC],
 [
    AC_MSG_CHECKING([for $1 headers])
    $2=""
@@ -265,7 +265,7 @@ AC_DEFUN(ROBOT_PATH_INC,
 dnl --- Look for a library in a path ------------------------------------
 dnl ROBOT_PATH_LIB(PACKAGE, VARIABLE, LIB, FNCT [,VALUE-IF-NOT-FOUND [,PATH]])
 dnl
-AC_DEFUN(ROBOT_PATH_LIB,
+AC_DEFUN([ROBOT_PATH_LIB],
 [
    AC_MSG_CHECKING([for $1 libraries])
    $2=""
@@ -308,7 +308,7 @@ AC_DEFUN(ROBOT_PATH_LIB,
 dnl --- Look for a file in a path ---------------------------------------
 dnl ROBOT_PATH_FILE(PACKAGE, VARIABLE, LIB, [, VALUE-IF-NOT-FOUND, [, PATH]])
 dnl
-AC_DEFUN(ROBOT_PATH_FILE,
+AC_DEFUN([ROBOT_PATH_FILE],
 [
    AC_ARG_WITH($1,
 	       AC_HELP_STRING([--with-$1=DIR],
@@ -342,7 +342,7 @@ AC_DEFUN(ROBOT_PATH_FILE,
 
 dnl --- Look for tcl ----------------------------------------------------
 dnl
-AC_DEFUN(ROBOT_LIB_TCL,
+AC_DEFUN([ROBOT_LIB_TCL],
 [
    AC_ARG_WITH(tcl,
       AC_HELP_STRING([--with-tcl=DIR], [directory containing tclConfig.sh. 'no' to disable.]),
