@@ -75,6 +75,7 @@ fig-links:
 
 ifneq (:,$(LATEX))
 install: all
+	$(MKINSTALLDIRS) $(datadir)
 	$(INSTALL_DATA) $(genom_doc) $(datadir)/$(genom_doc)
 else
 install:
