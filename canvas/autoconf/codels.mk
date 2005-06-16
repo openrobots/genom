@@ -20,10 +20,10 @@ $(OBJDIR)/$(MODULE_BIN): $(top_builddir)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LI
 
 $(OBJDIR)/$(MODULE_BIN):
 	$(LTLD) $(BINEXPORT) $(CFLAGS) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT)		\
-		$(EXTRA_LIBS) \
 		$(top_builddir)/$(serverdir)/$(OBJDIR)/$(CLIENT_LIB)	\
 		$(top_builddir)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)	\
-		$(OBJDIR)/$(USER_LIB)					\
+		$(OBJDIR)/$(USER_LIB) \
+		$(EXTRA_LIBS) \
 		$(top_builddir)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LIB)	\
 		$(GENOM_LIBS)
 
