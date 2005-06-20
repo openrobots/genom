@@ -239,28 +239,21 @@ configureGen(FILE *out,
    genomIncludes = NULL;
    serverLibs = NULL;
 
-   /* import from */
+   /* Include all packages by default */
+   for (ln = packages; ln != NULL; ln = ln->next)
+       bufcatIfNotIn(&genomIncludes, " \\$(%s_CFLAGS)", ln->NAME);
+
    for (ln = externLibs; ln != NULL; ln = ln->next)
    {
-        bufcatIfNotIn(&genomIncludes, " -I\\$(%s_PREFIX)/include/%s", 
-                ln->NAME, ln->name);
-	bufcatIfNotIn(&serverLibs, "-L\\$(%s_EXEC)/lib -l%sClient ", 
-                ln->NAME, ln->name); 
+        bufcatIfNotIn(&genomIncludes, " \\$(%s_CFLAGS)", ln->NAME);
+	bufcatIfNotIn(&serverLibs, "\\$(%s_LIBS)", ln->NAME); 
    }
-
    output(out, "genomPackages", pkg_conf_mk);
    output(out, "serverLibs", serverLibs);
 
-   /* -I options 
-    * Only quote the @..@ construct once, for perl */
+   /* -I options */
    for (ln = externPath; ln != NULL; ln = ln->next)
-   {
-       if ( (ln->name)[0] == '@' )
-           bufcatIfNotIn(&genomIncludes, " -I\\%s", ln->name);
-       else
-           bufcatIfNotIn(&genomIncludes, " -I%s", ln->name);
-    }
-
+       bufcatIfNotIn(&genomIncludes, " -I%s", ln->name);
    output(out, "genomIncludes", genomIncludes);
 
    subst_end(out);
@@ -360,12 +353,24 @@ configureServerGen(FILE *out,
 
 int pkgconfigGen(FILE *out)
 {
-	script_open(out);
-	subst_begin(out, PROTO_PKGCONFIG_IN);
-	print_sed_subst(out, "module", module->name);
-	print_sed_subst(out, "genomMinor", genomMinor);
-	print_sed_subst(out, "genomMajor", genomMajor);
-	subst_end(out);
-	script_close(out, "%s.pc.in", module->name);
-	return 0;
+    char* require = 0;
+    ID_LIST* ln;
+
+    script_open(out);
+    subst_begin(out, PROTO_PKGCONFIG_IN);
+
+    /* Build the require field */
+    for (ln = packages; ln != NULL; ln = ln->next)
+    {
+	bufcat(&require, ", ");
+	bufcat(&require, ln->name);
+    }
+    output(out, "require", require);
+
+    print_sed_subst(out, "module", module->name);
+    print_sed_subst(out, "genomMinor", genomMinor);
+    print_sed_subst(out, "genomMajor", genomMajor);
+    subst_end(out);
+    script_close(out, "%s.pc.in", module->name);
+    return 0;
 }

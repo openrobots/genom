@@ -3,8 +3,8 @@
 
 /* Returns the cflags needed by package, by calling pkg-config --cflags
  * or 0 if --cflags is not found */
-char *
-get_pkgconfig_cflags(char *package);
+int
+get_pkgconfig_cflags(char *package, char** cpp_options, int first_option);
 
 #define MAX_CPP_OPT 20
 

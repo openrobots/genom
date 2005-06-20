@@ -1512,62 +1512,19 @@ main(int argc, char **argv)
 	    il->next = 0;
             externPath = push_back(externPath, il);
 	    break;
+
 	  case 'P': /* define a package */
 	    bufcat(&cmdLine, "-P%s ", optarg);
-	    cflags = get_pkgconfig_cflags(optarg);
-
-	    /* make option for cpp with the path */
-	    if (cflags)
-	    {
-		if (nCppOptions < MAX_CPP_OPT - 1) {
-		    cppOptions[nCppOptions++] = cflags;
-		} else {
-		    fprintf(stderr, "%s: too many options for cpp\n", argv[0]);
-		    exit(-1);
-		}
-	    }
+	    /* get_pkgconfig_cflags calls exit() itself if there is too much options */
+	    nCppOptions += get_pkgconfig_cflags(optarg, cppOptions, nCppOptions);
+	    for (i = 0; i < nCppOptions; ++i)
+		fprintf(stderr, "%s\n", cppOptions[i]);
 
 	    /* keep macro name and path for makefiles */
 	    il = STR_ALLOC(ID_LIST);
 	    il->name = strdup(optarg);
 	    il->next = 0;
 	    packages = push_back(packages, il);
-#if 0
-            equal = strstr(optarg, "=");
-
-            /* Check if there is a path */
-            if (equal == 0)
-            {
-                strcpy(pathmacro, optarg);
-                *path = 0;
-            }
-            else
-            {
-                /* separation between macro and path */
-                strncpy(pathmacro, optarg, equal-optarg);
-                pathmacro[equal-optarg] = '\0';
-                strcpy (path, equal+1);
-
-                /* make option for cpp with the path */
-                sprintf(nomout, "-I%s/include/%s", path, pathmacro);
-                if (nCppOptions < MAX_CPP_OPT - 1) {
-                    cppOptions[nCppOptions++] = strdup(nomout);
-                } else {
-                    fprintf(stderr, "%s: too many options for cpp\n", argv[0]);
-                    exit(-1);
-                }
-            }
-
-	    /* keep macro name and path for makefiles */
-	    il = STR_ALLOC(ID_LIST);
-	    il->name = strdup(pathmacro);
-	    il->next = 0;
-	    packages = push_back(packages, il);
-	    il = STR_ALLOC(ID_LIST);
-	    il->name = strdup(path);
-	    il->next = 0;
-	    packagesPrefix = push_back(packagesPrefix, il);
-#endif
 
 	    break;
 	  case 'v':
