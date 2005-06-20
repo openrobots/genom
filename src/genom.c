@@ -58,8 +58,13 @@ static char* strcpytoupper(char const* value)
 {
     char* result = (char*)xalloc(strlen(value) + 1);
     int i;
-    for (i = 0; value[i] != '\0'; 
-            result[i] = toupper(value[i]), i++);
+    for (i = 0; value[i] != '\0'; ++i);
+    {
+	if (value[i] == '-')
+	    result[i] = '_';
+	else
+	    result[i] = toupper(value[i]);
+    }
     result[i] = '\0';
     return result;
 }
