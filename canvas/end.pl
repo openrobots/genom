@@ -99,7 +99,6 @@ sub is_autoconf_fresh() {
 
             if ( $mtime > $configure->mtime )
             {
-                print "\n$source $mtime\n";
                 $aconf_regen = 1;
                 last;
             }

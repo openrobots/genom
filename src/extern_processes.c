@@ -46,8 +46,6 @@ split(char* string, char* delim, int lookahead, char** fields, int max_fields)
 	fields[last_option++] = string_strip_end( strdup(field_begin) );
 	field_begin = field_end + delim_length - lookahead;
 
-	fprintf(stderr, "\n\n%s\n%s\n\n", field_begin, field_end);
-
 	if (last_option == max_fields)
 	{
 	    int i = 0;

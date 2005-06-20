@@ -1410,7 +1410,6 @@ main(int argc, char **argv)
     extern FILE *yyin;
     char nomout[MAXPATHLEN];
     char cmdout[MAXPATHLEN];
-    char *cflags;
     
     char *nomTemp;
     int opt;
@@ -1517,8 +1516,6 @@ main(int argc, char **argv)
 	    bufcat(&cmdLine, "-P%s ", optarg);
 	    /* get_pkgconfig_cflags calls exit() itself if there is too much options */
 	    nCppOptions += get_pkgconfig_cflags(optarg, cppOptions, nCppOptions);
-	    for (i = 0; i < nCppOptions; ++i)
-		fprintf(stderr, "%s\n", cppOptions[i]);
 
 	    /* keep macro name and path for makefiles */
 	    il = STR_ALLOC(ID_LIST);
