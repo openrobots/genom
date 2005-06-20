@@ -84,7 +84,8 @@ SRCS = \
 	userExecCodelsGen.c	\
 	userCntrlCodelsGen.c	\
 	userStartGen.c		\
-	configureGen.c	
+	configureGen.c		\
+	extern_processes.c
 
 OBJS = $(SRCS:.c=.lo)
 

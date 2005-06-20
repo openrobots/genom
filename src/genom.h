@@ -312,7 +312,7 @@ extern ID_LIST *includeFiles;
 extern ID_LIST *allIncludeFiles;
 extern ID_LIST *externLibs;
 extern ID_LIST *packages;      /* variables name from -P */
-extern ID_LIST *packagesPrefix;  /* all the path from -P */
+/* extern ID_LIST *packagesPrefix;*/  /* all the path from -P */
 extern ID_LIST *externPath;           /* all the path from -I */
 extern POSTER_LIST *posters;
 extern POSTERS_INPUT_LIST *posters_input;
@@ -324,6 +324,8 @@ extern int nCppOptions;
 extern const char genomVersion[];
 extern const char genomMajor[];
 extern const char genomMinor[];
+
+extern int verbose;
 
 #include "genomProto.h"
 

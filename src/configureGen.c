@@ -81,27 +81,16 @@ static void genomDefines(FILE* out)
    }
 }
 
-static void definePackage(char** conf_in, char** conf_mk_in, char const* NAME, char const* name, char const* defprefix)
+static void definePackage(char** conf_in, char** conf_mk_in, char const* NAME, char const* name)
 {
-    bufcatIfNotIn(conf_mk_in, "\n%s_PREFIX   =  \t\\@%s_PREFIX\\@", NAME, NAME);
-    bufcatIfNotIn(conf_mk_in, "\n%s_PREFIX   ?= \t\\$(prefix)", NAME);
-    bufcatIfNotIn(conf_mk_in, "\n%s_EXEC     =  \t\\@%s_EXEC\\@", NAME, NAME);
-    bufcatIfNotIn(conf_mk_in, "\n%s_EXEC     ?= \t\\$(exec_prefix)", NAME);
+    bufcatIfNotIn(conf_mk_in, "\n%s_CFLAGS   = \t\\@%s_CFLAGS\\@", NAME, NAME);
+    bufcatIfNotIn(conf_mk_in, "\n%s_LIBS     = \t\\@%s_LIBS@", NAME, NAME);
 
     bufcatIfNotIn(conf_in,
-        "\nAC_ARG_WITH(%s,\n"
-        "       AC_HELP_STRING([--with-%s=PATH], [%s is installed in PATH (prefix), default %s]),\n"
-        "       [%s_PREFIX=\\$withval],\n"
-        "       [%s_PREFIX=\"%s\"])\n"
-        "AC_ARG_WITH(%s-exec,\n"
-        "       AC_HELP_STRING([--with-%s-exec], [%s binaries are installed in PATH (exec prefix), default %s]),\n"
-        "       [%s_EXEC=\\$withval],\n"
-        "       [%s_EXEC=\\$%s_PREFIX])\n"
-        "AC_SUBST(%s_PREFIX)\n"
-        "AC_SUBST(%s_EXEC)\n\n", 
-        name, name, name, defprefix == 0 ? "module prefix" : defprefix, NAME, NAME, defprefix,
-        name, name, name, defprefix == 0 ? "module prefix" : defprefix, NAME, NAME, NAME,
-        NAME, NAME);
+        "\nPKG_CHECK_MODULES(%s, %s)\n"
+        "AC_SUBST(%s_CFLAGS)\n"
+        "AC_SUBST(%s_LIBS)\n\n", 
+        NAME, name, NAME, NAME);
 }
 
 int
@@ -112,7 +101,7 @@ configureGen(FILE *out,
 {
    const char **p;
    EXEC_TASK_LIST *lt;
-   ID_LIST *ln, *ln2;
+   ID_LIST *ln;
 
    char *pkg_conf_in, *pkg_conf_mk;
    char *genomIncludes, *serverLibs, *codel_files;
@@ -209,17 +198,17 @@ configureGen(FILE *out,
    pkg_conf_mk = NULL;
 
    /* First, the -P option */ 
-   for (ln = packages, ln2 = packagesPrefix; ln != NULL; ln = ln->next, ln2 = ln2->next) 
-       definePackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name, ln2->name);
+   for (ln = packages; ln != NULL; ln = ln->next) 
+       definePackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 
    /* import from. Remove those already in -P */
    for (ln = externLibs; ln != NULL; ln = ln->next)
    {
 	char* check = NULL;
-	bufcat(&check, "\n%s_PREFIX ", ln->NAME);
-	/* test if $(MACRO)_PREFIX has already been defined with -P */
+	bufcat(&check, "\n%s_CFLAGS ", ln->NAME);
+	/* test if $(MACRO)_CFLAGS has already been defined with -P */
 	if (pkg_conf_mk == NULL || strstr(pkg_conf_mk, check) == NULL)
-            definePackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name, 0);
+            definePackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 	free(check);
    }
 
@@ -293,7 +282,7 @@ configureServerGen(FILE *out,
 {
    char *str;
    EXEC_TASK_LIST *lt;
-   ID_LIST *ln, *ln2;
+   ID_LIST *ln;
 
    /* --- genom.mk --------------------------------------------------- */
    script_open(out);
@@ -311,10 +300,8 @@ configureServerGen(FILE *out,
 
    /* GenoM -P options */
    str = NULL;
-   for (ln = packages, ln2 = packagesPrefix; 
-	ln != NULL; 
-	ln = ln->next, ln2 = ln2->next) {
-     bufcatIfNotIn(&str, " -P%s=%s", ln->name, ln2->name);
+   for (ln = packages; ln != NULL; ln = ln->next) {
+     bufcatIfNotIn(&str, " -P%s", ln->name);
    }
 
    /* GenoM -I options 

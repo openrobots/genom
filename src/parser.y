@@ -54,6 +54,8 @@ __RCSID("$LAAS$");
 
 #include <errno.h>
 
+#include "extern_processes.h"
+
 #include "genom.h"
 #include "typeGen.h"
 #include "errorGen.h"
@@ -136,10 +138,8 @@ ID_LIST *includeFiles = NULL; /* Fichiers inclus dans .gen */
 ID_LIST *allIncludeFiles = NULL; /* Tous les fichiers inclus (trouves par cpp) */
 ID_LIST *externLibs = NULL;
 ID_LIST *packages = NULL;
-ID_LIST *packagesPrefix = NULL;
+/*ID_LIST *packagesPrefix = NULL;*/
 ID_LIST *externPath = NULL;
-
-#define MAX_CPP_OPT 20
 
 char *cppOptions[MAX_CPP_OPT];
 int nCppOptions = 0;
@@ -1387,8 +1387,6 @@ int yydebug = 0;
 int verbose = 0;
 /*----------------------------------------------------------------------*/
 
-static char *callCpp(char *nomFic, char *cppOptions[]);
-
 static ID_LIST* push_back(ID_LIST* list, ID_LIST* item)
 {
     item->next = 0;
@@ -1412,9 +1410,7 @@ main(int argc, char **argv)
     extern FILE *yyin;
     char nomout[MAXPATHLEN];
     char cmdout[MAXPATHLEN];
-    char pathmacro[MAXPATHLEN];
-    char path[MAXPATHLEN];
-    char *equal;
+    char *cflags;
     
     char *nomTemp;
     int opt;
@@ -1450,18 +1446,19 @@ main(int argc, char **argv)
 
     static const char *usage = 
       "Usage: \n  genom [-i] [-c] [-d] [-n] [-p protoDir] [-s] [-t] "
-      "[-u codelsDir] [-x]\n\t[-Ddefine] [-Ipath] [-Ppackage[=prefix]] module[.gen]\n"
+      "[-u codelsDir] [-x]\n\t[-Ddefine] [-Ipath] [-Ppackage] module[.gen]\n"
       "with:\n"
+      "     -P: declare a package on which this module is dependent.\n"
+      "         Packages are defined used via pkg-config, so you should\n"
+      "         have a pkg-config file installed for each -P\n"
+      "     -I: path for included file. Use @PACKAGE_CFLAGS@\n"
+      "         to reuse a prefix defined with -Ppackage\n"
       "     -i: installs new templates for codels and makefiles (new module)\n"
       "     -t: produces on-board tcl client code\n"
       "     -x: produces openprs interfaces\n\n"
       "     -u: specifies the name of the codels directory\n"
       "     -p: changes the path for prototype files (canvas) \n"
       "     -D: define a preprocessor symbol\n"
-      "     -P: declare a package on which this module is dependent.\n"
-      "         Use -Ppackage=PREFIX to define a prefix.\n"
-      "     -I: path for included file. Use @PACKAGE_PREFIX@\n"
-      "         to reuse a prefix defined with -Ppackage=path\n"
       "     -c: generates if changes only  \n"
       "     -d: debug \n"
       "     -v: verbose (for debugging pruposes)\n"
@@ -1484,7 +1481,7 @@ main(int argc, char **argv)
     memset(cppOptions, 0, sizeof(cppOptions));
     nopt = argc;
 
-    while ((opt = getopt(argc, argv, "D:I:P:dnp:ciu:txs-:")) != -1) {
+    while ((opt = getopt(argc, argv, "D:I:P:dnp:ciu:txs-:v")) != -1) {
 
 	switch (opt) {
 	  case 'D':
@@ -1517,6 +1514,25 @@ main(int argc, char **argv)
 	    break;
 	  case 'P': /* define a package */
 	    bufcat(&cmdLine, "-P%s ", optarg);
+	    cflags = get_pkgconfig_cflags(optarg);
+
+	    /* make option for cpp with the path */
+	    if (cflags)
+	    {
+		if (nCppOptions < MAX_CPP_OPT - 1) {
+		    cppOptions[nCppOptions++] = cflags;
+		} else {
+		    fprintf(stderr, "%s: too many options for cpp\n", argv[0]);
+		    exit(-1);
+		}
+	    }
+
+	    /* keep macro name and path for makefiles */
+	    il = STR_ALLOC(ID_LIST);
+	    il->name = strdup(optarg);
+	    il->next = 0;
+	    packages = push_back(packages, il);
+#if 0
             equal = strstr(optarg, "=");
 
             /* Check if there is a path */
@@ -1551,6 +1567,7 @@ main(int argc, char **argv)
 	    il->name = strdup(path);
 	    il->next = 0;
 	    packagesPrefix = push_back(packagesPrefix, il);
+#endif
 
 	    break;
 	  case 'v':
@@ -1631,35 +1648,11 @@ main(int argc, char **argv)
     /* Traitement des options de cpp */
     for (i = 0; i<nCppOptions; i++) {
 	if (cppOptions[i][0] == '-' && cppOptions[i][1] == 'I') {
-            /* Check for $(MACRO_PREFIX) where MACRO is one of the -P */
-            ID_LIST* ln, * ln2;
-            for (ln = packages, ln2 = packagesPrefix; 
-                    ln != NULL;
-                    ln = ln->next, ln2 = ln2->next)
-            {
-                char* pattern = 0, *found;
-                bufcat(&pattern, "@%s_PREFIX@", ln->NAME);
-
-                found = strstr(cppOptions[i], pattern); 
-                if (found)
-                {
-                    char* begin = strdup(cppOptions[i]);
-                    begin[ found - cppOptions[i] ] = 0;
-                    sprintf(nomout, "%s%s%s", begin, ln2->name, found + strlen(pattern));
-                    free(cppOptions[i]);
-                    free(begin);
-                    cppOptions[i] = strdup(nomout);
-                }
-                free(pattern);
-            }
-                
-
 	    if (cppOptions[i][2] != '/' && chDir[0] != '\0') {
 		/* chemin relatif et on a changé de répertoire */
 		sprintf(nomout, "-I%s%s", chDir, &cppOptions[i][2]);
 		free(cppOptions[i]);
 		cppOptions[i] = strdup(nomout);
-
 	    }
 	}
     } /* for */
@@ -1904,102 +1897,4 @@ yyerror(char *s)
 
 /*----------------------------------------------------------------------*/
 
-/**
- ** Appel du preprocesseur C 
- **/
-
-#ifndef STDINCPP
-# define STDINCPP "gcc -E -"
-#endif /* STDINCPP */
-
-static char *
-callCpp(char *nomFic, char *cppOptions[])
-{
-    char *tmpName;
-    char *cppArg[MAX_CPP_OPT + 3], *cpp;
-    int in, out, i, j, status;
-    
-    /* open input and output files */
-    in = open(nomFic, O_RDONLY, 0);
-    if (in < 0) {
-       fprintf(stderr, "cannot open %s for reading: ", nomFic);
-       perror("");
-       exit(2);
-    }
-
-    tmpName = strdup("/tmp/genomXXXXXX");
-    /* use a safe temporary file */
-    out = mkstemp(tmpName);
-    if (out < 0) {
-       fprintf(stderr, "genom: cannot open %s for writing: ", tmpName);
-       perror("");
-       exit(2);
-    }
-   
-    /* build the argv array: split cpp into argvs and copy options */
-    cpp = strdup(STDINCPP);
-    if (!cpp) {
-       perror("genom: cannot exec cpp");
-       exit(2);
-    }
-
-    for(i=0; *cpp != '\0'; i++) {
-       if (i > MAX_CPP_OPT) {
-	  fputs("too many options to cpp\n", stderr);
-	  free(cppArg[0]);
-	  exit(2);
-       }
-
-       cppArg[i] = cpp;
-       cpp += strcspn(cpp, " \t");
-       if (*cpp != '\0') {
-	  *cpp = '\0';
-	  cpp++;
-	  cpp += strspn(cpp, " \t");
-       }
-    }
-    
-    if (verbose)
-        fputs("Running cpp with options ", stderr);
-
-    for(j=0; cppOptions[j] != NULL;) {
-       if (i > MAX_CPP_OPT) {
-	  fputs("too many options to cpp\n", stderr);
-	  free(cppArg[0]);
-	  exit(2);
-       }
-
-        
-       if (verbose)
-           fputs(cppOptions[j], stderr);
-       cppArg[i++] = cppOptions[j++];
-    }
-
-    /* cpp output goes to stdout */
-    cppArg[i] = NULL;
-
-    if (fork() == 0) {
-	    /* read stdin from nomFic */
-	    if (dup2(in, fileno(stdin)) < 0) {
-		    fprintf(stderr, "genom: cannot redirect cpp stdin: %s\n",
-			strerror(errno));
-		    exit(2);
-	    }
-
-	    /* redirect stdout to tmpName */
-	    if (dup2(out, fileno(stdout)) < 0) {
-		    fprintf(stderr, "genom: cannot redirect cpp output: %s\n",
-			strerror(errno));
-		    exit(2);
-	    }
-	    execvp(cppArg[0], cppArg);
-    }
-    free(cppArg[0]);
-    wait(&status);
-    if (! WIFEXITED(status) || WEXITSTATUS(status) != 0) {
-	    fprintf(stderr, "genom: cpp failure\n");
-	    exit(2);
-    }
-    return(tmpName);
-} /* callCpp */
 
