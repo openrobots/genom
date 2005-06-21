@@ -41,6 +41,10 @@ INSTALL=  	@INSTALL@
 VPATH=	  	$(srcdir)
 
 include $(top_builddir)/config.mk
+
+# Ensure that the default target is the one defined in codels.mk
+all: codels-mk-all
+
 # --- source files ------------------------------------------------------
 
 codels_src = \

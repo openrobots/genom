@@ -1,6 +1,6 @@
 
 ###### Default target
-all: $(OBJDIR) $(OBJDIR)/$(MODULE_BIN)
+codels-mk-all: $(OBJDIR) $(OBJDIR)/$(MODULE_BIN)
 
 ###### GenoM flags
 include $(top_srcdir)/$(autoconfdir)/genom.mk
