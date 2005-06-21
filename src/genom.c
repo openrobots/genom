@@ -58,7 +58,7 @@ static char* strcpytoupper(char const* value)
 {
     char* result = (char*)xalloc(strlen(value) + 1);
     int i;
-    for (i = 0; value[i] != '\0'; ++i);
+    for (i = 0; value[i] != '\0'; ++i)
     {
 	if (value[i] == '-')
 	    result[i] = '_';
