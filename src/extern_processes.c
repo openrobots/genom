@@ -64,6 +64,8 @@ int
 get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 {
     int outpipe[2];
+    pid_t pid;
+
     if (pipe(outpipe) == -1)
     {
 	fprintf(stderr, "error running pkg-config: ");
@@ -71,7 +73,7 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 	exit(2);
     }
 
-    pid_t pid = fork();
+    pid = fork();
     if (! pid)
     {
 	close(outpipe[0]);

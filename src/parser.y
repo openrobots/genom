@@ -1389,12 +1389,13 @@ int verbose = 0;
 
 static ID_LIST* push_back(ID_LIST* list, ID_LIST* item)
 {
-    item->next = 0;
-    if (! list)
+    ID_LIST* last;
+
+    item->next = NULL;
+    if (list == NULL)
         return item;
         
-    ID_LIST* last = 0;
-    for (last = list; last->next != 0; last=last->next);
+    for (last = list; last->next != NULL; last = last->next) ;
 
     last->next = item;
     return list;
