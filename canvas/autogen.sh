@@ -32,15 +32,14 @@ cat autoconf/configure.ac.end >> configure.ac
 # Get the version and email
 version=`grep 'VERSION[[:space:]]*=[[:space:]]*' configure.ac.user | sed 's/.*=[[:space:]]*\(.*\)/\1/'`
 email=`grep 'EMAIL[[:space:]]*=[[:space:]]*'   configure.ac.user | sed 's/.*=[[:space:]]*\(.*\)/\1/'`
+use_cxx=`grep 'USE_CXX[[:space:]]*=[[:space:]]*'   configure.ac.user | sed 's/.*=[[:space:]]*\(.*\)/\1/'`
 
-sed -i "s/\\\$version\\\$/${version+1.0}/" configure.ac
-sed -i "s/\\\$email\\\$/${email+noemail@nowhere}/"     configure.ac
+sed -i "s/\\\$version\\\$/${version:-1.0}/" configure.ac
+sed -i "s/\\\$email\\\$/${email:-noemail@nowhere}/"     configure.ac
+sed -i "s/\\\$use_cxx\\\$/${use_cxx:-0}/" configure.ac
 
 echo " * Running aclocal"
-aclocal
-
-echo " * Adding GenoM specific macros"
-cat autoconf/acinclude.m4 >> aclocal.m4
+aclocal -I autoconf/
 
 echo " * Running autoconf"
 autoconf

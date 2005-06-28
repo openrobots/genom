@@ -46,15 +46,22 @@ datadir=	@datadir@/modules
 
 # --- Programs ----------------------------------------------------------
 
+USE_CXX=	@USE_CXX@
+
 CPP=		@CPP@
 PURIFY=		
-CC=		@CC@
 SED=		sed
 MKDEP=		@MKDEP@
 MKINSTALLDIRS=  $(top_srcdir)/autoconf/mkinstalldirs
 
 LIBTOOL=        @LIBTOOL@ 
+CC=		@CC@
 LTCC=           $(LIBTOOL) --mode=compile $(CC)
+ifeq ($(USE_CXX),1)
+CXX=		@CXX@
+LTCXX=		$(LIBTOOL) --mode=compile $(CXX)
+endif
+
 LTLD=           $(LIBTOOL) --mode=link $(PURIFY) $(CC)
 LTRM=           $(LIBTOOL) --mode=clean rm -f
 LTINSTALL=	$(LIBTOOL) --mode=install $(INSTALL)
