@@ -1,1 +1,1 @@
-dnl Add your macro definitions for configure.in.in here
+dnl Add your macro definitions for configure.ac.user here

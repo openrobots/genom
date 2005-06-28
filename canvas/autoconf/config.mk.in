@@ -124,5 +124,5 @@ GENOM_LIBS=	@GENOM_LIBS@
 EXTRA_INCLUDES=	@EXTRA_INCLUDES@
 EXTRA_LIBS=	@EXTRA_LIBS@
 
--include $(abs_top_srcdir)/$(autoconfdir)/local.mk
+-include $(top_builddir)/local.mk
 

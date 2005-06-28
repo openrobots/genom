@@ -138,8 +138,8 @@ AC_OUTPUT(
 	src/Makefile
 	include/Makefile
 	canvas/Makefile
-        canvas/autoconf/configure.begin.in
-        canvas/autoconf/configure.end.in
+        canvas/autoconf/configure.ac.begin
+        canvas/autoconf/configure.ac.end
 	tclserv/server/Makefile
 	tclserv/client/Makefile
 	doc/user_guide/Makefile

@@ -33,9 +33,9 @@
 
 #define PROTO_USER_ACINCLUDE_M4        "acinclude.m4"
 #define PROTO_AUTOGEN_SH	"autogen.sh" 
-#define PROTO_CONFIGURE_IN_IN   "configure.in.in"
-#define PROTO_CONFIGURE_BEGIN   "autoconf/configure.begin.in"
-#define PROTO_CONFIGURE_END     "autoconf/configure.end.in"
+#define PROTO_CONFIGURE_IN_IN   "configure.ac.user"
+#define PROTO_CONFIGURE_BEGIN   "autoconf/configure.ac.begin"
+#define PROTO_CONFIGURE_END     "autoconf/configure.ac.end"
 #define PROTO_INSTALL		"autoconf/install-sh" 
 #define PROTO_MKINSTALLDIRS	"autoconf/mkinstalldirs" 
 #define PROTO_CONFIGSUB		"autoconf/config.sub" 
@@ -49,7 +49,7 @@
 #define PROTO_CONFIG_MK		"autoconf/config.mk.in"
 #define PROTO_CONFIG_POSIX_MK	"autoconf/config.posix.mk"
 #define PROTO_CONFIG_RTAI_MK	"autoconf/config.rtai.mk"
-#define PROTO_CONFIG_LOCAL_MK   "autoconf/local.mk"
+#define PROTO_CONFIG_LOCAL_MK   "autoconf/local.mk.in"
 #define PROTO_CONFIG_CODELS_MK	"autoconf/codels.mk"
 #define PROTO_GENOM_MK		"autoconf/genom.mk"
 

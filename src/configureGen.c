@@ -192,27 +192,15 @@ configureGen(FILE *out,
    script_close(out, PROTO_MAKEFILE_CODELS);
 
    /* --- build the configuration strings for needed packages  -----------------
-    They are either required because of -P or import from (or both)
+    They are required because of -P 
    */
    pkg_conf_in = NULL;
    pkg_conf_mk = NULL;
 
-   /* First, the -P option */ 
    for (ln = packages; ln != NULL; ln = ln->next) 
        definePackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 
-   /* import from. Remove those already in -P */
-   for (ln = externLibs; ln != NULL; ln = ln->next)
-   {
-	char* check = NULL;
-	bufcat(&check, "\n%s_CFLAGS ", ln->NAME);
-	/* test if $(MACRO)_CFLAGS has already been defined with -P */
-	if (pkg_conf_mk == NULL || strstr(pkg_conf_mk, check) == NULL)
-            definePackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
-	free(check);
-   }
-
-   /* --- configure.in --------------------------------------------------- */
+   /* --- configure.ac.begin.in --------------------------------------------------- */
    script_open(out);
    subst_begin(out, PROTO_CONFIGURE_BEGIN);
    print_sed_subst(out, "module",    module->name);
@@ -354,16 +342,22 @@ configureServerGen(FILE *out,
 int pkgconfigGen(FILE *out)
 {
     char* require = 0;
-    ID_LIST* ln;
+    ID_LIST* ln, *ln2;
 
     script_open(out);
     subst_begin(out, PROTO_PKGCONFIG_IN);
 
-    /* Build the require field */
-    for (ln = packages; ln != NULL; ln = ln->next)
+    /* Build the require field 
+     * We take into account only the packages 
+     * use in "import from" statements */
+    for (ln = externLibs; ln != NULL; ln = ln->next)
     {
-	bufcat(&require, ", ");
-	bufcat(&require, ln->name);
+	for (ln2 = packages; ln2 != NULL; ln2 = ln2->next)
+	    if (! strcmp(ln2->name, ln->name))
+	    {
+		bufcat(&require, ", ");
+		bufcat(&require, ln->name);
+	    }
     }
     output(out, "require", require);
 

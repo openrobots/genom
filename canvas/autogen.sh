@@ -4,22 +4,22 @@ cat <<EOF
 
 Creating build environment ...
 
- * Building configure.in
+ * Building configure.ac
 EOF
-cat autoconf/configure.begin.in > configure.in
+cat autoconf/configure.ac.begin > configure.ac
 
-if test -f configure.in.in; then
-    cat >> configure.in <<EOF
+if test -f configure.ac.user; then
+    cat >> configure.ac <<EOF
 dnl
-dnl ------- USER PART (configure.in.in) -----------
+dnl ------- USER PART (configure.ac.user) -----------
 dnl
 dnl
 EOF
 
-    cat configure.in.in >> configure.in
-    cat >> configure.in <<EOF
+    cat configure.ac.user >> configure.ac
+    cat >> configure.ac <<EOF
 dnl
-dnl ------- END OF USER PART (configure.in.in) -----------
+dnl ------- END OF USER PART (configure.ac.user) -----------
 dnl
 dnl
 
@@ -27,14 +27,14 @@ dnl
 
 EOF
 fi
-cat autoconf/configure.end.in >> configure.in
+cat autoconf/configure.ac.end >> configure.ac
 
 # Get the version and email
-version=`grep 'VERSION[[:space:]]*=[[:space:]]*' configure.in.in | sed 's/.*=[[:space:]]*\(.*\)/\1/'`
-email=`grep 'EMAIL[[:space:]]*=[[:space:]]*'   configure.in.in | sed 's/.*=[[:space:]]*\(.*\)/\1/'`
+version=`grep 'VERSION[[:space:]]*=[[:space:]]*' configure.ac.user | sed 's/.*=[[:space:]]*\(.*\)/\1/'`
+email=`grep 'EMAIL[[:space:]]*=[[:space:]]*'   configure.ac.user | sed 's/.*=[[:space:]]*\(.*\)/\1/'`
 
-sed -i "s/\\\$version\\\$/${version+1.0}/" configure.in
-sed -i "s/\\\$email\\\$/${email+noemail@nowhere}/"     configure.in
+sed -i "s/\\\$version\\\$/${version+1.0}/" configure.ac
+sed -i "s/\\\$email\\\$/${email+noemail@nowhere}/"     configure.ac
 
 echo " * Running aclocal"
 aclocal

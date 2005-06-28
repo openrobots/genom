@@ -1505,8 +1505,8 @@ main(int argc, char **argv)
 	    }
 
             /* Cannot add the element at the head of the list
-             because it leads to different generated files (configure.begin.in,
-             config.mk.in, genom.mk) at each generation */
+             because it leads to different generated files (configure.ac.begin,
+             config.mk.in, genom.mk) at each run */
 	    il = STR_ALLOC(ID_LIST);
 	    il->name = strdup(optarg);
 	    il->next = 0;

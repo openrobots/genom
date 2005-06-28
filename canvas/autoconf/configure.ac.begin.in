@@ -1,6 +1,6 @@
 dnl	$LAAS$
 dnl
-dnl configure.in --
+dnl configure.ac --
 dnl	process this file with autoconf to produce a configure script.
 dnl
 AC_REVISION($LAAS$)

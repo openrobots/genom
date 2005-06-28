@@ -43,16 +43,16 @@ if ($installUserPart == 1) {
   mirror_dir("codels", "../$codelsDir", "", "", 1);
 
   mirror_dir(".", "..", "^Makefile.in", "", 1);
-  mirror_dir(".", "..", "^configure.in.in", "", 1);
-  mirror_dir("autoconf", "../$autoconfDir", "^(?:local\.mk)", 1);
+  mirror_dir(".", "..", "^configure.ac.user", "", 1);
+  mirror_dir("autoconf", "../$autoconfDir", "^(?:local\.mk\.in)", 1);
+  mirror_dir(".", "..", "^acinclude.m4", "", 1);
 } 
 
 # Install server files
 mirror_dir("server", "../$serverDir", "", "", 0);
 mirror_dir("server/tcl", "../$tclDir", "", "", 0) if ($genTcl == 1); 
 mirror_dir("server/openprs", "../$openprsDir", "", "", 0) if ($genOpenprs == 1);
-mirror_dir("autoconf", "../$autoconfDir", "", "^(?:local.mk)", 0);
-mirror_dir(".", "..", "^acinclude.m4", "", 1);
+mirror_dir("autoconf", "../$autoconfDir", "", "^(?:local\.mk\.in)", 0);
 mirror_dir(".", "..", "^autogen.sh", "", 0);
 mirror_dir(".", "..", "^$module.pc", "", 0);
 
@@ -81,9 +81,9 @@ sub is_autoconf_fresh() {
     #  its sources
     my @autoconf_src = 
     (
-        "../$autoconfDir/configure.begin.in",
-        "../$autoconfDir/configure.end.in",
-        "../configure.in.in", 
+        "../$autoconfDir/configure.ac.begin",
+        "../$autoconfDir/configure.ac.end",
+        "../configure.ac.user", 
         "../acinclude.m4"
     );
 

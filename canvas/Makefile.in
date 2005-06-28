@@ -59,7 +59,7 @@ flist=\
 	autoconf/config.rtai.mk		\
 	autoconf/config.mk.in           \
 	autoconf/codels.mk		\
-	autoconf/local.mk
+	autoconf/local.mk.in
 
 # server templates
 flist+=\
@@ -129,7 +129,7 @@ flist+=\
 
 # top level templates
 flist+=\
-	configure.in.in			\
+	configure.ac.user			\
 	Makefile.top.in			\
 	autogen.sh			\
 	acinclude.m4			\
@@ -139,8 +139,8 @@ flist+=\
 
 # These are searched in builddir instead of srcdir
 genlist = \
-	autoconf/configure.begin.in \
-	autoconf/configure.end.in
+	autoconf/configure.ac.begin \
+	autoconf/configure.ac.end
 
 dirs=autoconf codels openprs server server/tcl server/openprs
 
