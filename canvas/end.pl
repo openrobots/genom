@@ -81,10 +81,12 @@ sub is_autoconf_fresh() {
     #  its sources
     my @autoconf_src = 
     (
+	"../autogen.sh",
         "../$autoconfDir/configure.ac.begin",
         "../$autoconfDir/configure.ac.end",
         "../configure.ac.user", 
-        "../acinclude.m4"
+        "../acinclude.m4",
+	"../$autoconfDir/robots.m4"
     );
 
     my $aconf_regen = 0;
