@@ -5,7 +5,7 @@ fi
 rm -fR server autom4te.cache .genom
 rm -f \
     configure \
-    configure.in \
+    configure.ac \
     aclocal.m4 \
     autogen.sh
 
@@ -14,13 +14,13 @@ rm -f \
     autoconf/config.guess   \
     autoconf/config.posix.mk   \
     autoconf/config.sub           \
-    autoconf/configure.end.in   \
+    autoconf/configure.ac.begin   \
     autoconf/install-sh   \
     autoconf/mkinstalldirs \
     autoconf/codels.mk      \
     autoconf/config.mk.in   \
     autoconf/config.rtai.mk    \
-    autoconf/configure.begin.in   \
+    autoconf/configure.ac.begin   \
     autoconf/libtool.m4   \
     autoconf/ltmain.sh   \
     autoconf/robots.m4
