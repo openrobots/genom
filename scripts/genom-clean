@@ -7,7 +7,7 @@ rm -f \
     configure \
     configure.ac \
     aclocal.m4 \
-    autogen.sh
+    autogen
 
 rm -f \
     autoconf/acinclude.m4  \
