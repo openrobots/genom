@@ -1,0 +1,84 @@
+#! @PERL@ -w
+use strict;
+
+my $begin = "autoconf/configure.ac.begin";
+my $end = "autoconf/configure.ac.end";
+my $user = "configure.ac.user";
+my $final = "configure.ac";
+
+# Get options from the user file
+my ($email, $version, $use_cxx);
+
+sub get_options {
+    open USER, $user or die("Unable to open $user for reading");
+    while (<USER>)
+    {
+        if (!$email && /\bEMAIL\s*=\s*(.*)/)
+        { $email = $1; }
+        if (!$version && /\bVERSION\s*=\s*(.*)/)
+        { $version = $1; }
+        if (!$use_cxx && /\bUSE_CXX\s*=\s*(.*)/)
+        { $use_cxx = $1; }
+    }
+    close USER;
+
+    $email = 'noone@nowhere' if (! $email);
+    $version = 1.0 if (! $version);
+    $use_cxx = 0 if (! $use_cxx);
+}
+
+sub build_autoconf_ac {
+    open AC, ">$final" or die("Unable to open $final for writing");
+    open AC_BEGIN, $begin or die("Unable top open $begin for reading");
+    while (<AC_BEGIN>)
+    {
+        s/\$email\$/\Q$email\E/;
+        s/\$version\$/\Q$version\E/;
+        s/\$use_cxx\$/\Q$use_cxx\E/;
+        print AC;
+    }
+    close AC_BEGIN;
+
+    print AC "
+dnl
+dnl ------- USER PART (configure.ac.user) -----------
+dnl
+dnl
+";
+
+    open USER, $user or die("Unable to open $user for reading");
+    while (<USER>) { print AC; }
+    close USER;
+
+    print AC "
+dnl
+dnl ------- END OF USER PART (configure.ac.user) -----------
+dnl
+dnl
+";
+
+    open AC_END, $end or die("Unable to open $end for reading");
+    while (<AC_END>) { print AC; }
+    close AC_END;
+}
+
+get_options
+
+print "
+
+Creating build environment ...
+
+ * Building configure.ac
+";
+build_autoconf_ac
+
+print " * Running aclocal\n";
+exit 1 if system("aclocal -I autoconf");
+print " * Running autoconf\n";
+exit 1 if system("autoconf");
+
+print "
+
+If you already have a build of this module, do not forget to
+reconfigure (for instance by running ./config.status --recheck)\n\n";
+

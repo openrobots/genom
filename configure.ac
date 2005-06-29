@@ -125,6 +125,12 @@ AC_SUBST(PORTLIB_LIBS)
 
 ROBOT_LIB_TCL
 
+dnl Check for perl
+AC_ARG_VAR(PERL, full path of Perl interpreter)
+AC_PATH_PROG(PERL, perl, no)
+if test "x$PERL" = "xno"; then
+    AC_MSG_ERROR(Cannot find the perl executable)
+fi
 
 dnl --- Create the Makefiles --------------------------------------------
 dnl
@@ -138,6 +144,7 @@ AC_OUTPUT(
 	src/Makefile
 	include/Makefile
 	canvas/Makefile
+        canvas/autogen
         canvas/autoconf/configure.ac.begin
         canvas/autoconf/configure.ac.end
 	tclserv/server/Makefile

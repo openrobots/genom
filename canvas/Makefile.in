@@ -129,9 +129,8 @@ flist+=\
 
 # top level templates
 flist+=\
-	configure.ac.user			\
+	configure.ac.user		\
 	Makefile.top.in			\
-	autogen.sh			\
 	acinclude.m4			\
 	module.pc.in			\
 	start.pl			\
@@ -139,6 +138,7 @@ flist+=\
 
 # These are searched in builddir instead of srcdir
 genlist = \
+	autogen \
 	autoconf/configure.ac.begin \
 	autoconf/configure.ac.end
 

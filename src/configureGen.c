@@ -120,7 +120,7 @@ configureGen(FILE *out,
    const char *configProtos[] = {
        PROTO_USER_ACINCLUDE_M4,
        PROTO_ACINCLUDE_M4,
-       PROTO_AUTOGEN_SH,
+       PROTO_AUTOGEN,
        PROTO_ROBOTS_M4,
        PROTO_LIBTOOL_M4,
        PROTO_CONFIG_LOCAL_MK,

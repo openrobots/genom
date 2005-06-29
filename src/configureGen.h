@@ -31,8 +31,8 @@
 #ifndef H_CONFIGUREGEN
 #define H_CONFIGUREGEN
 
-#define PROTO_USER_ACINCLUDE_M4        "acinclude.m4"
-#define PROTO_AUTOGEN_SH	"autogen.sh" 
+#define PROTO_USER_ACINCLUDE_M4 "acinclude.m4"
+#define PROTO_AUTOGEN       	"autogen" 
 #define PROTO_CONFIGURE_IN_IN   "configure.ac.user"
 #define PROTO_CONFIGURE_BEGIN   "autoconf/configure.ac.begin"
 #define PROTO_CONFIGURE_END     "autoconf/configure.ac.end"

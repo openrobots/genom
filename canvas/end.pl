@@ -53,12 +53,12 @@ mirror_dir("server", "../$serverDir", "", "", 0);
 mirror_dir("server/tcl", "../$tclDir", "", "", 0) if ($genTcl == 1); 
 mirror_dir("server/openprs", "../$openprsDir", "", "", 0) if ($genOpenprs == 1);
 mirror_dir("autoconf", "../$autoconfDir", "", "^(?:local\.mk\.in)", 0);
-mirror_dir(".", "..", "^autogen.sh", "", 0);
+mirror_dir(".", "..", "^autogen", "", 0);
 mirror_dir(".", "..", "^$module.pc", "", 0);
 
 
-# Do +x on autogen.sh
-my $autogen = "../autogen.sh";
+# Do +x on autogen
+my $autogen = "../autogen";
 my $autogen_mode = stat($autogen)->mode & 07777;
 
 chmod ((0111|$autogen_mode), $autogen);
@@ -68,7 +68,7 @@ if ( ! -d "../$serverDir" || ! -d "../$codelsDir" )
 {
     print "
     One of server/ or codels/ is not generated 
-    yet, I won't run autogen.sh
+    yet, I won't run autogen
     ";
     exit;
 }
@@ -81,7 +81,7 @@ sub is_autoconf_fresh() {
     #  its sources
     my @autoconf_src = 
     (
-	"../autogen.sh",
+	"../autogen",
         "../$autoconfDir/configure.ac.begin",
         "../$autoconfDir/configure.ac.end",
         "../configure.ac.user", 
@@ -120,10 +120,9 @@ if ($aconf_regen)
 {
     print "
     Some files related to the configure environment
-    have changed. Running autogen.sh
-    ";
+    have changed. Running autogen\n";
 
     chdir "..";
-    exec "./autogen.sh";
+    exec "./autogen";
 }
 
