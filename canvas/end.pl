@@ -44,7 +44,7 @@ if ($installUserPart == 1) {
 
   mirror_dir(".", "..", "^Makefile.in", "", 1);
   mirror_dir(".", "..", "^configure.ac.user", "", 1);
-  mirror_dir("autoconf", "../$autoconfDir", "^(?:local\.mk\.in)", 1);
+  mirror_dir("autoconf", "../$autoconfDir", "^local\.mk\.in", 1);
   mirror_dir(".", "..", "^acinclude.m4", "", 1);
 } 
 
