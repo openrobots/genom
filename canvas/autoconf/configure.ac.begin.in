@@ -82,49 +82,22 @@ AC_SUBST(LIBMATH, "${LIBS}")
 dnl --- checks for libraries --------------------------------------------
 dnl
 
-
+dnl Pocolibs
 PKG_CHECK_MODULES(POCOLIBS, pocolibs >= 2.0)
-
 AC_SUBST(POCOLIBS_CFLAGS)
 AC_SUBST(POCOLIBS_LIBS)
 
-dnl genom
-AC_ARG_WITH(genom,
-           AC_HELP_STRING([--with-genom=DIR],
-               [genom is installed in DIR (prefix)]),
-           [opt_genom=$withval],[opt_genom=NONE])
-AC_ARG_WITH(genom-exec-prefix,
-           AC_HELP_STRING([--with-genom-exec-prefix=DIR],
-               [genom library is installed in DIR (exec-prefix)]),
-           [opt_genom_eprefix=$withval],[opt_genom_eprefix=NONE])
-
-
-genom_path_lib=$opt_genom_eprefix/lib:$opt_genom/lib
-if test "x${cross_compiling}" = "xyes"; then
-   genom_path_lib=$genom_path_lib:$libdir:$prefix/lib
-else
-   genom_path_lib=$genom_path_lib:`$genomBin$ --libraries`
-fi
-genom_path_lib=$genom_path_lib:/usr/local/lib:/usr/lib
-
+dnl GenoM
 PKG_CHECK_MODULES(GENOM, genom >= @GENOM_MAJOR@.@GENOM_MINOR@ pocolibs >= 2.0)
 AC_SUBST(GENOM_CFLAGS)
 AC_SUBST(GENOM_LIBS)
 
-
-
-dnl tcl
-ROBOT_LIB_TCL(@TCL_CONFIG_PATH@)
-
-AC_ARG_WITH(openprs,
-    AC_HELP_STRING([--with-openprs=path], [path to the OpenPRS installation]),
-    [
-     if test "x$withval" != "xno" -a "x$withval" != "x"; then
-         OPENPRS_CFLAGS="-I$withval/include"
-     fi
-    ]
-)
-
+dnl Tcl
+ifelse([$genTcl$], [yes], [ROBOT_LIB_TCL(@TCL_CONFIG_PATH@)], [])
+ifelse([$genOpenprs$], [yes], [
+	PKG_CHECK_MODULES(TRANSGEN, transgen)
+	PKG_CHECK_MODULES(OPENPRS, openprs)
+	], [])
 
 dnl --- Check for extra software ----------------------------------------
 

@@ -1446,7 +1446,7 @@ main(int argc, char **argv)
 
     static const char *usage = 
       "Usage: \n  genom [-i] [-c] [-d] [-n] [-p protoDir] [-s] [-t] "
-      "[-u codelsDir] [-x]\n\t[-Ddefine] [-Ipath] [-Ppackage] module[.gen]\n"
+      "[-u codelsDir] [-o]\n\t[-Ddefine] [-Ipath] [-Ppackage] module[.gen]\n"
       "with:\n"
       "     -P: declare a package on which this module is dependent.\n"
       "         Packages are defined used via pkg-config, so you should\n"
@@ -1455,7 +1455,7 @@ main(int argc, char **argv)
       "         to reuse a prefix defined with -Ppackage\n"
       "     -i: installs new templates for codels and makefiles (new module)\n"
       "     -t: produces on-board tcl client code\n"
-      "     -x: produces openprs interfaces\n\n"
+      "     -o: produces openprs interfaces\n\n"
       "     -u: specifies the name of the codels directory\n"
       "     -p: changes the path for prototype files (canvas) \n"
       "     -D: define a preprocessor symbol\n"
@@ -1481,7 +1481,7 @@ main(int argc, char **argv)
     memset(cppOptions, 0, sizeof(cppOptions));
     nopt = argc;
 
-    while ((opt = getopt(argc, argv, "D:I:P:dnp:ciu:txs-:v")) != -1) {
+    while ((opt = getopt(argc, argv, "D:I:P:dnp:ciu:tos-:v")) != -1) {
 
 	switch (opt) {
 	  case 'D':
@@ -1551,7 +1551,7 @@ main(int argc, char **argv)
 	  case 't':
 	    genTcl = 1;
 	    break;
-	  case 'x':
+	  case 'o':
 	    genOpenprs = 1;
 	    break;
 

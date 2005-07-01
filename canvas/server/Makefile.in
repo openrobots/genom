@@ -137,7 +137,14 @@ $genOpenprs$	openprs/$module$DecodeOpenprs.c \
 $genOpenprs$	openprs/$module$EncodeOpenprs.c \
 $genOpenprs$	openprs/$module$RequestsOpenprs.c
 $genOpenprs$openprsclient_obj=$(openprsclient_src:%.c=$(OBJDIR)/%.lo)
-
+$genOpenprs$oprsclient_headers = \
+$genOpenprs$	openprs/genPosDecodeOpenprs.h \
+$genOpenprs$	openprs/genPosDecodeOpenprsProto.h \
+$genOpenprs$	openprs/genPosEncodeOpenprs.h \
+$genOpenprs$	openprs/genPosEncodeOpenprsProto.h \
+$genOpenprs$	openprs/genPosRequestsOpenprsProto.h
+$genOpenprs$oprsclient_data = \
+$genOpenprs$	openprs/$module$Openprs.inc openprs/$module$Openprs.opf openprs/$module$Openprs.sym
 
 # --- what to do --------------------------------------------------------
 
@@ -185,7 +192,7 @@ $genTcl$		$(LDFLAGS) $(TCL_LDFLAGS)
 
 $genOpenprs$$(OBJDIR)/$(OPENPRSCLIENT_LIB): $(openprsclient_obj)
 $genOpenprs$	$(LTLD) $(CFLAGS) $(openprsclient_obj) -o $@ $(LDFLAGS)		\
-$genOpenprs$		$(GENOM_LIBS) -rpath $(libdir)
+$genOpenprs$		$(GENOM_LIBS) -rpath $(libdir) -R$(libdir)
 
 
 # --- binaries ----------------------------------------------------------
@@ -207,6 +214,10 @@ $genTcl$$(tclclient_obj): $(OBJDIR)/%.lo: %.c
 $genTcl$	$(LTCC) -c $(CPPFLAGS) $(TCL_CPPFLAGS) -DDATADIR='"$(datadir)"' \
 $genTcl$		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
+$genOpenprs$$(openprsclient_obj): $(OBJDIR)/%.lo: %.c
+$genOpenprs$	$(LTCC) -c $(CPPFLAGS) $(OPENPRS_CFLAGS) $(TRANSGEN_CFLAGS) \
+$genOpenprs$		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
+
 $(OBJDIR)/%.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
 
@@ -223,17 +234,23 @@ install-bin:
 	$(LTINSTALL) $(OBJDIR)/$(CLIENT_LIB) $(libdir)/$(CLIENT_LIB)
 	$genTcl$$(MKINSTALLDIRS) $(libdir)/tclserv
 	$genTcl$$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/tclserv/$(TCLCLIENT_LIB)
+	$genOpenprs$$(MKINSTALLDIRS) $(libdir)/oprs
+	$genOpenprs$$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) $(libdir)/oprs/$(OPRSCLIENT_LIB)
 	$(MKINSTALLDIRS) $(bindir)
 	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
 	$(LTINSTALL) $(OBJDIR)/$(ESSAY_BIN) $(bindir)/$(ESSAY_BIN)
 
 install-data:
 	$(MKINSTALLDIRS) $(includedir)/server
-	@for f in $(client_includes); do				\
+	@for f in $(client_includes); do \
 		$(INSTALL_DATA) $(top_srcdir)/$$f $(includedir)/$$f;\
 	done
 	$genTcl$$(MKINSTALLDIRS) $(datadir)/tcl
 	$genTcl$$(INSTALL_DATA) $(srcdir)/$(tclclient_tcl) $(datadir)/$(tclclient_tcl)
+	$genOpenprs$$(MKINSTALLDIRS) $(datadir)/oprs
+	$genOpenprs$( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_data) $(datadir)/oprs )
+	$genOpenprs$$(MKINSTALLDIRS) $(includedir)/server/oprs
+	$genOpenprs$( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_headers) $(includedir)/server/oprs )
 
 
 # --- clean -------------------------------------------------------------
@@ -272,7 +289,7 @@ $genTcl$depend $(OBJDIR)/dependencies:: $(tclclient_src)
 $genTcl$	$(make_depend) $(TCL_CPPFLAGS) $?
 
 $genOpenprs$depend $(OBJDIR)/dependencies:: $(openprsclient_src)
-$genOpenprs$	@$(make_depend) $(TCL_CPPFLAGS) $?
+$genOpenprs$	@$(make_depend) $(OPENPRS_CFLAGS) $(TRANSGEN_CFLAGS) $?
 
 ifneq (${MAKECMDGOALS},clean)
 -include $(OBJDIR)/dependencies

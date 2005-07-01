@@ -79,7 +79,7 @@ ESSAY_BIN=	$module$Essay$(BINEXT)
 CLIENT_LIB=		lib$module$Client$(LIBEXT)
 MY_CLIENT_LIB=          $(GENOM_LIBS) $(abs_top_builddir)/server/$(OBJDIR)/$(CLIENT_LIB)
 TCLCLIENT_LIB=		lib$module$TclServ$(LIBEXT)
-PRSCLIENT_LIB=	lib$module$Openprs$(LIBEXT)
+OPENPRSCLIENT_LIB=	lib$module$Openprs$(LIBEXT)
 
 # libtool 'helper' libs -- static archives
 MODULE_LIB=		lib$module$Server.la
@@ -122,6 +122,12 @@ KERNEL_INC=	@KERNEL_INC@
 
 TCL_CPPFLAGS=	@TCL_CPPFLAGS@
 TCL_LDFLAGS=	@TCL_LDFLAGS@ @TCL_LIB_FLAG@ @TCL_LIBS@
+
+TRANSGEN_CFLAGS = @TRANSGEN_CFLAGS@
+TRANSGEN_LIBS = @TRANSGEN_LIBS@
+
+OPENPRS_CFLAGS  = @OPENPRS_CFLAGS@
+OPENPRS_LIBS    = @OPENPRS_LIBS@
 
 POCOLIBS_CFLAGS=	@POCOLIBS_CFLAGS@
 

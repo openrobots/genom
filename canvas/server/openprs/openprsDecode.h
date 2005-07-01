@@ -42,6 +42,6 @@ $externOpenprsDecodeLibs$
 /* Structures du module */
 #include "$module$PosterLib.h"
 
-#include "openprs/$module$DecodeOpenprsProto.h"
+#include "$module$DecodeOpenprsProto.h"
 
 #endif /* $MODULE$_OPENPRS_DECODE_H */

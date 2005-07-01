@@ -184,6 +184,7 @@ openprsOpGen(FILE *out)
        print_sed_subst(out, "poster", post->name);
        print_sed_subst(out, "POSTERU", "%s_%s", module->NAME, post->NAME);
        print_sed_subst(out, "POSTERM", "%s-%s", module->NAME, post->NAME);
+       print_sed_subst(out, "ref", "");
 
 #if 0
        dcl = post->type->name;

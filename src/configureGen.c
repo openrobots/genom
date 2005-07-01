@@ -127,7 +127,7 @@ configureGen(FILE *out,
        PROTO_CONFIG_POSIX_MK,
        PROTO_CONFIG_RTAI_MK,
        PROTO_CONFIG_CODELS_MK,
-       PROTO_CONFIGURE_IN_IN,
+       PROTO_CONFIGURE_AC_USER,
        PROTO_CONFIGURE_END,
        NULL
    };
@@ -136,7 +136,8 @@ configureGen(FILE *out,
       script_open(out);
       subst_begin(out, *p);
       print_sed_subst(out, "module", module->name);
-      print_sed_subst(out, "genTcl", genTcl?"yes":"no");
+      print_sed_subst(out, "genTcl", genTcl ? "yes":"no");
+      print_sed_subst(out, "genOpenprs", genOpenprs ? "yes":"no");
       print_sed_subst(out, "genomBin", genomBin);
       subst_end(out);
       script_close_exec(out, *p);
@@ -145,7 +146,8 @@ configureGen(FILE *out,
       script_open(out);
       subst_begin(out, *p);
       print_sed_subst(out, "module", module->name);
-      print_sed_subst(out, "genTcl", genTcl?"yes":"no");
+      print_sed_subst(out, "genTcl", genTcl ? "yes":"no");
+      print_sed_subst(out, "genOpenprs", genOpenprs ? "yes":"no");
       print_sed_subst(out, "genomBin", genomBin);
       print_sed_subst(out, "codelsDir", codelsDir);
       subst_end(out);
@@ -204,7 +206,8 @@ configureGen(FILE *out,
    script_open(out);
    subst_begin(out, PROTO_CONFIGURE_BEGIN);
    print_sed_subst(out, "module",    module->name);
-   print_sed_subst(out, "genTcl",    genTcl?"yes":"no");
+   print_sed_subst(out, "genTcl",     genTcl?     "yes":"no");
+   print_sed_subst(out, "genOpenprs", genOpenprs? "yes":"no");
    print_sed_subst(out, "genomBin",  genomBin);
    print_sed_subst(out, "codelsDir", codelsDir);
 
@@ -217,7 +220,6 @@ configureGen(FILE *out,
    script_open(out);
    subst_begin(out, PROTO_CONFIG_MK);
    print_sed_subst(out, "module",    module->name);
-   print_sed_subst(out, "genTcl",    genTcl?"yes":"no");
    print_sed_subst(out, "genomBin",  genomBin);
    print_sed_subst(out, "codelsDir", codelsDir);
 
@@ -271,7 +273,7 @@ configureServerGen(FILE *out,
    print_sed_subst(out, "genomBin", genomBin);
    print_sed_subst(out, "genomFile", genomFile);
 
-   print_sed_subst(out, "genTcl", genTcl ? "" : "#");
+   print_sed_subst(out, "genTcl",     genTcl ? "" : "#");
    print_sed_subst(out, "genOpenprs", genOpenprs ? "" : "#");
 
    /* GenoM options */

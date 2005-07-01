@@ -33,9 +33,9 @@
 
 #define PROTO_USER_ACINCLUDE_M4 "acinclude.m4"
 #define PROTO_AUTOGEN       	"autogen" 
-#define PROTO_CONFIGURE_IN_IN   "configure.ac.user"
-#define PROTO_CONFIGURE_BEGIN   "autoconf/configure.ac.begin"
-#define PROTO_CONFIGURE_END     "autoconf/configure.ac.end"
+#define PROTO_CONFIGURE_AC_USER  "configure.ac.user"
+#define PROTO_CONFIGURE_BEGIN    "autoconf/configure.ac.begin"
+#define PROTO_CONFIGURE_END      "autoconf/configure.ac.end"
 #define PROTO_INSTALL		"autoconf/install-sh" 
 #define PROTO_MKINSTALLDIRS	"autoconf/mkinstalldirs" 
 #define PROTO_CONFIGSUB		"autoconf/config.sub" 

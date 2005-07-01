@@ -50,17 +50,17 @@
 
 #undef FREE
 
-#include <openprs/macro-pub.h>
-#include <openprs/opaque-pub.h>
-#include <openprs/constant-pub.h>
-#include <openprs/oprs-type-pub.h>
-#include <openprs/pu-mk-term_f.h>
-#include <openprs/pu-parse-tl_f.h>
+#include <macro-pub.h>
+#include <opaque-pub.h>
+#include <constant-pub.h>
+#include <oprs-type-pub.h>
+#include <pu-mk-term_f.h>
+#include <pu-parse-tl_f.h>
 
-#include <openprs/pu-enum_f.h>
-#include <openprs/pu-genom_f.h>
+#include <pu-enum_f.h>
+#include <pu-genom_f.h>
 
 #include "$module$Type.h"
 #include "$module$PosterLib.h"
-#include "openprs/$module$EncodeOpenprs.h"
+#include "$module$EncodeOpenprs.h"
 

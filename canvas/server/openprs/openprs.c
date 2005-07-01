@@ -48,33 +48,30 @@
 #include "$module$MsgLib.h"
 #undef FREE
 
-#include <openprs/macro-pub.h>
-#include <openprs/opaque-pub.h>
-#include <openprs/constant-pub.h>
-#include <openprs/oprs-type-pub.h>
-#include <openprs/pu-mk-term_f.h>
-#include <openprs/pu-parse-tl_f.h>
+#include <macro-pub.h>
+#include <opaque-pub.h>
+#include <constant-pub.h>
+#include <oprs-type-pub.h>
+#include <pu-mk-term_f.h>
+#include <pu-parse-tl_f.h>
 
-#include <openprs/oprs-type_f-pub.h>
-#include <openprs/oprs-sprint_f-pub.h>
+#include <oprs-type_f-pub.h>
+#include <oprs-sprint_f-pub.h>
 
-/*
-#include <user-decl-openprs-post_f.h>
-#include <user-decl-openprs-com_f.h>
-*/
+#include <user-decl-oprs-post_f.h>
+#include <user-decl-oprs-com_f.h>
 
-/*
-#include <openprs/openprs-com.h>
-#include <openprs/openprs-com_f.h>
-#include <openprs/openprs-post_f.h>
-*/
+#include <oprs-com.h>
+#include <oprs-com_f.h>
+#include <oprs-post_f.h>
 
-#include <openprs/pu-enum_f.h>
-#include <openprs/pu-genom_f.h>
+#include <pu-enum_f.h>
+#include <pu-genom_f.h>
 
 #include "$module$Error.h"
 #include "$module$MsgLib.h"
 #include "$module$PosterLib.h"
 
-#include "openprs/$module$DecodeOpenprs.h"
-#include "openprs/$module$EncodeOpenprs.h"
+#include "$module$DecodeOpenprs.h"
+#include "$module$EncodeOpenprs.h"
+
