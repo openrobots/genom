@@ -20,7 +20,7 @@ rm -f \
     autoconf/codels.mk      \
     autoconf/config.mk.in   \
     autoconf/config.rtai.mk    \
-    autoconf/configure.ac.begin   \
+    autoconf/configure.ac.end   \
     autoconf/libtool.m4   \
     autoconf/ltmain.sh   \
     autoconf/robots.m4
