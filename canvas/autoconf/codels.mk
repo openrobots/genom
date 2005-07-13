@@ -32,8 +32,7 @@ $(OBJDIR)/$(MODULE_BIN):
 		$(GENOM_LIBS)
 
 $(OBJDIR)/$(USER_LIB): $(codels_obj)
-	$(LTLD) -static $(CFLAGS) $(codels_obj) -o $@ $(LDFLAGS) \
-		$(LIBTOOL_LINKOPT)
+	$(LTLD) $(CFLAGS) $(codels_obj) -o $@ $(LDFLAGS)
 
 $(OBJDIR)/%.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(CODELS_CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)

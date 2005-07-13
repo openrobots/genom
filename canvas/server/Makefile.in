@@ -174,12 +174,10 @@ $genOpenprs$client:: $(OBJDIR)/$(OPENPRSCLIENT_LIB)
 # --- libraries ---------------------------------------------------------
 
 $(OBJDIR)/$(MODULE_LIB): $(module_obj)
-	$(LTLD) -static  -o $@ $(LDFLAGS) $(module_obj) \
-		$(LIBTOOL_LINKOPT)
+	$(LTLD) -o $@ $(LDFLAGS) $(module_obj)
 
 $(OBJDIR)/$(POSTERWRITE_LIB): $(posterwrite_obj)
-	$(LTLD) -static  -o $@ $(LDFLAGS) $(posterwrite_obj) \
-		$(LIBTOOL_LINKOPT)
+	$(LTLD) -o $@ $(LDFLAGS) $(posterwrite_obj)
 
 $(OBJDIR)/$(CLIENT_LIB): $(client_obj)
 	$(LTLD) -o $@ $(LDFLAGS) $(client_obj) $(SERVERS_CLIENT_LIB) \
@@ -191,8 +189,8 @@ $genTcl$		$(LIBTOOL_LINKOPT) $(GENOM_LIBS)			\
 $genTcl$		$(LDFLAGS) $(TCL_LDFLAGS)
 
 $genOpenprs$$(OBJDIR)/$(OPENPRSCLIENT_LIB): $(openprsclient_obj)
-$genOpenprs$	$(LTLD) $(CFLAGS) $(openprsclient_obj) -o $@ $(LDFLAGS)		\
-$genOpenprs$		$(GENOM_LIBS) -rpath $(libdir) -R$(libdir)
+$genOpenprs$	$(LTLD) $(CFLAGS) $(openprsclient_obj) $(SERVERS_ENDIAN_LIB) -o $@ \
+$genOpenprs$		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LDFLAGS)	
 
 
 # --- binaries ----------------------------------------------------------
