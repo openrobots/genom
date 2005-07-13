@@ -9,6 +9,32 @@ my $final = "configure.ac";
 # Get options from the user file
 my ($email, $version, $use_cxx);
 
+sub check_aclocal_version {
+    my ($major, $minor, $rev) = @_;
+    # We need aclocal >= 1.6
+    my @version = `aclocal --version`;
+
+    my $version_line = shift @version;
+    if ($version_line !~ /^aclocal \(GNU automake\) (\d+)\.(\d+)\.(\d+)$/) 
+    {
+        print <<EOF;
+You don't seem to have a valid version of aclocal. I was expecting
+aclocal --version to return "aclocal (GNU automake) <version>", but
+I got $version_line
+EOF
+        exit;
+    }
+
+    if (($major > $1) 
+        || (($major eq $1) && ($minor > $2)) 
+        || (($minor eq $2) && ($rev > $3)))
+    {
+        print "Unsupported aclocal version $1.$2.$3, you need at least $major.$minor.$rev\n";
+        exit;
+    }
+
+}
+    
 sub get_options {
     open USER, $user or die("Unable to open $user for reading");
     while (<USER>)
@@ -60,6 +86,15 @@ dnl
     open AC_END, $end or die("Unable to open $end for reading");
     while (<AC_END>) { print AC; }
     close AC_END;
+}
+
+check_aclocal_version(1, 6, 0);
+
+# Check for a few files (Genom -> OpenGenom migration)
+if ( ! -f $user || ! -f "autoconf/local.mk.in" || ! -f "codels/Makefile.in" ) {
+    print "You're missing one of configure.ac.user, autoconf/local.mk.in, codels/Makefile.in\n";
+    print "you may need to run genom -i\n";
+    exit
 }
 
 get_options
