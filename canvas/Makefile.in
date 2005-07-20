@@ -174,4 +174,4 @@ install: all
 clean:;
 
 distclean: clean
-	rm -f Makefile
+	rm -f Makefile $(genlist)

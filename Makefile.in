@@ -98,7 +98,7 @@ clean:
 
 distclean: 
 	$(make_subdirs)
-	rm -f Makefile genom-config.h config.status config.log config.mk libtool
+	rm -f Makefile genom-config.h config.status config.log config.mk libtool genom.pc
 
 
 # --- build distribution ------------------------------------------------
