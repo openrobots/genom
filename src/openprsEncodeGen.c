@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1999-2003 LAAS/CNRS
+ * Copyright (c) 1999-2005 LAAS/CNRS
  * Sara Fleury - Mon Jun  7 1999
  * All rights reserved.
  *
@@ -284,7 +284,7 @@ genEncodeTerm(FILE *out, DCL_NOM_STR *dclDesc, int typedefFlag, int numTerm)
 
     /* Debut de la fonction */
     fprintf(out, 
-	    "      if (! PUGetOpenprsTermCompSpecArg(tc, elt*tabsize+%d, EXPRESSION, &tc_tmp))\n"
+	    "      if (! PUGetOprsTermCompSpecArg(tc, elt*tabsize+%d, EXPRESSION, &tc_tmp))\n"
 	    "         return FALSE;\n"
 	    "      if (! pu_encode_genom_%s(\"%s\", tc_tmp, ",
 	    numTerm, 
@@ -333,7 +333,7 @@ genEncodeEnum (FILE *out, DCL_NOM_LIST *members, char *type)
 
   fprintf(out, 
 "      Symbol val;\n"
-"      if (!PUGetOpenprsTermCompSpecArg(tc, elt+1, ATOM, &val))\n"
+"      if (!PUGetOprsTermCompSpecArg(tc, elt+1, ATOM, &val))\n"
 "	   return FALSE;\n");
 
 
