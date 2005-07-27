@@ -1,0 +1,36 @@
+#!/usr/local/bin/perl -w
+#
+# Tue MES modules Genom sous Unix
+#
+# Sara Fleury - Avril 2001
+#
+# $Id$
+#----------------------------------------------------------------------
+#
+
+$killmodule =  "/usr/local/robots/bin/killmodule";
+
+# Recupere les liste des fichiers 
+@list_files=`ls $ENV{'HOME'}/.*.pid-*`;
+
+# Pour chaque fichier ~/.*.pid
+foreach $file (@list_files) {
+  $_ = $file;
+
+  # On récupère le nom du module
+  if (/.(\w*).pid/) {
+    $module = $1;
+    
+    # On appelle killmodule
+    printf "killmodule $module\n";
+    `$killmodule $module`;
+  }
+
+  # On ne trouve pas le nom du module...
+  else {
+    printf "Cannot get module name of $file\n";
+  }
+}
+
+# fini
+exit 0;
