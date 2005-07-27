@@ -54,7 +54,7 @@ mirror_dir("server/tcl", "../$tclDir", "", "", 0) if ($genTcl == 1);
 mirror_dir("server/openprs", "../$openprsDir", "", "", 0) if ($genOpenprs == 1);
 mirror_dir("autoconf", "../$autoconfDir", "", "^(?:local\.mk\.in)", 0);
 mirror_dir(".", "..", "^autogen", "", 0);
-mirror_dir(".", "..", "^$module.pc", "", 0);
+mirror_dir(".", "..", "^$module.pc.in", "", 0);
 
 
 # Do +x on autogen
