@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+oprslibdir=@libdir@/openprs
+includedir=@includedir@/$module$
+
+Name: $module$-oprs
+Description: $module$ Genom module
+Version: @PACKAGE_VERSION@
+Requires: genom >= $genomMajor$.$genomMinor$ $require$
+Libs: -L${libdir} -l$module$Client -L${oprslibdir} -l$module$Openprs
+Cflags: -I${includedir}

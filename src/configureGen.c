@@ -93,6 +93,17 @@ static void definePackage(char** conf_in, char** conf_mk_in, char const* NAME, c
         NAME, name, NAME, NAME);
 }
 
+static void defineExternLibsPackage(char** conf_in, char** conf_mk_in, char const* NAME, char const* name)
+{
+    bufcatIfNotIn(conf_mk_in, "\n%s_OPRS_CFLAGS   = \t\\@%s_OPRS_CFLAGS\\@", NAME, NAME);
+
+    bufcatIfNotIn(conf_in,
+        "\nPKG_CHECK_MODULES(%s_OPRS, %s-oprs)\n"
+        "AC_SUBST(%s_OPRS_CFLAGS)\n"
+        "AC_SUBST(%s_OPRS_LIBS)\n\n", 
+        NAME, name, NAME, NAME);
+}
+
 int
 configureGen(FILE *out,
 	     const char *codelsDir, const char *cmdLine,
@@ -202,6 +213,11 @@ configureGen(FILE *out,
    for (ln = packages; ln != NULL; ln = ln->next) 
        definePackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 
+#ifdef USELESS
+   for (ln = externLibs; ln != NULL; ln = ln->next) 
+       defineExternLibsPackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
+#endif
+
    /* --- configure.ac.begin.in --------------------------------------------------- */
    script_open(out);
    subst_begin(out, PROTO_CONFIGURE_BEGIN);
@@ -236,7 +252,7 @@ configureGen(FILE *out,
    for (ln = externLibs; ln != NULL; ln = ln->next)
    {
         bufcatIfNotIn(&genomIncludes, " \\$(%s_CFLAGS)", ln->NAME);
-	bufcatIfNotIn(&serverLibs, "\\$(%s_LIBS)", ln->NAME); 
+	bufcatIfNotIn(&serverLibs, " \\$(%s_LIBS)", ln->NAME); 
    }
    output(out, "genomPackages", pkg_conf_mk);
    output(out, "serverLibs", serverLibs);
@@ -344,6 +360,7 @@ configureServerGen(FILE *out,
 int pkgconfigGen(FILE *out)
 {
     char* require = 0;
+    char* require2 = 0;
     ID_LIST* ln, *ln2;
 
     script_open(out);
@@ -368,5 +385,31 @@ int pkgconfigGen(FILE *out)
     print_sed_subst(out, "genomMajor", genomMajor);
     subst_end(out);
     script_close(out, "%s.pc.in", module->name);
+
+    script_open(out);
+    subst_begin(out, PROTO_PKGCONFIG_OPRS_IN);
+
+
+    /* Build the require field 
+     * We take into account only the packages 
+     * use in "import from" statements */
+    for (ln = externLibs; ln != NULL; ln = ln->next)
+    {
+	for (ln2 = packages; ln2 != NULL; ln2 = ln2->next)
+	    if (! strcmp(ln2->name, ln->name))
+	    {
+		bufcat(&require2, ", ");
+		bufcat(&require2, ln->name);
+		bufcat(&require2, "-oprs");
+	    }
+    }
+    output(out, "require", require2);
+
+    print_sed_subst(out, "module", module->name);
+    print_sed_subst(out, "genomMinor", genomMinor);
+    print_sed_subst(out, "genomMajor", genomMajor);
+    subst_end(out);
+    script_close(out, "%s-oprs.pc.in", module->name);
+
     return 0;
 }

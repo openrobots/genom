@@ -132,7 +132,7 @@ else {
     chmod 04775, 'server';
 }
 
-# Creation du repertoire openprs
+# Creation du repertoire tcl
 #
 if ($genTcl == 1) {
   if (! -d "$tclDir") {

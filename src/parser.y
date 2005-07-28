@@ -1734,8 +1734,9 @@ main(int argc, char **argv)
     fprintf(sortie, "# Generateur du module %s\n\n", module->name);
 
     /* Variables generales pour perl */
-    fprintf(sortie, "use vars qw($module $genOpenprs $genTcl $codelsDir $autoconfDir $serverDir $installUserPart $openprsDir $tclDir);\n");
+    fprintf(sortie, "use vars qw($module $moduleOprs $genOpenprs $genTcl $codelsDir $autoconfDir $serverDir $installUserPart $openprsDir $tclDir);\n");
     fprintf(sortie, "$module=\"%s\";\n", module->name);
+    fprintf(sortie, "$moduleOprs=\"%s-oprs\";\n", module->name);
     fprintf(sortie, "$genOpenprs=%d;\n", genOpenprs);
     fprintf(sortie, "$genTcl=%d;\n", genTcl);
 

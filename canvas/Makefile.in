@@ -133,6 +133,7 @@ flist+=\
 	Makefile.top.in			\
 	acinclude.m4			\
 	module.pc.in			\
+	module-oprs.pc.in			\
 	start.pl			\
 	end.pl
 

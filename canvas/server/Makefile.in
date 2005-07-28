@@ -198,7 +198,7 @@ $genOpenprs$		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LDFLAGS)
 $(OBJDIR)/$(INIT_BIN): $(init_obj) $(OBJDIR)/$(CLIENT_LIB)
 	$(LTLD) $(CFLAGS) $(init_obj) -o $@ $(LDFLAGS)	\
 		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)	\
-		$(GENOM_LIBS)
+		$(SERVERS_CLIENT_LIB) $(GENOM_LIBS)
 
 $(OBJDIR)/$(ESSAY_BIN): $(essay_obj) $(OBJDIR)/$(CLIENT_LIB)
 	$(LTLD) $(CFLAGS) $(essay_obj) -o $@  $(LDFLAGS) 	\
@@ -232,8 +232,8 @@ install-bin:
 	$(LTINSTALL) $(OBJDIR)/$(CLIENT_LIB) $(libdir)/$(CLIENT_LIB)
 	$genTcl$$(MKINSTALLDIRS) $(libdir)/tclserv
 	$genTcl$$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/tclserv/$(TCLCLIENT_LIB)
-	$genOpenprs$$(MKINSTALLDIRS) $(libdir)/oprs
-	$genOpenprs$$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) $(libdir)/oprs/$(OPRSCLIENT_LIB)
+	$genOpenprs$$(MKINSTALLDIRS) $(libdir)/openprs
+	$genOpenprs$$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) $(libdir)/openprs/$(OPRSCLIENT_LIB)
 	$(MKINSTALLDIRS) $(bindir)
 	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
 	$(LTINSTALL) $(OBJDIR)/$(ESSAY_BIN) $(bindir)/$(ESSAY_BIN)
@@ -245,10 +245,10 @@ install-data:
 	done
 	$genTcl$$(MKINSTALLDIRS) $(datadir)/tcl
 	$genTcl$$(INSTALL_DATA) $(srcdir)/$(tclclient_tcl) $(datadir)/$(tclclient_tcl)
-	$genOpenprs$$(MKINSTALLDIRS) $(datadir)/oprs
-	$genOpenprs$( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_data) $(datadir)/oprs )
-	$genOpenprs$$(MKINSTALLDIRS) $(includedir)/server/oprs
-	$genOpenprs$( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_headers) $(includedir)/server/oprs )
+	$genOpenprs$$(MKINSTALLDIRS) $(datadir)/openprs
+	$genOpenprs$( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_data) $(datadir)/openprs )
+	$genOpenprs$$(MKINSTALLDIRS) $(includedir)/server/openprs
+	$genOpenprs$( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_headers) $(includedir)/server/openprs )
 
 
 # --- clean -------------------------------------------------------------

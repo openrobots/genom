@@ -58,6 +58,7 @@
 #define PROTO_MAKEFILE_CODELS	"codels/Makefile.in"
 
 #define PROTO_PKGCONFIG_IN	"module.pc.in"
+#define PROTO_PKGCONFIG_OPRS_IN	"module-oprs.pc.in"
 
 int configureGen(FILE *out, const char *codelsDir, const char *cmdLine,
 	const char *genomBin, const char *genomFile, const char *genomWd,

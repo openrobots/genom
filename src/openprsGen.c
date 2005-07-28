@@ -181,8 +181,8 @@ openprsGen(FILE *out)
      /* Entete */
      cat_begin(out);
      fprintf(out, file_header_op);
-     fprintf(out, "include \"server/openprs/%sOpenprs.sym\"\n", module->name);
-     fprintf(out, "load opf \"server/openprs/%sOpenprs.opf\"\n", module->name);
+     fprintf(out, "include \"%sOpenprs.sym\"\n", module->name);
+     fprintf(out, "load opf \"%sOpenprs.opf\"\n", module->name);
      cat_end(out);
   
      script_close(out, "server/openprs/%sOpenprs.inc", module->name);

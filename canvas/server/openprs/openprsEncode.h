@@ -40,8 +40,8 @@
 $externOpenprsEncodeLibs$
 
 /* Structures du module */
-#include "$module$PosterLib.h"
+#include "server/$module$PosterLib.h"
 
-#include "$module$EncodeOpenprsProto.h"
+#include "server/openprs/$module$EncodeOpenprsProto.h"
 
 #endif /* $MODULE$_OPENPRS_ENCODE_H */

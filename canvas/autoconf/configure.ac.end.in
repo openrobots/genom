@@ -7,6 +7,7 @@ AC_CONFIG_FILES(
 	[codels/Makefile]
 	[server/Makefile]
 	[$module$.pc]
+	[$module$-oprs.pc]
 	[local.mk:autoconf/local.mk.in]
 )
 
