@@ -7,14 +7,14 @@ rm -f \
     configure \
     configure.ac \
     aclocal.m4 \
-    autogen
+    autogen \
+    Makefile.in
 
 rm -f \
     autoconf/acinclude.m4  \
     autoconf/config.guess   \
     autoconf/config.posix.mk   \
     autoconf/config.sub           \
-    autoconf/configure.ac.begin   \
     autoconf/install-sh   \
     autoconf/mkinstalldirs \
     autoconf/codels.mk      \
@@ -24,4 +24,9 @@ rm -f \
     autoconf/libtool.m4   \
     autoconf/ltmain.sh   \
     autoconf/robots.m4
+
+for i in *.gen; do
+    rm -f ${i/.gen/.pc.in}
+    rm -f ${i/.gen/-oprs.pc.in}
+done
 
