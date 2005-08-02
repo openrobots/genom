@@ -64,3 +64,5 @@ clean:;
 distclean: clean
 	rm -f Makefile
 
+.PHONY: depend
+depend:

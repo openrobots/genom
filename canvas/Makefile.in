@@ -176,3 +176,6 @@ clean:;
 
 distclean: clean
 	rm -f Makefile $(genlist)
+
+.PHONY: depend
+depend:

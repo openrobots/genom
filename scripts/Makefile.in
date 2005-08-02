@@ -49,7 +49,7 @@ flist=\
 	killmodule \
 	genom-clean \
 	killmymodules
-	
+
 
 # -----------------------------------------------------------------------
 
@@ -68,3 +68,5 @@ clean:;
 distclean: clean
 	rm -f Makefile
 
+.PHONY: depend
+depend:

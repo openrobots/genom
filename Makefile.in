@@ -93,6 +93,9 @@ install::  genom.pc
 	$(MKINSTALLDIRS) $(libdir)/pkgconfig
 	$(INSTALL) genom.pc $(libdir)/pkgconfig
 
+depend:
+	$(make_subdirs)
+
 clean: 
 	$(make_subdirs)
 

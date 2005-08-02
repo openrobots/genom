@@ -96,3 +96,5 @@ distclean: clean
 
 # --- dependencies ------------------------------------------------------
 
+.PHONY: depend
+depend:

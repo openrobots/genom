@@ -91,3 +91,7 @@ clean:
 distclean: clean
 	rm -f Makefile
 
+# --- depend ------------------------------------------------------------
+
+.PHONY: depend
+depend:
