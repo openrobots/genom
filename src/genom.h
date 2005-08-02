@@ -257,6 +257,9 @@ typedef struct {
     TYPE_STR *internal_data;
     int number;
     ID_LIST *codel_files;
+    ID_STR *email;
+    ID_STR *version;
+    int use_cxx;
 } MODULE_STR;
 
 
@@ -266,6 +269,9 @@ typedef struct {
 	TYPE_STR *internal_data;
 	int number;
 	ID_LIST *codel_files;
+        ID_STR *email;
+        ID_STR *version;
+        int use_cxx;
     } value;
 } MODULE_AV_STR;
 
@@ -296,6 +302,9 @@ typedef struct POSTERS_INPUT_LIST {
     struct POSTERS_INPUT_LIST *next;
 } POSTERS_INPUT_LIST;
 
+extern void genom_get_requires(char* filename);
+extern ID_LIST* push_back(ID_LIST* list, ID_LIST* item);
+
 extern int keyword;	
 extern int num_ligne;
 extern char nomfic[];
@@ -310,10 +319,9 @@ extern EXEC_TASK_LIST *taches;
 extern int nbExecTask;
 extern ID_LIST *includeFiles;
 extern ID_LIST *allIncludeFiles;
-extern ID_LIST *externLibs;
-extern ID_LIST *packages;      /* variables name from -P */
-/* extern ID_LIST *packagesPrefix;*/  /* all the path from -P */
-extern ID_LIST *externPath;           /* all the path from -I */
+extern ID_LIST *imports;            /* modules listed in import from */
+extern ID_LIST *requires;    /* packages listed in -P and require statements */
+extern ID_LIST *externPath;         /* all the path from -I */
 extern POSTER_LIST *posters;
 extern POSTERS_INPUT_LIST *posters_input;
 extern int initRequest;

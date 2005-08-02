@@ -82,7 +82,7 @@ int openprsMakeGen(FILE *out)
 	    bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/server ", ln->NAME, ln->NAME);
 	} /* for */
     } /* for */
-    for (ln = externLibs; ln != NULL; ln = ln->next) {
+    for (ln = imports; ln != NULL; ln = ln->next) {
 	bufcatIfNotIn(&str, "-I\\$(%s) -I\\$(%s)/server ", ln->NAME, ln->NAME);
     }
     /* Options -J et -I passe'es a` genom */

@@ -35,11 +35,9 @@
 use strict;
 
 # add newline on print
+# (we don't want to explicitely add '\n' on each print in the generated Perl code)
 $\ = "\n";
 
-# Definition de $MAKE
-# (utilisation de gnumake car problemes de compatibilite de make avec gnumake)
-my $MAKE = "gnumake";
 
 # move_if_change
 sub move_if_change {
@@ -48,64 +46,67 @@ sub move_if_change {
         if (system("cmp -s $a $b") == 0) {
             unlink $a;
         } else {
-            print "$b changed";
+            #print "$b changed";
             system("mv $a $b");
         }
     } else {
-        print "$b created";
+        #print "$b created";
         system("mv $a $b");
     }
 }
 
 sub mirror_dir {
-  my ($srcdir, $dstdir, $include, $exclude, $confirm) = @_;
+  my ($srcdir, $dstdir, $include, $exclude, $mode) = @_;
 
   if (! -d "$dstdir") {
-    my $agree='y';
-    if ($confirm) {
-      printf ("create $dstdir (y/n)? ");
-      chomp($agree=<STDIN>);
-    }
-    if ($agree eq 'y') {
-      mkdir "$dstdir", 04775;
-    } else { return; }
+    mkdir "$dstdir", 04775;
   }
 
+  my $found_something = 0;
   opendir(DIR, $srcdir);
   foreach(readdir(DIR)) {
     # skip unwanted files
     if ($exclude ne "") { if (/$exclude/) { next; } }
     if ($include ne "") { if (!/$include/) { next; } }
-    if (! -f "$srcdir/$_") { next; }
+    next if ( ! -f "$srcdir/$_" );
 
     if (! -f "$dstdir/$_") {
+      $found_something = 1;
       # file doesn't exist
+      printf ("  creating $_\n");
       system("cp $srcdir/$_ $dstdir/$_");
-
     } elsif (system("cmp -s $srcdir/$_ $dstdir/$_") != 0) {
+      $found_something = 1;
       # file exists and is different
-      if ($confirm) {
-	printf ("overwrite $dstdir/$_ (y/n)? ");
-	my $agree;
+      my $agree = 'n';
+      if ($mode == $SKIP_IF_CHANGED) {
+        printf ("  $_ changed, skipping\n");
+        next;
+      } elsif ($mode == $ASK_IF_CHANGED) {
+	printf ("  $_ has changed, overwrite (y/n)? ");
 	chomp($agree=<STDIN>);
-	if ($agree eq 'y') {
-	  printf ("save $dstdir/$_ in $dstdir/$_.genomsave\n");
-	  system ("cp $dstdir/$_ $dstdir/$_.genomsave");
-	} else {
-	  printf ("keeping $dstdir/$_\n");
-	  next;
-	}
+        if ($agree eq 'y') {
+          printf ("  saving $_ in $_.genomsave\n");
+          system ("cp $dstdir/$_ $dstdir/$_.genomsave");
+        }
+      } else { 
+        $agree = 'y';
+        printf ("  overwriting $_ with new version\n");
       }
-      system ("'cp' -f $srcdir/$_ $dstdir/$_");
+
+      if ($agree eq 'y') {
+        system ("\\cp -f $srcdir/$_ $dstdir/$_");
+      }
     }
   }
   closedir(DIR);
+
+  return $found_something
 }
 
 # Creation du repertoire user
 #
 if (! -d "codels") {
-    print "directory codels created";
     mkdir "codels", 04775;
 }
 else {
@@ -115,7 +116,6 @@ else {
 # Creation du repertoire configure
 #
 if (! -d "autoconf") {
-    print "directory autoconf created";
     mkdir "autoconf", 04775;
 }
 else {
@@ -125,7 +125,6 @@ else {
 # Create server directory
 #
 if (! -d "server") {
-    print "directory server created";
     mkdir "server", 04775;
 }
 else {
@@ -136,7 +135,6 @@ else {
 #
 if ($genTcl == 1) {
   if (! -d "$tclDir") {
-    print "directory $tclDir created";
     mkdir "$tclDir", 04775;
   }
   else {
@@ -148,7 +146,6 @@ if ($genTcl == 1) {
 #
 if ($genOpenprs == 1) {
   if (! -d "$openprsDir") {
-    print "directory $openprsDir created";
     mkdir "$openprsDir", 04775;
   }
   else {

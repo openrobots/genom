@@ -53,6 +53,11 @@ all install depend:: $(config_files)
 clean:
 	$(MAKE) $@-$(OSAPI)
 
+.PHONY: distclean
+distclean:
+	rm -f Makefile libtool config.log config.status $module$.pc $module$-oprs.pc local.mk config.mk
+	$(make_subdirs)
+
 
 # GenoM flags
 include $(top_srcdir)/$(autoconfdir)/genom.mk
@@ -86,7 +91,8 @@ regen: standalone-regen
 	@./config.status
 
 # --- pkgconfig ---------------------------------------------------------
-ALL_PKGCONFIG:=$module$.pc $module$-oprs.pc $(addsuffix .pc,@EXTRA_PKGCONFIG@)
+ALL_PKGCONFIG := $module$.pc $(addsuffix .pc,@EXTRA_PKGCONFIG@)
+$genOpenprs$ALL_PKGCONFIG += $module$-oprs.pc
 install:: $(ALL_PKGCONFIG)
 	$(MKINSTALLDIRS) $(libdir)/pkgconfig
 	$(INSTALL) $(ALL_PKGCONFIG) $(libdir)/pkgconfig

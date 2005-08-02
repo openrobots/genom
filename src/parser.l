@@ -38,7 +38,7 @@ __RCSID("$LAAS$");
 C	[A-Z_a-z]
 D	[0-9]
 H       [0-9a-fA-F]
-A	[0-9A-Z_a-z]
+A	[0-9A-Z_a-z\-]
 W       [ \t\n]
 WC      {W}*\:
 
@@ -50,6 +50,8 @@ WC      {W}*\:
  #include "parser.tab.h"
 
 %%
+
+"require"/{WC}  {yylval.ival = REQUIRE; return(REQUIRE); }
 
 "struct"   {yylval.ival = STRUCT; return(STRUCT); }
 "union"    {yylval.ival = UNION; return(UNION); }
@@ -91,6 +93,9 @@ WC      {W}*\:
 
 "internal_data"/{WC}  {yylval.ival = INTERNAL_DATA; return(INTERNAL_DATA); }
 "number"/{WC}         {yylval.ival = NUMBER; return(NUMBER); }
+"version"/{WC}        {yylval.ival = VERSION; return(VERSION); }
+"email"/{WC}          {yylval.ival = EMAIL; return(EMAIL); }
+"cxx"/{WC}            {yylval.ival = USE_CXX; return(USE_CXX); }
 "codel_files"/{WC}    {yylval.ival = CODEL_FILES; return(CODEL_FILES); }
 
 "type"/{WC}            {yylval.ival = TYPE; return(TYPE); }
@@ -142,7 +147,12 @@ WC      {W}*\:
 
 {C}+{A}* { yylval.idStr = (ID_STR *)malloc(strlen(yytext) + 1);
           strcpy((char *)yylval.idStr, yytext);
-          return(IDENTIFICATEUR); }
+          if (strchr(yytext, '-') != NULL)
+            return (PACKAGENAME);
+          else
+            return (IDENTIFICATEUR);
+         }
+        
 
 0x{H}+ { yylval.ival = strtol(yytext, (char **)NULL, 16); 
            return(CONSTANTE_ENTIERE); }

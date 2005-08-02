@@ -97,6 +97,7 @@ ifelse([$genTcl$], [yes], [ROBOT_LIB_TCL(@TCL_CONFIG_PATH@)], [])
 ifelse([$genOpenprs$], [yes], [
 	PKG_CHECK_MODULES(TRANSGEN, transgen)
 	PKG_CHECK_MODULES(OPENPRS, openprs)
+        AC_CONFIG_FILES([$module$-oprs.pc])
 	], [])
 
 dnl --- Check for extra software ----------------------------------------
@@ -121,4 +122,28 @@ AC_SUBST(EXTRA_LIBS)
 
 $genomPackages$
 
+dnl ============ Include the user part
+m4_include([configure.ac.user])
+dnl ============ Include the user part (end)
+
+AC_SUBST(EXTRA_SUBDIRS)
+AC_SUBST(EXTRA_PKGCONFIG)
+
+AC_CONFIG_FILES(
+	[config.mk:autoconf/config.mk.in]
+	[Makefile]
+	[codels/Makefile]
+	[server/Makefile]
+	[$module$.pc]
+	[local.mk:autoconf/local.mk.in]
+)
+
+for dir in $EXTRA_SUBDIRS; do
+    AC_CONFIG_FILES([$dir/Makefile])
+done
+for pc in $EXTRA_PKGCONFIG; do
+    AC_CONFIG_FILES([$pc.pc])
+done
+
+AC_OUTPUT
 

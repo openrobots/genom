@@ -139,9 +139,8 @@ flist+=\
 
 # These are searched in builddir instead of srcdir
 genlist = \
-	autogen \
-	autoconf/configure.ac.begin \
-	autoconf/configure.ac.end
+	configure.ac \
+	autogen
 
 dirs=autoconf codels openprs server server/tcl server/openprs
 
@@ -179,3 +178,4 @@ distclean: clean
 
 .PHONY: depend
 depend:
+

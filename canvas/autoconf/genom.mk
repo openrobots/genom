@@ -30,10 +30,7 @@
 
 GENOM=		$genomBin$
 GENFILE=	$genomFile$
-
-GENFLAGS=	$genomIncludes$ $genomDefines$
-$genTcl$GENFLAGS+=	-t
-$genOpenprs$GENFLAGS+=	-o
+GENFLAGS=	$genomFlags$
 
 # --- genom -------------------------------------------------------------
 

@@ -48,6 +48,18 @@ __RCSID("$LAAS$");
 
 POSTERS_INPUT_LIST *posters_input=NULL;
 
+ID_LIST* push_back(ID_LIST* list, ID_LIST* item)
+{
+    ID_LIST* last;
+
+    item->next = NULL;
+    if (list == NULL)
+        return item;
+        
+    for (last = list; last->next != NULL; last = last->next);
+    last->next = item;
+    return list;
+}
 
 /***
  *** Fonctions d'usage ge'ne'ral dans genom
@@ -67,16 +79,6 @@ static char* strcpytoupper(char const* value)
     }
     result[i] = '\0';
     return result;
-}
-
-void
-upCaseArguments(void)
-{
-    ID_LIST *ln;
-
-    /* -P */
-    for (ln = packages; ln != NULL; ln = ln->next)
-        ln->NAME = strcpytoupper(ln->name);
 }
 	
 /**
@@ -107,7 +109,11 @@ upCaseNames(void)
     }
 
     /* Import from */
-    for (ln = externLibs; ln != NULL; ln = ln->next)
+    for (ln = imports; ln != NULL; ln = ln->next)
+        ln->NAME = strcpytoupper(ln->name);
+
+    /* Required packages */
+    for (ln = requires; ln != NULL; ln = ln->next)
         ln->NAME = strcpytoupper(ln->name);
 
     /* Noms des taches d'execution */
@@ -133,6 +139,111 @@ upCaseNames(void)
 
 } /* upCaseNames */
 
+static char* skip_spaces(char* buffer)
+{
+    if (!buffer)
+        return NULL;
+
+    while (*buffer && isspace(*buffer))
+        ++buffer;
+
+    if (! *buffer)
+        return NULL;
+
+    return buffer;
+}
+
+/* Get require statements 
+ * It changes the content of buffer, so take care of using its return value */
+#define MAX_REQUIRE_COUNT 256
+static void parse_require(char* buffer, int line)
+{
+    /* We split the string into tokens, removing the 'require' statement */
+    size_t current = 0;
+    char* packages[MAX_REQUIRE_COUNT];
+    int i;
+    ID_LIST* il;
+
+    char* statement, *delim;
+    char* line_end = strchr(buffer, '\n');
+    char* end = strchr(buffer, ';');
+    if (! end || end > line_end)
+    {
+        printf("genom 0:%i: expecting ';' at end of 'require' statement\n", line);
+        exit(1);
+    }
+
+    /* Copy the statement */
+    statement = xalloc(end - buffer + 1);
+    strncpy(statement, buffer, end - buffer);
+    statement[end-buffer] = 0;
+
+    delim = strchr(statement, ' ');
+    /* Split it into the tokens array */
+    while (delim)
+    {
+        *delim = 0;
+        packages[current] = skip_spaces(delim + 1);
+        if (! packages[current])
+            break;
+
+        delim = strchr(packages[current], ',');
+        if (++current > MAX_REQUIRE_COUNT)
+        {
+            fprintf(stderr, "genom: 0:%i: too many arguments to 'require' (%i max)\n", line, MAX_REQUIRE_COUNT);
+            exit(1);
+        }
+    }
+
+    for (i = 0; i < current; ++i)
+    {
+        il = STR_ALLOC(ID_LIST);
+        il->name = strdup(packages[i]);
+        il->next = 0;
+
+        requires = push_back(requires, il);
+    }
+
+    free(statement);
+}
+
+void
+genom_get_requires(char* filename)
+{
+    FILE* fd = fopen(filename, "r");
+    if (! fd)
+    {
+        printf("Unable to open %s for reading\n", filename);
+        exit(1);
+    }
+
+    fseek(fd, 0, SEEK_END);
+    long size = ftell(fd);
+    fseek(fd, 0, SEEK_SET);
+    char *buffer = xalloc(size);
+    if (fread(buffer, size, 1, fd) != 1)
+    {
+        printf("Error reading %s\n", filename);
+        exit(1);
+    }
+
+    /* Go for the primitive parsing ... :p */
+    long line = 0;
+    char* current = buffer;
+    while (current)
+    {
+        if (strncmp(current, "require", 7) == 0)
+            parse_require(current, 0);
+
+        current = strchr(current, '\n');
+        if (current) ++current;
+        ++line;
+    }
+    
+    free(buffer);
+    fclose(fd);
+}
+
 /*----------------------------------------------------------------------*/
 
 /*
@@ -151,6 +262,16 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
 	break;
       case CODEL_FILES:
 	module->codel_files = av->value.codel_files;
+        break;
+      case VERSION:
+        module->version = av->value.version;
+        break;
+      case EMAIL:
+        module->email = av->value.email;
+        break;
+      case USE_CXX:
+        module->use_cxx = av->value.use_cxx;
+        break;
     }
     return(module);
 } /* ajout_av_module */

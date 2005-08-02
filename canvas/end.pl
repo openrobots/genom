@@ -36,26 +36,35 @@ use File::stat;
 #----------------------------------------------------------------------
 
 # mirror_dir source dest include exclude confirm
+my $user_mode = ($installUserPart ? $ASK_IF_CHANGED : $SKIP_IF_CHANGED);
 
-if ($installUserPart == 1) {
-  # Install user files
+my $found_something = 0;
 
-  mirror_dir("codels", "../$codelsDir", "", "", 1);
+print "\nUpdating top directory";
+mirror_dir(".", "..", "^(?:configure.ac.user|acinclude.m4)", "", $user_mode);
+print "" if (mirror_dir(".", "..", "", "^(?:configure.ac.user|acinclude.m4|\\w+\\.pl)", $OVERWRITE));
 
-  mirror_dir(".", "..", "^Makefile.in", "", 1);
-  mirror_dir(".", "..", "^configure.ac.user", "", 1);
-  mirror_dir("autoconf", "../$autoconfDir", "^local\.mk\.in", 1);
-  mirror_dir(".", "..", "^acinclude.m4", "", 1);
-} 
+print "Updating $codelsDir";
+print "" if (mirror_dir("codels", "../$codelsDir", "", "", $user_mode));
 
-# Install server files
-mirror_dir("server", "../$serverDir", "", "", 0);
-mirror_dir("server/tcl", "../$tclDir", "", "", 0) if ($genTcl == 1); 
-mirror_dir("server/openprs", "../$openprsDir", "", "", 0) if ($genOpenprs == 1);
-mirror_dir("autoconf", "../$autoconfDir", "", "^(?:local\.mk\.in)", 0);
-mirror_dir(".", "..", "^autogen", "", 0);
-mirror_dir(".", "..", "^$module.pc.in", "", 0);
-mirror_dir(".", "..", "^$moduleOprs.pc.in", "", 0) if ($genOpenprs == 1);
+print "Updating $autoconfDir";
+mirror_dir("autoconf", "../$autoconfDir", "^local\.mk\.in", "", $user_mode);
+print "" if (mirror_dir("autoconf", "../$autoconfDir", "", "^local.mk.in",$OVERWRITE));
+
+print "Updating $serverDir";
+print "" if (mirror_dir("server", "../$serverDir", "", "",$OVERWRITE));
+
+if ($genTcl == 1)
+{
+    print "Updating $tclDir";
+    print "" if (mirror_dir("server/tcl", "../$tclDir", "", "",$OVERWRITE));
+}
+
+if ($genOpenprs == 1)
+{
+    print "Updating $openprsDir";
+    print "" if (mirror_dir("server/openprs", "../$openprsDir", "", "",$OVERWRITE));
+}
 
 # Do +x on autogen
 my $autogen = "../autogen";
@@ -82,8 +91,7 @@ sub is_autoconf_fresh() {
     my @autoconf_src = 
     (
 	"../autogen",
-        "../$autoconfDir/configure.ac.begin",
-        "../$autoconfDir/configure.ac.end",
+        "../configure.ac",
         "../configure.ac.user", 
         "../acinclude.m4",
 	"../$autoconfDir/robots.m4"
@@ -119,6 +127,8 @@ my $aconf_regen = is_autoconf_fresh;
 if ($aconf_regen)
 {
     print "
+
+
     Some files related to the configure environment
     have changed. Running autogen\n";
 

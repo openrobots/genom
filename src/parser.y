@@ -136,9 +136,8 @@ TYPE_LIST *types = NULL;
 POSTER_LIST *posters = NULL;
 ID_LIST *includeFiles = NULL; /* Fichiers inclus dans .gen */
 ID_LIST *allIncludeFiles = NULL; /* Tous les fichiers inclus (trouves par cpp) */
-ID_LIST *externLibs = NULL;
-ID_LIST *packages = NULL;
-/*ID_LIST *packagesPrefix = NULL;*/
+ID_LIST *imports = NULL;
+ID_LIST *requires = NULL;
 ID_LIST *externPath = NULL;
 
 char *cppOptions[MAX_CPP_OPT];
@@ -177,7 +176,7 @@ int nCppOptions = 0;
     RQST_INPUT_INFO_LIST *rqstInputInfoList;
 }
 
-%token <idStr> IDENTIFICATEUR QUOTED_STRING
+%token <idStr> IDENTIFICATEUR QUOTED_STRING PACKAGENAME
 %token <ival> CONSTANTE_ENTIERE
 %token <dval> CONSTANTE_FLOTTANTE
 %token <ival>  AUTO STATIC EXTERN REGISTER TYPEDEF
@@ -185,8 +184,12 @@ int nCppOptions = 0;
 %token <ival> STRUCT UNION ENUM
 %token <ival> MEMBER N_WHITE
 
+%token <ival> REQUIRE
 %token <ival> MODULE REQUEST EXEC_TASK IMPORT_TYPE FROM
 %token <ival> INTERNAL_DATA
+%token <ival> VERSION
+%token <ival> EMAIL
+%token <ival> USE_CXX
 %token <ival> NUMBER CODEL_FILES
 %token <ival> TYPE INPUT OUTPUT C_CONTROL_FUNC C_EXEC_FUNC INCOMPATIBLE_WITH
 %token <ival> POSTERS_INPUT
@@ -284,6 +287,7 @@ declaration_top: declaration_de_module ';' { $$ = 0; }
     | liste_declaration_de_requete { requetes = $1; $$ = 0; }
     | liste_declaration_de_tache { taches = $1; $$ = 0; }
     | liste_declaration_de_posters { posters = $1; $$ = 0; }
+    | require ';' { $$ = 0; }
     ;
 
 liste_declaration_de_typedef: declaration_de_typedef 
@@ -336,6 +340,14 @@ liste_declaration_de_posters: declaration_de_poster ';'
 
 /*----------------------------------------------------------------------*/
 
+require: REQUIRE ':' list_packages
+list_packages: 
+             PACKAGENAME 
+             | IDENTIFICATEUR
+             | list_packages ',' PACKAGENAME
+             | list_packages ',' IDENTIFICATEUR
+             ;
+
 declaration_de_module: MODULE identificateur attributs_de_module  
         { $3->name = $2; module = $3; $$ = $3; }
 ;
@@ -363,6 +375,15 @@ av_module: INTERNAL_DATA ':' indicateur_de_type
     | CODEL_FILES ':' quoted_string_list
 	{ $$ = STR_ALLOC(MODULE_AV_STR);
 	  $$->attribut = $1; $$->value.codel_files = $3; }
+    | VERSION ':' quoted_string
+        { $$ = STR_ALLOC(MODULE_AV_STR);
+          $$->attribut = $1; $$->value.version = $3; }
+    | EMAIL ':' quoted_string
+        { $$ = STR_ALLOC(MODULE_AV_STR);
+          $$->attribut = $1; $$->value.email = $3; }
+    | USE_CXX ':' expression_constante
+        { $$ = STR_ALLOC(MODULE_AV_STR);
+          $$->attribut = $1; $$->value.use_cxx = $3; }
     ;
 
 /*----------------------------------------------------------------------*/
@@ -865,8 +886,8 @@ declaration_de_typedef:
 	  }
 	  ld = STR_ALLOC(ID_LIST);
 	  ld->name = $3;
-	  ld->next = externLibs;
-	  externLibs = ld;
+	  ld->next = imports;
+	  imports = ld;
 	  import_flag = 0;
 	  $$ = $6; 
          } 
@@ -1387,20 +1408,6 @@ int yydebug = 0;
 int verbose = 0;
 /*----------------------------------------------------------------------*/
 
-static ID_LIST* push_back(ID_LIST* list, ID_LIST* item)
-{
-    ID_LIST* last;
-
-    item->next = NULL;
-    if (list == NULL)
-        return item;
-        
-    for (last = list; last->next != NULL; last = last->next) ;
-
-    last->next = item;
-    return list;
-}
-
 /**
  ** Programme principal
  **/
@@ -1515,16 +1522,15 @@ main(int argc, char **argv)
 
 	  case 'P': /* define a package */
 	    bufcat(&cmdLine, "-P%s ", optarg);
-	    /* get_pkgconfig_cflags calls exit() itself if there is too much options */
-	    nCppOptions += get_pkgconfig_cflags(optarg, cppOptions, nCppOptions);
 
 	    /* keep macro name and path for makefiles */
 	    il = STR_ALLOC(ID_LIST);
 	    il->name = strdup(optarg);
 	    il->next = 0;
-	    packages = push_back(packages, il);
+	    requires = push_back(requires, il);
 
 	    break;
+
 	  case 'v':
 	    verbose = 1;
 	    break;
@@ -1549,9 +1555,11 @@ main(int argc, char **argv)
 	    sprintf (codelsDir, "%s", optarg);
 	    break;
 	  case 't':
+	    bufcat(&cmdLine, "-t ", optarg);
 	    genTcl = 1;
 	    break;
 	  case 'o':
+	    bufcat(&cmdLine, "-o ", optarg);
 	    genOpenprs = 1;
 	    break;
 
@@ -1589,7 +1597,6 @@ main(int argc, char **argv)
     } 
 
     /* Enregistrer le nom du fichier a analyser */
-    bufcat(&cmdLine, "%s", argv[argc - 1]);
     strcpy(nomfic, argv[argc - 1]);
 
     /* add .gen extension if missing */
@@ -1598,7 +1605,16 @@ main(int argc, char **argv)
 	strcat(nomfic, extention);
     }
 
-    upCaseArguments();
+    /* pre-parse the .gen file to get requires */
+    genom_get_requires(nomfic);
+
+    for (il = requires; il; il = il->next)
+    {
+        /* get_pkgconfig_cflags calls exit() itself if there is too much options */
+        nCppOptions += get_pkgconfig_cflags(il->name, cppOptions, nCppOptions);
+    }
+
+    /*upCaseArguments();*/
 
     /* Traitement des options de cpp */
     for (i = 0; i<nCppOptions; i++) {
@@ -1638,6 +1654,11 @@ main(int argc, char **argv)
       fprintf(stderr, "Parsing errors.\n");
       exit(2);
     }
+    /* Fix missing email and/or version */
+    if (! module->email)
+        module->email = strdup("nobody@nowhere");
+    if (! module->version)
+        module->version = strdup("0.0");
 
     /*
      * Build data structures
@@ -1747,15 +1768,17 @@ main(int argc, char **argv)
     fprintf(sortie, "$tclDir=\"%s\";\n\n", tclDir);
     fprintf(sortie, "$installUserPart=%d;\n\n", installUserPart);
 
+    fprintf(sortie, "use vars qw($OVERWRITE $ASK_IF_CHANGED $SKIP_IF_CHANGED);\n");
+    fprintf(sortie, "($OVERWRITE, $ASK_IF_CHANGED, $SKIP_IF_CHANGED) = (0, 1, 2);\n");
+
     /* Debut du fichier perl */
     script_do(sortie, protoDir, "start.pl");
 
     /* Le module */
     fatalError = 0;
 
-    if (installUserPart) goto userPart;
-
-    fatalError |= (configureServerGen(sortie, argv[0], genfile,
+    fatalError |= (configureServerGen(sortie, 
+                                      cmdLine, argv[0], genfile,
 				      genTcl, genOpenprs)!=0);
     fatalError |= (typeGen(sortie) != 0);
     fatalError |= (errorGen(sortie) != 0);
@@ -1781,14 +1804,15 @@ main(int argc, char **argv)
        fatalError |= (tclClientGen(sortie) != 0);
     }
 
-  userPart:
     /* user templates */
     fatalError |= (userExecCodelsGen(sortie) != 0);
     fatalError |= (userCntrlCodelsGen(sortie) != 0);
 
     /* building environment */
     fatalError |= (configureGen(sortie,
-				codelsDir, cmdLine, argv[0], genfile, cwd,
+				codelsDir, 
+                                cmdLine, argv[0], genfile, 
+                                cwd,
 				genTcl, genOpenprs) != 0);
     /* pkgconfig data file */
     fatalError |= (pkgconfigGen(sortie) != 0);

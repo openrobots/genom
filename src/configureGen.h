@@ -33,9 +33,8 @@
 
 #define PROTO_USER_ACINCLUDE_M4 "acinclude.m4"
 #define PROTO_AUTOGEN       	"autogen" 
-#define PROTO_CONFIGURE_AC_USER  "configure.ac.user"
-#define PROTO_CONFIGURE_BEGIN    "autoconf/configure.ac.begin"
-#define PROTO_CONFIGURE_END      "autoconf/configure.ac.end"
+#define PROTO_CONFIGURE_AC      "configure.ac"
+#define PROTO_CONFIGURE_AC_USER "configure.ac.user"
 #define PROTO_INSTALL		"autoconf/install-sh" 
 #define PROTO_MKINSTALLDIRS	"autoconf/mkinstalldirs" 
 #define PROTO_CONFIGSUB		"autoconf/config.sub" 
@@ -60,11 +59,14 @@
 #define PROTO_PKGCONFIG_IN	"module.pc.in"
 #define PROTO_PKGCONFIG_OPRS_IN	"module-oprs.pc.in"
 
-int configureGen(FILE *out, const char *codelsDir, const char *cmdLine,
-	const char *genomBin, const char *genomFile, const char *genomWd,
+int configureGen(FILE *out, 
+        const char *codelsDir, 
+	const char *cmdLine, const char *genomBin, const char *genomFile, 
+        const char *genomWd,
 	int genTcl, int genOpenprs);
-int configureServerGen(FILE *out, const char *genomBin,
-	const char *genomFile, int genTcl, int genOpenprs);
+int configureServerGen(FILE *out, 
+        const char* cmdLine, const char *genomBin, const char *genomFile,
+        int genTcl, int genOpenprs);
 int pkgconfigGen(FILE *out);
 
 #endif /* H_CONFIGUREGEN */

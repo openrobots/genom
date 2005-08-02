@@ -48,6 +48,7 @@ include $(top_builddir)/config.mk
 flist=\
 	killmodule \
 	genom-clean \
+	genom-regen \
 	killmymodules
 
 

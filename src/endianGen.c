@@ -209,7 +209,7 @@ endianGen(FILE *out)
     fprintf(out, "#include \"%sEndianProto.h\"\n\n", module->name);
 
     /* Structures importees d'autres modules */
-    for (ln = externLibs; ln != NULL; ln = ln->next) {
+    for (ln = imports; ln != NULL; ln = ln->next) {
       fprintf(out, "\n#include \"server/%sEndian.h\"\n", ln->name);
     } /* for */
 

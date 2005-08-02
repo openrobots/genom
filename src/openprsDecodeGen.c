@@ -113,7 +113,7 @@ openprsDecodeGen(FILE *out)
 
     /* Structures importees d'autres modules */
     str = NULL;
-    for (ln = externLibs; ln != NULL; ln = ln->next) {
+    for (ln = imports; ln != NULL; ln = ln->next) {
       bufcat(&str, "\n#include \"server/openprs/%sDecodeOpenprs.h\"\n", ln->name);
     } /* for */
     if (str != NULL) {
