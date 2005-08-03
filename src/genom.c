@@ -211,6 +211,9 @@ void
 genom_get_requires(char* filename)
 {
     FILE* fd = fopen(filename, "r");
+    long size, line = 0;
+    char *buffer, *current;
+    
     if (! fd)
     {
         printf("Unable to open %s for reading\n", filename);
@@ -218,9 +221,9 @@ genom_get_requires(char* filename)
     }
 
     fseek(fd, 0, SEEK_END);
-    long size = ftell(fd);
+    size = ftell(fd);
     fseek(fd, 0, SEEK_SET);
-    char *buffer = xalloc(size);
+    buffer = xalloc(size);
     if (fread(buffer, size, 1, fd) != 1)
     {
         printf("Error reading %s\n", filename);
@@ -228,8 +231,7 @@ genom_get_requires(char* filename)
     }
 
     /* Go for the primitive parsing ... :p */
-    long line = 0;
-    char* current = buffer;
+    current = buffer;
     while (current)
     {
         if (strncmp(current, "require", 7) == 0)
