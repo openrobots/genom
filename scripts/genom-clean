@@ -2,31 +2,12 @@
 if test -f Makefile; then
     make distclean
 fi
-rm -fR server autom4te.cache .genom
+rm -fR server .genom
 rm -f \
     configure \
-    configure.ac \
     aclocal.m4 \
     autogen \
     Makefile.in
 
-rm -f \
-    autoconf/acinclude.m4  \
-    autoconf/config.guess   \
-    autoconf/config.posix.mk   \
-    autoconf/config.sub           \
-    autoconf/install-sh   \
-    autoconf/mkinstalldirs \
-    autoconf/codels.mk      \
-    autoconf/config.mk.in   \
-    autoconf/config.rtai.mk    \
-    autoconf/configure.ac.end   \
-    autoconf/libtool.m4   \
-    autoconf/ltmain.sh   \
-    autoconf/robots.m4
-
-for i in *.gen; do
-    rm -f ${i/.gen/.pc.in}
-    rm -f ${i/.gen/-oprs.pc.in}
-done
+rm -fR autoconf
 
