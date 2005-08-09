@@ -9,7 +9,7 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option);
 #define MAX_CPP_OPT 256
 
 char *
-callCpp(char *nomFic, char *cppOptions[]);
+callCpp(char *nomFic, char *cppOptions[], int ignore_error);
 
 #endif
 

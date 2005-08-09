@@ -302,7 +302,7 @@ typedef struct POSTERS_INPUT_LIST {
     struct POSTERS_INPUT_LIST *next;
 } POSTERS_INPUT_LIST;
 
-extern void genom_get_requires(char* filename);
+extern void genom_get_requires(char* filename, char* cppOptions[]);
 extern ID_LIST* push_back(ID_LIST* list, ID_LIST* item);
 
 extern int keyword;	

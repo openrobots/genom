@@ -39,6 +39,8 @@ __RCSID("$LAAS$");
 #include <sys/param.h>
 
 #include "genom.h"
+#include "extern_processes.h"
+#include <unistd.h>
 #include "parser.tab.h"
 
 /* Ces includes sont nécessaires pour récurérer SERV_NMAX_RQST_ID */
@@ -208,15 +210,19 @@ static void parse_require(char* buffer, int line)
 }
 
 void
-genom_get_requires(char* filename)
+genom_get_requires(char* filename, char* cppOptions[])
 {
-    FILE* fd = fopen(filename, "r");
+    /* Call cpp first, to use #ifdef's */
+    char* processed_file = callCpp(filename, cppOptions, 1);
+
+    FILE* fd = fopen(processed_file, "r");
     long size, line = 0;
-    char *buffer, *current;
+    char *buffer = 0, *current;
     
     if (! fd)
     {
         printf("Unable to open %s for reading\n", filename);
+        unlink(processed_file);
         exit(1);
     }
 
@@ -227,6 +233,8 @@ genom_get_requires(char* filename)
     if (fread(buffer, size, 1, fd) != 1)
     {
         printf("Error reading %s\n", filename);
+        unlink(processed_file);
+        free(buffer);
         exit(1);
     }
 
@@ -242,6 +250,7 @@ genom_get_requires(char* filename)
         ++line;
     }
     
+    unlink(processed_file);
     free(buffer);
     fclose(fd);
 }

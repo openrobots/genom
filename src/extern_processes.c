@@ -150,7 +150,7 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 #endif /* STDINCPP */
 
 char *
-callCpp(char *nomFic, char *cppOptions[])
+callCpp(char *nomFic, char *cppOptions[], int ignore_error)
 {
     char *tmpName;
     char *cppArg[MAX_CPP_OPT + 3], *cpp;
@@ -227,6 +227,10 @@ callCpp(char *nomFic, char *cppOptions[])
 		    strerror(errno));
 	    exit(2);
 	}
+        
+        if (ignore_error)
+            close(fileno(stderr));
+
 	if (verbose)
 	{
 	    for (display = cppArg + 1; *display; ++display)
@@ -237,7 +241,7 @@ callCpp(char *nomFic, char *cppOptions[])
     }
     free(cppArg[0]);
     wait(&status);
-    if (! WIFEXITED(status) || WEXITSTATUS(status) != 0) {
+    if ( (!ignore_error) && (! WIFEXITED(status) || WEXITSTATUS(status) != 0) ) {
 	    fprintf(stderr, "genom: cpp failure\n");
 	    exit(2);
     }

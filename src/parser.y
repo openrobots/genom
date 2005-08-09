@@ -1606,7 +1606,7 @@ main(int argc, char **argv)
     }
 
     /* pre-parse the .gen file to get requires */
-    genom_get_requires(nomfic);
+    genom_get_requires(nomfic, cppOptions);
 
     for (il = requires; il; il = il->next)
     {
@@ -1628,7 +1628,7 @@ main(int argc, char **argv)
 	}
     } /* for */
     cppOptions[nCppOptions] = NULL;
-    nomTemp = callCpp(nomfic, cppOptions);
+    nomTemp = callCpp(nomfic, cppOptions, 0);
     genfile = strdup(nomfic);
 
     /*
