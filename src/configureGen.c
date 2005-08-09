@@ -131,7 +131,6 @@ configureGen(FILE *out,
 
    const char *configProtos[] = {
        PROTO_USER_ACINCLUDE_M4,
-       PROTO_ACINCLUDE_M4,
        PROTO_AUTOGEN,
        PROTO_ROBOTS_M4,
        PROTO_LIBTOOL_M4,
@@ -370,7 +369,7 @@ int pkgconfigGen(FILE *out)
     print_sed_subst(out, "genomMinor", genomMinor);
     print_sed_subst(out, "genomMajor", genomMajor);
     subst_end(out);
-    script_close(out, "%s.pc.in", module->name);
+    script_close(out, "autoconf/%s.pc.in", module->name);
 
     script_open(out);
     subst_begin(out, PROTO_PKGCONFIG_OPRS_IN);
@@ -395,7 +394,7 @@ int pkgconfigGen(FILE *out)
     print_sed_subst(out, "genomMinor", genomMinor);
     print_sed_subst(out, "genomMajor", genomMajor);
     subst_end(out);
-    script_close(out, "%s-oprs.pc.in", module->name);
+    script_close(out, "autoconf/%s-oprs.pc.in", module->name);
 
     return 0;
 }

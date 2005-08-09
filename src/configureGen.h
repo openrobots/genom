@@ -33,7 +33,7 @@
 
 #define PROTO_USER_ACINCLUDE_M4 "acinclude.m4"
 #define PROTO_AUTOGEN       	"autogen" 
-#define PROTO_CONFIGURE_AC      "configure.ac"
+#define PROTO_CONFIGURE_AC      "autoconf/configure.ac"
 #define PROTO_CONFIGURE_AC_USER "configure.ac.user"
 #define PROTO_INSTALL		"autoconf/install-sh" 
 #define PROTO_MKINSTALLDIRS	"autoconf/mkinstalldirs" 
@@ -43,12 +43,11 @@
 
 #define PROTO_ROBOTS_M4		"autoconf/robots.m4" 
 #define PROTO_LIBTOOL_M4	"autoconf/libtool.m4" 
-#define PROTO_ACINCLUDE_M4	"autoconf/acinclude.m4" 
 
 #define PROTO_CONFIG_MK		"autoconf/config.mk.in"
 #define PROTO_CONFIG_POSIX_MK	"autoconf/config.posix.mk"
 #define PROTO_CONFIG_RTAI_MK	"autoconf/config.rtai.mk"
-#define PROTO_CONFIG_LOCAL_MK   "autoconf/local.mk.in"
+#define PROTO_CONFIG_LOCAL_MK   "local.mk.in"
 #define PROTO_CONFIG_CODELS_MK	"autoconf/codels.mk"
 #define PROTO_GENOM_MK		"autoconf/genom.mk"
 
@@ -56,8 +55,8 @@
 #define PROTO_MAKEFILE_SERVER	"server/Makefile.in"
 #define PROTO_MAKEFILE_CODELS	"codels/Makefile.in"
 
-#define PROTO_PKGCONFIG_IN	"module.pc.in"
-#define PROTO_PKGCONFIG_OPRS_IN	"module-oprs.pc.in"
+#define PROTO_PKGCONFIG_IN	"autoconf/module.pc.in"
+#define PROTO_PKGCONFIG_OPRS_IN	"autoconf/module-oprs.pc.in"
 
 int configureGen(FILE *out, 
         const char *codelsDir, 

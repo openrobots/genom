@@ -46,7 +46,6 @@ include $(top_builddir)/config.mk
 
 # autoconf/libtool
 flist=\
-	autoconf/acinclude.m4		\
 	autoconf/install-sh		\
 	autoconf/mkinstalldirs		\
 	autoconf/config.sub		\
@@ -59,7 +58,8 @@ flist=\
 	autoconf/config.rtai.mk		\
 	autoconf/config.mk.in           \
 	autoconf/codels.mk		\
-	autoconf/local.mk.in
+	autoconf/module.pc.in		\
+	autoconf/module-oprs.pc.in	
 
 # server templates
 flist+=\
@@ -132,14 +132,13 @@ flist+=\
 	configure.ac.user		\
 	Makefile.top.in			\
 	acinclude.m4			\
-	module.pc.in			\
-	module-oprs.pc.in			\
 	start.pl			\
-	end.pl
+	end.pl				\
+	local.mk.in
 
 # These are searched in builddir instead of srcdir
 genlist = \
-	configure.ac \
+	autoconf/configure.ac \
 	autogen
 
 dirs=autoconf codels openprs server server/tcl server/openprs

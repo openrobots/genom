@@ -32,7 +32,7 @@ EOF
 check_aclocal_version(1, 7, 0);
 
 # Check for a few files (Genom -> OpenGenom migration)
-if ( ! -f $user || ! -f "autoconf/local.mk.in" || ! -f "codels/Makefile.in" ) {
+if ( ! -f $user || ! -f "local.mk.in" || ! -f "codels/Makefile.in" ) {
     print "You're missing one of configure.ac.user, autoconf/local.mk.in, codels/Makefile.in\n";
     print "you may need to run genom -i\n";
     exit
@@ -41,9 +41,9 @@ if ( ! -f $user || ! -f "autoconf/local.mk.in" || ! -f "codels/Makefile.in" ) {
 print "
 Creating build environment ...
   * Running aclocal\n";
-exit 1 if system("aclocal -I autoconf");
+exit 1 if system("cd autoconf && aclocal -I .. -I .");
 print "  * Running autoconf\n";
-exit 1 if system("autoconf");
+exit 1 if system("cd autoconf && autoconf -o ../configure");
 
 print "
 
