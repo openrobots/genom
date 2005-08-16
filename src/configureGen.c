@@ -93,7 +93,8 @@ static void definePackage(char** conf_in, char** conf_mk_in, char const* NAME, c
         NAME, name, NAME, NAME);
 }
 
-static void defineExternLibsPackage(char** conf_in, char** conf_mk_in, char const* NAME, char const* name)
+#ifdef FOR_OPRS
+static void defineExternOprsPackage(char** conf_in, char** conf_mk_in, char const* NAME, char const* name)
 {
     bufcatIfNotIn(conf_mk_in, "\n%s_OPRS_CFLAGS   = \t\\@%s_OPRS_CFLAGS\\@", NAME, NAME);
 
@@ -103,6 +104,7 @@ static void defineExternLibsPackage(char** conf_in, char** conf_mk_in, char cons
         "AC_SUBST(%s_OPRS_LIBS)\n\n", 
         NAME, name, NAME, NAME);
 }
+#endif
 
 int
 configureGen(FILE *out,
@@ -214,9 +216,10 @@ configureGen(FILE *out,
    for (ln = requires; ln != NULL; ln = ln->next) 
        definePackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 
-#ifdef USELESS
-   for (ln = imports; ln != NULL; ln = ln->next) 
-       defineExternLibsPackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
+#ifdef FOR_OPRS
+   if (genOpenprs)
+     for (ln = imports; ln != NULL; ln = ln->next) 
+       defineExternOprsPackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 #endif
 
    /* --- configure.ac.begin.in --------------------------------------------------- */
@@ -342,7 +345,7 @@ configureServerGen(FILE *out, char const* cmdLine,
 }
 /*----------------------------------------------------------------------*/
 
-int pkgconfigGen(FILE *out)
+int pkgconfigGen(FILE *out, int genOpenprs)
 {
     char* require = 0;
     char* require2 = 0;
@@ -371,30 +374,33 @@ int pkgconfigGen(FILE *out)
     subst_end(out);
     script_close(out, "autoconf/%s.pc.in", module->name);
 
-    script_open(out);
-    subst_begin(out, PROTO_PKGCONFIG_OPRS_IN);
-
-
-    /* Build the require field 
-     * We take into account only the packages 
-     * use in "import from" statements */
-    for (ln = imports; ln != NULL; ln = ln->next)
-    {
-	for (ln2 = requires; ln2 != NULL; ln2 = ln2->next)
+    /* package -oprs.pc.in for prs */
+    if (genOpenprs) {
+      script_open(out);
+      subst_begin(out, PROTO_PKGCONFIG_OPRS_IN);
+      
+      
+      /* Build the require field 
+       * We take into account only the packages 
+       * use in "import from" statements */
+      for (ln = imports; ln != NULL; ln = ln->next)
+	{
+	  for (ln2 = requires; ln2 != NULL; ln2 = ln2->next)
 	    if (! strcmp(ln2->name, ln->name))
-	    {
+	      {
 		bufcat(&require2, ", ");
 		bufcat(&require2, ln->name);
 		bufcat(&require2, "-oprs");
-	    }
-    }
-    output(out, "require", require2);
-
-    print_sed_subst(out, "module", module->name);
-    print_sed_subst(out, "genomMinor", genomMinor);
-    print_sed_subst(out, "genomMajor", genomMajor);
-    subst_end(out);
-    script_close(out, "autoconf/%s-oprs.pc.in", module->name);
+	      }
+	}
+      output(out, "require", require2);
+      
+      print_sed_subst(out, "module", module->name);
+      print_sed_subst(out, "genomMinor", genomMinor);
+      print_sed_subst(out, "genomMajor", genomMajor);
+      subst_end(out);
+      script_close(out, "autoconf/%s-oprs.pc.in", module->name);
+    } /* -oprs.pc.in */
 
     return 0;
 }
