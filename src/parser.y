@@ -218,7 +218,7 @@ int nCppOptions = 0;
 %type <moduleStr> declaration_de_module
 %type <rqstStr> declaration_de_requete 
 %type <taskStr> declaration_de_tache
-
+%type <ival> require list_packages
 %type <moduleStr> liste_av_module attributs_de_module 
 %type <moduleAV> paire_av_module av_module
 %type <rqstStr> attributs_de_requete liste_av_requete 
@@ -341,9 +341,11 @@ liste_declaration_de_posters: declaration_de_poster ';'
 /*----------------------------------------------------------------------*/
 
 require: REQUIRE ':' list_packages
+;
+
 list_packages: 
-             PACKAGENAME 
-             | IDENTIFICATEUR
+	     PACKAGENAME { $$ = 0; }
+             | IDENTIFICATEUR { $$ = 0; }
              | list_packages ',' PACKAGENAME
              | list_packages ',' IDENTIFICATEUR
              ;
@@ -634,7 +636,7 @@ quoted_string_list:
 
        $$ = $1;
     }
-
+    ;
 
 /*----------------------------------------------------------------------*/
 
