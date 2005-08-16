@@ -76,6 +76,7 @@ eg : (setq genom-find-file-hook 'find-file)")
 ;----------------------------------------------------------------------
 
 ;; cc-mode init (emacs 20)
+(font-lock-mode t)
 (c-initialize-cc-mode)
 
 ;----------------------------------------------------------------------
@@ -608,7 +609,7 @@ Works only if you keep the original codel file name."
 	  (setq findres (genom-find-file (concat "codels/" filename)
 					 objectname))
 	  ;; Si on a le fichier mais pas objectname
-	  ;; on cherche object name dans auto/user/<filename>
+	  ;; on cherche object name dans server/codels/<filename>
 	  (if (eq findres 1)
 	      (if (genom-insert-code filename objectname 
 				     startfrom endseparator t)
@@ -687,7 +688,7 @@ If CONFIRM is t, a confirmation is asked in mini-buffer before insertion."
   (let (filebuf beg end bilan)
 
     ;; Fichier ou chercher
-    (setq filename (concat "../auto/user/" filename))
+    (setq filename (concat "../.genom/codels/" filename))
     (if (file-exists-p filename) 
 	(progn
 	  (setq filebuf (find-file-noselect filename))
