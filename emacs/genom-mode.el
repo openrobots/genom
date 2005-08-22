@@ -76,8 +76,8 @@ eg : (setq genom-find-file-hook 'find-file)")
 ;----------------------------------------------------------------------
 
 ;; cc-mode init (emacs 20)
-(font-lock-mode t)
 (c-initialize-cc-mode)
+(font-lock-mode t)
 
 ;----------------------------------------------------------------------
 ;
@@ -559,6 +559,7 @@ Works only if you keep the original codel file name."
 	    ;; On recupere son nom
 	    (setq objectname (buffer-substring (match-beginning 1) 
 						(match-end 1) nil))
+	    (setq objectname-origin objectname)
 	    (setq objectname (concat "/[*]-\*\n[^\n]\*\\b" objectname "\\b"))
 	    ;; On recupere le nom de la tache
 	    (if (looking-at "[^}]\*exec_task:\\s \+\\(\\w\+\\);")
@@ -578,6 +579,7 @@ Works only if you keep the original codel file name."
 	      ;; Nom du codel
 	      (setq objectname (buffer-substring (match-beginning 2) 
 						 (match-end 2) nil))
+	      (setq objectname-origin objectname)
 	      (setq objectname (concat 
 				"\\<\\(ACTIVITY_EVENT\\|STATUS\\)\\W\+\\b" 
 				objectname "\\b"))
@@ -613,7 +615,7 @@ Works only if you keep the original codel file name."
 	  (if (eq findres 1)
 	      (if (genom-insert-code filename objectname 
 				     startfrom endseparator t)
-		  ()(message "Not found. Call genom."))
+		  ()(message (concat objectname-origin " not found in " filename". Call genom.")))
 	    ))
       
       ;; Pas trouve : bilan
