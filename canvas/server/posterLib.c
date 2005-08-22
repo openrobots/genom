@@ -50,7 +50,7 @@
 #include "genom/h2endian.h"
 
 /* Id. du poster de controle */
-static POSTER_ID $module$CntrlPosterId=NULL;    
+static POSTER_ID $module$CntrlPosterId=(POSTER_ID)NULL;
 static H2_ENDIANNESS posterDataEndianness;
 
 /*  prototypes de la bibliotheque printState */

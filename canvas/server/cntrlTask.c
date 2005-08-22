@@ -372,6 +372,8 @@ $module$CntrlInitTask(SERV_ID *$module$ServId)
 {
   int i;
 
+  CNTRL_SDI_F = SDI_F;
+
   /* Creation de la boite aux lettres de reception des requetes */
   if (csMboxInit ($MODULE$_MBOX_NAME, 
 		  $MODULE$_MBOX_RQST_SIZE, 0)
@@ -847,7 +849,7 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 
     switch (activityId) 
       {
-	/* Activity -88: on relance les taches d'exec suspendues */
+	/* Activity -88: restart suspended exec tasks */
       case GENOM_RESUME_EXEC_TASK:
 	for (i=0; i<$MODULE$_NB_EXEC_TASK; i++) {
 	  taskResume(EXEC_TASK_ID(i));
@@ -855,54 +857,54 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 	}
 	break;
     
-	/* Activity -99: on libère le module */
+	/* Activity -99: stop the module */
       case GENOM_END_MODULE:
 
-	/* Test s'il n'y a pas d'activités en cours */
+	/* Test if there is on going activities */
 	if (NB_ACTIVITIES != 0) {
 	  bilan = S_$module$Std_WAIT_ABORT_ZOMBIE_ACTIVITY;
 	  /* bilan = S_ACTIVITIES_REMAINED; */
 	  break;
 	}
 
-	/* Termine le module */
+	/* End the module */
 	else {
 
 	  STOP_MODULE_FLAG = TRUE;
 	  for (i=$MODULE$_NB_EXEC_TASK-1; i > -1; i--) 
 	    EXEC_TASK_WAKE_UP_FLAG(i) = TRUE;
 
-	  /* Liberer l'acces aux SDI */
+	  /* give back Internal Data Structures */
 	  commonStructGive ((void *) $module$DataStrId);
 	  commonStructGive ((void *) $module$CntrlStrId);
 
-	  /* Interrompt les taches d'exec */
+	  /* Interrupt exec task */
 	  for (i=$MODULE$_NB_EXEC_TASK-1; i > -1; i--) {
 	    logMsg("Killing task %s ... \n", $module$ExecTaskNameTab[i]);
 	    taskResume(EXEC_TASK_ID(i));
 	    h2evnSignal(EXEC_TASK_ID(i));
 	  }
 
-	  /* Attend la fin */
+	  /* Wait end */
 	  for (i=$MODULE$_NB_EXEC_TASK-1; i > -1; i--) {
 	    while (EXEC_TASK_WAKE_UP_FLAG(i))
 	      h2evnSusp(0);
 	    logMsg("    ... task %s killed\n", $module$ExecTaskNameTab[i]);
 	  }
 
-	  /* Envoie la réplique finale */
+	  /* send final reply */
 	  csServReplySend (servId, rqstId, FINAL_REPLY, bilan, 
 			   (void *) NULL, 0, (FUNCPTR) NULL);
 
 	  
-	  /* Destruction des bal, SDI et poster et CIAO ! */
+	  /* Destruction of mboxes, SDI and posters and BYE ! */
 	  csMboxEnd();
 	  commonStructDelete ((void *) $module$DataStrId);
 	  commonStructDelete ((void *) $module$CntrlStrId);
 	  posterDelete($module$CntrlPosterId);
 	  logMsg("$module$CntrlTask ended\n");
 #ifdef PID_FILE
-	  /* Detruit le fichier de PID */
+	  /* Remove PID file */
 	  unlink(pidFilePath);
 #endif
 	  exit(0);

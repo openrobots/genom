@@ -136,9 +136,6 @@ void $module$$execTaskName$ (void)
   int i, nb, nbActi;
   int prevExecTaskBilan;
   int wakeUpCntrlTask;
-#ifdef SDI_UNLOCKABLE
-  int SDItaken = FALSE;
-#endif
 #if($csServersFlag$ /* tache cliente */)
   int extEvn;
 #endif
@@ -178,7 +175,10 @@ void $module$$execTaskName$ (void)
     }
 #else
     /* Attendre un evenement interne ou externe */
-    h2evnSusp(0);
+    if (h2evnSusp(0) != TRUE) {
+      printf ("$module$$execTaskName$: h2evnSusp error\n");
+      $module$$execTaskName$Suspend (FALSE);
+    }
 #endif
 
     /* Lecture du temps */
@@ -212,13 +212,18 @@ void $module$$execTaskName$ (void)
       $cFuncExecEndName$ ();
 #endif
       
-      /* Libérer les posters, clients, bal */
+      /* free les posters, clients, bal */
       $listPosterDelete$
 #if($csServersFlag$ /* Tache cliente */)
       $listServerClientEnd$
       csMboxEnd();
+#else
+#if(!$periodFlag$ /* tache aperiodique */)
+      /* free device created to manage h2evn required to aperiodic tasks */
+      mboxEnd(0);
 #endif
-      /* Libère le sémaphore */
+#endif
+      /* free semaphore */
       EXEC_TASK_WAKE_UP_FLAG($execTaskNum$) = FALSE;
       h2evnSignal(CNTRL_TASK_ID);
 
@@ -226,18 +231,11 @@ void $module$$execTaskName$ (void)
     }
 
     /* Prendre l'acces aux SDI */
-#ifdef SDI_UNLOCKABLE
-    if (!EXEC_TASK_UNLOCK_SDI($execTaskNum$)) {
-#endif
       if (commonStructTake ($module$CntrlStrId) != OK ||
 	  commonStructTake ($module$DataStrId) != OK) {
 	logMsg("$module$$execTaskName$: commonStructTake error\n");
 	$module$$execTaskName$Suspend (FALSE);
       }
-#ifdef SDI_UNLOCKABLE
-      SDItaken = TRUE;
-    }
-#endif
     
     /* Test reception d'une replique (XXX: voir remarque plus loin) */
 #if($csServersFlag$ /* Tache cliente */)
@@ -364,18 +362,19 @@ void $module$$execTaskName$ (void)
     if(wakeUpCntrlTask)
       h2evnSignal(CNTRL_TASK_ID);
 
-    /* Liberer l'acces aux SDI */
-#ifdef SDI_UNLOCKABLE
-    if (SDItaken) {
-#endif
-      if (commonStructGive ($module$DataStrId) != OK ||
-	  commonStructGive ($module$CntrlStrId) != OK) {
-	logMsg("$module$$execTaskName$: commonStructGive error\n");
-	$module$$execTaskName$Suspend (FALSE);
+    /* Wake-up others tasks ? */
+    for (i=0; i<CNTRL_NB_EXEC_TASKS; i++) {
+      if (EXEC_TASK_WAKE_UP_FLAG(i)) {
+	h2evnSignal(EXEC_TASK_ID(i));
+	EXEC_TASK_WAKE_UP_FLAG(i) = FALSE;
       }
-#ifdef SDI_UNLOCKABLE
     }
-#endif
+
+    if (commonStructGive ($module$DataStrId) != OK ||
+	commonStructGive ($module$CntrlStrId) != OK) {
+      logMsg("$module$$execTaskName$: commonStructGive error\n");
+      $module$$execTaskName$Suspend (FALSE);
+    }
   }     /* FOREVER */
 
 }
@@ -451,9 +450,7 @@ static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId)
   EXEC_TASK_MAX_PERIOD($execTaskNum$) = 0;
   EXEC_TASK_ON_PERIOD($execTaskNum$) = 0;
   EXEC_TASK_WAKE_UP_FLAG($execTaskNum$) = FALSE;
-#ifdef SDI_UNLOCKABLE
-  EXEC_TASK_UNLOCK_SDI($execTaskNum$) = FALSE;
-#endif
+
   /* Creer le poster */
   $listPosterCreate$
   LOGDBG(("$module$$execTaskName$InitTaskFunc: posters created\n"));

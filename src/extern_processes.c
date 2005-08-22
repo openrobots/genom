@@ -18,7 +18,7 @@ static char*
 string_strip_end(char* string)
 {
     char* end = string + strlen(string) - 1;
-    while (isspace(*end))
+    while (isspace((unsigned char)*end))
 	--end;
     *(++end) = 0;
     return string;

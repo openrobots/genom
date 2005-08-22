@@ -178,7 +178,7 @@ execTaskGen(FILE *out)
 		}
 
  		/* also func to delete poster */
-		bufcat(&str2, "  if (EXEC_TASK_POSTER_ID(%d)[%d] != NULL)\n",
+		bufcat(&str2, "  if (EXEC_TASK_POSTER_ID(%d)[%d] != (POSTER_ID)NULL)\n",
 		       t->num, i);
 		bufcat(&str2,
 		       "    posterDelete(EXEC_TASK_POSTER_ID(%d)[%d]);\n",
@@ -195,7 +195,7 @@ execTaskGen(FILE *out)
 		bufcat(&str, "    &(EXEC_TASK_POSTER_ID(%d)[%d])) != OK)\n"
 		       "    return(ERROR);\n", t->num, i);
 
-		bufcat(&str2, "  if (EXEC_TASK_POSTER_ID(%d)[%d] != NULL)\n",
+		bufcat(&str2, "  if (EXEC_TASK_POSTER_ID(%d)[%d] != (POSTER_ID)NULL)\n",
 		       t->num, i);
 		bufcat(&str2,
 		       "    posterDelete(EXEC_TASK_POSTER_ID(%d)[%d]);\n",

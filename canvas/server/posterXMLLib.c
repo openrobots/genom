@@ -93,6 +93,67 @@ web$module$(FILE *f, int argc, char **argv, char **argn)
 
 /* ---------------- LE POSTER DE CONTROLE ------------------------------ */
 
+static void 
+$module$ActivitiesXML (FILE *f, $MODULE$_CNTRL_STR *sdic)
+{
+#define $MODULE$_NB_RQST_EXEC $nbExecRqst$
+#if $MODULE$_NB_RQST_EXEC != 0
+
+  $requestNameTabDeclare$
+  int i;
+  ACTIVITY_EVENT evn;
+  ACTIVITY_STATE status;
+  int bilan;
+  int rqst;
+
+  for (i=0; i<MAX_ACTIVITIES; i++) {
+    status = M_ACTIVITY_STATUS(sdic,i);
+    bilan = M_ACTIVITY_BILAN(sdic,i);
+
+    if (status != ETHER || bilan != OK) {
+      evn = M_ACTIVITY_EVN(sdic,i);
+      
+      xmlBalise("activity", BEGIN_BALISE_NEWLINE, f, 1);
+
+      xmlBalise("id", BEGIN_BALISE, f, 2);
+      fprintf(f, "%d", M_ACTIVITY_ID(sdic, i));
+      xmlBalise("id", TERMINATE_BALISE, f, 0);
+      
+      /* find the name */
+      rqst=0;
+      while($module$ExecRqstNumTab[rqst] != M_ACTIVITY_RQST_TYPE(sdic,i) 
+	    && rqst<$MODULE$_NB_RQST_EXEC)
+	rqst++;
+      xmlBalise("name", BEGIN_BALISE, f, 2);
+      fprintf(f, "%s", 
+	  rqst == $MODULE$_NB_RQST_EXEC?
+	  "Unknown" : $module$ExecRqstNameTab[rqst]);
+      xmlBalise("name", TERMINATE_BALISE, f, 0);
+      
+      xmlBalise("task", BEGIN_BALISE, f, 2);
+      fprintf(f, "%s", 
+	  M_ACTIVITY_TASK_NUM(sdic,i) == -1 ? 
+	  "not exec" : $module$ExecTaskNameTab[M_ACTIVITY_TASK_NUM(sdic,i)]);
+      xmlBalise("task", TERMINATE_BALISE, f, 0);
+
+      xmlBalise("status", BEGIN_BALISE, f, 2);
+      fprintf(f, "%s", 
+	  evn == NO_EVENT ?
+	  h2GetEvnStateString(status) : h2GetEvnStateString(evn));
+      xmlBalise("status", TERMINATE_BALISE, f, 0);
+      
+      xmlBalise("errno", BEGIN_BALISE, f, 2);
+      fprintf(f, "%s", h2getMsgErrno(bilan));
+      xmlBalise("errno", TERMINATE_BALISE, f, 0);
+
+      xmlBalise("activity", TERMINATE_BALISE, f, 1);
+    }
+
+  }	/* for */
+
+#endif /* $MODULE$_NB_RQST_EXEC != 0 */
+}
+
 /* ----------------------------------------------------------------------
  *
  *  $module$CntrlPosterXML - Affichage du poster de controle du module
@@ -104,7 +165,7 @@ STATUS $module$CntrlPosterXML (FILE *f)
   $MODULE$_CNTRL_STR *sdic;
   int i;
 
-  /* Lecture de la SDI de controle */
+  /* Read the control IDS */
   sdic = ($MODULE$_CNTRL_STR *)malloc(sizeof($MODULE$_CNTRL_STR));
   if (sdic == NULL) {
     h2perror ("$module$CntrlPosterXML");
@@ -116,40 +177,62 @@ STATUS $module$CntrlPosterXML (FILE *f)
   }
 
   /* 
-   * Affichage 
+   * display 
    */
+  /* control task */
+  xmlBalise("task", BEGIN_BALISE_NEWLINE, f, 1);
 
-  fprintfBuf (f, "** TASKS           (status)      (last duration)         (bilan)\n");
-  /* Tache de controle */
-  fprintfBuf (f, " Control Task        %-5s                               %s\n",  
-	  M_CNTRL_TASK_STATUS(sdic)==OK ? "OK":"ERROR",
-	  h2getMsgErrno(M_CNTRL_TASK_BILAN(sdic)));
-  
-  /* Taches d'execution */
+  xmlBalise("name", BEGIN_BALISE, f, 2);
+  fprintf(f, "ControlTask");
+  xmlBalise("name", TERMINATE_BALISE, f, 0);
+
+  xmlBalise("status", BEGIN_BALISE, f, 2);
+  fprintf(f, "%s", 
+	  M_CNTRL_TASK_STATUS(sdic)==OK ? "OK":"ERROR");
+  xmlBalise("status", TERMINATE_BALISE, f, 0);
+  if (M_CNTRL_TASK_STATUS(sdic) != OK) {
+    xmlBalise("errno", BEGIN_BALISE, f, 2);
+    fprintf(f, "%s", h2getMsgErrno(M_CNTRL_TASK_BILAN(sdic)));
+    xmlBalise("errno", TERMINATE_BALISE, f, 0);
+  }
+  xmlBalise("task", TERMINATE_BALISE, f, 1);
+
+  /* execution tasks */
   for (i=0; i<$MODULE$_NB_EXEC_TASK; i++) {
-    fprintfBuf (f, " %d:%-15s   %-5s ",  
-	    i, $module$ExecTaskNameTab[i],
-	    M_EXEC_TASK_STATUS(sdic,i) == OK ? "OK": "ERROR");
+    xmlBalise("task", BEGIN_BALISE_NEWLINE, f, 1);
+
+    xmlBalise("name", BEGIN_BALISE, f, 2);
+    fprintf(f, "%s", $module$ExecTaskNameTab[i]);
+    xmlBalise("name", TERMINATE_BALISE, f, 0);
+
+    xmlBalise("status", BEGIN_BALISE, f, 2);
+    fprintf(f, "%s", M_EXEC_TASK_STATUS(sdic,i) == OK ? "OK": "ERROR");
+    xmlBalise("status", TERMINATE_BALISE, f, 0);
+    if (M_EXEC_TASK_STATUS(sdic, i) != OK) {
+      xmlBalise("errno", BEGIN_BALISE, f, 2);
+      fprintf(f, "%s", h2getMsgErrno(M_EXEC_TASK_BILAN(sdic,i)));
+      xmlBalise("errno", TERMINATE_BALISE, f, 0);
+    }
+
     if (M_EXEC_TASK_PERIOD(sdic,i) != 0) {
-      fprintfBuf (f, "    %3lums ", M_EXEC_TASK_ON_PERIOD(sdic,i));
-      fprintfBuf (f, "(max %lu, ", M_EXEC_TASK_MAX_PERIOD(sdic,i));
-      fprintfBuf (f, "th %d)", (int)(M_EXEC_TASK_PERIOD(sdic,i)*1000.));
+      xmlBalise("period", BEGIN_BALISE, f, 2);
+      fprintfBuf (f, "%d", (int)(M_EXEC_TASK_PERIOD(sdic,i)*1000.));
+      xmlBalise("period", TERMINATE_BALISE, f, 0);
     }
-    else {
-      fprintfBuf (f, "    %3lums ", M_EXEC_TASK_ON_PERIOD(sdic,i));
-      fprintfBuf (f, "(max %lu)        ", M_EXEC_TASK_MAX_PERIOD(sdic,i));      
-    }
-    fprintfBuf (f, "\t %s\n", h2getMsgErrno(M_EXEC_TASK_BILAN(sdic,i)));
+    xmlBalise("task", TERMINATE_BALISE, f, 1);
 
   }
-  fprintfBuf (f, "\n");
 
-  /* Activites */
+  /* Activities */
+  $module$ActivitiesXML(f, sdic);
 
   free(sdic);
   return OK;
 }
 
+/**
+ ** Dump only activities. XXX not used ? 
+ **/
 STATUS $module$CntrlPosterActivityXML (FILE *f)
 {
   $MODULE$_CNTRL_STR *sdic;
@@ -164,7 +247,7 @@ STATUS $module$CntrlPosterActivityXML (FILE *f)
     free(sdic);
     return ERROR;
   }
-
+  $module$ActivitiesXML(f, sdic);
   free(sdic);
   return OK;
 }

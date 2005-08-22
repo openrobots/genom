@@ -146,7 +146,7 @@ static char* skip_spaces(char* buffer)
     if (!buffer)
         return NULL;
 
-    while (*buffer && isspace(*buffer))
+    while (*buffer != '\0' && isspace((unsigned char)*buffer))
         ++buffer;
 
     if (! *buffer)
@@ -1586,7 +1586,11 @@ construitIncludeList(void)
 	    continue;
 	}
 	/* marque les types definis dans le source genom */
-	if (strcmp(t->filename, nomfic) == 0) {
+	if (t->filename == NULL) {
+	  fprintf(stderr, "%s:%d: warning filename unknown for "
+		  "type %s\n", nomfic, t->linenum, t->name);
+	}
+	else if (strcmp(t->filename, nomfic) == 0) {
 	    fprintf(stderr, "%s:%d: warning: type de'fini "
 		    "dans source genom %s\n", nomfic, 
 		    t->linenum, t->name);
@@ -1595,14 +1599,17 @@ construitIncludeList(void)
 	}
 	/* Le fichier est-it deja dans la liste ? */
 	for (il = includeFiles; il != NULL; il = il->next) {
-	    if (!strcmp(il->name, t->filename)) {
+	    if (il->name != NULL && !strcmp(il->name, t->filename)) {
 		break;
 	    }
 	} /* for */
 	if (il == NULL) {
 	    /* pas trouve' */
 	    il = STR_ALLOC(ID_LIST);
-	    il->name = strdup(t->filename);
+	    if (t->filename != NULL) 
+	      il->name = strdup(t->filename);
+	    else 
+	      il->name = NULL;
 	    il->next = includeFiles;
 	    includeFiles = il;
 	}

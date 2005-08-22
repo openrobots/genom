@@ -106,7 +106,7 @@ int posterLibGen(FILE *out)
      * Poster Ids
      */
     for (p = posters; p != NULL; p = p->next) {
-	fprintf(out, "static POSTER_ID %sPosterId=NULL;\n", p->name);
+	fprintf(out, "static POSTER_ID %sPosterId=(POSTER_ID)NULL;\n", p->name);
     }
 
     /*
@@ -203,7 +203,7 @@ int posterLibGen(FILE *out)
       /* la fonction pour lire tout le poster */
       fprintf(out,
 	      "STATUS %s%sPosterRead(%s *x)\n{\n"
-	      "  if (%sPosterId == NULL) {\n"
+	      "  if (%sPosterId == (POSTER_ID)NULL) {\n"
 	      "     if (%s%sPosterInit() == ERROR) {\n"
 	      "        h2perror(\"%s%sPosterInit\");\n"
 	      "        return ERROR;\n"
@@ -727,7 +727,7 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
     STR_REF_STR *m;
     DCL_NOM_STR *n;
     char *type, *var, *type1;
-    char *decla=NULL, *addrstr=NULL;
+    char *decla=NULL, *addrstr=NULL, *typetab=NULL;
     int nDim, i, *dims, newline;
     
     
@@ -779,8 +779,11 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
 	    fprintf(out, "  %s *x = NULL;\n", p->type->name);
 	    fprintf(out, "  int offset = (int)&(x->%s) - (int)(x);\n", n->name);
 	    fprintf(out, "  int size = sizeof(x->%s);\n", n->name);
+
+	    fprintf(out, "  int %s;\n\n", decla);
+
 	    fprintf(out, 
-		    "  if (%sPosterId == NULL) {\n"
+		    "  if (%sPosterId == (POSTER_ID)NULL) {\n"
 		    "     if (%s%sPosterInit() == ERROR) {\n"
 		    "        h2perror(\"%s%sPosterInit\");\n"
 		    "        return ERROR;\n"
@@ -797,12 +800,12 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
 		    "    return ERROR;\n"
 		    "  }\n"
 		    "  if (posterDataEndianness != H2_LOCAL_ENDIANNESS)\n"
-		    "     endianswap_%s(%s, 0, NULL);\n"
+		    "     endianswap_%s(%s, %d, dims);\n"
 		    "  return OK;\n"
 		    "}\n\n",
 		    p->name, n->name,
 		    module->name, p->name, /* h2perror */
-		    type1, n->name);
+		    type1, n->name, nDim);
 
 	    free(type1);
 
@@ -876,12 +879,23 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
 	    fprintf(out, "/* --  %s -> %s ---------------------------------------- */\n\n",
 		    p->name, n->name);
 
+	    if (nDim==0) {
+	      bufcat(&typetab, "");
+	    }
+	    else {
+	      for (i=0;i<nDim;i++) {
+		bufcat(&typetab, "[%d]", dims[i]);
+	      }
+	    }
 	    fprintf(out, 
 		    "STATUS %s%s%sPosterXML(FILE *f)\n"
-		    "{\n  %s %s;\n", 
-		    module->name, p->name, n->name, type, n->name);
+		    "{\n  %s %s%s;\n", 
+		    module->name, p->name, n->name, 
+		    type, n->name, typetab);
 	    fprintf(out, "  int %s;\n\n", decla);
-	    
+	    free(typetab);
+	    typetab = NULL;
+
 	    /* Corps de la fonction */
 	    fprintf(out, 
 		    "  if (%s%s%sPosterRead(&%s) == ERROR) {\n"
@@ -1051,7 +1065,7 @@ static void posterWriteLibMemberGen(FILE *out, POSTER_LIST *p, int protos)
 
 	  fprintf(out, "STATUS %s%s%sPosterWrite (POSTER_ID pid, %s *%s /* %s */)\n{\n",
 		  module->name, p->name, n->name, type, n->name, addrstr);
-	  fprintf(out, "  %s *x = 0;\n", p->type->name);
+	  fprintf(out, "  %s *x = NULL;\n", p->type->name);
 	  fprintf(out, "  int size = sizeof(x->%s);\n", n->name);
 	  fprintf(out, "  return (posterWrite(pid, (int)&x->%s - (int)x, "
 		  "(char *)(%s), size) \n\t== size ? OK : ERROR);\n}\n\n",

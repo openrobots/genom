@@ -85,10 +85,6 @@ typedef struct {
   int currentActivity;     /* Activite courante */
   int wakeUp;              /* Eveil de la tache d'exec requis */
   int nbActivities;        /* Nombre d'activites en cours pour cette tache */
-#ifdef SDI_UNLOCKABLE
-  int unlockSDIFlag;       /* Indique qu'il ne faut pas reserver les SDIs */
-  int unused;
-#endif
   POSTER_ID posterId[MAX_POSTERS];  /* (CONST.!) Posters de la tache d'exec */
   CLIENT_ID clientId[MAX_SERVERS];  /* (CONST.!) Serveurs qu'elle utilise */
 } EXEC_TASK_DESCRIPTION;
@@ -120,7 +116,7 @@ typedef struct {
   BOOL stopModule;         /* Flag pour arrêter le module */
   int initRqst;            /* Numéro de la requête d'init ou -1 */
   int nbExecTasks;         /* Nombre de taches d'execution */
-  int unused;              /* Pas (encore) utilisé */
+  void *sdif;              /* sdi_f adresse */
 } CNTRL_TASK_DESCRIPTION;
 
 
@@ -136,7 +132,6 @@ typedef struct {
 #define M_EXEC_TASK_ON_PERIOD(p,i)  ((p)->execTaskTab[(i)].onPeriod)
 #define M_EXEC_TASK_BILAN(p,i)      ((p)->execTaskTab[(i)].bilan)
 #define M_EXEC_TASK_NB_ACTI(p,i)    ((p)->execTaskTab[(i)].nbActivities)
-#define M_EXEC_TASK_UNLOCK_SDI(p,i) ((p)->execTaskTab[(i)].unlockSDIFlag)
 #define M_EXEC_TASK_POSTER_ID(p,i)  ((p)->execTaskTab[(i)].posterId)
 #define M_CURRENT_ACTIVITY_NUM(p,i) ((p)->execTaskTab[(i)].currentActivity)
 #define M_EXEC_TASK_WAKE_UP_FLAG(p,i) ((p)->execTaskTab[(i)].wakeUp)
@@ -165,6 +160,11 @@ typedef struct {
 #define M_STOP_MODULE_FLAG(p)       ((p)->cntrlTask.stopModule)
 #define M_INIT_RQST(p)              ((p)->cntrlTask.initRqst)
 #define M_CNTRL_NB_EXEC_TASKS(p)    ((p)->cntrlTask.nbExecTasks)
+#define M_CNTRL_SDI_F(p)            ((p)->cntrlTask.sdif)
  
+#include "genomModulesLibProto.h"
 
-#endif /* H_GENOM_MODULE */
+#define M_GENOM_UNLOCK_SDI(p)       (genomGiveSDIs(p))
+#define M_GENOM_LOCK_SDI(p)         (genomTakeSDIs(p))
+
+#endif  /* H_GENOM_MODULE */

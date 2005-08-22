@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * Matthieu Herrb - Fri Jul 16 1993
  * All rights reserved.
  *
@@ -67,6 +67,7 @@ int typeGen(FILE *out)
     fprintf(out, "#define %s_TYPE1_H\n\n",  module->name);
 
     for (il = includeFiles; il != NULL; il = il->next) {
+      if (il->name != NULL) 
 	fprintf(out, "#include \"%s\"\n", il->name);
     } /* for */
     fprintf(out, "\n");
