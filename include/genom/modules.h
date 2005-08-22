@@ -162,7 +162,7 @@ typedef struct {
 #define M_CNTRL_NB_EXEC_TASKS(p)    ((p)->cntrlTask.nbExecTasks)
 #define M_CNTRL_SDI_F(p)            ((p)->cntrlTask.sdif)
  
-#include "genomModulesLibProto.h"
+#include "genom/genomModulesLibProto.h"
 
 #define M_GENOM_UNLOCK_SDI(p)       (genomGiveSDIs(p))
 #define M_GENOM_LOCK_SDI(p)         (genomTakeSDIs(p))
