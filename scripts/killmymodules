@@ -8,7 +8,7 @@
 #----------------------------------------------------------------------
 #
 
-$killmodule =  "/usr/local/robots/bin/killmodule";
+$killmodule =  "killmodule";
 
 # Recupere les liste des fichiers 
 @list_files=`ls $ENV{'HOME'}/.*.pid-*`;
