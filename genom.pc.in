@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: genom
 Description: generator of modules
 Version: @GENOM_MAJOR@.@GENOM_MINOR@
-Requires: pocolibs
+Requires: pocolibs >= 2.0
 Libs: -L${libdir} -lgenom @LIBS@
 Cflags: -I${includedir}
