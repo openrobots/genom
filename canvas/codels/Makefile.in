@@ -38,7 +38,7 @@ srcdir=		@srcdir@
 builddir=       @builddir@
 
 INSTALL=  	@INSTALL@
-VPATH=	  	$(srcdir)
+vpath %.c  	$(srcdir)
 
 include $(top_builddir)/config.mk
 
