@@ -64,6 +64,8 @@ clean:
 	rm -f $(OBJDIR)/$(MODULE_BIN)
 	rm -f $(OBJDIR)/dependencies
 
+distclean: clean
+	rm -f Makefile
 
 # --- dependencies ------------------------------------------------------
 
