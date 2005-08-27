@@ -335,7 +335,6 @@ main(int argc, char *argv[])
     int errFlag = 0;
     int waitPipe[2];
     char buf[80];
-    int n;
 
     /* Parse les options */
     while ((c = getopt(argc, argv, "besf:")) != -1) {
