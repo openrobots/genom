@@ -131,7 +131,7 @@ flist+=\
 flist+=\
 	configure.ac.user		\
 	Makefile.top.in			\
-	acinclude.m4			\
+	acinclude.user.m4			\
 	start.pl			\
 	end.pl				\
 	local.mk.in
