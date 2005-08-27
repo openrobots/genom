@@ -41,8 +41,8 @@ my $user_mode = ($installUserPart ? $ASK_IF_CHANGED : $SKIP_IF_CHANGED);
 my $found_something = 0;
 
 print "\nUpdating top directory";
-mirror_dir(".", "..", "^(?:configure.ac.user|acinclude.m4)", "", $user_mode);
-print "" if (mirror_dir(".", "..", "", "^(?:configure.ac.user|acinclude.m4|\\w+\\.pl)", $OVERWRITE));
+mirror_dir(".", "..", "^(?:configure.ac.user|acinclude.user.m4)", "", $user_mode);
+print "" if (mirror_dir(".", "..", "", "^(?:configure.ac.user|acinclude.user.m4|\\w+\\.pl)", $OVERWRITE));
 
 print "Updating $codelsDir";
 print "" if (mirror_dir("codels", "../$codelsDir", "", "", $user_mode));
@@ -76,7 +76,7 @@ chmod ((0111|$autogen_mode), $autogen);
 if ( ! -d "../$serverDir" || ! -d "../$codelsDir" )
 {
     print "
-    One of server/ or codels/ is not generated 
+    One of server/ or codels/ is not generated
     yet, I won't run autogen
     ";
     exit;
@@ -84,16 +84,17 @@ if ( ! -d "../$serverDir" || ! -d "../$codelsDir" )
 
 
 # Checks if configure is up to date
+# XXXX miss also the files *.pc from required packages
 sub is_autoconf_fresh() {
     #  the configure script
     my $autoconf_dst = "../configure";
     #  its sources
-    my @autoconf_src = 
+    my @autoconf_src =
     (
 	"../autogen",
-        "../configure.ac",
-        "../configure.ac.user", 
-        "../acinclude.m4",
+        "../$autoconfDir/configure.ac",
+        "../configure.ac.user",
+        "../acinclude.user.m4",
 	"../$autoconfDir/robots.m4"
     );
 
