@@ -55,8 +55,8 @@ clean:
 
 .PHONY: distclean
 distclean:
+	$(MAKE) $@-$(OSAPI)
 	rm -f Makefile libtool config.log config.status $module$.pc $module$-oprs.pc local.mk config.mk
-	$(make_subdirs)
 
 
 # GenoM flags
@@ -65,17 +65,19 @@ include $(top_srcdir)/$(autoconfdir)/genom.mk
 
 # --- Directory recursion -----------------------------------------------
 
-# OS-specific targets
+# OS-specific targets :
+# WARNING: because of $*, $(make_subdirs_osapi) can only be used within 
+# target including "%-<osapi>" in its name.
 
-make_subdirs=\
-  for d in ${SUBDIRS}; do (cd $$d; ${MAKE} OSAPI=$${OSAPI} $* ) || exit 2; done
+make_subdirs_osapi=\
+  for d in ${SUBDIRS}; do (cd $$d; ${MAKE} OSAPI=$${OSAPI} $*) || exit 2; done
 
 %-posix:
-	@OSAPI=posix; $(make_subdirs)
+	@OSAPI=posix; $(make_subdirs_osapi)
 
 %-rtai:
-	@OSAPI=rtai;  $(make_subdirs)
-	@OSAPI=posix; $(make_subdirs)
+	@OSAPI=rtai;  $(make_subdirs_osapi)
+	@OSAPI=posix; $(make_subdirs_osapi)
 
 # --- genom -------------------------------------------------------------
 regen-user: standalone-regen-user
@@ -96,7 +98,6 @@ $genOpenprs$ALL_PKGCONFIG += $module$-oprs.pc
 install:: $(ALL_PKGCONFIG)
 	$(MKINSTALLDIRS) $(libdir)/pkgconfig
 	$(INSTALL) $(ALL_PKGCONFIG) $(libdir)/pkgconfig
-	
 
 # --- autoconf/autoheader -----------------------------------------------
 
