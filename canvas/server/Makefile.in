@@ -48,7 +48,7 @@ include $(top_srcdir)/$(autoconfdir)/config.$(OSAPI).mk
 
 CPPFLAGS+= $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
 CPPFLAGS+= -I. -I$(top_srcdir) -I$(srcdir)
-CPPFLAGS+= $(POCOLIBS_CFLAGS) $(GENOM_CFLAGS)
+CPPFLAGS+= $(GENOM_CFLAGS)
 
 # Put this BEFORE including genom.mk since genom.mk defines the regen and regen-user targets
 all: dirs server client
@@ -213,7 +213,7 @@ $genTcl$	$(LTCC) -c $(CPPFLAGS) $(TCL_CPPFLAGS) -DDATADIR='"$(datadir)"' \
 $genTcl$		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
 $genOpenprs$$(openprsclient_obj): $(OBJDIR)/%.lo: %.c
-$genOpenprs$	$(LTCC) -c $(CPPFLAGS) $(OPENPRS_CFLAGS) $(TRANSGEN_CFLAGS) \
+$genOpenprs$	$(LTCC) -c $(CPPFLAGS) $(TRANSGEN_CFLAGS) \
 $genOpenprs$		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
 $(OBJDIR)/%.lo: %.c
@@ -287,7 +287,7 @@ $genTcl$depend $(OBJDIR)/dependencies:: $(tclclient_src)
 $genTcl$	$(make_depend) $(TCL_CPPFLAGS) $?
 
 $genOpenprs$depend $(OBJDIR)/dependencies:: $(openprsclient_src)
-$genOpenprs$	@$(make_depend) $(OPENPRS_CFLAGS) $(TRANSGEN_CFLAGS) $?
+$genOpenprs$	@$(make_depend) $(TRANSGEN_CFLAGS) $?
 
 ifneq (${MAKECMDGOALS},clean)
 -include $(OBJDIR)/dependencies
