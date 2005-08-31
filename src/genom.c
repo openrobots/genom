@@ -171,7 +171,7 @@ static void parse_require(char* buffer, int line)
     char* end = strchr(buffer, ';');
     if (! end || end > line_end)
     {
-        printf("genom 0:%i: expecting ';' at end of 'require' statement\n", line);
+        printf("genom : line %i: expecting ';' at end of 'require' statement\n", line);
         exit(1);
     }
 
@@ -221,7 +221,7 @@ genom_get_requires(char* filename, char* cppOptions[])
     
     if (! fd)
     {
-        printf("Unable to open %s for reading\n", filename);
+        printf("genom: Unable to open %s for reading\n", filename);
         unlink(processed_file);
         exit(1);
     }
@@ -232,7 +232,7 @@ genom_get_requires(char* filename, char* cppOptions[])
     buffer = xalloc(size);
     if (fread(buffer, size, 1, fd) != 1)
     {
-        printf("Error reading %s\n", filename);
+        printf("genom: Error reading %s\n", filename);
         unlink(processed_file);
         free(buffer);
         exit(1);
@@ -242,8 +242,10 @@ genom_get_requires(char* filename, char* cppOptions[])
     current = buffer;
     while (current)
     {
-        if (strncmp(current, "require", 7) == 0)
-            parse_require(current, 0);
+        while (*current == ' ' || *current == '\t') 
+	    current++;
+        if (strncmp(current, "requires:", 9) == 0)
+            parse_require(current, line);
 
         current = strchr(current, '\n');
         if (current) ++current;
@@ -390,13 +392,13 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case CS_CLIENT_FROM:
 	task->cs_client_from = av->value.cs_client_from;
 	fprintf(stderr, 
-		"%s: warning: old fashion declaration \"cs_client_from: %s\"\n", 
+		"genom %s: warning: old fashion declaration \"cs_client_from: %s\"\n", 
 		nomfic, av->value.cs_client_from->name);
 	break;
       case POSTER_CLIENT_FROM:
 	task->poster_client_from = av->value.poster_client_from;
 	fprintf(stderr, 
-		"%s: warning: old fashion declaration \"poster_client_from: %s\"\n", 
+		"genom %s: warning: old fashion declaration \"poster_client_from: %s\"\n", 
 		nomfic, av->value.poster_client_from->name);
 	break;
       case RESOURCES:
@@ -535,7 +537,7 @@ resolveTypes(void)
     tr = trouve_type(t_sdi);
     if (tr == NULL) {
 	fprintf(stderr, 
-		"%s: Error: SDI type %s unknown\n", 
+		"genom %s: Error: SDI type %s unknown\n", 
 		nomfic, module->internal_data->name);
 	exit(2);
     } else {
@@ -556,7 +558,7 @@ resolveTypes(void)
 	/* inputs */
 	if (r->input != NULL) {
 	  if ((n = trouve_sdi_ref(r->input)) == NULL) {
-	    fprintf(stderr, "%s: Error: no element %s in SDI for requete %s\n",
+	    fprintf(stderr, "genom %s: Error: no element %s in SDI for requete %s\n",
 		    nomfic, r->input->sdi_ref->name, r->name);
 		/* XXXX On ne sait pas mieux reprendre cette erreur  */
 		exit(2);
@@ -593,7 +595,7 @@ resolveTypes(void)
 	/* outputs */
 	if (r->output != NULL) {
 	    if ((n = trouve_sdi_ref(r->output)) == NULL) {
-		fprintf(stderr, "%s: Error: no element %s in SDI for requete %s\n", nomfic, r->output->sdi_ref->name, r->name);
+		fprintf(stderr, "genom %s: Error: no element %s in SDI for requete %s\n", nomfic, r->output->sdi_ref->name, r->name);
 		exit(2);
 	    } else {
 		if (r->output->dcl_nom->type == NULL) {
@@ -641,7 +643,7 @@ resolveTypes(void)
 	      tr = trouve_type(t_tmp);
 	      if (tr == NULL) {
 		fprintf(stderr,
-			"%s: Error: type of poster input of request %s: %s unknown\n", 
+			"genom %s: Error: type of poster input of request %s: %s unknown\n", 
 			nomfic, r->name, t_tmp->name);
 		exit(2);
 	      }
@@ -678,7 +680,7 @@ resolveTypes(void)
 
     /* typedefs */
     if (typedefs == NULL) {
-	fprintf(stderr, "Warning: no new typedef\n");
+	fprintf(stderr, "genom Warning: no new typedef\n");
 	return;
     }
 
@@ -707,7 +709,7 @@ resolveTypes(void)
 		/* Trouve la variable correspondante dans SDI */
 		if ((n = trouve_sdi_ref(lm->str_ref)) == NULL) {
 		  fprintf(stderr, 
-			  "%s: Error: no element %s in SDI for poster %s\n", 
+			  "genom %s: Error: no element %s in SDI for poster %s\n", 
 			  nomfic, lm->str_ref->sdi_ref->name, p->name);
 		  exit(2);
 		}
@@ -727,7 +729,7 @@ resolveTypes(void)
 		    lm->str_ref->dcl_nom->flags = n->flags;
 
 		    if (trouve_type(lm->str_ref->dcl_nom->type) == NULL) {
-			fprintf(stderr, "%s: Error: unknown type %s\n",
+			fprintf(stderr, "genom %s: Error: unknown type %s\n",
 				nomfic, lm->str_ref->dcl_nom->type->name);
 			exit(2);
 		    }
@@ -755,7 +757,7 @@ resolveTypes(void)
 	    tr = trouve_type(t_tmp);
 	    if (tr == NULL) {
 	      fprintf(stderr,
-		      "%s: Error: type of poster %s: %s unknown\n", 
+		      "genom %s: Error: type of poster %s: %s unknown\n", 
 		      nomfic, p->name, t_tmp->name);
 	      exit(2);
 	    } else {
@@ -890,7 +892,7 @@ resolveTypes(void)
 		    last->next = m;
 		    last = m;
 		    fprintf(stderr,
-			    "%s: info: array %sInput added in SDI "
+			    "genom %s: info: array %sInput added in SDI "
 			    "for request %s\n",
 			    nomfic, r->name, r->name);
 
@@ -927,7 +929,7 @@ resolveTypes(void)
 		    last->next = m;
 		    last = m;
 		    fprintf(stderr,
-			    "%s: info: array %sOutput added in SDI "
+			    "genom %s: info: array %sOutput added in SDI "
 			    "for request %s\n",
 			    nomfic, r->name, r->name);
 		}
@@ -936,7 +938,7 @@ resolveTypes(void)
 		if (r->input != NULL && r->output != NULL &&
 		    r->input->dcl_nom == r->output->dcl_nom) {
 		  fprintf(stderr, 
-			  "%s: warning: input and output of "
+			  "genom %s: warning: input and output of "
 			  "request %s "
 			  "will no more refered to the "
 			  "same data %s in SDI !\n", 
@@ -950,7 +952,7 @@ resolveTypes(void)
     /* types non utilise's */
     for (t = types; t != NULL; t = t->next) {
 	if (t->type->used == 0 && ((t->type->flags & TYPE_IMPORT) == 0)) {
-	    fprintf(stderr, "%s:%d: warning: type %s unused\n",
+	    fprintf(stderr, "genom %s:%d: warning: type %s unused\n",
 		    t->type->filename,
 		    t->type->linenum,
 		    t->type->name);
@@ -1020,7 +1022,7 @@ resolveRequests(void)
 	    for (li = r->incompatible_with; li != NULL; li = li->next) {
 		r = trouve_requete(li->name);
 		if (r == NULL) {
-		    fprintf(stderr, "%s: warning: unknown request %s\n",
+		    fprintf(stderr, "genom %s: warning: unknown request %s\n",
 			    nomfic, li->name);
 		} else {
 		    li->rqst = r;
@@ -1105,7 +1107,7 @@ resolveTasks(void)
 	if (lr->rqst->exec_task_name != NULL) {
 	    lr->rqst->exec_task = trouve_exec_task(lr->rqst->exec_task_name);
 	    if (lr->rqst->exec_task == NULL) {
-		fprintf(stderr, "%s: Error: exec_task %s unknown\n",
+		fprintf(stderr, "genom %s: Error: exec_task %s unknown\n",
 			nomfic, lr->rqst->exec_task_name);
 		exit(2);
 	    }
@@ -1121,7 +1123,7 @@ resolveTasks(void)
 		free(p->exec_task);
 		p->exec_task = t;
 	    } else {
-		fprintf(stderr, "%s: Error: exec_task %s unknown\n",
+		fprintf(stderr, "genom %s: Error: exec_task %s unknown\n",
 			nomfic, p->exec_task->name);
 		exit(2);
 	    }
@@ -1174,7 +1176,7 @@ new_name(void)
     char *p = xalloc(11*sizeof(char));
     static int unamed_compt = 0;
     
-    fprintf(stderr, "%s: %d: warning: de'claration de type sans nom\n",
+    fprintf(stderr, "genom %s: %d: warning: type without name\n",
 	    nomfic, num_ligne);
     sprintf(p, "unamed%04d", unamed_compt++);
     return(p);
@@ -1310,7 +1312,7 @@ taille_obj(DCL_NOM_STR *t)
 	    }
 	  default:
 	    /* type inconnu */
-	    fprintf(stderr, "Error: taille_obj: type inconnu %s\n", t->name);
+	    fprintf(stderr, "genom Error: taille_obj: unknown type %s\n", t->name);
 	    return(tt*4);
 	} /* switch */
     } else {
@@ -1522,7 +1524,7 @@ trouve_members(TYPE_STR *t)
 	    return(1);
 	}
     } /* for */
-    fprintf(stderr, "%s:%d: error: %s %s re'fe'rence' mais pas de'clare'\n",
+    fprintf(stderr, "genom %s:%d: error: %s %s not declared\n",
 	    t->filename, t->linenum, nom_type(t), t->name);
     return(0);
 } /* trouve_members */
@@ -1587,13 +1589,12 @@ construitIncludeList(void)
 	}
 	/* marque les types definis dans le source genom */
 	if (t->filename == NULL) {
-	  fprintf(stderr, "%s:%d: warning filename unknown for "
+	  fprintf(stderr, "genom %s:%d: warning filename unknown for "
 		  "type %s\n", nomfic, t->linenum, t->name);
 	}
 	else if (strcmp(t->filename, nomfic) == 0) {
-	    fprintf(stderr, "%s:%d: warning: type de'fini "
-		    "dans source genom %s\n", nomfic, 
-		    t->linenum, t->name);
+	    fprintf(stderr, "genom %s:%d: warning: unknown type %s\n", 
+		    nomfic, t->linenum, t->name);
 	    t->flags |= TYPE_GENOM;
 	    continue;
 	}

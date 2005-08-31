@@ -321,13 +321,14 @@ This does fairly subdued highlighting.")
 (let ((types (concat "request\\|module\\|typedef struct\\|"
 		     "import from\\|poster\\|exec_task"))
       (fields (concat
-	       "require\\|type\\|doc\\|input\\|posters_input\\|input_info\\|output\\|"
+	       "type\\|doc\\|input\\|posters_input\\|input_info\\|output\\|"
 	       "c_control_func\\|fail_msg\\|"
 	       "c_exec_func_start\\|c_exec_func_end\\|c_exec_func_inter\\|"
 	       "c_exec_func_fail\\|c_exec_func\\|c_func\\|"
 	       "c_init_func\\|c_end_func\\|c_create_func\\|"
 	       "resources\\|incompatible_with\\|activity\\|exec_task\\|"
-	       "update\\|address\\|number\\|internal_data\\|version\\|email\\|data\\|"
+	       "update\\|address\\|number\\|internal_data\\|version\\|"
+	       "email\\|uses_cxx\\|requires\\|data\\|"
 	       "cs_client_from\\|poster_client_from\\|"
 	       "period\\|delay\\|priority\\|stack_size"))
       (mand-var (concat
@@ -1038,16 +1039,18 @@ import from " (downcase import-name) " {
  *                     --  Module  " MODULE-NAME "  --
  * 
  *  Description:
- *  Date de creation : " (current-time-string) " 
- *  Auteur: " (user-full-name) "
+ *  Creation date : " (current-time-string) " 
+ *  Author: " (user-full-name) "
  * 
  *" minus-char-string "*/
 
 module " module-name " {
-     internal_data: " MODULE-NAME "_STR;
      number: <<number>>;
      version: \"0.1\";
      email:   <email>;
+     requires: <package-or-module>" genom-etc ";
+     internal_data: " MODULE-NAME "_STR;
+     uses_cxx:     0;
 }; 
 
 /*" minus-char-string "

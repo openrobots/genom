@@ -218,7 +218,7 @@ int nCppOptions = 0;
 %type <moduleStr> declaration_de_module
 %type <rqstStr> declaration_de_requete 
 %type <taskStr> declaration_de_tache
-%type <ival> require list_packages
+%type <ival> list_packages
 %type <moduleStr> liste_av_module attributs_de_module 
 %type <moduleAV> paire_av_module av_module
 %type <rqstStr> attributs_de_requete liste_av_requete 
@@ -287,7 +287,6 @@ declaration_top: declaration_de_module ';' { $$ = 0; }
     | liste_declaration_de_requete { requetes = $1; $$ = 0; }
     | liste_declaration_de_tache { taches = $1; $$ = 0; }
     | liste_declaration_de_posters { posters = $1; $$ = 0; }
-    | require ';' { $$ = 0; }
     ;
 
 liste_declaration_de_typedef: declaration_de_typedef 
@@ -340,9 +339,6 @@ liste_declaration_de_posters: declaration_de_poster ';'
 
 /*----------------------------------------------------------------------*/
 
-require: REQUIRE ':' list_packages
-;
-
 list_packages: 
 	     PACKAGENAME { $$ = 0; }
              | IDENTIFICATEUR { $$ = 0; }
@@ -383,6 +379,9 @@ av_module: INTERNAL_DATA ':' indicateur_de_type
     | EMAIL ':' quoted_string
         { $$ = STR_ALLOC(MODULE_AV_STR);
           $$->attribut = $1; $$->value.email = $3; }
+    | REQUIRE ':' list_packages
+        { $$ = STR_ALLOC(MODULE_AV_STR);
+	  $$->attribut = $1; $$->value.number = $3; }
     | USE_CXX ':' expression_constante
         { $$ = STR_ALLOC(MODULE_AV_STR);
           $$->attribut = $1; $$->value.use_cxx = $3; }

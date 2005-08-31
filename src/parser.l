@@ -51,8 +51,6 @@ WC      {W}*\:
 
 %%
 
-"require"/{WC}  {yylval.ival = REQUIRE; return(REQUIRE); }
-
 "struct"   {yylval.ival = STRUCT; return(STRUCT); }
 "union"    {yylval.ival = UNION; return(UNION); }
 "enum"     {yylval.ival = ENUM; return(ENUM); }
@@ -91,11 +89,12 @@ WC      {W}*\:
 "import"          {yylval.ival = IMPORT_TYPE; return(IMPORT_TYPE); }
 "from"            {yylval.ival = FROM; return(FROM); }
 
+"requires"/{WC}       {yylval.ival = REQUIRE; return(REQUIRE); }
 "internal_data"/{WC}  {yylval.ival = INTERNAL_DATA; return(INTERNAL_DATA); }
 "number"/{WC}         {yylval.ival = NUMBER; return(NUMBER); }
 "version"/{WC}        {yylval.ival = VERSION; return(VERSION); }
 "email"/{WC}          {yylval.ival = EMAIL; return(EMAIL); }
-"cxx"/{WC}            {yylval.ival = USE_CXX; return(USE_CXX); }
+"uses_cxx"/{WC}       {yylval.ival = USE_CXX; return(USE_CXX); }
 "codel_files"/{WC}    {yylval.ival = CODEL_FILES; return(CODEL_FILES); }
 
 "type"/{WC}            {yylval.ival = TYPE; return(TYPE); }
