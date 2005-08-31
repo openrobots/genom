@@ -16,6 +16,9 @@ USE_CXX=$use_cxx$
 AC_SUBST(USE_CXX)
 
 AC_PROG_CC
+if test "x$USE_CXX" = "x1"; then
+    AC_PROG_CXX
+fi
 
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
@@ -118,10 +121,6 @@ $genomPackages$
 dnl ============ Include the user part
 m4_include([../configure.ac.user])
 dnl ============ Include the user part (end)
-
-if test "x$USE_CXX" = "x1"; then
-    AC_PROG_CXX
-fi
 
 AC_SUBST(EXTRA_SUBDIRS)
 AC_SUBST(EXTRA_PKGCONFIG)
