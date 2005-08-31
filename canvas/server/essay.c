@@ -84,8 +84,6 @@ void $module$Essay (int essayNumber);
 
 static void $module$EssayInitTask (ESSAY_STR* essayStr);
 
-#define $MODULE$_NAME "$module$"
-
 $requestFuncTabDeclare$
   $requestNameTabDeclare$
 
@@ -124,7 +122,7 @@ $module$Essay (int essayNumber)
   ESSAY_STR *essayStr;
   
   /* Allocation de la structure */
-  if ((essayStr = essayInit(essayNumber, $MODULE$_NAME,
+  if ((essayStr = essayInit(essayNumber, "$module$",
 			  $MODULE$_CLIENT_MBOX_REPLY_SIZE,
 			  $MODULE$_ABORT_RQST,
 			  $nbRequest$,
