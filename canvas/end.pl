@@ -41,15 +41,14 @@ my $user_mode = ($installUserPart ? $ASK_IF_CHANGED : $SKIP_IF_CHANGED);
 my $found_something = 0;
 
 print "\nUpdating top directory";
-mirror_dir(".", "..", "^(?:configure.ac.user|acinclude.user.m4)", "", $user_mode);
-print "" if (mirror_dir(".", "..", "", "^(?:configure.ac.user|acinclude.user.m4|\\w+\\.pl)", $OVERWRITE));
+mirror_dir(".", "..", "^(?:configure.ac.user|acinclude.user.m4|local.mk.in)", "", $user_mode);
+print "" if (mirror_dir(".", "..", "", "^(?:configure.ac.user|acinclude.user.m4|local.mk.in|\\w+\\.pl)", $OVERWRITE));
 
 print "Updating $codelsDir";
 print "" if (mirror_dir("codels", "../$codelsDir", "", "", $user_mode));
 
 print "Updating $autoconfDir";
-mirror_dir("autoconf", "../$autoconfDir", "^local\.mk\.in", "", $user_mode);
-print "" if (mirror_dir("autoconf", "../$autoconfDir", "", "^local.mk.in",$OVERWRITE));
+print "" if (mirror_dir("autoconf", "../$autoconfDir", "", "",$OVERWRITE));
 
 print "Updating $serverDir";
 print "" if (mirror_dir("server", "../$serverDir", "", "",$OVERWRITE));
