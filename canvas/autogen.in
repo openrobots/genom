@@ -4,32 +4,32 @@ use strict;
 my $user = "configure.ac.user";
 
 sub check_aclocal_version {
-    my ($major, $minor, $rev) = @_;
+    my ($major, $minor) = @_;
     # We need aclocal >= 1.7
     my @version = `aclocal --version`;
 
     my $version_line = shift @version;
-    if ($version_line !~ /^aclocal \(GNU automake\) (\d+)\.(\d+)\.(\d+)$/) 
+    if (($version_line !~ /^aclocal \(GNU automake\) (\d+)\.(\d+)\.\d+$/)
+        && ($version_line !~ /^aclocal \(GNU automake\) (\d+)\.(\d+)-p\d$/)) 
     {
         print <<EOF;
 You don't seem to have a valid version of aclocal. I was expecting
-aclocal --version to return "aclocal (GNU automake) <version>", but
+aclocal --version to return "aclocal (GNU automake) <major>.<minor>.<revision>", but
 I got $version_line
 EOF
         exit;
     }
 
     if (($major > $1) 
-        || (($major eq $1) && ($minor > $2)) 
-        || (($minor eq $2) && ($rev > $3)))
+        || (($major eq $1) && ($minor > $2)))
     {
-        print "Unsupported aclocal version $1.$2.$3, you need at least $major.$minor.$rev\n";
+        print "Unsupported aclocal version $1.$2, you need at least $major.$minor\n";
         exit;
     }
 
 }
     
-check_aclocal_version(1, 7, 0);
+check_aclocal_version(1, 7);
 
 # Check for a few files (Genom -> OpenGenom migration)
 if ( ! -f $user || ! -f "local.mk.in" || ! -f "codels/Makefile.in" ) {
