@@ -31,6 +31,9 @@
 #ifndef MODULE_EVENT_H
 #define MODULE_EVENT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum MODULE_EVENT_TYPE {
   CNTRL_START_EVENT,             /* Request reception */
@@ -55,5 +58,9 @@ typedef struct MODULE_EVENT_STR {
 
 /* Sends module event (returns usec) */
 extern void sendModuleEvent(MODULE_EVENT_STR *moduleEvent);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif
