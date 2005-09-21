@@ -243,6 +243,8 @@ install-data:
 	@for f in $(client_includes); do \
 		$(INSTALL_DATA) $(top_srcdir)/$$f $(includedir)/$$f;\
 	done
+	$(MKINSTALLDIRS) $(datadir)/gen
+	$(INSTALL_DATA) $(top_srcdir)/$(GENFILE) $(datadir)/gen
 	$genTcl$$(MKINSTALLDIRS) $(datadir)/tcl
 	$genTcl$$(INSTALL_DATA) $(srcdir)/$(tclclient_tcl) $(datadir)/$(tclclient_tcl)
 	$genOpenprs$$(MKINSTALLDIRS) $(datadir)/openprs
