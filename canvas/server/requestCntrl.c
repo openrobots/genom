@@ -65,6 +65,15 @@ static void $module$Cntrl$request$ (SERV_ID servId, int rqstId)
     if (ACTIVITY_STATUS(i) != ETHER && ! compatibilityTab[ACTIVITY_RQST_TYPE(i)]) 
       $module$AbortActivity (servId, i);
 
+  /* 
+   * Send the associated event
+   */
+  moduleEventCntrl.eventType = STATE_START_EVENT;
+  moduleEventCntrl.activityState = EXEC;
+  moduleEventCntrl.rqstType = $requestNum$;
+  moduleEventCntrl.taskNum = -1;
+  sendModuleEvent(&moduleEventCntrl);
+
   /*--------------------------------------------------------------
    * Call control func
    */
@@ -114,5 +123,9 @@ static void $module$Cntrl$request$ (SERV_ID servId, int rqstId)
 		       (void *) $outputRefPtr$, $outputSize$,
 		       (FUNCPTR) NULL) != OK)
     $module$CntrlTaskSuspend (TRUE);
+
+  moduleEventCntrl.eventType = STATE_END_EVENT;
+  moduleEventCntrl.activityState = ETHER;
+  sendModuleEvent(&moduleEventCntrl);
 }
 
