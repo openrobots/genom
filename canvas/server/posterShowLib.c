@@ -74,6 +74,7 @@ static void $module$ActivityShow ($MODULE$_CNTRL_STR *sdic);
 
 STATUS $module$CntrlPosterShow ()
 {
+  char string[64];
   $MODULE$_CNTRL_STR *sdic;
   int i;
 
@@ -92,11 +93,11 @@ STATUS $module$CntrlPosterShow ()
    * Affichage 
    */
 
-  printf ("** TASKS           (status)      (last duration)         (bilan)\n");
+  printf ("-- TASKS           (status)      (last duration)         (bilan)\n");
   /* Tache de controle */
   printf (" Control Task        %-5s                               %s\n",  
 	  M_CNTRL_TASK_STATUS(sdic)==OK ? "OK":"ERROR",
-	  h2getMsgErrno(M_CNTRL_TASK_BILAN(sdic)));
+	  h2getMsgErrno(M_CNTRL_TASK_BILAN(sdic), string, 64));
   
   /* Taches d'execution */
   for (i=0; i<$MODULE$_NB_EXEC_TASK; i++) {
@@ -112,7 +113,7 @@ STATUS $module$CntrlPosterShow ()
       printf ("    %3lums ", M_EXEC_TASK_ON_PERIOD(sdic,i));
       printf ("(max %lu)        ", M_EXEC_TASK_MAX_PERIOD(sdic,i));      
     }
-    printf ("\t %s\n", h2getMsgErrno(M_EXEC_TASK_BILAN(sdic,i)));
+    printf ("\t %s\n", h2getMsgErrno(M_EXEC_TASK_BILAN(sdic,i), string, 64));
 
   }
   printf ("\n");
@@ -157,9 +158,10 @@ static void $module$ActivityShow ($MODULE$_CNTRL_STR *sdic)
   ACTIVITY_STATE status;
   int bilan;
   int rqst;
+  char string[64];
   
   /*  printf (" ACTIVITY  REQUEST         TASK        FROM -> TO    BILAN\n");*/
-  printf ("** ACTIVITIES\n");
+  printf ("-- ACTIVITIES\n");
   for (i=0; i<MAX_ACTIVITIES; i++) {
     status = M_ACTIVITY_STATUS(sdic,i);
     bilan = M_ACTIVITY_BILAN(sdic,i);
@@ -194,7 +196,7 @@ static void $module$ActivityShow ($MODULE$_CNTRL_STR *sdic)
 	      evn == NO_EVENT ?
 	      h2GetEvnStateString(status) : h2GetEvnStateString(evn), 
 
-	      h2getMsgErrno(bilan),
+	      h2getMsgErrno(bilan, string, 64),
 	      
 	      status == ETHER ? ")" : "");
     }

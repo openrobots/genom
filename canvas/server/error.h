@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -37,25 +37,28 @@
 #define $module$_ERROR_H
 
 #include "h2errorLib.h"
+#include "genom/genomError.h"
 
 #define M_$module$    ($numModule$)
-#define M_$module$Std ($numModule$ + 1)
 
-#define S_$module$Std_ACTIVITY_INTERRUPTED          (M_$module$Std << 16 | 1 )
-#define S_$module$Std_TOO_MANY_ACTIVITIES           (M_$module$Std << 16 | 2 )
-#define S_$module$Std_ACTIVITY_FAILED               (M_$module$Std << 16 | 3 )
-#define S_$module$Std_WAIT_ABORT_ZOMBIE_ACTIVITY    (M_$module$Std << 16 | 4 )
-#define S_$module$Std_UNKNOWN_ACTIVITY              (M_$module$Std << 16 | 5 )
-#define S_$module$Std_FORBIDDEN_ACTIVITY_TRANSITION (M_$module$Std << 16 | 6 )
-#define S_$module$Std_SYSTEM_ERROR                  (M_$module$Std << 16 | 7 )
-#define S_$module$Std_ACTIVITY_ALREADY_ENDED        (M_$module$Std << 16 | 8 )
-#define S_$module$Std_WAIT_INIT_RQST                (M_$module$Std << 16 | 9 )
-#define S_$module$Std_CONTROL_CODEL_ERROR           (M_$module$Std << 16 | 10 )
-#define S_$module$Std_EXEC_TASK_SUSPENDED           (M_$module$Std << 16 | 11 )
-#define S_$module$Std_BAD_BLOCK_TYPE                (M_$module$Std << 16 | 12 )
+/* -- MODULES ERRORS -------------------------------------------------- */
 
-$listCntrlFailures$
-$listExecFailures$ 
+/* demo errors */
+$listCntrlFailures$$listExecFailures$
 
-/*-------------------- Fin de chargement du fichier -----------------------*/
+/* std errors */
+$listStdFailures$
+
+
+/* static H2_ERROR[] */
+#define $MODULE$_H2_ERR_MSGS {\$listTabFailures$
+}
+
+extern const H2_ERROR $module$H2errMsgs[]; /* it is $MODULE$_H2_ERR_MSGS */
+
+int $module$RecordH2errMsgs();
+
+
+
+/*-------------------------- end file loading ---------------------------*/
 #endif

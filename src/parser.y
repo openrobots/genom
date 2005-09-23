@@ -59,7 +59,6 @@ __RCSID("$LAAS$");
 #include "genom.h"
 #include "typeGen.h"
 #include "errorGen.h"
-#include "reportsGen.h"
 #include "msgLibGen.h"
 #include "printGen.h"
 #include "printXMLGen.h"
@@ -71,7 +70,7 @@ __RCSID("$LAAS$");
 #include "cntrlTaskGen.h"
 #include "execTaskGen.h"
 #include "moduleInitGen.h"
-#include "essayGen.h"
+#include "testGen.h"
 #include "initGen.h"
 
 #include "openprsGen.h"
@@ -1793,10 +1792,9 @@ main(int argc, char **argv)
     fatalError |= (cntrlTaskGen(sortie) != 0);
     fatalError |= (execTaskGen(sortie) != 0);
     fatalError |= (moduleInitGen(sortie) != 0);
-    fatalError |= (essayGen(sortie) != 0);
+    fatalError |= (testGen(sortie) != 0);
     fatalError |= (posterLibGen(sortie) != 0);
     fatalError |= (initGen(sortie) != 0);
-    fatalError |= (reportsGen(sortie) != 0);
 
     if (genOpenprs)
       fatalError |= (openprsGen(sortie) != 0); 

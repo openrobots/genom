@@ -65,6 +65,7 @@ module_src= \
 $listExecTask_c$
 
 client_src= \
+	$module$Error.c	\
 	$module$Endian.c	\
 	$module$Print.c		\
 	$module$PrintXML.c	\
@@ -106,8 +107,8 @@ $listIncludesInDotGen$
 init_src= \
 	$module$Init.c
 
-essay_src= \
-	$module$Essay.c
+test_src= \
+	$module$Test.c
 
 connect_src= \
 	$module$ConnectLib.c
@@ -118,7 +119,7 @@ posterwrite_src= \
 module_obj=	$(module_src:%.c=$(OBJDIR)/%.lo)
 client_obj=	$(client_src:%.c=$(OBJDIR)/%.lo)
 init_obj=	$(init_src:%.c=$(OBJDIR)/%.lo)
-essay_obj=	$(essay_src:%.c=$(OBJDIR)/%.lo)
+test_obj=	$(test_src:%.c=$(OBJDIR)/%.lo)
 connect_obj=	$(connect_src:%.c=$(OBJDIR)/%.lo)
 posterwrite_obj=$(posterwrite_src:%.c=$(OBJDIR)/%.lo)
 
@@ -126,7 +127,8 @@ posterwrite_obj=$(posterwrite_src:%.c=$(OBJDIR)/%.lo)
 $genTcl$tclclient_src= \
 $genTcl$	tcl/$module$Tcl.c		\
 $genTcl$	$module$PosterLib.c	\
-$genTcl$	$module$Endian.c
+$genTcl$	$module$Endian.c  \
+$genTcl$	$module$Error.c
 $genTcl$tclclient_obj=	$(tclclient_src:%.c=$(OBJDIR)/%.lo)
 $genTcl$
 $genTcl$tclclient_tcl= \
@@ -166,7 +168,7 @@ server: $(OBJDIR)/$(MODULE_LIB)
 server: $(OBJDIR)/$(INIT_BIN)
 server: $(OBJDIR)/$(POSTERWRITE_LIB)
 
-client:: $(OBJDIR)/$(ESSAY_BIN) $(OBJDIR)/$(CONNECT)
+client:: $(OBJDIR)/$(TEST_BIN) $(OBJDIR)/$(CONNECT)
 $genTcl$client:: $(OBJDIR)/$(TCLCLIENT_LIB)
 $genOpenprs$client:: $(OBJDIR)/$(OPENPRSCLIENT_LIB)
 
@@ -200,8 +202,8 @@ $(OBJDIR)/$(INIT_BIN): $(init_obj) $(OBJDIR)/$(CLIENT_LIB)
 		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)	\
 		$(SERVERS_CLIENT_LIB) $(GENOM_LIBS)
 
-$(OBJDIR)/$(ESSAY_BIN): $(essay_obj) $(OBJDIR)/$(CLIENT_LIB)
-	$(LTLD) $(CFLAGS) $(essay_obj) -o $@  $(LDFLAGS) 	\
+$(OBJDIR)/$(TEST_BIN): $(test_obj) $(OBJDIR)/$(CLIENT_LIB)
+	$(LTLD) $(CFLAGS) $(test_obj) -o $@  $(LDFLAGS) 	\
 		$(LIBTOOL_LINKOPT) $(LTLK_CLIENT_LIB)		\
 		$(SERVERS_CLIENT_LIB) $(GENOM_LIBS)
 
@@ -236,7 +238,7 @@ install-bin:
 	$genOpenprs$$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) $(libdir)/openprs/$(OPRSCLIENT_LIB)
 	$(MKINSTALLDIRS) $(bindir)
 	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
-	$(LTINSTALL) $(OBJDIR)/$(ESSAY_BIN) $(bindir)/$(ESSAY_BIN)
+	$(LTINSTALL) $(OBJDIR)/$(TEST_BIN) $(bindir)/$(TEST_BIN)
 
 install-data:
 	$(MKINSTALLDIRS) $(includedir)/server
@@ -257,7 +259,7 @@ install-data:
 
 .PHONY: clean
 
-CLEAN_FILES = $(module_obj) $(posterwrite_obj) $(client_obj) $(connect_obj) $(init_obj) $(essay_obj)
+CLEAN_FILES = $(module_obj) $(posterwrite_obj) $(client_obj) $(connect_obj) $(init_obj) $(test_obj)
 
 $genTcl$CLEAN_FILES += $(tclclient_obj)
 

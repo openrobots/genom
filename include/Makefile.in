@@ -43,11 +43,9 @@ include $(top_builddir)/config.mk
 
 # -----------------------------------------------------------------------
 flist = \
-				genom/essayLib.h \
-				genom/essayLibProto.h \
-				genom/genomReportsLib.h \
-				genom/genomReportsLibProto.h \
-				genom/genomReportsStd.h \
+				genom/testLib.h \
+				genom/testLibProto.h \
+				genom/genomError.h \
 				genom/h2endian.h \
 				genom/h2endianProto.h \
 				genom/moduleEvents.h \

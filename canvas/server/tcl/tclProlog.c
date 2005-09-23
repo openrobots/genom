@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -87,6 +87,9 @@ $module$ClientInitCb(ClientData clientData, Tcl_Interp *interp,
    char *mboxName;
    struct ModuleInfo *m;
    STATUS status;
+   char strerr[64];
+
+  $module$RecordH2errMsgs();
 
    m = malloc(sizeof(struct ModuleInfo));
    if (m == NULL) {
@@ -115,7 +118,7 @@ $module$ClientInitCb(ClientData clientData, Tcl_Interp *interp,
 			 &m->cid);
 
    if (status == ERROR) {
-      Tcl_SetResult(interp, (char *)h2getMsgErrno(errnoGet()), TCL_STATIC);
+      Tcl_SetResult(interp, h2getMsgErrno(errnoGet(), strerr, 64), TCL_VOLATILE);
       return TCL_ERROR;
    }
 
@@ -128,9 +131,10 @@ $module$ClientEndCb(ClientData clientData, Tcl_Interp *interp,
 		    int objc, Tcl_Obj *const objv[])
 {
    struct ModuleInfo *m = (struct ModuleInfo *)clientData;
+   char strerr[64];
 
    if (csClientEnd(m->cid) == ERROR) {
-      Tcl_SetResult(interp, (char *)h2getMsgErrno(errnoGet()), TCL_STATIC);
+      Tcl_SetResult(interp, h2getMsgErrno(errnoGet(), strerr, 64), TCL_VOLATILE);
       return TCL_ERROR;
    }
 
@@ -159,6 +163,7 @@ $module$AbortRqstSendCb(ClientData data, Tcl_Interp *interp,
    int rqstId, bilan;
    char buf[10];
    int activity;	/* input */
+   char strerr[64];
 
    TEST_BAD_USAGE(objc != 2);
 		 
@@ -170,7 +175,7 @@ $module$AbortRqstSendCb(ClientData data, Tcl_Interp *interp,
 		       &activity, sizeof(int),
 		       &rqstId, &bilan) == ERROR) {
 
-      Tcl_SetResult(interp, (char *)h2getMsgErrno(bilan), TCL_STATIC);
+      Tcl_SetResult(interp, h2getMsgErrno(bilan, strerr, 64), TCL_VOLATILE);
       return TCL_ERROR;
    }
     
@@ -188,6 +193,7 @@ $module$AbortReplyRcvCb(ClientData clientData, Tcl_Interp *interp,
    int ret;
    int rqstId, bilan, activity, status;
    Tcl_Obj *result;
+   char strerr[64];
 
    TEST_BAD_USAGE(
       objc != 2 ||
@@ -213,7 +219,7 @@ $module$AbortReplyRcvCb(ClientData clientData, Tcl_Interp *interp,
 	 break;
 
       default:
-	 Tcl_SetResult(interp, (char *)h2getMsgErrno(bilan), TCL_STATIC);
+	 Tcl_SetResult(interp, h2getMsgErrno(bilan, strerr, 64), TCL_VOLATILE);
 	 return TCL_ERROR;
    }
 
@@ -230,7 +236,7 @@ $module$AbortReplyRcvCb(ClientData clientData, Tcl_Interp *interp,
    else
       ret = Tcl_ListObjAppendElement(interp, result,
 				     Tcl_NewStringObj(
-					(char *)h2getMsgErrno(bilan), -1));
+					h2getMsgErrno(bilan, strerr, 64), -1));
    if (ret != TCL_OK) return TCL_ERROR;
 
    Tcl_SetObjResult(interp, result);

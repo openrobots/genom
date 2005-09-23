@@ -73,7 +73,7 @@ INSTALL_DATA=	$(INSTALL) -m 644
 # executables or modules
 MODULE_BIN=	$module$$(BINEXT)
 INIT_BIN=	$module$SendInitRqst$(BINEXT)
-ESSAY_BIN=	$module$Essay$(BINEXT)
+TEST_BIN=	$module$Test$(BINEXT)
 
 # client libraries
 CLIENT_LIB=		lib$module$Client$(LIBEXT)

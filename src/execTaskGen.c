@@ -385,14 +385,15 @@ execTaskGen(FILE *out)
 		       lm->str_ref->dcl_nom->name);
 		bufcat(&str, "  size = sizeof(x.%s);\n",
 		       lm->str_ref->dcl_nom->name);
-		bufcat(&str, "  posterWrite(%s_%s_POSTER_ID, offset, "
+		bufcat(&str, "  if (posterWrite(%s_%s_POSTER_ID, offset, "
 		       "(char *)&(%sDataStrId->",
 		       module->NAME, p->NAME, module->name);
 		for (ln = lm->str_ref->sdi_ref; ln != NULL; ln = ln->next) {
 		    bufcat(&str, "%s%c", ln->name,
 			   ln->next != NULL ? '.' : ')');
 		} /* for */
-		bufcat(&str, ", size);\n");
+		bufcat(&str, ", size) != size) %s%sSuspend (TRUE);\n",
+		       module->name, t->name);
 	    } /* for */
 	    bufcat(&str, "  }");
 	    i++;

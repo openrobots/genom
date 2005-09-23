@@ -355,6 +355,7 @@ AC_DEFUN([ROBOT_LIB_TCL],
          /usr/pkg/lib            \
          /usr/lib                \
          /usr/lib/tcl8.4         \
+         /usr/lib/tcl-8.4         \
          /usr/lib/tcl8.3         \
         ; \
        do

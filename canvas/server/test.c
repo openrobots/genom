@@ -34,8 +34,8 @@
  
 /****************************************************************************
  *   LABORATOIRE D'AUTOMATIQUE ET D'ANALYSE DE SYSTEMES - LAAS / CNRS       
- *   PROJET HILARE II - ROUTINE D'ESSAY INTERACTIF       
- *   FICHIER SOURCE: $module$Essay.c                                          
+ *   PROJET HILARE II - ROUTINE D'TEST INTERACTIF       
+ *   FICHIER SOURCE: $module$Test.c                                          
  ****************************************************************************/
 
 /* VERSION ACTUELLE / HISTORIQUE DES MODIFICATIONS :
@@ -72,17 +72,16 @@
 #include "$module$Print.h"
 #include "$module$Scan.h"
 
-#include "genom/genomReportsLib.h"
 /* #include "$module$Reports.h" */
 
-#include "genom/essayLib.h"
+#include "genom/testLib.h"
 
 
-void $module$Essay (int essayNumber);
+void $module$Test (int testNumber);
 
 /*------------------- PROTOTYPES DES FONCTIONS LOCALES --------------------*/
 
-static void $module$EssayInitTask (ESSAY_STR* essayStr);
+static void $module$TestInitTask (TEST_STR* testStr);
 
 $requestFuncTabDeclare$
   $requestNameTabDeclare$
@@ -98,13 +97,13 @@ int
 main(int argc, char **argv)
 {
   if (argc != 2) {
-    fprintf(stderr, "usage: $module$Essay <numMBox>\n");
+    fprintf(stderr, "usage: $module$Test <numMBox>\n");
     exit(1);
   }
   if (h2initGlob(0) == ERROR) {
       exit(2);
   }
-  $module$Essay(atoi(argv[1]));
+  $module$Test(atoi(argv[1]));
   /*NOTREACHED*/
   return 0;
 } /* main */
@@ -113,50 +112,50 @@ main(int argc, char **argv)
 
 
 /**
- **   $module$Essay - Fonction de essay du module $module$
+ **   $module$Test - Fonction de test du module $module$
  **/
 
 void
-$module$Essay (int essayNumber)     
+$module$Test (int testNumber)     
 {
-  ESSAY_STR *essayStr;
+  TEST_STR *testStr;
   
   /* Allocation de la structure */
-  if ((essayStr = essayInit(essayNumber, "$module$",
+  if ((testStr = testInit(testNumber, "$module$",
 			  $MODULE$_CLIENT_MBOX_REPLY_SIZE,
 			  $MODULE$_ABORT_RQST,
 			  $nbRequest$,
-			  $module$EssayRequestNameTab,
-			  $module$EssayRqstFuncTab,
+			  $module$TestRequestNameTab,
+			  $module$TestRqstFuncTab,
 			  $nbPosterData$, 
-			  $module$EssayPosterNameTab,
-			  $module$EssayPosterShowFuncTab)) == NULL)
+			  $module$TestPosterNameTab,
+			  $module$TestPosterShowFuncTab)) == NULL)
     return;
 
   /* Init specifiques */
-  $module$EssayInitTask (essayStr);
+  $module$TestInitTask (testStr);
   
   /* Fonction principale */
-  essayMain(essayStr);
+  testMain(testStr);
 }
 
 /*----------------------- ROUTINES LOCALES ---------------------------------*/
 
 
 /**
- **  $module$EssayInitTask - Routine d'initialisation de la tache d'essai
+ **  $module$TestInitTask - Routine d'initialisation de la tache d'essai
  **/
 
-static void $module$EssayInitTask (ESSAY_STR *essayStr)
+static void $module$TestInitTask (TEST_STR *testStr)
      
 {
   /* S'initialiser comme client */
   printf ("client init ...");
   if (csClientInit ($MODULE$_MBOX_NAME, $MODULE$_MAX_RQST_SIZE,
 		    $MODULE$_MAX_INTERMED_REPLY_SIZE, 
-		    $MODULE$_MAX_REPLY_SIZE, &ESSAY_CID(essayStr)) != OK) {
+		    $MODULE$_MAX_REPLY_SIZE, &TEST_CID(testStr)) != OK) {
       (void) h2perror("Client init failed");
-      essayEnd(essayStr);
+      testEnd(testStr);
   }
   
   /* S'initialiser comme client des posters */

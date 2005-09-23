@@ -58,8 +58,7 @@ LIB=		lib$(BASENAME).la
 
 SRCS += \
 	printState.c		\
-	essayLib.c		\
-	genomReportsLib.c	\
+	testLib.c		\
 	h2endian.c		\
 	moduleEvents.c		\
 	scan.c			\

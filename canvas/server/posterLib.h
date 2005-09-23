@@ -39,6 +39,7 @@
 
 /* Types definis ou utilises par le module */
 #include "$module$Type.h"
+#include "$module$Error.h"
 
 /* 
  * Definition de la SDI_C 

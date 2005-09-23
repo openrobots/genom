@@ -61,6 +61,8 @@
 STATUS $module$ClientInit (CLIENT_ID *pClientId)
 
 {
+  $module$RecordH2errMsgs();
+
   /* Appeler la routine d'initialisation d'un client CS */
   return (csClientInit ($MODULE$_MBOX_NAME, $MODULE$_MAX_RQST_SIZE,
                         $MODULE$_MAX_INTERMED_REPLY_SIZE, 

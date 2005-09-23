@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -43,16 +43,17 @@ $module$$posterFullName$PosterTclRead(ClientData data, Tcl_Interp *interp,
    int ret;
    static $posterStructType$ *_posterData;	/* data */
    Tcl_Obj *my_own_private_unique_result;
+   char strerr[64];
 
    TEST_BAD_USAGE(objc != 1);
 		 
   if ((_posterData = malloc(sizeof($dataType$))) == NULL) {
-      Tcl_SetResult(interp, (char *)h2getMsgErrno(errnoGet()), TCL_STATIC);
+      Tcl_SetResult(interp, h2getMsgErrno(errnoGet(), strerr, 64), TCL_VOLATILE);
       return TCL_ERROR;
   }
 
    if ($module$$posterFullName$PosterRead(_posterData) != OK) {
-      Tcl_SetResult(interp, (char *)h2getMsgErrno(errnoGet()), TCL_STATIC);
+      Tcl_SetResult(interp, h2getMsgErrno(errnoGet(), strerr, 64), TCL_VOLATILE);
       free(_posterData);
       return TCL_ERROR;
    }

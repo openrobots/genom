@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -28,6 +28,9 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+#ifndef H_TESTGENPROTO
+#define H_TESTGENPROTO
 
-/* reportsGen.c */
-extern int reportsGen(FILE *out);
+extern int testGen ( FILE *out );
+
+#endif /* H_TESTGENPROTO */

@@ -1,8 +1,8 @@
 /*	$LAAS$ */
 
-$commentend$
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 2005 LAAS/CNRS
+ * Matthieu Herrb - Tue Aug 10 1993
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -29,30 +29,13 @@ $commentend$
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-$commentend$
+#ifndef _TESTGEN_H
+#define _TESTGEN_H
 
-/**
- **  Emission/reception de la requete d'execution $module$Essay$request$
- **/
+#define PROTO_TEST "server/test.c"
+#define PROTO_TEST_EXEC_RQST "server/testExec.c"
+#define PROTO_TEST_CNTRL_RQST "server/testCntrl.c"
 
-static BOOL $module$Essay$request$ (ESSAY_STR *essayId, int rqstNum, 
-				    int acti, BOOL silent)
-{
-  $inputDeclarations$
-  $outputDeclarations$
+#include "testGenProto.h" 
 
-  /* Saisie données */
-  if (!ESSAY_ACTIVITY_ON(essayId, acti)) {
-    $inputScan$
-  }
-  
-  /* Emission d'une requete + replique intermediaire 
-     ET/OU reception replique finale (selon ESSAY_ACTIVITY_RQST_ID) */
-  if (!essaySendAndOrRcvExecRqst(essayId, rqstNum, acti, silent, NULL
-				/* &$MODULE$_REPORTS_STRUCT */))
-    return FALSE;
-
-  $outputPrint$
-  return TRUE;
-}
-
+#endif

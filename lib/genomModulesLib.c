@@ -17,6 +17,24 @@
 #endif
 #include "commonStructLib.h"
 #include "genom/modules.h"
+#include "genom/genomError.h"
+
+const H2_ERROR genomH2errMsgs[] = GENOM_H2_ERR_MSGS;
+
+/* ----------------------------------------------------------------------
+ *
+ * genomRecordH2errMsgs - This function record the genom common error 
+ *                        messages of the modules
+ *
+ * return OK, or ERROR if fails
+ */
+STATUS genomRecordH2errMsgs()
+{
+  if (!h2recordErrMsgs("genomRecordH2errMsgs", "stdGenom", M_stdGenom, 
+		       sizeof(genomH2errMsgs)/sizeof(H2_ERROR), genomH2errMsgs))
+    return ERROR;
+  return OK;
+}
 
 /* ----------------------------------------------------------------------
  *

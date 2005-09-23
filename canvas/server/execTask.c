@@ -5,7 +5,7 @@
 /* 
  * Copyright (c) 2004 
  *      Autonomous Systems Lab, Swiss Federal Institute of Technology.
- * Copyright (c) 1993-2004 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -471,6 +471,9 @@ static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId)
   }
 #endif
 
+  /* Record errors */
+/*   $module$RecordH2errMsgs(); */
+
    /* Donner le sem de fin d'initialisation */
   LOGDBG(("$module$$execTaskName$InitTaskFunc: ok\n"));
   return (OK);
@@ -490,13 +493,15 @@ static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId)
 static void $module$$execTaskName$Suspend (BOOL giveFlag)
 
 {
+  char string[64];
+
   /* Indiquer qu'une erreur a ete detectee */
   EXEC_TASK_STATUS($execTaskNum$) = ERROR;
   if (EXEC_TASK_BILAN($execTaskNum$) == OK)
     EXEC_TASK_BILAN($execTaskNum$) = errnoGet();
 
   logMsg("Suspend $module$$execTaskName$: %s\n", 
-	  h2getMsgErrno(EXEC_TASK_BILAN($execTaskNum$)));
+	  h2getMsgErrno(EXEC_TASK_BILAN($execTaskNum$), string, 64));
 
   /* Eveiller la tache de controle */
   h2evnSignal(CNTRL_TASK_ID);

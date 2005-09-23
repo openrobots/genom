@@ -1,7 +1,8 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
+ * Matthieu Herrb - Thu Jul 22 1993
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -36,6 +37,7 @@ __RCSID("$LAAS$");
 #include <string.h>
 
 #include "genom.h"
+#include "genom/genomError.h"
 #include "parser.tab.h"
 #include "errorGen.h"
 
@@ -53,19 +55,24 @@ static int id_member(ID_LIST *m, ID_LIST *l)
     return(0);
 }
 
+const H2_ERROR genomH2errMsgs[] = GENOM_H2_ERR_MSGS;
+
 
 int errorGen(FILE *out)
 {
     RQST_LIST *l;
     RQST_STR *r;
+    ID_LIST *m, *cntrlFailList = NULL, *execFailList = NULL, *tmp;
+    int n, err, i;
+    char *cntrlFail, *execFail, *stdFail;
+    char *localFail = NULL;
+    char *othersReports=NULL;
     EXEC_TASK_LIST *lt;
-    ID_LIST *m, *cntrlFailList = NULL, *execFailList = NULL,  *tmp;
-    ID_LIST *execTaskListTmpXXX = NULL;
-    int n;
-    char *cntrlFail, *execFail;
+    short genSrc, genErr;
+    int genomNbErrs;
 
     script_open(out);
-	subst_begin(out, PROTO_ERROR_H);
+    subst_begin(out, PROTO_ERROR_H);
 
     /* Nom du  module */
     print_sed_subst(out, "module", module->name);
@@ -85,17 +92,11 @@ int errorGen(FILE *out)
 		tmp->name = m->name;
 		tmp->next = execFailList;
 		execFailList = tmp;
-
-		/* XXX tmp for compatibility purpose */
-		tmp = (ID_LIST *)xalloc(sizeof(ID_LIST));
-		tmp->name = lt->exec_task->name;
-		tmp->next = execTaskListTmpXXX;
-		execTaskListTmpXXX = tmp;
 	    }
 	} /* for */
     } /* for */
 
-    /* erreur pour les reque^tes */
+    /* list des requetes */
     for (l = requetes; l != NULL; l = l->next) {
 	r = l->rqst;
 	for (m = r->fail_msg; m != NULL; m = m->next) {
@@ -108,12 +109,6 @@ int errorGen(FILE *out)
 		} else {
 		    tmp->next = execFailList;
 		    execFailList = tmp;
-
-		    /* XXX tmp for compatibility purpose */
-		    tmp = (ID_LIST *)xalloc(sizeof(ID_LIST));
-		    tmp->name = r->exec_task_name;
-		    tmp->next = execTaskListTmpXXX;
-		    execTaskListTmpXXX = tmp;
 		}
 	    }
 	}
@@ -123,53 +118,92 @@ int errorGen(FILE *out)
     cntrlFail = NULL;
     n = 1;
     for (m = cntrlFailList; m != NULL; m = m->next) {
+	if (!(err = H2_ENCODE_ERR(module->number, n))) {
+	  printf ("genom: error code invalide :\n" 
+		  "genom: M_%s=%d or S_%s_%s=%d not in [1, 2^16=65536]\n", 
+		  module->name, module->number,
+		  module->name, m->name, n);
+	}
 	bufcat(&cntrlFail, 
-	       "#define S_%s_%s \t\t(M_%s << 16 | %d )\n",
+	       "#define S_%s_%-20s H2_ENCODE_ERR(M_%-10s, %d)\n",
 	       module->name, m->name, module->name, n);
+	bufcat(&localFail,
+	       "\n    {\"%s\", %d}, \\\\", m->name, n);
 	n++;
-    }
-
-    execFail = NULL;
-    for (m = execFailList; m != NULL; m = m->next) {
-	bufcat(&execFail, "#define S_%s_%s \t\t(M_%s << 16 | %d )\n",
-	       module->name, m->name, module->name, n);
-	n++;
-    }
-
-    /* XXXXX generation liste for compatibility purpose */
-    bufcat(&execFail,  "\n\n/* XXXXX temporary for compatibility purpose */\n");
-    for (m = cntrlFailList; m != NULL; m = m->next) {
-	bufcat(&execFail, 
-	       "#define S_%sCntrlTask_%s \t\tS_%s_%s\n",
-	       module->name, m->name, module->name, m->name);
-    }
-    bufcat(&execFail,  "\n");
-
-    for (m = execFailList; m != NULL; m = m->next) {
-	bufcat(&execFail, "#define S_%s%s_%s \t\tS_%s_%s\n",
-	       module->name, execTaskListTmpXXX->name, m->name, 
-	       module->name, m->name);
-	tmp = execTaskListTmpXXX;
-	execTaskListTmpXXX = execTaskListTmpXXX->next;
-	free(tmp);
     }
 
     /* Liberation liste */
     for (m = cntrlFailList; m != NULL; tmp = m->next, free(m), m = tmp);
 
+    execFail = NULL;
+    for (m = execFailList; m != NULL; m = m->next) {
+	if (!(err = H2_ENCODE_ERR(module->number, n))) {
+	  printf ("genom: error code invalide :" 
+		  "genom: M_%s=%d or S_%s_%s=%d not in [1, 2^16=65536]\n", 
+		  module->name, module->number, 
+		  module->name, m->name, n);
+	}
+	bufcat(&execFail, 
+	       "#define S_%s_%-20s H2_ENCODE_ERR(M_%-10s, %d)\n",
+	       module->name, m->name, module->name, n);
+	bufcat(&localFail,
+	       "\n    {\"%s\", %d},\\\\", m->name, n);
+	n++;
+    }
     /* liberation liste */
     for (m = execFailList; m != NULL; tmp = m->next, free(m), m = tmp);
 
+    /* erreurs standards */
+    stdFail = NULL;
+    
+    genomNbErrs = sizeof(genomH2errMsgs)/sizeof(H2_ERROR);
+    for (i=0; i<genomNbErrs; i++) {
+
+      if (!(err = H2_ENCODE_ERR(module->number, genomH2errMsgs[i].num))) {
+	printf ("genom: error code invalide :" 
+		"genom: M_%s=%d or S_stdGenom_%s=%d not in [1, 2^16=65536]\n", 
+		module->name, module->number, 
+		genomH2errMsgs[i].name, genomH2errMsgs[i].num);
+      }
+
+      genSrc = H2_SOURCE_STD_ERR(genomH2errMsgs[i].num);
+      genErr = H2_NUMBER_STD_ERR(genomH2errMsgs[i].num);
+
+      bufcat(&stdFail, "#define S_stdGenom_%s_%-26s %d   /* %d <<16 %d <<8 %d */\n", 
+	     module->name, genomH2errMsgs[i].name, 
+	     err, 
+	     module->number, genSrc, genErr);
+    }
+
     print_sed_subst(out, "listCntrlFailures", cntrlFail);
     print_sed_subst(out, "listExecFailures", execFail);
+    print_sed_subst(out, "listStdFailures", stdFail);
+    print_sed_subst(out, "listTabFailures", localFail);
     
     free(cntrlFail);
     free(execFail);
+    free(stdFail);
+    free(localFail);
 
-    /* Fin */
     subst_end(out);
     script_close(out, "server/%sError.h", module->name);
-    return(0);
 
+    /* ------ error.c ---------------------------------------- */
+    script_open(out);
+    subst_begin(out, PROTO_ERROR_C);
+
+    /* Nom du  module */
+    print_sed_subst(out, "module", module->name);
+    print_sed_subst(out, "MODULE", module->NAME);
+
+    for (m = imports; m != NULL; m = m->next)
+      bufcat(&othersReports, "  %sRecordH2errMsgs();\n", m->name);
+
+    print_sed_subst(out, "h2recordOtherModules", othersReports);
+    free(othersReports);
+    subst_end(out);
+    script_close(out, "server/%sError.c", module->name);
+
+    return(0);
 }
 

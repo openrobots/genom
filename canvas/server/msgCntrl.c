@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -68,7 +68,7 @@ int $module$$request$ReplyRcv (CLIENT_ID clientId,
 
   /* Verifier le flag de type de blocage */
   if (block != NO_BLOCK && block != BLOCK_ON_FINAL_REPLY) {
-    errnoSet (S_$module$Std_BAD_BLOCK_TYPE);
+    errnoSet (S_stdGenom_$module$_BAD_BLOCK_TYPE);
     return (ERROR);
   }
   

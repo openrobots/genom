@@ -119,6 +119,7 @@ $module$TaskInit()
   char *home;
   struct utsname uts;
 #endif /* PID_FILE */
+  char string[64];
 
   /*
    * Create internal data structures
@@ -229,7 +230,7 @@ $module$TaskInit()
     /* check task status */
     if (EXEC_TASK_STATUS(i) == ERROR) {
        logMsg("$module$TaskInit: Exec task %s failed : %s\n", 
-	      $module$ExecTaskTab[i].name, h2getMsgErrno(EXEC_TASK_BILAN(i)));
+	      $module$ExecTaskTab[i].name, h2getMsgErrno(EXEC_TASK_BILAN(i), string, 64));
        errnoSet(EXEC_TASK_BILAN(i));
        goto error;
     }

@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * Matthieu Herrb - Thu Jul 22 1993
  * All rights reserved.
  *
@@ -33,6 +33,7 @@
 #define _ERRORGEN_H
 
 #define PROTO_ERROR_H "server/error.h"
+#define PROTO_ERROR_C "server/error.c"
 
 #include "errorGenProto.h" 
 

@@ -67,10 +67,11 @@ flist+=\
 	server/cntrlTask.c		\
 	server/connectLib.c		\
 	server/error.h			\
-	server/essay.c			\
-	server/essayCntrl.c		\
-	server/essayExec.c		\
-	server/essay_script		\
+	server/error.c			\
+	server/test.c			\
+	server/testCntrl.c		\
+	server/testExec.c		\
+	server/test_script		\
 	server/execTask.c		\
 	server/execTaskHeader.h		\
 	server/header.h			\
@@ -93,7 +94,6 @@ flist+=\
 	server/posterXMLLib.h		\
 	server/print.h			\
 	server/printXML.h		\
-	server/reports.h		\
 	server/requestCntrl.c		\
 	server/requestExec.c		\
 	server/scan.h			\

@@ -60,8 +60,7 @@ SRCS = \
 	genom.c			\
 	cntrlTaskGen.c		\
 	errorGen.c		\
-	reportsGen.c		\
-	essayGen.c		\
+	testGen.c		\
 	execTaskGen.c		\
 	headerGen.c		\
 	moduleInitGen.c		\

@@ -49,6 +49,7 @@ $module$$requestName$RqstSendCb(ClientData data, Tcl_Interp *interp,
    int ret;
    int curObjc = 0;
 #endif
+   char strerr[64];
 
    TEST_BAD_USAGE(objc != $argNumber$+1);
 		 
@@ -59,7 +60,7 @@ $parseInput$
 		       $&inputVar,$ $inputSize$,
 		       &rqstId, &bilan) == ERROR) {
 
-      Tcl_SetResult(interp, (char *)h2getMsgErrno(bilan), TCL_STATIC);
+     Tcl_SetResult(interp, h2getMsgErrno(bilan, strerr, 64), TCL_VOLATILE);
       return TCL_ERROR;
    }
     
@@ -78,6 +79,7 @@ $module$$requestName$ReplyRcvCb(ClientData data, Tcl_Interp *interp,
    int rqstId, bilan, activity;
    $outputType$ $outputVar;$	/* output */
    Tcl_Obj *my_own_private_unique_result;
+   char strerr[64];
 
    TEST_BAD_USAGE(
       objc != 2 ||
@@ -106,7 +108,7 @@ $module$$requestName$ReplyRcvCb(ClientData data, Tcl_Interp *interp,
 	 break;
 
       default:
-	 Tcl_SetResult(interp, (char *)h2getMsgErrno(bilan), TCL_STATIC);
+	 Tcl_SetResult(interp, h2getMsgErrno(bilan, strerr, 64), TCL_VOLATILE);
 	 return TCL_ERROR;
    }
 
@@ -123,7 +125,7 @@ $module$$requestName$ReplyRcvCb(ClientData data, Tcl_Interp *interp,
    else
       ret = Tcl_ListObjAppendElement(interp, my_own_private_unique_result,
 				     Tcl_NewStringObj(
-					(char *)h2getMsgErrno(bilan), -1));
+					h2getMsgErrno(bilan, strerr, 64), -1));
    if (ret != TCL_OK) return TCL_ERROR;
 
 $output$

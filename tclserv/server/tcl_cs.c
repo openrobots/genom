@@ -236,6 +236,7 @@ csMboxInitCb(ClientData clientData, Tcl_Interp *interp,
 {
    static char *syntax = "<mboxName> <rcvSize> <replySize>";
    int rcvSize, replySize;
+   char strerr[64];
     
    if (csInit) {
       Tcl_SetResult(interp, "csMbox already initialized", TCL_STATIC);
@@ -258,7 +259,7 @@ csMboxInitCb(ClientData clientData, Tcl_Interp *interp,
    if (csMboxInit(Tcl_GetStringFromObj(argv[1], NULL), 
 		  rcvSize, replySize) != OK) {
       Tcl_SetObjResult(interp, Tcl_NewStringObj(
-	 (char *)h2getMsgErrno(errnoGet()), -1));
+	 h2getMsgErrno(errnoGet(), strerr, 64), -1));
       return TCL_ERROR;
    }
 
@@ -276,6 +277,7 @@ csMboxEndCb(ClientData clientData, Tcl_Interp *interp,
 	    int argc, Tcl_Obj *const argv[])
 {
    static char *syntax = "";
+   char strerr[64];
 
    if (!csInit) {
       Tcl_SetResult(interp, "csMbox not initialized", TCL_STATIC);
@@ -291,7 +293,7 @@ csMboxEndCb(ClientData clientData, Tcl_Interp *interp,
 
    if (csMboxEnd() != OK) {
       Tcl_SetObjResult(interp, Tcl_NewStringObj(
-	 (char *)h2getMsgErrno(errnoGet()), -1));
+	 h2getMsgErrno(errnoGet(), strerr, 64), -1));
       return(TCL_ERROR);
    }
 
@@ -307,6 +309,7 @@ csMboxWaitCb(ClientData clientData, Tcl_Interp *interp,
 {
    static char *syntax = "<timeOut>";
    int timeout, mask;
+   char strerr[64];
     
    if (!csInit) {
       Tcl_SetResult(interp, "csMbox not initialized", TCL_STATIC);
@@ -324,7 +327,7 @@ csMboxWaitCb(ClientData clientData, Tcl_Interp *interp,
 
    if ((mask = csMboxWait(timeout, REPLY_MBOX)) == ERROR) {
       Tcl_SetObjResult(interp, Tcl_NewStringObj(
-	 (char *)h2getMsgErrno(errnoGet()), -1));
+	 h2getMsgErrno(errnoGet(), strerr, 64), -1));
       return TCL_ERROR;
    }
 

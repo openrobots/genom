@@ -116,6 +116,9 @@ int posterLibGen(FILE *out)
     fprintf(out, "STATUS %sPosterInit(void)\n{\n", module->name);
     fprintf(out, "  int status = OK;\n\n");
 
+    /* Init errors */
+    fprintf(out, "  %sRecordH2errMsgs();\n\n", module->name);
+
     /* Init poster de controle */
     fprintf(out, 
 	    "  if (%sCntrlPosterInit() == ERROR) {\n"

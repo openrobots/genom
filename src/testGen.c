@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 2005 LAAS/CNRS
  * Matthieu Herrb - Tue Aug 10 1993
  * All rights reserved.
  *
@@ -38,21 +38,21 @@ __RCSID("$LAAS$");
 
 #include "genom.h"
 #include "parser.tab.h"
-#include "essayGen.h"
+#include "testGen.h"
 
 static void
-essayMakeInput(RQST_STR *r, char **decla, char **scanOrPrint);
+testMakeInput(RQST_STR *r, char **decla, char **scanOrPrint);
 static void
-essayMakeOutput(RQST_STR *r, char **decla, char **scanOrPrint);
+testMakeOutput(RQST_STR *r, char **decla, char **scanOrPrint);
 static void
-essayMakeGetInput(RQST_STR *rqst, char *var, char **scanOrPrint);
+testMakeGetInput(RQST_STR *rqst, char *var, char **scanOrPrint);
 
 
 /***
  *** Ge'ne'ration des commandes pour construire la tache d'essai
  ***/
 static char *
-essayTabRequestFunc(void) 
+testTabRequestFunc(void) 
 {
     RQST_LIST *l;
     RQST_STR *r;
@@ -66,11 +66,11 @@ essayTabRequestFunc(void)
         r = l->rqst;
 	bufcat(&msg,
 	       "static BOOL "
-	       "%sEssay%s(ESSAY_STR *id, int rq, int ac, BOOL ch);\n", 
+	       "%sTest%s(TEST_STR *id, int rq, int ac, BOOL ch);\n", 
 		module->name, r->name);
     }
 
-    bufcat(&msg, "\nstatic  ESSAY_RQST_DESC_STR %sEssayRqstFuncTab[] = {\n",
+    bufcat(&msg, "\nstatic  TEST_RQST_DESC_STR %sTestRqstFuncTab[] = {\n",
 	   module->name); 
 
     for (l = requetes; l != NULL; l = l->next) {
@@ -101,13 +101,13 @@ essayTabRequestFunc(void)
 	}
 
 	/* Description de la requete */
-	bufcat(&msg, "  {%s_%s_RQST, %sEssay%s, %s, %s}",
+	bufcat(&msg, "  {%s_%s_RQST, %sTest%s, %s, %s}",
 	       module->NAME, r->NAME, module->name, r->name,
 	       sizeIn, sizeOut);
 #if 0
 	if (r->input_info != NULL) {
 	    RQST_INPUT_INFO_LIST *ril;
-	    printf ("** %s \n", r->name );
+	    printf ("-- %s \n", r->name );
 	    if (r->doc != NULL)
 	      printf ("doc: %s\n", r->doc);
 	    for (ril = r->input_info; ril != NULL; ril=ril->next) {
@@ -137,13 +137,13 @@ essayTabRequestFunc(void)
 }
 
 static char *
-essayTabRequestName(void) 
+testTabRequestName(void) 
 {
     RQST_LIST *l;
     RQST_STR *r;
     char *msg = NULL;
 
-    bufcat(&msg, "\nstatic char *%sEssayRequestNameTab[] = {\n",
+    bufcat(&msg, "\nstatic char *%sTestRequestNameTab[] = {\n",
 	   module->name); 
 
     for (l = requetes; l != NULL; l = l->next) {
@@ -164,14 +164,14 @@ essayTabRequestName(void)
 }
 
 static char *
-essayTabPosterFunc(int *nbPosterData) 
+testTabPosterFunc(int *nbPosterData) 
 {
     POSTER_LIST *p;
     char *msg = NULL;
     STR_REF_LIST *d;
 
     *nbPosterData = 0;
-    bufcat(&msg, "\nstatic STATUS (*%sEssayPosterShowFuncTab[])() = {\n",
+    bufcat(&msg, "\nstatic STATUS (*%sTestPosterShowFuncTab[])() = {\n",
 	   module->name); 
 
     for (p = posters; p != NULL; p = p->next) {
@@ -193,13 +193,13 @@ essayTabPosterFunc(int *nbPosterData)
 }
 
 static char *
-essayTabPosterName(void) 
+testTabPosterName(void) 
 {
     POSTER_LIST *p;
     char *msg = NULL;
     STR_REF_LIST *d;
 
-    bufcat(&msg, "\nstatic char *%sEssayPosterNameTab[] = {\n",
+    bufcat(&msg, "\nstatic char *%sTestPosterNameTab[] = {\n",
 	   module->name); 
 
     if (posters == NULL)
@@ -227,7 +227,7 @@ essayTabPosterName(void)
 }
 
 int 
-essayGen(FILE *out)
+testGen(FILE *out)
 {
     RQST_LIST *l;
     RQST_STR *r;
@@ -235,9 +235,9 @@ essayGen(FILE *out)
     int nbPosters;
     char *decla=NULL, *scanOrPrint=NULL;
     
-    /* La tache d'essay */
+    /* La tache d'test */
     script_open(out);
-    subst_begin(out, PROTO_ESSAY);
+    subst_begin(out, PROTO_TEST);
     
     /* nom du module */
     print_sed_subst(out, "module", module->name);
@@ -245,20 +245,20 @@ essayGen(FILE *out)
     /* Nombre de requetes */
     print_sed_subst(out, "nbRequest", "%d", nbRequest);
     /* tableau des fonctions d'essai */
-    p = essayTabRequestFunc();
+    p = testTabRequestFunc();
     print_sed_subst(out, "requestFuncTabDeclare", p);
     free(p);
     /* tableau des noms des fonctions */
-    p = essayTabRequestName();
+    p = testTabRequestName();
     print_sed_subst(out, "requestNameTabDeclare", p);
     free(p);
     /* tableaux des fonctions des posters */
-    p = essayTabPosterFunc(&nbPosters);
+    p = testTabPosterFunc(&nbPosters);
     print_sed_subst(out, "posterShowFuncTabDeclare", p);
     free(p);
     print_sed_subst(out, "nbPosterData", "%d", nbPosters);
     /* tableaux des noms des donnees des posters */
-    p = essayTabPosterName();
+    p = testTabPosterName();
     print_sed_subst(out, "posterNameTabDeclare", p);
     free(p);
 
@@ -271,11 +271,11 @@ essayGen(FILE *out)
 
 	/* EXEC or INIT requests */
 	if (r->type == EXEC || r->type == INIT)
-	  subst_begin(out, PROTO_ESSAY_EXEC_RQST);
+	  subst_begin(out, PROTO_TEST_EXEC_RQST);
 
 	/* CONTROL requests */
 	else 
-	  subst_begin(out, PROTO_ESSAY_CNTRL_RQST);
+	  subst_begin(out, PROTO_TEST_CNTRL_RQST);
 
 	print_sed_subst(out, "module", module->name);
 	print_sed_subst(out, "MODULE", module->NAME);
@@ -284,7 +284,7 @@ essayGen(FILE *out)
 
 	/* Saisie des paramètres */
 	if (r->input != NULL) {
-	    essayMakeInput(r, &decla, &scanOrPrint);
+	    testMakeInput(r, &decla, &scanOrPrint);
 	    print_sed_subst(out, "inputDeclarations", "%s", decla);
 	    print_sed_subst(out, "inputScan", "%s", scanOrPrint);
 	    free(decla); decla = NULL;
@@ -296,7 +296,7 @@ essayGen(FILE *out)
 
 	/* Affichage donnée résultat */
 	if (r->output != NULL) {
-	    essayMakeOutput(r, &decla, &scanOrPrint);
+	    testMakeOutput(r, &decla, &scanOrPrint);
 	    print_sed_subst(out, "outputDeclarations", "%s", decla);
 	    print_sed_subst(out, "outputPrint", "%s", scanOrPrint);
 	    free(decla); decla = NULL;
@@ -309,13 +309,13 @@ essayGen(FILE *out)
     } /* for */
 
     
-    script_close(out, "server/%sEssay.c", module->name);
+    script_close(out, "server/%sTest.c", module->name);
     
     return(0);
 }
 
 static void
-essayMakeOutput(RQST_STR *r, char **decla, char **scanOrPrint)
+testMakeOutput(RQST_STR *r, char **decla, char **scanOrPrint)
 {
   int i, newline, nDim, *dims;
   char *type=NULL;
@@ -332,14 +332,14 @@ essayMakeOutput(RQST_STR *r, char **decla, char **scanOrPrint)
   dcl_nom_decl(dcl, &type, &var);
   if (nDim==0) {
     bufcat(decla, "int *outputDims = NULL;");
-    bufcat(&arg, "(%s *)ESSAY_RQST_OUTPUT(essayId,rqstNum)", type);
+    bufcat(&arg, "(%s *)TEST_RQST_OUTPUT(testId,rqstNum)", type);
   }
   else {
     bufcat(decla, "  int outputDims[%d] = {%d", nDim, dims[0]);
     for (i=1;i<nDim;i++) 
       bufcat(decla, ",%d", dims[i]);
     bufcat(decla, "};");
-    bufcat(&arg, "(%s *)ESSAY_RQST_OUTPUT(essayId,rqstNum)", 
+    bufcat(&arg, "(%s *)TEST_RQST_OUTPUT(testId,rqstNum)", 
 	   nom_type(dcl->type));
   }
 
@@ -357,7 +357,7 @@ essayMakeOutput(RQST_STR *r, char **decla, char **scanOrPrint)
 }
 
 static void
-essayMakeInput(RQST_STR *r, char **decla, char **scanOrPrint)
+testMakeInput(RQST_STR *r, char **decla, char **scanOrPrint)
 {
   int i, newline, nDim, *dims;
   char *type=NULL;
@@ -375,7 +375,7 @@ essayMakeInput(RQST_STR *r, char **decla, char **scanOrPrint)
 
   if (nDim==0) {
     bufcat(decla, "int *inputDims = NULL;");
-    bufcat(&arg, "(%s *)ESSAY_RQST_INPUT(essayId,rqstNum)", type);
+    bufcat(&arg, "(%s *)TEST_RQST_INPUT(testId,rqstNum)", type);
   }
 
   else {
@@ -383,7 +383,7 @@ essayMakeInput(RQST_STR *r, char **decla, char **scanOrPrint)
     for (i=1;i<nDim;i++) 
       bufcat(decla, ",%d", dims[i]);
     bufcat(decla, "};");
-    bufcat(&arg, "(%s *)ESSAY_RQST_INPUT(essayId,rqstNum)", nom_type(dcl->type));
+    bufcat(&arg, "(%s *)TEST_RQST_INPUT(testId,rqstNum)", nom_type(dcl->type));
 
     if (dcl->flags & STRING) {
       free(type); type = NULL;
@@ -395,9 +395,9 @@ essayMakeInput(RQST_STR *r, char **decla, char **scanOrPrint)
     }
   }
 
-  essayMakeGetInput(r, var, scanOrPrint);
+  testMakeGetInput(r, var, scanOrPrint);
 
-  bufcat(scanOrPrint, "printf (\"** Enter %s %s%s\");\n"
+  bufcat(scanOrPrint, "printf (\"-- Enter %s %s%s\");\n"
 	 "    scan_%s(stdin, stdout, %s, %d, %d, "
 	 "inputDims);",
 	 type, var, newline ? ":\\\\n" : ": ",
@@ -409,7 +409,7 @@ essayMakeInput(RQST_STR *r, char **decla, char **scanOrPrint)
 }
 
 static void
-essayMakeGetInput(RQST_STR *rqst, char *varName, char **scanOrPrint)
+testMakeGetInput(RQST_STR *rqst, char *varName, char **scanOrPrint)
 {
   RQST_LIST *l;
   RQST_STR *r;
@@ -454,7 +454,7 @@ essayMakeGetInput(RQST_STR *rqst, char *varName, char **scanOrPrint)
 	  
 	  bufcat(&funcget, 
 		 "    case %d:\n"
-		 "    if (!essaySendAndGetInput(essayId, %s_%s_RQST, acti, ESSAY_RQST_INPUT(essayId,rqstNum)))\n"
+		 "    if (!testSendAndGetInput(testId, %s_%s_RQST, acti, TEST_RQST_INPUT(testId,rqstNum)))\n"
 		 "       return FALSE;\n"
 		 "    break;\n",
 		 i++, module->NAME, r->NAME);
@@ -482,7 +482,7 @@ essayMakeGetInput(RQST_STR *rqst, char *varName, char **scanOrPrint)
 	  n->pointeur--;
 	  bufcat(&funcget, 
 		 "    case %d:\n"
-		 "    %s%s%sPosterRead((%s *)ESSAY_RQST_INPUT(essayId,rqstNum));\n"
+		 "    %s%s%sPosterRead((%s *)TEST_RQST_INPUT(testId,rqstNum));\n"
 		 "    break;\n",
 		 i++, module->name, p->name, lm->str_ref->dcl_nom->name,
 		 type);
@@ -500,8 +500,8 @@ essayMakeGetInput(RQST_STR *rqst, char *varName, char **scanOrPrint)
   if (funcnames != NULL) {
     bufcat(scanOrPrint, 
 	   "  const char *menu[] = {\"%s\", %s};\n"
-	   "  if(essayPrintGetInputMenu(essayId, %d, menu, rqstNum)) {\n"
-	   "  switch(ESSAY_RQST_GET_CMD(essayId,rqstNum)) {\n"
+	   "  if(testPrintGetInputMenu(testId, %d, menu, rqstNum)) {\n"
+	   "  switch(TEST_RQST_GET_CMD(testId,rqstNum)) {\n"
 	   "%s"
 	   "    default:\n"
 	   "    break;\n   }\n  }\n"

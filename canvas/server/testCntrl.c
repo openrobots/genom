@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -28,9 +28,22 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#ifndef H_ESSAYGENPROTO
-#define H_ESSAYGENPROTO
 
-extern int essayGen ( FILE *out );
+/**
+ **  Emission et reception de la requete de controle $module$Test$request$
+ **/
 
-#endif /* H_ESSAYGENPROTO */
+static BOOL $module$Test$request$ (TEST_STR *testId, int rqstNum, 
+				    int acti, BOOL silent)
+
+{
+  $inputDeclarations$
+  $outputDeclarations$
+  $inputScan$
+  if (!testSendAndRcvCntrlRqst(testId, rqstNum, acti, silent))
+     return FALSE;
+
+  $outputPrint$
+  return TRUE;
+}
+

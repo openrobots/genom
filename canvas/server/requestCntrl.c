@@ -2,7 +2,7 @@
 
 $commentbegin$
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -94,7 +94,7 @@ static void $module$Cntrl$request$ (SERV_ID servId, int rqstId)
 #endif
     if (status != OK) {
       if (bilan == OK)
-	bilan =  S_$module$Std_CONTROL_CODEL_ERROR;
+	bilan =  S_stdGenom_$module$_CONTROL_CODEL_ERROR;
       if (csServReplySend (servId, rqstId, FINAL_REPLY, bilan, 
 			   (void *) NULL, 0, (FUNCPTR) NULL) != OK)
 	$module$CntrlTaskSuspend (TRUE);
