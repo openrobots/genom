@@ -1,7 +1,9 @@
 /*	$LAAS$ */
 
+/* --- FILE GENERATED WITH GENOM, DO NOT EDIT BY HAND ------------------ */
+
 /* 
- * Copyright (c) 1999-2003 LAAS/CNRS
+ * Copyright (c) 1999-2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -259,7 +261,7 @@ csMboxInitCb(ClientData clientData, Tcl_Interp *interp,
    if (csMboxInit(Tcl_GetStringFromObj(argv[1], NULL), 
 		  rcvSize, replySize) != OK) {
       Tcl_SetObjResult(interp, Tcl_NewStringObj(
-	 h2getMsgErrno(errnoGet(), strerr, 64), -1));
+	 h2getErrMsg(errnoGet(), strerr, 64), -1));
       return TCL_ERROR;
    }
 
@@ -293,7 +295,7 @@ csMboxEndCb(ClientData clientData, Tcl_Interp *interp,
 
    if (csMboxEnd() != OK) {
       Tcl_SetObjResult(interp, Tcl_NewStringObj(
-	 h2getMsgErrno(errnoGet(), strerr, 64), -1));
+	 h2getErrMsg(errnoGet(), strerr, 64), -1));
       return(TCL_ERROR);
    }
 
@@ -327,7 +329,7 @@ csMboxWaitCb(ClientData clientData, Tcl_Interp *interp,
 
    if ((mask = csMboxWait(timeout, REPLY_MBOX)) == ERROR) {
       Tcl_SetObjResult(interp, Tcl_NewStringObj(
-	 h2getMsgErrno(errnoGet(), strerr, 64), -1));
+	 h2getErrMsg(errnoGet(), strerr, 64), -1));
       return TCL_ERROR;
    }
 

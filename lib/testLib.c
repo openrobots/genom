@@ -813,7 +813,7 @@ testRcvReply(TEST_STR *eid, int acti, int block)
 			    TEST_RQST_OUTPUT_SIZE(eid,rqstNum),
 			    (FUNCPTR) NULL))
     {
-      char string[68];
+      char str[68];
       /* On attend toujours */
     case WAITING_FINAL_REPLY:
       if (block == BLOCK_ON_INTERMED_REPLY)
@@ -828,9 +828,9 @@ testRcvReply(TEST_STR *eid, int acti, int block)
       bilan = errnoGet();
       if (H2_MODULE_ERR_FLAG(bilan))
 	printf("Final reply:\n        %s\n", 
-	       h2getMsgErrno(bilan, string, 68));
+	       h2getErrMsg(bilan, str, 68));
       else 
-	printf("Final reply ERROR:\n        %s\n", h2getMsgErrno(bilan, string, 68));
+	printf("Final reply ERROR:\n        %s\n", h2getErrMsg(bilan, str, 68));
       break;
     case FINAL_REPLY_TIMEOUT:
       printf ("Final reply: TIMEOUT\n");

@@ -19,7 +19,7 @@
 #include "genom/modules.h"
 #include "genom/genomError.h"
 
-const H2_ERROR genomH2errMsgs[] = GENOM_H2_ERR_MSGS;
+static const H2_ERROR const genomH2errMsgs[] = GENOM_H2_ERR_MSGS;
 
 /* ----------------------------------------------------------------------
  *
