@@ -54,8 +54,6 @@ $listStdFailures$
 #define $MODULE$_H2_ERR_MSGS {\$listTabFailures$
 }
 
-extern const H2_ERROR $module$H2errMsgs[]; /* it is $MODULE$_H2_ERR_MSGS */
-
 int $module$RecordH2errMsgs();
 
 

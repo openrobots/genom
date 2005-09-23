@@ -1,5 +1,7 @@
 /*	$LAAS$ */
 
+/* --- FILE GENERATED WITH GENOM, DO NOT EDIT BY HAND ------------------ */
+
 /* 
  * Copyright (c) 2003-2005 LAAS/CNRS
  * All rights reserved.
@@ -105,7 +107,7 @@ $module$ActivitiesXML (FILE *f, $MODULE$_CNTRL_STR *sdic)
   ACTIVITY_STATE status;
   int bilan;
   int rqst;
-  char string[64];
+  char strerr[64];
 
   for (i=0; i<MAX_ACTIVITIES; i++) {
     status = M_ACTIVITY_STATUS(sdic,i);
@@ -144,7 +146,7 @@ $module$ActivitiesXML (FILE *f, $MODULE$_CNTRL_STR *sdic)
       xmlBalise("status", TERMINATE_BALISE, f, 0);
       
       xmlBalise("errno", BEGIN_BALISE, f, 2);
-      fprintf(f, "%s", h2getMsgErrno(bilan, string, 64));
+      fprintf(f, "%s", h2getErrMsg(bilan, strerr, 64));
       xmlBalise("errno", TERMINATE_BALISE, f, 0);
 
       xmlBalise("activity", TERMINATE_BALISE, f, 1);
@@ -165,7 +167,7 @@ STATUS $module$CntrlPosterXML (FILE *f)
 {
   $MODULE$_CNTRL_STR *sdic;
   int i;
-  char string[64];
+  char strerr[64];
 
   /* Read the control IDS */
   sdic = ($MODULE$_CNTRL_STR *)malloc(sizeof($MODULE$_CNTRL_STR));
@@ -194,7 +196,7 @@ STATUS $module$CntrlPosterXML (FILE *f)
   xmlBalise("status", TERMINATE_BALISE, f, 0);
   if (M_CNTRL_TASK_STATUS(sdic) != OK) {
     xmlBalise("errno", BEGIN_BALISE, f, 2);
-    fprintf(f, "%s", h2getMsgErrno(M_CNTRL_TASK_BILAN(sdic), string, 64));
+    fprintf(f, "%s", h2getErrMsg(M_CNTRL_TASK_BILAN(sdic), strerr, 64));
     xmlBalise("errno", TERMINATE_BALISE, f, 0);
   }
   xmlBalise("task", TERMINATE_BALISE, f, 1);
@@ -212,7 +214,7 @@ STATUS $module$CntrlPosterXML (FILE *f)
     xmlBalise("status", TERMINATE_BALISE, f, 0);
     if (M_EXEC_TASK_STATUS(sdic, i) != OK) {
       xmlBalise("errno", BEGIN_BALISE, f, 2);
-      fprintf(f, "%s", h2getMsgErrno(M_EXEC_TASK_BILAN(sdic,i), string, 64));
+      fprintf(f, "%s", h2getErrMsg(M_EXEC_TASK_BILAN(sdic,i), strerr, 64));
       xmlBalise("errno", TERMINATE_BALISE, f, 0);
     }
 

@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -29,8 +29,8 @@
  * DAMAGE.
  */
 
-/*------------------  Fichier généré automatiquement ------------------*/
-/*------------------  Ne pas éditer manuellement !!! ------------------*/
+/*--------------  file automaticaly generated with GenoM -------------*/
+/*-----------------------  DO NOT EDIT BY HAND -----------------------*/
  
 /****************************************************************************/
 /*   LABORATOIRE D'AUTOMATIQUE ET D'ANALYSE DE SYSTEMES - LAAS / CNRS       */
@@ -74,7 +74,7 @@ static void $module$ActivityShow ($MODULE$_CNTRL_STR *sdic);
 
 STATUS $module$CntrlPosterShow ()
 {
-  char string[64];
+  char strmsg[64];
   $MODULE$_CNTRL_STR *sdic;
   int i;
 
@@ -97,7 +97,7 @@ STATUS $module$CntrlPosterShow ()
   /* Tache de controle */
   printf (" Control Task        %-5s                               %s\n",  
 	  M_CNTRL_TASK_STATUS(sdic)==OK ? "OK":"ERROR",
-	  h2getMsgErrno(M_CNTRL_TASK_BILAN(sdic), string, 64));
+	  h2getErrMsg(M_CNTRL_TASK_BILAN(sdic), strmsg, 64));
   
   /* Taches d'execution */
   for (i=0; i<$MODULE$_NB_EXEC_TASK; i++) {
@@ -113,7 +113,7 @@ STATUS $module$CntrlPosterShow ()
       printf ("    %3lums ", M_EXEC_TASK_ON_PERIOD(sdic,i));
       printf ("(max %lu)        ", M_EXEC_TASK_MAX_PERIOD(sdic,i));      
     }
-    printf ("\t %s\n", h2getMsgErrno(M_EXEC_TASK_BILAN(sdic,i), string, 64));
+    printf ("\t %s\n", h2getErrMsg(M_EXEC_TASK_BILAN(sdic,i), strmsg, 64));
 
   }
   printf ("\n");
@@ -158,7 +158,7 @@ static void $module$ActivityShow ($MODULE$_CNTRL_STR *sdic)
   ACTIVITY_STATE status;
   int bilan;
   int rqst;
-  char string[64];
+  char strmsg[64];
   
   /*  printf (" ACTIVITY  REQUEST         TASK        FROM -> TO    BILAN\n");*/
   printf ("-- ACTIVITIES\n");
@@ -196,7 +196,7 @@ static void $module$ActivityShow ($MODULE$_CNTRL_STR *sdic)
 	      evn == NO_EVENT ?
 	      h2GetEvnStateString(status) : h2GetEvnStateString(evn), 
 
-	      h2getMsgErrno(bilan, string, 64),
+	      h2getErrMsg(bilan, strmsg, 64),
 	      
 	      status == ETHER ? ")" : "");
     }

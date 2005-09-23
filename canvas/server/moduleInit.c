@@ -1,11 +1,11 @@
 /*	$LAAS$ */
 
-/* --- GENERATED FILE, DO NOT EDIT BY HAND --------------------------- */
+/* --- FILE GENERATED WITH GENOM, DO NOT EDIT BY HAND ------------------ */
 
 /* 
- * Copyright (c) 2004 
+ * Copyright (c) 2004-2005
  *      Autonomous Systems Lab, Swiss Federal Institute of Technology.
- * Copyright (c) 1993-2004 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -119,7 +119,7 @@ $module$TaskInit()
   char *home;
   struct utsname uts;
 #endif /* PID_FILE */
-  char string[64];
+  char strerr[64];
 
   /*
    * Create internal data structures
@@ -230,7 +230,7 @@ $module$TaskInit()
     /* check task status */
     if (EXEC_TASK_STATUS(i) == ERROR) {
        logMsg("$module$TaskInit: Exec task %s failed : %s\n", 
-	      $module$ExecTaskTab[i].name, h2getMsgErrno(EXEC_TASK_BILAN(i), string, 64));
+	      $module$ExecTaskTab[i].name, h2getErrMsg(EXEC_TASK_BILAN(i), strerr, 64));
        errnoSet(EXEC_TASK_BILAN(i));
        goto error;
     }

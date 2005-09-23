@@ -1,6 +1,6 @@
 #include "$module$Error.h"
 
-const H2_ERROR $module$H2errMsgs[] = $MODULE$_H2_ERR_MSGS;
+static const H2_ERROR const $module$H2errMsgs[] = $MODULE$_H2_ERR_MSGS;
 
 int $module$RecordH2errMsgs()
 {
@@ -14,7 +14,7 @@ int $module$RecordH2errMsgs()
     return 0;
 
   /* others modules errros */
-  $h2recordOtherModules$;
+  $h2recordOtherModules$
 
   return 1;
 }
