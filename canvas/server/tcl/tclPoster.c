@@ -1,5 +1,7 @@
 /*	$LAAS$ */
 
+/* --- FILE GENERATED WITH GENOM, DO NOT EDIT BY HAND ------------------ */
+
 /* 
  * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
@@ -48,12 +50,12 @@ $module$$posterFullName$PosterTclRead(ClientData data, Tcl_Interp *interp,
    TEST_BAD_USAGE(objc != 1);
 		 
   if ((_posterData = malloc(sizeof($dataType$))) == NULL) {
-      Tcl_SetResult(interp, h2getMsgErrno(errnoGet(), strerr, 64), TCL_VOLATILE);
+      Tcl_SetResult(interp, h2getErrMsg(errnoGet(), strerr, 64), TCL_VOLATILE);
       return TCL_ERROR;
   }
 
    if ($module$$posterFullName$PosterRead(_posterData) != OK) {
-      Tcl_SetResult(interp, h2getMsgErrno(errnoGet(), strerr, 64), TCL_VOLATILE);
+      Tcl_SetResult(interp, h2getErrMsg(errnoGet(), strerr, 64), TCL_VOLATILE);
       free(_posterData);
       return TCL_ERROR;
    }

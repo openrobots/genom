@@ -1,7 +1,9 @@
 /*	$LAAS$ */
 
+/* --- FILE GENERATED WITH GENOM, DO NOT EDIT BY HAND ------------------ */
+
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -60,7 +62,7 @@ $parseInput$
 		       $&inputVar,$ $inputSize$,
 		       &rqstId, &bilan) == ERROR) {
 
-     Tcl_SetResult(interp, h2getMsgErrno(bilan, strerr, 64), TCL_VOLATILE);
+     Tcl_SetResult(interp, h2getErrMsg(bilan, strerr, 64), TCL_VOLATILE);
       return TCL_ERROR;
    }
     
@@ -108,7 +110,7 @@ $module$$requestName$ReplyRcvCb(ClientData data, Tcl_Interp *interp,
 	 break;
 
       default:
-	 Tcl_SetResult(interp, h2getMsgErrno(bilan, strerr, 64), TCL_VOLATILE);
+	 Tcl_SetResult(interp, h2getErrMsg(bilan, strerr, 64), TCL_VOLATILE);
 	 return TCL_ERROR;
    }
 
@@ -125,7 +127,7 @@ $module$$requestName$ReplyRcvCb(ClientData data, Tcl_Interp *interp,
    else
       ret = Tcl_ListObjAppendElement(interp, my_own_private_unique_result,
 				     Tcl_NewStringObj(
-					h2getMsgErrno(bilan, strerr, 64), -1));
+					h2getErrMsg(bilan, strerr, 64), -1));
    if (ret != TCL_OK) return TCL_ERROR;
 
 $output$
