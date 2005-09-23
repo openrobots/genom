@@ -66,7 +66,6 @@
   {"BAD_BLOCK_TYPE",                S_stdGenom_BAD_BLOCK_TYPE} \
 }
 
-extern const H2_ERROR genomH2errMsgs[]; /* it is GENOM_H2_ERR_MSGS */
 extern int genomRecordH2errMsgs();
 
 #endif

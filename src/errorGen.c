@@ -45,6 +45,9 @@ __RCSID("$LAAS$");
  *** Ge'ne'ration liste des erreurs
  ***/
 
+static const H2_ERROR const genomH2errMsgs[] = GENOM_H2_ERR_MSGS;
+
+
 static int id_member(ID_LIST *m, ID_LIST *l)
 {
     for (; l != NULL; l = l->next) {
@@ -54,9 +57,6 @@ static int id_member(ID_LIST *m, ID_LIST *l)
     }
     return(0);
 }
-
-const H2_ERROR genomH2errMsgs[] = GENOM_H2_ERR_MSGS;
-
 
 int errorGen(FILE *out)
 {
