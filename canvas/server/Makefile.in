@@ -82,7 +82,6 @@ client_includes = \
 	server/$module$ScopeLib.h \
 	server/$module$ScanProto.h \
 	server/$module$Scan.h \
-	server/$module$Reports.h \
 	server/$module$PrintXMLProto.h \
 	server/$module$PrintXML.h \
 	server/$module$PrintProto.h \
