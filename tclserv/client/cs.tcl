@@ -44,6 +44,10 @@ namespace eval cs {
     namespace export abort
     namespace export kill
 
+    if [catch {package require el::tools}] {
+	package require pm::tools
+    }
+
     # Generic function to send a request --------------------------------
 
     proc rqstSend { module name docString usage argNumber inputInfo argList } {
