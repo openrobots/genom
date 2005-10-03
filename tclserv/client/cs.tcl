@@ -44,8 +44,10 @@ namespace eval cs {
     namespace export abort
     namespace export kill
 
-    if [catch {package require el::tools}] {
+    if [catch {package present el::base}] {
 	package require pm::tools
+    } else {
+	package require el::tools
     }
 
     # Generic function to send a request --------------------------------
