@@ -158,8 +158,14 @@ namespace eval server {
 
 
 	# try to compute a prompt, depending on the client's machine
-	set ::tcl_prompt1 "format \"tcl\\\[${server}\\\]-> \""
-
+	if [catch {package present el::base}] {
+	    # standard Tcl interpeter
+	    set ::tcl_prompt1 "puts -nonewline \"tcl\\\[${server}\\\]-> \""
+	} else {
+	    # eltclsh / elwish
+	    set ::el::prompt1 "format \"tcl\\\[${server}\\\]-> \""
+        }
+	    
 	# Damned, it worked!
 	return "connected to $server"
     }
