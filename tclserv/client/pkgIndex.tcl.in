@@ -38,3 +38,11 @@ package ifneeded genom @genomversion@ {
     source [file join $canvasdir tcl load.tcl]
     unset canvasdir
 }
+
+package ifneeded pm::tools @genomversion@ {
+    package provide pm::tools @genomversion@
+
+    set dir @canvasdir@
+    source [file join  $dir tcl pmtools.tcl]
+    unset dir
+}
