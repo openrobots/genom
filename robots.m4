@@ -401,6 +401,15 @@ AC_DEFUN([ROBOT_LIB_TCL],
       fi
    done
    if test "x$ac_tcl_includes" = "x"; then
+      echo
+      echo "+--------------------------------------------------+"
+      echo "| NOTE for users at LAAS:                          |"
+      echo "|  If tclConfig.sh was found under /usr/lib/ but   |"
+      echo "|  the Tcl headers could not be found, then you're |"
+      echo "|  probably under Fedore and should use            |"
+      echo "|      --with-tcl=/usr/local/tcl-8.4/lib           |"
+      echo "|  or something similar.                           |"
+      echo "+--------------------------------------------------+"
       AC_MSG_ERROR([not found (fatal)])
    else
 
