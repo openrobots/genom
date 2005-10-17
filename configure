@@ -21036,6 +21036,7 @@ echo $ECHO_N "checking for tcl headers... $ECHO_C" >&6
       $TCL_PREFIX/include/tcl$TCL_VERSION       \
       $TCL_PREFIX/include                       \
       /usr/local/include/tcl$TCL_VERSION        \
+      /usr/local/tcl-$TCL_VERSION/include        \
       /usr/local/include                        \
       /usr/include                              \
       /Library/Frameworks/Tcl.framework/Headers \
