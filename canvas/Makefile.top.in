@@ -56,7 +56,7 @@ clean:
 .PHONY: distclean
 distclean:
 	$(MAKE) $@-$(OSAPI)
-	rm -f Makefile libtool config.log config.status $module$.pc $module$-oprs.pc local.mk config.mk
+	rm -f Makefile libtool config.log config.status $pkgname$.pc $pkgname$-oprs.pc local.mk config.mk
 
 
 # GenoM flags
@@ -93,8 +93,8 @@ regen: standalone-regen
 	@./config.status
 
 # --- pkgconfig ---------------------------------------------------------
-ALL_PKGCONFIG := $module$.pc $(addsuffix .pc,@EXTRA_PKGCONFIG@)
-$genOpenprs$ALL_PKGCONFIG += $module$-oprs.pc
+ALL_PKGCONFIG := $pkgname$.pc $(addsuffix .pc,@EXTRA_PKGCONFIG@)
+$genOpenprs$ALL_PKGCONFIG += $pkgname$-oprs.pc
 install:: $(ALL_PKGCONFIG)
 	$(MKINSTALLDIRS) $(libdir)/pkgconfig
 	$(INSTALL) $(ALL_PKGCONFIG) $(libdir)/pkgconfig

@@ -130,7 +130,7 @@ AC_CONFIG_FILES(
 	[Makefile]
 	[codels/Makefile]
 	[server/Makefile]
-	[$module$.pc:autoconf/$module$.pc.in]
+	[$pkgname$.pc:autoconf/$pkgname$.pc.in]
 	[local.mk]
 )
 

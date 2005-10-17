@@ -106,6 +106,38 @@ static void defineExternOprsPackage(char** conf_in, char** conf_mk_in, char cons
 }
 #endif
 
+/*----------------------------------------------------------------------*/
+/*
+ * format a module name into a pkgconfig name
+ */
+static char *
+pkgconfigName(char *name)
+{
+	size_t size = strlen(name)+1;
+	char *buf = malloc(size);
+#if 0
+	/* all lowercase, no dashes */
+	char *tmp;
+	int i;
+
+	if (buf == NULL)
+		return NULL;
+	for (i = 0, tmp = buf; name[i] != '\0'; i++) {
+		if (name[i] != '-')
+			*tmp++ = tolower(name[i]);
+	} /* for */
+	*tmp = '\0';
+#else
+	/* This version doesn't touch the package name. */
+	if (buf == NULL)
+		return NULL;
+	strncpy(buf, name,  size);
+#endif
+	return buf;
+}
+
+/*----------------------------------------------------------------------*/
+
 int
 configureGen(FILE *out,
 	     const char *codelsDir, const char *cmdLine,
@@ -118,7 +150,7 @@ configureGen(FILE *out,
 
    char *pkg_conf_in, *pkg_conf_mk;
    char *genomIncludes, *serverLibs, *codel_files;
-   char *at_sign;
+   char *at_sign, *pkgname;
 
    /* --- `configure' scripts ---------------------------------------- */
 
@@ -167,10 +199,12 @@ configureGen(FILE *out,
    }
 
    /* --- main makefile ---------------------------------------------- */
+   pkgname = pkgconfigName(module->name);
    script_open(out);
    subst_begin(out, PROTO_MAKEFILE_TOP);
 
    print_sed_subst(out, "module", module->name);
+   print_sed_subst(out, "pkgname", pkgname);
    print_sed_subst(out, "codelsDir", codelsDir);
    print_sed_subst(out, "genTcl", genTcl ? "" : "#");
    print_sed_subst(out, "genOpenprs", genOpenprs ? "":"#");
@@ -222,7 +256,7 @@ configureGen(FILE *out,
        defineExternOprsPackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 #endif
 
-   /* --- configure.ac.begin.in --------------------------------------------------- */
+   /* --- configure.ac --------------------------------------------------- */
    script_open(out);
    subst_begin(out, PROTO_CONFIGURE_AC);
    print_sed_subst(out, "version",   module->version);
@@ -238,6 +272,7 @@ configureGen(FILE *out,
    }
    print_sed_subst(out, "use_cxx",   module->use_cxx ? "1" : "0" );
    print_sed_subst(out, "module",    module->name);
+   print_sed_subst(out, "pkgname",   pkgname);
    print_sed_subst(out, "genTcl",     genTcl?     "yes":"no");
    print_sed_subst(out, "genOpenprs", genOpenprs? "yes":"no");
    print_sed_subst(out, "genomBin",  genomBin);
@@ -252,6 +287,7 @@ configureGen(FILE *out,
    script_open(out);
    subst_begin(out, PROTO_CONFIG_MK);
    print_sed_subst(out, "module",    module->name);
+   print_sed_subst(out, "pkgname",   pkgname);
    print_sed_subst(out, "genomBin",  genomBin);
    print_sed_subst(out, "codelsDir", codelsDir);
 
@@ -279,6 +315,7 @@ configureGen(FILE *out,
 
    subst_end(out);
    script_close(out, PROTO_CONFIG_MK);
+   free(pkgname);
 
    return 0;
 }
@@ -344,12 +381,17 @@ configureServerGen(FILE *out, char const* cmdLine,
     return 0;
 }
 /*----------------------------------------------------------------------*/
-
 int pkgconfigGen(FILE *out, int genOpenprs)
 {
     char* require = 0;
     char* require2 = 0;
     ID_LIST* ln, *ln2;
+    char *pkgname;
+
+    pkgname = pkgconfigName(module->name);
+    if (pkgname == NULL) {
+	    return -1;
+    }
 
     script_open(out);
     subst_begin(out, PROTO_PKGCONFIG_IN);
@@ -369,10 +411,11 @@ int pkgconfigGen(FILE *out, int genOpenprs)
     output(out, "require", require);
 
     print_sed_subst(out, "module", module->name);
+    print_sed_subst(out, "pkgname", pkgname);
     print_sed_subst(out, "genomMinor", genomMinor);
     print_sed_subst(out, "genomMajor", genomMajor);
     subst_end(out);
-    script_close(out, "autoconf/%s.pc.in", module->name);
+    script_close(out, "autoconf/%s.pc.in", pkgname);
 
     /* package -oprs.pc.in for prs */
     if (genOpenprs) {
@@ -396,11 +439,13 @@ int pkgconfigGen(FILE *out, int genOpenprs)
       output(out, "require", require2);
       
       print_sed_subst(out, "module", module->name);
+      print_sed_subst(out, "pkgname", pkgname);
       print_sed_subst(out, "genomMinor", genomMinor);
       print_sed_subst(out, "genomMajor", genomMajor);
       subst_end(out);
-      script_close(out, "autoconf/%s-oprs.pc.in", module->name);
+      script_close(out, "autoconf/%s-oprs.pc.in", pkgname);
     } /* -oprs.pc.in */
-
+    
+    free(pkgname);
     return 0;
 }
