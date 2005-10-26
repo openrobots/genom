@@ -127,15 +127,15 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 	if (verbose)
 	{
 	    int i;
-	    for (i = 0; i < option_count; ++i)
-		bufcat(&cflags, cpp_options[first_option + i]);
-	    
-	    if (cflags)
-		fprintf(stderr, "pkg-config: found '%s' for package %s\n", cflags, package);
+	    if (option_count > 0) 
+		    for (i = 0; i < option_count; ++i) {
+			    fprintf(stderr, 
+				"pkg-config: found '%s' for package %s\n", 
+				cpp_options[first_option + i], package);
+		    }
 	    else
-		fprintf(stderr, "pkg-config: no cflags needed for package %s\n", package);
-
-	    free(cflags);
+		fprintf(stderr, 
+		    "pkg-config: no cflags needed for package %s\n", package);
 	}
 	return option_count;
     }
@@ -234,7 +234,7 @@ callCpp(char *nomFic, char *cppOptions[], int ignore_error)
 	if (verbose)
 	{
 	    for (display = cppArg + 1; *display; ++display)
-		fprintf(stderr, "genom:   %s\n", *display);
+		fprintf(stderr, "genom:   '%s'\n", *display);
 	}
 
 	execvp(cppArg[0], cppArg);
