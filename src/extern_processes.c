@@ -114,6 +114,9 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 	/* Split cflags at \s+- and add the fields in cpp_options */
 	if (!cflags)
 	    return 0;
+	/* XXX pkgconfig < 0.15 leaves a space in front of cflags 
+	 * this causes problems here. This is why pkg-config >= 0.15 
+	 * is required */
 
 	option_count = split(cflags, " -", 1, cpp_options + first_option, MAX_CPP_OPT - first_option);
 	if (option_count == -1)
