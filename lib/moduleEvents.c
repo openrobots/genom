@@ -37,6 +37,7 @@ __RCSID("$LAAS$");
  *** pour la trace du comportement des modules
  ***/
 
+#include "genom/modules.h"
 #include "genom/moduleEvents.h"
 
 /*----------------------------------------------------------------------*/
