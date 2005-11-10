@@ -46,13 +46,13 @@ typedef enum MODULE_EVENT_TYPE {
 
 
 typedef struct MODULE_EVENT_STR {
-  unsigned long stamp;	         /* time stamp */
-  unsigned short moduleNum;      /* Module number */
-  unsigned char taskNum;         /* Exec task number */
-  char rqstType;                 /* Request type (-1: no request) */
-  char activityNum;              /* Activity number (-1: permanent activity) */
-  unsigned char eventType;       /* MODULE_EVENT_TYPE */
-  unsigned char activityState;   /* ACTIVITY_STATE */
+  unsigned long     stamp;	   /* time stamp (not used) */
+  unsigned short    moduleNum;     /* Module number */
+  unsigned int      taskNum;       /* Exec task number */
+  int               rqstType;      /* Request type (-1: no request) */
+  int               activityNum;   /* Activity number (-1: permanent activity) */
+  MODULE_EVENT_TYPE eventType;     /* MODULE_EVENT_TYPE */
+  ACTIVITY_STATE    activityState; /* ACTIVITY_STATE */
 } MODULE_EVENT_STR;
 
 
