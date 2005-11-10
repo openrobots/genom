@@ -355,10 +355,12 @@ configureServerGen(FILE *out, char const* cmdLine,
    print_sed_subst(out, "genOpenprs", genOpenprs ? "" : "#");
 
    str = NULL;
-   for (ln = includeFiles; ln != NULL; ln = ln->next) {
+   for (ln = allIncludeFiles; ln != NULL; ln = ln->next) {
      /* Will install only .h files used by .gen file that are located 
 	in the main module directory */
-     if (strstr(ln->name, "..") == NULL && ln->name[0] != '/') {
+     if (strstr(ln->name, "..") == NULL 
+             && ln->name[0] != '/' 
+             && strcmp(ln->name + strlen(ln->name) - 2, ".h") == 0) {
        bufcat(&str, "\t%s \\\\\n", ln->name);
      }
     } /* for */
