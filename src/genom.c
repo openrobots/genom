@@ -279,6 +279,15 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
       case VERSION:
         module->version = av->value.version;
         break;
+      case IFACE_VERSION:
+        if (av->value.iface_version->current < av->value.iface_version->age)
+        {
+            fprintf(stderr, "error: iface_version should have CURRENT >= AGE. Please check Genom manual\n");
+            exit(1);
+        }
+        module->iface_version = av->value.iface_version;
+        
+        break;
       case EMAIL:
         module->email = av->value.email;
         break;

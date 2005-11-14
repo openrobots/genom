@@ -8,6 +8,9 @@ AC_REVISION($LAAS$)
 AC_INIT($module$, $version$, $email$)
 AC_CONFIG_AUX_DIR(autoconf)
 
+ABI_VERSION_INFO=$iface_version$
+AC_SUBST(ABI_VERSION_INFO)
+
 AC_CANONICAL_HOST
 
 dnl --- checks for programs ---------------------------------------------

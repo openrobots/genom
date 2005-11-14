@@ -82,6 +82,10 @@ typedef struct type_str {
     int flags;         /* Voir ci-dessous */
 } TYPE_STR;
 
+typedef struct LIBTOOL_VERSION {
+    int current, revision, age;
+} LIBTOOL_VERSION;
+
 /* Flags des types */
 #define    TYPE_INTERNAL_DATA 0x01 /* Ce type est celui de la SDI */
 #define    TYPE_POSTER        0x02 /* Ce type est celui d'un poster */
@@ -259,6 +263,7 @@ typedef struct {
     ID_LIST *codel_files;
     ID_STR *email;
     ID_STR *version;
+    LIBTOOL_VERSION *iface_version;
     int use_cxx;
 } MODULE_STR;
 
@@ -271,6 +276,7 @@ typedef struct {
 	ID_LIST *codel_files;
         ID_STR *email;
         ID_STR *version;
+        LIBTOOL_VERSION *iface_version;
         int use_cxx;
     } value;
 } MODULE_AV_STR;

@@ -155,6 +155,7 @@ int nCppOptions = 0;
 %union {
     int                  ival;
     double               dval;
+    LIBTOOL_VERSION     *libtool_version;
     ID_LIST 		*idList;
     ID_STR 		*idStr;
     RQST_STR 		*rqstStr;
@@ -187,6 +188,7 @@ int nCppOptions = 0;
 %token <ival> MODULE REQUEST EXEC_TASK IMPORT_TYPE FROM
 %token <ival> INTERNAL_DATA
 %token <ival> VERSION
+%token <ival> IFACE_VERSION
 %token <ival> EMAIL
 %token <ival> USE_CXX
 %token <ival> NUMBER CODEL_FILES
@@ -206,6 +208,7 @@ int nCppOptions = 0;
 
 %type <ival> error 
 
+%type <libtool_version> libtool_version
 %type <idStr> identificateur quoted_string
 %type <idList> quoted_string_list
 %type <ival> expression_constante
@@ -375,6 +378,9 @@ av_module: INTERNAL_DATA ':' indicateur_de_type
     | VERSION ':' quoted_string
         { $$ = STR_ALLOC(MODULE_AV_STR);
           $$->attribut = $1; $$->value.version = $3; }
+    | IFACE_VERSION ':' libtool_version
+        { $$ = STR_ALLOC(MODULE_AV_STR);
+          $$->attribut = $1; $$->value.iface_version = $3; }
     | EMAIL ':' quoted_string
         { $$ = STR_ALLOC(MODULE_AV_STR);
           $$->attribut = $1; $$->value.email = $3; }
@@ -387,6 +393,12 @@ av_module: INTERNAL_DATA ':' indicateur_de_type
     ;
 
 /*----------------------------------------------------------------------*/
+
+libtool_version: expression_constante ':' expression_constante ':' expression_constante
+    { $$ = STR_ALLOC(LIBTOOL_VERSION);
+      $$->current=$1;
+      $$->revision=$3;
+      $$->age=$5; }
 
 declaration_de_requete: REQUEST identificateur attributs_de_requete  
     { $3->name = $2; $$ = $3; }

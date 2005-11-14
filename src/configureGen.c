@@ -151,6 +151,8 @@ configureGen(FILE *out,
    char *pkg_conf_in, *pkg_conf_mk;
    char *genomIncludes, *serverLibs, *codel_files;
    char *at_sign, *pkgname;
+#define VERSION_TO_STR_LENGTH 200
+   char version_to_str[VERSION_TO_STR_LENGTH];
 
    /* --- `configure' scripts ---------------------------------------- */
 
@@ -260,6 +262,15 @@ configureGen(FILE *out,
    script_open(out);
    subst_begin(out, PROTO_CONFIGURE_AC);
    print_sed_subst(out, "version",   module->version);
+
+   version_to_str[0] = 0;
+   if (module->iface_version)
+   {
+       snprintf(version_to_str, VERSION_TO_STR_LENGTH, "%i:%i:%i", 
+               module->iface_version->current, module->iface_version->revision, module->iface_version->age);
+   }
+   print_sed_subst(out, "iface_version", version_to_str);
+
    /* Quote the @ in email */
    at_sign = strchr(module->email, '@');
    if (! at_sign)

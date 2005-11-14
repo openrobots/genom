@@ -93,6 +93,7 @@ WC      {W}*\:
 "internal_data"/{WC}  {yylval.ival = INTERNAL_DATA; return(INTERNAL_DATA); }
 "number"/{WC}         {yylval.ival = NUMBER; return(NUMBER); }
 "version"/{WC}        {yylval.ival = VERSION; return(VERSION); }
+"iface_version"/{WC}  {yylval.ival = IFACE_VERSION; return(IFACE_VERSION); }
 "email"/{WC}          {yylval.ival = EMAIL; return(EMAIL); }
 "uses_cxx"/{WC}       {yylval.ival = USE_CXX; return(USE_CXX); }
 "codel_files"/{WC}    {yylval.ival = CODEL_FILES; return(CODEL_FILES); }

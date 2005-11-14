@@ -180,18 +180,24 @@ $(OBJDIR)/$(MODULE_LIB): $(module_obj)
 $(OBJDIR)/$(POSTERWRITE_LIB): $(posterwrite_obj)
 	$(LTLD) -o $@ $(LDFLAGS) $(posterwrite_obj)
 
+ifeq ($(ABI_VERSION_INFO),)
+LIBTOOL_VERSION_INFO = -avoid-version
+else
+LIBTOOL_VERSION_INFO = -version-info $(ABI_VERSION_INFO)
+endif
+
 $(OBJDIR)/$(CLIENT_LIB): $(client_obj)
 	$(LTLD) -o $@ $(LDFLAGS) $(client_obj) $(SERVERS_CLIENT_LIB) \
-		$(LIBTOOL_LINKOPT) $(GENOM_LIBS)
+		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LIBTOOL_VERSION_INFO)
 
 $genTcl$$(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj)
 $genTcl$	$(LTLD) $(CFLAGS) $(tclclient_obj) $(SERVERS_ENDIAN_LIB) -o $@	\
 $genTcl$		$(LIBTOOL_LINKOPT) $(GENOM_LIBS)			\
-$genTcl$		$(LDFLAGS) $(TCL_LDFLAGS)
+$genTcl$		$(LDFLAGS) $(TCL_LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
 $genOpenprs$$(OBJDIR)/$(OPENPRSCLIENT_LIB): $(openprsclient_obj)
 $genOpenprs$	$(LTLD) $(CFLAGS) $(openprsclient_obj) $(SERVERS_ENDIAN_LIB) -o $@ \
-$genOpenprs$		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LDFLAGS)	
+$genOpenprs$		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
 
 # --- binaries ----------------------------------------------------------
