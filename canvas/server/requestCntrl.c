@@ -94,7 +94,7 @@ static void $module$Cntrl$request$ (SERV_ID servId, int rqstId)
 #endif
     if (status != OK) {
       if (bilan == OK)
-	bilan =  S_stdGenom_$module$_CONTROL_CODEL_ERROR;
+	bilan =  S_$module$_stdGenom_CONTROL_CODEL_ERROR;
       if (csServReplySend (servId, rqstId, FINAL_REPLY, bilan, 
 			   (void *) NULL, 0, (FUNCPTR) NULL) != OK)
 	$module$CntrlTaskSuspend (TRUE);

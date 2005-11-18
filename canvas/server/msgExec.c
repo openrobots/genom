@@ -70,7 +70,7 @@ int $module$$request$ReplyRcv (CLIENT_ID clientId, int rqstId,
   /* Verifier le flag de type de blocage */
   if (block != NO_BLOCK && block != BLOCK_ON_FINAL_REPLY 
       && block != BLOCK_ON_INTERMED_REPLY) {
-    errnoSet (S_stdGenom_$module$_BAD_BLOCK_TYPE);
+    errnoSet (S_$module$_stdGenom_BAD_BLOCK_TYPE);
     return (ERROR);
   }
   

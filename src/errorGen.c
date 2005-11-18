@@ -169,7 +169,7 @@ int errorGen(FILE *out)
       genSrc = H2_SOURCE_STD_ERR(genomH2errMsgs[i].num);
       genErr = H2_NUMBER_STD_ERR(genomH2errMsgs[i].num);
 
-      bufcat(&stdFail, "#define S_stdGenom_%s_%-26s %d   /* %d <<16 %d <<8 %d */\n", 
+      bufcat(&stdFail, "#define S_%s_stdGenom_%-26s %d   /* %d<<16 %d<<8 %d */\n", 
 	     module->name, genomH2errMsgs[i].name, 
 	     err, 
 	     module->number, genSrc, genErr);
