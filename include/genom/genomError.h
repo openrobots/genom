@@ -33,37 +33,37 @@
 
 #include "h2errorLib.h"
 
-#define M_stdGenom 100
+#define M_stdGenoM 100
 
-#define S_stdGenom_ACTIVITY_INTERRUPTED          H2_ENCODE_STD_ERR(M_stdGenom, 1)
-#define S_stdGenom_TOO_MANY_ACTIVITIES           H2_ENCODE_STD_ERR(M_stdGenom, 2)
-#define S_stdGenom_ACTIVITY_FAILED               H2_ENCODE_STD_ERR(M_stdGenom, 3)
-#define S_stdGenom_WAIT_ABORT_ZOMBIE_ACTIVITY    H2_ENCODE_STD_ERR(M_stdGenom, 4)
-#define S_stdGenom_UNKNOWN_ACTIVITY              H2_ENCODE_STD_ERR(M_stdGenom, 5)
-#define S_stdGenom_FORBIDDEN_ACTIVITY_TRANSITION H2_ENCODE_STD_ERR(M_stdGenom, 6)
-#define S_stdGenom_SYSTEM_ERROR                  H2_ENCODE_STD_ERR(M_stdGenom, 7)
-#define S_stdGenom_ACTIVITY_ALREADY_ENDED        H2_ENCODE_STD_ERR(M_stdGenom, 8)
-#define S_stdGenom_WAIT_INIT_RQST                H2_ENCODE_STD_ERR(M_stdGenom, 9)
-#define S_stdGenom_CONTROL_CODEL_ERROR           H2_ENCODE_STD_ERR(M_stdGenom, 10)
-#define S_stdGenom_EXEC_TASK_SUSPENDED           H2_ENCODE_STD_ERR(M_stdGenom, 11)
-#define S_stdGenom_BAD_BLOCK_TYPE                H2_ENCODE_STD_ERR(M_stdGenom, 12)
+#define S_stdGenoM_ACTIVITY_INTERRUPTED          H2_ENCODE_STD_ERR(M_stdGenoM, 1)
+#define S_stdGenoM_TOO_MANY_ACTIVITIES           H2_ENCODE_STD_ERR(M_stdGenoM, 2)
+#define S_stdGenoM_ACTIVITY_FAILED               H2_ENCODE_STD_ERR(M_stdGenoM, 3)
+#define S_stdGenoM_WAIT_ABORT_ZOMBIE_ACTIVITY    H2_ENCODE_STD_ERR(M_stdGenoM, 4)
+#define S_stdGenoM_UNKNOWN_ACTIVITY              H2_ENCODE_STD_ERR(M_stdGenoM, 5)
+#define S_stdGenoM_FORBIDDEN_ACTIVITY_TRANSITION H2_ENCODE_STD_ERR(M_stdGenoM, 6)
+#define S_stdGenoM_SYSTEM_ERROR                  H2_ENCODE_STD_ERR(M_stdGenoM, 7)
+#define S_stdGenoM_ACTIVITY_ALREADY_ENDED        H2_ENCODE_STD_ERR(M_stdGenoM, 8)
+#define S_stdGenoM_WAIT_INIT_RQST                H2_ENCODE_STD_ERR(M_stdGenoM, 9)
+#define S_stdGenoM_CONTROL_CODEL_ERROR           H2_ENCODE_STD_ERR(M_stdGenoM, 10)
+#define S_stdGenoM_EXEC_TASK_SUSPENDED           H2_ENCODE_STD_ERR(M_stdGenoM, 11)
+#define S_stdGenoM_BAD_BLOCK_TYPE                H2_ENCODE_STD_ERR(M_stdGenoM, 12)
 
 
 /* H2_ERROR[] */
 #define GENOM_H2_ERR_MSGS \
 { \
-  {"ACTIVITY_INTERRUPTED",          S_stdGenom_ACTIVITY_INTERRUPTED}, \
-  {"TOO_MANY_ACTIVITIES",           S_stdGenom_TOO_MANY_ACTIVITIES}, \
-  {"ACTIVITY_FAILED",               S_stdGenom_ACTIVITY_FAILED}, \
-  {"WAIT_ABORT_ZOMBIE_ACTIVITY",    S_stdGenom_WAIT_ABORT_ZOMBIE_ACTIVITY}, \
-  {"UNKNOWN_ACTIVITY",              S_stdGenom_UNKNOWN_ACTIVITY}, \
-  {"FORBIDDEN_ACTIVITY_TRANSITION", S_stdGenom_FORBIDDEN_ACTIVITY_TRANSITION}, \
-  {"SYSTEM_ERROR",                  S_stdGenom_SYSTEM_ERROR}, \
-  {"ACTIVITY_ALREADY_ENDED",        S_stdGenom_ACTIVITY_ALREADY_ENDED}, \
-  {"WAIT_INIT_RQST",                S_stdGenom_WAIT_INIT_RQST}, \
-  {"CONTROL_CODEL_ERROR",           S_stdGenom_CONTROL_CODEL_ERROR},\
-  {"EXEC_TASK_SUSPENDED",           S_stdGenom_EXEC_TASK_SUSPENDED},	\
-  {"BAD_BLOCK_TYPE",                S_stdGenom_BAD_BLOCK_TYPE} \
+  {"ACTIVITY_INTERRUPTED",          S_stdGenoM_ACTIVITY_INTERRUPTED}, \
+  {"TOO_MANY_ACTIVITIES",           S_stdGenoM_TOO_MANY_ACTIVITIES}, \
+  {"ACTIVITY_FAILED",               S_stdGenoM_ACTIVITY_FAILED}, \
+  {"WAIT_ABORT_ZOMBIE_ACTIVITY",    S_stdGenoM_WAIT_ABORT_ZOMBIE_ACTIVITY}, \
+  {"UNKNOWN_ACTIVITY",              S_stdGenoM_UNKNOWN_ACTIVITY}, \
+  {"FORBIDDEN_ACTIVITY_TRANSITION", S_stdGenoM_FORBIDDEN_ACTIVITY_TRANSITION}, \
+  {"SYSTEM_ERROR",                  S_stdGenoM_SYSTEM_ERROR}, \
+  {"ACTIVITY_ALREADY_ENDED",        S_stdGenoM_ACTIVITY_ALREADY_ENDED}, \
+  {"WAIT_INIT_RQST",                S_stdGenoM_WAIT_INIT_RQST}, \
+  {"CONTROL_CODEL_ERROR",           S_stdGenoM_CONTROL_CODEL_ERROR},\
+  {"EXEC_TASK_SUSPENDED",           S_stdGenoM_EXEC_TASK_SUSPENDED},	\
+  {"BAD_BLOCK_TYPE",                S_stdGenoM_BAD_BLOCK_TYPE} \
 }
 
 extern int genomRecordH2errMsgs();

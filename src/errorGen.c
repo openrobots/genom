@@ -161,7 +161,7 @@ int errorGen(FILE *out)
 
       if (!(err = H2_ENCODE_ERR(module->number, genomH2errMsgs[i].num))) {
 	printf ("genom: error code invalide :" 
-		"genom: M_%s=%d or S_stdGenom_%s=%d not in [1, 2^16=65536]\n", 
+		"genom: M_%s=%d or S_stdGenoM_%s=%d not in [1, 2^16=65536]\n", 
 		module->name, module->number, 
 		genomH2errMsgs[i].name, genomH2errMsgs[i].num);
       }
@@ -169,7 +169,7 @@ int errorGen(FILE *out)
       genSrc = H2_SOURCE_STD_ERR(genomH2errMsgs[i].num);
       genErr = H2_NUMBER_STD_ERR(genomH2errMsgs[i].num);
 
-      bufcat(&stdFail, "#define S_%s_stdGenom_%-26s %d   /* %d<<16 %d<<8 %d */\n", 
+      bufcat(&stdFail, "#define S_%s_stdGenoM_%-26s %d   /* %d<<16 %d<<8 %d */\n", 
 	     module->name, genomH2errMsgs[i].name, 
 	     err, 
 	     module->number, genSrc, genErr);

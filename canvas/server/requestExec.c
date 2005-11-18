@@ -87,7 +87,7 @@ static void $module$Cntrl$request$ (SERV_ID servId, int rqstId)
     if (status != OK) {
       freeActivity(activity);
       if (bilan == OK)
-	bilan = S_$module$_stdGenom_CONTROL_CODEL_ERROR;
+	bilan = S_$module$_stdGenoM_CONTROL_CODEL_ERROR;
       if (csServReplySend (servId, rqstId, FINAL_REPLY, bilan, 
 			   (void *) NULL, 0, (FUNCPTR) NULL) != OK)
 	$module$CntrlTaskSuspend (TRUE);

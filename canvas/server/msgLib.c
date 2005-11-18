@@ -143,7 +143,7 @@ int $module$AbortReplyRcv (CLIENT_ID clientId,
 
   /* Verifier le flag de type de blocage */
   if (block != NO_BLOCK && block != BLOCK_ON_FINAL_REPLY) {
-    errnoSet (S_$module$_stdGenom_BAD_BLOCK_TYPE);
+    errnoSet (S_$module$_stdGenoM_BAD_BLOCK_TYPE);
     return (ERROR);
   }
   

@@ -30,7 +30,7 @@ static const H2_ERROR const genomH2errMsgs[] = GENOM_H2_ERR_MSGS;
  */
 STATUS genomRecordH2errMsgs()
 {
-  if (!h2recordErrMsgs("genomRecordH2errMsgs", "stdGenom", M_stdGenom, 
+  if (!h2recordErrMsgs("genomRecordH2errMsgs", "stdGenoM", M_stdGenoM, 
 		       sizeof(genomH2errMsgs)/sizeof(H2_ERROR), genomH2errMsgs))
     return ERROR;
   return OK;
