@@ -109,9 +109,8 @@ distclean:
 dist:
 	mkdir -p $(dist_path)
 	(cd $(top_srcdir); tar cf - .) | (cd $(dist_path); tar xpf -)
-	find $(dist_path) -name "CVS" | xargs rm -rf
-	find $(dist_path) -name "*~" | xargs rm -rf
-	find $(dist_path) -name "autom4te.cache" | xargs rm -rf
+	find $(dist_path) -name "CVS" -o -name "*~" -o -name ".#*" \
+		-o -name "autom4te.cache"| xargs rm -rf
 	tar cf - $(dist_path) | gzip -c -9 > $(dist_name).tar.gz
 	rm -rf $(dist_path)
 
