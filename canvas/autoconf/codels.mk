@@ -26,8 +26,8 @@ $(OBJDIR)/$(MODULE_BIN): $(top_builddir)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LI
 $(OBJDIR)/$(MODULE_BIN):
 	$(LTLD) $(BINEXPORT) $(CFLAGS) -o $@ $(LDFLAGS) $(LIBTOOL_LINKOPT)		\
 		$(top_builddir)/$(serverdir)/$(OBJDIR)/$(MODULE_LIB)	\
-		$(top_builddir)/$(serverdir)/$(OBJDIR)/$(CLIENT_LIB)	\
 		$(OBJDIR)/$(USER_LIB) \
+		$(top_builddir)/$(serverdir)/$(OBJDIR)/$(CLIENT_LIB)	\
 		$(EXTRA_LIBS) \
 		$(top_builddir)/$(serverdir)/$(OBJDIR)/$(POSTERWRITE_LIB)	\
 		$(GENOM_LIBS)
