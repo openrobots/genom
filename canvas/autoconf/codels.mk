@@ -61,12 +61,13 @@ install-bin:
 .PHONY: clean
 
 clean: 
-	$(top_builddir)/libtool --mode=clean rm -f $(codels_obj)
-	rm -f $(OBJDIR)/$(MODULE_BIN)
-	rm -f $(OBJDIR)/dependencies
+	$(top_builddir)/libtool --mode=clean rm -f \
+		$(codels_obj) \
+		$(OBJDIR)/$(MODULE_BIN) \
+		$(OBJDIR)/$(USER_LIB)
 
 distclean: clean
-	rm -f Makefile
+	rm -f $(OBJDIR)/dependencies Makefile
 
 # --- dependencies ------------------------------------------------------
 

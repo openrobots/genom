@@ -264,17 +264,22 @@ install-data:
 
 .PHONY: clean
 
-CLEAN_FILES = $(module_obj) $(posterwrite_obj) $(client_obj) $(connect_obj) $(init_obj) $(test_obj)
+CLEAN_FILES = \
+    $(module_obj) $(OBJDIR)/$(MODULE_LIB) \
+    $(posterwrite_obj) $(OBJDIR)/$(POSTERWRITE_LIB) \
+    $(client_obj) $(OBJDIR)/$(CLIENT_LIB) \
+    $(connect_obj) \
+    $(init_obj) $(OBJDIR)/$(INIT_BIN) \
+    $(test_obj) $(OBJDIR)/$(TEST_BIN)
 
-$genTcl$CLEAN_FILES += $(tclclient_obj)
-
-$genOpenprs$CLEAN_FILES += $(openprsclient_obj)
+$genTcl$CLEAN_FILES += $(tclclient_obj) $(OBJDIR)/$(TCLCLIENT_LIB)
+$genOpenprs$CLEAN_FILES += $(openprsclient_obj) $(OBJDIR)/$(OPRSCLIENT_LIB)
 
 clean:
 	$(LTRM) $(CLEAN_FILES)
-	rm -f $(OBJDIR)/dependencies
 
 distclean: clean
+	rm -f $(OBJDIR)/dependencies
 	rm -f Makefile
 
 
