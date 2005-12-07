@@ -55,7 +55,7 @@ clean:
 
 .PHONY: distclean
 distclean:
-	$(MAKE) $@-$(OSAPI)
+	-$(MAKE) $@-$(OSAPI)
 	rm -f Makefile libtool config.log config.status $pkgname$.pc $pkgname$-oprs.pc local.mk config.mk
 
 
