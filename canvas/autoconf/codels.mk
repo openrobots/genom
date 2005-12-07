@@ -65,12 +65,15 @@ clean:
 		$(codels_obj) \
 		$(OBJDIR)/$(MODULE_BIN) \
 		$(OBJDIR)/$(USER_LIB)
+	rm -f $(OBJDIR)/dependencies 
+	-if test -d $(OBJDIR); then rmdir $(OBJDIR); fi
 
 distclean: clean
-	rm -f $(OBJDIR)/dependencies Makefile
+	rm -f Makefile
 
 # --- dependencies ------------------------------------------------------
 
+ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 .PHONY: depend
 depend $(OBJDIR)/dependencies:: $(OBJDIR);
 
@@ -78,7 +81,6 @@ depend $(OBJDIR)/dependencies:: $(codels_src)
 	$(MKDEP) -c$(CC) -o$(OBJDIR)/dependencies -d$(OBJDIR) -t.lo \
 		$(CPPFLAGS) $?
 
-ifneq (${MAKECMDGOALS},clean)
 -include $(OBJDIR)/dependencies
 endif
 

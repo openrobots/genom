@@ -277,9 +277,10 @@ $genOpenprs$CLEAN_FILES += $(openprsclient_obj) $(OBJDIR)/$(OPRSCLIENT_LIB)
 
 clean:
 	$(LTRM) $(CLEAN_FILES)
+	rm -f $(OBJDIR)/dependencies
+	-if test -d $(OBJDIR); then rmdir $(OBJDIR); fi
 
 distclean: clean
-	rm -f $(OBJDIR)/dependencies
 	rm -f Makefile
 
 
@@ -290,11 +291,14 @@ distclean: clean
 make_depend=\
   $(MKDEP) -c"$(CC)" -o$(OBJDIR)/dependencies -d$(OBJDIR) -t.lo $(CPPFLAGS)
 
+ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 depend $(OBJDIR)/dependencies:: $(OBJDIR);
 
 depend $(OBJDIR)/dependencies:: $(module_src) $(posterwrite_src)
 	$(make_depend) $?
 depend $(OBJDIR)/dependencies::  $(client_src) $(connect_src)
+	$(make_depend) $?
+depend $(OBJDIR)/dependencies::  $(test_src)
 	$(make_depend) $?
 
 $genTcl$depend $(OBJDIR)/dependencies:: $(tclclient_src)
@@ -303,7 +307,6 @@ $genTcl$	$(make_depend) $(TCL_CPPFLAGS) $?
 $genOpenprs$depend $(OBJDIR)/dependencies:: $(openprsclient_src)
 $genOpenprs$	@$(make_depend) $(TRANSGEN_CFLAGS) $?
 
-ifneq (${MAKECMDGOALS},clean)
 -include $(OBJDIR)/dependencies
 endif
 
