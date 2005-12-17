@@ -268,15 +268,39 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
 {
     switch (av->attribut) {
       case INTERNAL_DATA:
+	if (module->internal_data) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'internal_data' in module %s\n",
+		  nomfic, module->name);
+	  exit(2);
+	}
 	module->internal_data = av->value.internal_data;
 	break;
       case NUMBER:
+	if (module->number) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'number' in module %s\n",
+		  nomfic, module->name);
+	  exit(2);
+	}
 	module->number = av->value.number;
 	break;
       case CODEL_FILES:
+	if (module->codel_files) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'codel_files' in module %s\n",
+		  nomfic, module->name);
+	  exit(2);
+	}
 	module->codel_files = av->value.codel_files;
         break;
       case VERSION:
+	if (module->version) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'version' in module %s\n",
+		  nomfic, module->name);
+	  exit(2);
+	}
         module->version = av->value.version;
         break;
       case IFACE_VERSION:
@@ -285,13 +309,30 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
             fprintf(stderr, "error: iface_version should have CURRENT >= AGE. Please check GenoM manual\n");
             exit(1);
         }
+	if (module->iface_version) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'iface_version' in module %s\n",
+		  nomfic, module->name);
+	  exit(2);
+	}
         module->iface_version = av->value.iface_version;
-        
         break;
       case EMAIL:
+	if (module->email) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'email' in module %s\n",
+		  nomfic, module->name);
+	  exit(2);
+	}
         module->email = av->value.email;
         break;
       case USE_CXX:
+	if (module->use_cxx) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'use_cxx' in module %s\n",
+		  nomfic, module->name);
+	  exit(2);
+	}
         module->use_cxx = av->value.use_cxx;
         break;
     }
@@ -309,55 +350,157 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 {
     switch (av->attribut) {
       case TYPE:
+	if (rqst->type) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'type:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->type = av->value.type;
 	break;
       case INPUT:
+	if (rqst->input) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'input:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->input = av->value.input;
 	break;
       case POSTERS_INPUT:
+	if (rqst->posters_input_types) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'posters_input_types:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->posters_input_types = av->value.posters_input_types;
 	break;
       case OUTPUT:
+	if (rqst->output) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'output:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->output = av->value.input;
 	break;
       case C_CONTROL_FUNC:
+	if (rqst->c_control_func) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'c_control_func:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->c_control_func = av->value.c_control_func;
 	break;
       case C_EXEC_FUNC:
+	if (rqst->c_exec_func) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'c_exec_func:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->c_exec_func = av->value.c_exec_func;
 	break;
       case C_EXEC_FUNC_START:
+	if (rqst->c_exec_func_start) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'c_exec_func_start:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->c_exec_func_start = av->value.c_exec_func_start;
 	break;
       case C_EXEC_FUNC_END:
+	if (rqst->c_exec_func_end) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'c_exec_func_end:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->c_exec_func_end = av->value.c_exec_func_end;
 	break;
       case C_EXEC_FUNC_FAIL:
+	if (rqst->c_exec_func_fail) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'c_exec_func_fail:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->c_exec_func_fail = av->value.c_exec_func_fail;
 	break;
       case C_EXEC_FUNC_INTER:
+	if (rqst->c_exec_func_inter) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'c_exec_func_inter:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->c_exec_func_inter = av->value.c_exec_func_inter;
 	break;
       case INCOMPATIBLE_WITH:
+	if (rqst->incompatible_with) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'incompatible_with:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->incompatible_with = av->value.incompatible_with;
 	break;
       case EXEC_TASK:
-	rqst->exec_task_name = av->value.exec_task_name;
 	rqst->exec_task = NULL;
+	if (rqst->exec_task_name) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'exec_task_name:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
+	rqst->exec_task_name = av->value.exec_task_name;
 	break;
       case FAIL_MSG:
+	if (rqst->fail_msg) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'fail_msg:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->fail_msg = av->value.fail_msg;
 	break;
       case RESOURCES:
+	if (rqst->resource_list) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'resource_list:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->resource_list = av->value.resource_list;
 	break;
     case RQST_NUM:
+	if (rqst->rqst_num) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'rqst_num:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->rqst_num = av->value.rqst_num;
 	break;
     case RQST_DOC:
+	if (rqst->doc) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'doc:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
         rqst->doc = av->value.doc;
-        break;
+	break;
     case RQST_INPUT_INFO:
+	if (rqst->input_info) {
+	  fprintf(stderr, 
+		  "genom %s: Error: twice field 'input_info:' in request %s",
+		  nomfic, rqst->name);
+	  exit(2);
+	}
 	rqst->input_info = av->value.input_info;
 	break;
     }
@@ -375,27 +518,75 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
 {
     switch (av->attribut) {
       case PERIOD:
+	if (task->period) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice filed 'period' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
 	task->period = av->value.period;
 	break;
       case T_DELAY:
+	if (task->delay) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'delay' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
 	task->delay = av->value.delay;
 	break;
       case PRIORITY:
+	if (task->priority) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'priority' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
 	task->priority = av->value.priority;
 	break;
       case STACK_SIZE:
+	if (task->stack_size) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'stack_size' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
 	task->stack_size = av->value.stack_size;
 	break;
       case C_INIT_FUNC:
+	if (task->c_init_func) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'c_init_func' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
 	task->c_init_func = av->value.c_init_func;
 	break;
       case C_END_FUNC:
+	if (task->c_end_func) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'c_end_func' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
 	task->c_end_func = av->value.c_end_func;
 	break;
       case C_FUNC:
+	if (task->c_func) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'c_func' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
 	task->c_func = av->value.c_func;
 	break;
       case POSTERS_INPUT:
+	if (task->posters_input_types) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'posters_input_types' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
 	task->posters_input_types = av->value.posters_input_types;
 	break;
       case CS_CLIENT_FROM:
@@ -411,9 +602,21 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
 		nomfic, av->value.poster_client_from->name);
 	break;
       case RESOURCES:
+	if (task->resource_list) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'resource_list' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
 	task->resource_list = av->value.resource_list;
 	break;
       case FAIL_MSG:
+	if (task->fail_msg) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'fail_msg' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
 	task->fail_msg = av->value.fail_msg;
 	break;
     }
