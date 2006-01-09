@@ -1473,6 +1473,7 @@ main(int argc, char **argv)
       "     -I: path for included file. Use @PACKAGE_CFLAGS@\n"
       "         to reuse a prefix defined with -Ppackage\n"
       "     -i: installs new templates for codels and makefiles (new module)\n"
+      "     -h|--help: this help text\n"
       "     -t: produces on-board tcl client code\n"
       "     -o: produces openprs interfaces\n\n"
       "     -u: specifies the name of the codels directory\n"
@@ -1574,11 +1575,17 @@ main(int argc, char **argv)
 	    bufcat(&cmdLine, "-o ", optarg);
 	    genOpenprs = 1;
 	    break;
-
+	  case 'h':
+	    printf(usage);
+	    exit(0);
+	    
 	  case '-':
 	     if (!strcmp("includes", optarg)) {
 		puts(includeDir);
 		exit(0);
+	     } else if (!strcmp("help", optarg)) {
+	       printf(usage);
+	       exit(0);
 	     } else if (!strcmp("libraries", optarg)) {
 		puts(libraryDir);
 		exit(0);
