@@ -40,6 +40,7 @@ __RCSID("$LAAS$");
 # include <rpc/types.h>
 #endif /* VXWORKS */
 
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -117,7 +118,7 @@ Tcl_AppInit(Tcl_Interp *interp)
    Tcl_SetVar(interp, "tclserv_moduledir", TCLSERV_LIBDIR, TCL_GLOBAL_ONLY);
 
    if (xes_verbose) {
-      printf("\n\ttclServ - Copyright (C) 1999-2005 LAAS-CNRS\n\n");
+      printf("\n\ttclServ - Copyright (C) 1999-2006 LAAS-CNRS\n\n");
    }
 
 
@@ -167,11 +168,49 @@ tclServReal(char *verbose)
 
 #ifndef VXWORKS
 
+void 
+usage(char *name)
+{
+  printf("usage: %s [-f][-h][-v]\n", name);
+  printf("\t-c: (console) stay in foreground and be verbose\n"
+	 "\t-h: print this help text\n"
+	 "\t-v: print version\n\n");
+}
+
 int 
 main(int argc, char *argv[])
 {
+  int ch, errFlag = 0, foregroundFlag = 0;
+  
+  while ((ch = getopt(argc, argv, "chv-:")) != -1) {
+    switch (ch) {
+    case 'c':
+      foregroundFlag++;
+      break;
+    case 'h':
+      usage(argv[0]);
+      return EXIT_SUCCESS;
+    case 'v':
+      printf("tclServ version %s\n", PACKAGE_VERSION);
+      return EXIT_SUCCESS;
+    case '-':
+      if (!strcmp("help", optarg)) {
+	usage(argv[0]);
+	return EXIT_SUCCESS;
+      } else {
+	errFlag++;
+      }
+    case '?':
+      errFlag++;
+      break;
+    }
+    if (errFlag) {
+      usage(argv[0]);
+      return EXIT_FAILURE;
+    }
+  } /* while */
    /* daemonize */
-   if (argc < 2) {
+   if (!foregroundFlag) {
       switch(fork()) {
 	 case -1:
 	    perror("cannot fork");
@@ -182,9 +221,10 @@ main(int argc, char *argv[])
       }
    }
 
-   h2initGlob(0);
+   if (h2initGlob(0) == ERROR)
+     return EXIT_FAILURE;
    
-   if (tclServReal((argc < 1) ? NULL : argv[1]) == ERROR) {
+   if (tclServReal(foregroundFlag ? "-console" : NULL) == ERROR) {
       return EXIT_FAILURE;
    } 
    return EXIT_SUCCESS;
