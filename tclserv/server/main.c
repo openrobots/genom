@@ -196,6 +196,9 @@ main(int argc, char *argv[])
     case '-':
       if (!strcmp("help", optarg)) {
 	usage(argv[0]);
+	return EXIT_SUCCESS; 
+      } else if (!strcmp("version", optarg)) {
+	printf("tclServ version %s\n", PACKAGE_VERSION);
 	return EXIT_SUCCESS;
       } else {
 	errFlag++;
