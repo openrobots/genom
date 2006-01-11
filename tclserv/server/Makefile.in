@@ -47,7 +47,7 @@ include $(top_builddir)/config.mk
 CPPFLAGS+=	-I$(top_builddir) -I$(top_srcdir)/include -I$(srcdir) -I.
 CPPFLAGS+=	$(PORTLIB_CFLAGS)
 CPPFLAGS+=	-D$(ENDIANNESS)
-
+CPPFLAGS+=	-DPACKAGE_VERSION=\"${GENOM_MAJOR}.${GENOM_MINOR}${GENOM_REV}\"
 LDFLAGS+=	$(PORTLIB_LIBS)
 
 
