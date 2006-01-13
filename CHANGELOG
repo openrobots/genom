@@ -1,4 +1,9 @@
 $LAAS$
+ 24. Fix 'extern "C"' declaration for msgLibProto.h.
+ 23. Cleanup some duplicated comments in generated files. 
+ 22. Explicit '--help' and '-h' options for genom.
+
+[xxx lots of missing things there]
 
  21. Added a --with-kernel-includes option when configuring for RTAI, in
      case kernel headers and RTAI headers are not in the same path.
