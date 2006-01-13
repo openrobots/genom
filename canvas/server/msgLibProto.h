@@ -57,6 +57,3 @@ int $module$AbortRqstAndRcv (CLIENT_ID clientId,
 			     int *activity,
 			     int *bilan);
 
-#ifdef __cplusplus
-}
-#endif
