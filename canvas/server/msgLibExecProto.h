@@ -1,5 +1,5 @@
+$commentbegin$
 /*	$LAAS$ */
-
 /* 
  * Copyright (c) 1993-2003 LAAS/CNRS
  * All rights reserved.
@@ -28,6 +28,7 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+$commentend$
 
 extern STATUS $module$$request$RqstSend (CLIENT_ID clientId, int *pRqstId,
 					 $input$

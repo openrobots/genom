@@ -1,5 +1,5 @@
+$commentbegin$
 /*	$LAAS$ */
-
 /* 
  * Copyright (c) 1993-2005 LAAS/CNRS
  * All rights reserved.
@@ -28,7 +28,7 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
+$commentend$
 /*=========================================================================
  *
  *  $module$$request$RqstSend  -  Emission d'une requete de controle
