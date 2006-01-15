@@ -156,9 +156,9 @@ int msgLibGen(FILE *out)
     } /* for */
 
     cat_begin(out);
-    fprintf(out, "#ifdef __cplusplus\n", module->name);
-    fprintf(out, "}\n", module->name);
-    fprintf(out, "#endif\n", module->name);
+    fprintf(out, "#ifdef __cplusplus\n");
+    fprintf(out, "}\n");
+    fprintf(out, "#endif\n");
     fprintf(out, "#endif /* %s_MSG_LIB_PROTO_H */\n", module->name);
     cat_end(out);
 
