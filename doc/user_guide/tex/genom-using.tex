@@ -36,7 +36,7 @@ module and of addressing data in the posters.
 
 
 % =======================================================================
-\section{The interactive test program {\tt Essay}}
+\section{The interactive test program {\tt Test}}
 \label{sec|essay}
 
 The interactive  test program  is a client  of  a module. One can  launch
@@ -96,10 +96,10 @@ poster.
 
 
 % =======================================================================
-\section{The interactive tcl shell {\tt tclServ}}
+\section{The interactive tcl shell {\tt tclserv}}
 \label{sec|tcl}
 
-{\tt tclServ} is  a server which  connects to  a  list of modules on  one
+{\tt tclserv} is  a server which  connects to  a  list of modules on  one
 side, and accepts  tcl clients on  the other side.  Clients can then send
 requests to  a   set   of   modules,  using the    {\tt  tcl}   scripting
 language. This  can  be done  either interactively,  or  by the  mean  of
@@ -111,7 +111,7 @@ describe the usage of this server.
 
 
 % =======================================================================
-\section{{\tt Propice} and {\tt transGen}}
+\section{{\tt OpenPRS} and {\tt transGen}}
 \label{sec|propice}
 
 You must generate the module with the option {\tt -x}.
@@ -197,29 +197,14 @@ found in the header {\tt demoPosterLibProto.h}.
 
 \subsubsection{Third step: compilation}
 
-{\bf Beware: this part might be subject to important changes}
+Compilation is handled by the GNU autoconf framework. 
+It's sufficient to specify in the \texttt{requires} list of the new
+module, the list of modules names it is reading posters from.  
 
-To use libraries correspondig to other modules, you must:
-
-\begin{itemize}
-\item Define the path of this module in an {\tt Init.make} file. The
-variable is the name of the module, all in uppercase letters.
-
-For instance: {\tt DEMO = /usr/local/robots/modules/sara/demo}.
-
-\item Add to the {\tt Makefile.unix} and {\tt Makefile.vxworks} a line
-such as
-
- {\tt CPPFLAGS += -I\$\{DEMO\} -I\$\{DEMO\}/auto}.
-
-\item Add to the {\tt Makefile.unix} a line like:
-
- {\tt LIBS += \$\{DEMO\}/auto/\$\{TARGET\}/demoClient.a}.
-
-For VxWorks, you must load   the client library {\tt demoPosterLib.o}  or
-{\tt demoClient.o} (which contains the first one).
-
-\end{itemize}
+The \texttt{configure} script will check that the necessary libraries
+are present in your openrobots directory and generate the appropriate
+options in the generated Makefiles.
+  
 
 
 \subsection{The poster name is not known}
@@ -272,34 +257,32 @@ POSTER\_READ} instead of {\tt POSTER\_WRITE}).
 \end{verbatim}\end{cartouche}\end{center}
 
 
-% =======================================================================
-\section{Accessing modules services from modules}
 
-It is  possible to  send  requests to module   from any  process,  and in
-particular from  other  modules ({\em i.e.} from  their  codels). As  for
-posters, you must follow three steps:
+\section{Accessing modules services from another process}
 
-\subsection{First step: declaring modules}
+\subsection{The library {\tt posterLib}}
 
-The modules to which you want to send requests are  to be declared in the
-execution task field {\tt cs\_client\_from}. For instance, if you wish to
-use the services of the modules {\tt demo} and {\tt us}:
+The library {\tt  demoPosterLib} provides an initialization function {\tt
+demoPosterInit} and a set of  read functions (ending with {\tt PosterRead})
+and display  functions (ending in {\tt  PosterShow}) for the  control and
+execution posters of modules.
 
-\begin{center}\begin{cartouche}\small\begin{verbatim}
-exec_task MotionTask {
-     ...
-     cs_client_from: demo, us;
-     ...
-};
-\end{verbatim}\end{cartouche}\end{center}
+\subsection{The library {\tt msgLib}}
 
-This  step lets \GenoM\  find  the necessary communication libraries  and
-automatically call  the initialization  functions (create a  mailbox, and
-get a client id).
+Before you can use this library, you have to create a mailbox in order to
+receive the replies  of remote servers. This is   done with the  function
+{\tt csMboxInit}.
 
-\subsection{Second step: sending requests and receiving replies}
+Then, you  must  initialize   connections  for individual    clients: for
+instance {\tt demoClientInit} in the libray {\tt demoMsgLib}.
 
-You   can send requests from   codels  through the  functions  of the two
+Before you  quit, you must  free this connection with {\tt demoClientEnd}
+and close the mailbox with {\tt csMboxEnd}.
+
+
+\subsection{Sending requests and receiving replies}
+
+You   can send requests  through the  functions  of the two
 libraries  {\tt usMsgLib}   and {\tt  demoMsgLib}  (in  the case of   our
 example). To do so, you need to include the  headers {\tt usMsgLib.h} and
 {\tt demoMsgLib.h}.
@@ -356,20 +339,11 @@ The prototypes  of  these  functions  are defined   in the  header   {\tt
 auto/demoMsgLibProto.h}. Generic functions  (as for posters) also exists,
 and are documented in the sections below).
 
-\subsection{Third step: compilation}
-
-To compile  and link under  Unix, you can use the  same procedure  as for
-posters. For VxWorks, the library to load  is {\tt demoMsgLib.o}, or {\tt
-demoClient.o} which includes it.
-
-
 \subsection{An example}
 
-We  present here a few  examples, which involve  a module {\tt pilo} that
+We  present here a few  examples, which involve  a task {\tt pilo} that
 must send  the {\tt  SetSpeed} and   {\tt MoveDistance}  requests  to the
-module {\tt demo}. These  requests are  sent  by the execution  task {\tt
-CmdTask}. The {\tt  cs\_client\_from:  demo} field has been   declared in
-this task.
+module {\tt demo}. 
 
 \subsubsection{Sending a control request: {\tt RqstAndRcv}}
 
@@ -382,10 +356,7 @@ the input and output declarations of the request:
 \end{verbatim}\end{cartouche}\end{center}
 
 \begin{itemize}
-\item The first argument is the client number. For instance: {\tt
-PILO\_CMDTASK\_DEMO\_CLIENT\_ID} for the module {\tt pilo}, client of the
-module {\tt  demo}, in the execution  task {\tt CmdTask} (see header {\tt
-piloHeader.h}.
+\item The first argument is the client number. 
 
 \item The second and third arguments (between square brackets) are
 optional, and defined only if the request defines an input or an output
@@ -399,19 +370,13 @@ This function returns {\tt FINAL\_REPLY\_OK}  if everything went well, or
 
 \bigbreak
 
-The following example sends the {\tt SetSpeed} request from the codel
-{\tt piloSendRequest} of the module {\tt pilo}:
+The following example sends the {\tt SetSpeed} request:
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
-ACTIVITY_EVENT
-piloSendRequest(DEMO_SPEED *speed, int *report)
-{
    if (demoSetSpeedRqstAndRcv(PILO_CMDTASK_DEMO_CLIENT_ID, 
                               speed, report) != FINAL_REPLY_OK) {
-      return FAIL;
+      /* FAIL */
    }
-   return EXEC;
-}
 \end{verbatim}\end{cartouche}\end{center}
 
 
@@ -447,8 +412,7 @@ already been received. {\tt ERROR} is returned in case of a problem.
 
 \bigbreak
 
-The following example shows the sending of the {\tt Monitor} request from
-{\tt piloSendRequest2} in the module {\tt pilo}:
+The following example shows the sending of the {\tt Monitor} request:
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 /* Global variables */
@@ -456,22 +420,18 @@ static int piloDemoMonitoRqstId = -1;     /* Number of the request */
 static int demoMonitorActivity;           /* Number of the activity */
 static double piloDemoMonitorOut;         /* Output parameter */
 
-ACTIVITY_EVENT
-piloSendRequest2(double *posMon, int *report)
-{
    switch (demoMonitorRqstAndAck(PILO_CMDTASK_DEMO_CLIENT_ID, 
                                   &demoMonitorRqstId,  0,
                                   *posMon,  &piloDemoMonitorOut, 
                                   &demoMonitorActivity,  report)) {
       case WAITING_FINAL_REPLY:
-         return SLEEP;
+         /* SLEEP */
       case FINAL_REPLY_OK:
          piloDemoMonitorRqstId = -1;
-         return END;
+	 /* DONE */
       default:
-         return ZOMBIE;
+         /* ZOMBIE */
   }  /* switch */
-}
 \end{verbatim}\end{cartouche}\end{center}
 
 
@@ -493,81 +453,23 @@ reply arrives or not.
 \end{itemize}
 
 The  following  example shows the  reception   of the  reply of  the {\tt
-Monitor}  request  from the codel   {\tt waitReply}.  We   use the static
+Monitor}  request.  We   use the static
 variables defined in the previous example.
 
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
-ACTIVITY_EVENT
-waitReply(double *posMon, int *report)
-{
    switch (demoMonitorReplyRcv(PILO_CMDTASK_DEMO_CLIENT_ID, 
                              demoMonitorRqstId, NO_BLOCK,
                              &piloDemoMonitorOut, &demoMonitorActivity, 
                              &report)) {
       case WAITING_FINAL_REPLY:
-         return SLEEP;
+	/* SLEEP */
       case FINAL_REPLY_OK:
          piloDemoMonitorRqstId = -1;
-         return END;
+	/* DONE */
       default:
-         return ZOMBIE;
+         /* ZOMBIE */
   }  /* switch */
-}
-\end{verbatim}\end{cartouche}\end{center}
-
-{\bf Important note:} The activity which sends  the request and reads its
-reply can be interrupted.  In that case,  the codel which reads the final
-reply might never be executed. It is not advised  to let such an activity
-pending, without reading its reply.   To avoid this,  you must define  an
-interrupt codel, in which you will  interrupt the activity started by the
-initial  sending of your request.  This  can  be done  tanks  to the {\tt
-Abort} request:
-
-\begin{center}\begin{cartouche}\small\begin{verbatim}
-ACTIVITY_EVENT
-interActi(double *posMon, int *bilan)
-{
-   /* No current activity */
-   if (piloDemoMonitorRqstId == -1)
-         return ETHER;
-
-   /* interrupt the Monitor activity */
-   if (demoAbortRqstAndRcv(PILO_CMDTASK_DEMO_CLIENT_ID, 
-                           &demoMonitorActivity, bilan) != FINAL_REPLY_OK)
-         return ZOMBIE;
-
-   /* Wait for the final reply (which should arrive shortly thanks to the
-      interruption */
-   if (demoMonitorReplyRcv(PILO_CMDTASK_DEMO_CLIENT_ID, 
-                         demoMonitorRqstId, BLOCK_ON_FINAL_REPLY,
-                         &piloDemoMonitorOut, &demoMonitorActivity, 
-                         &bilan) != FINAL_REPLY_OK)
-        return ZOMBIE;
-
-   piloDemoMonitorRqstId = -1;
-   return ETHER;
-}
 \end{verbatim}\end{cartouche}\end{center}
 
 
-\section{Accessing modules services from another process}
-
-\subsection{The library {\tt posterLib}}
-
-The library {\tt  demoPosterLib} provides an initialization function {\tt
-demoPosterInit} and a set of  read functions (ending with {\tt PosterRead})
-and display  functions (ending in {\tt  PosterShow}) for the  control and
-execution posters of modules.
-
-\subsection{The library {\tt msgLib}}
-
-Before you can use this library, you have to create a mailbox in order to
-receive the replies  of remote servers. This is   done with the  function
-{\tt csMboxInit}.
-
-Then, you  must  initialize   connections  for individual    clients: for
-instance {\tt demoClientInit} in the libray {\tt demoMsgLib}.
-
-Before you  quit, you must  free this connection with {\tt demoClientEnd}
-and close the mailbox with {\tt csMboxEnd}.
