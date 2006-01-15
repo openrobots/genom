@@ -101,6 +101,7 @@ AC_CHECK_PTHREADS
 dnl ---- Checks for headers ---------------------------------------------
 dnl
 AC_CHECK_HEADERS(sys/cdefs.h)
+AC_CHECK_HEADERS(getopt.h)
 
 AC_C_BIGENDIAN([ENDIANNESS=IS_BIG_ENDIAN], [ENDIANNESS=IS_LITTLE_ENDIAN],
           [ENDIANNESS=IS_UNKNOWN_ENDIAN])

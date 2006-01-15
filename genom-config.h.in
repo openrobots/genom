@@ -34,6 +34,9 @@
 /* Do we have the BSD sys/cdefs.h ? */
 #undef HAVE_SYS_CDEFS_H
 
+/* Do we have getopt.h ? */
+#undef HAVE_GETOPT_H
+
 #if defined(HAVE_SYS_CDEFS_H) && !defined(__KERNEL__)
 #include <sys/cdefs.h>
 #endif
