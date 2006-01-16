@@ -272,11 +272,10 @@ to reflect your changes.
 
 Several {\tt  Makefile} are generated   by {\tt genom}.  By default, they
 compile your codels  files, and perform the  link edition with the module
-server ({\tt demoModule.o} for VxWorks and {\tt demoServer.a} for Unix).
+server ({\tt demoServer.a} for Unix).
 
 Each file  is compiled in the {\tt  \$\{TARGET\}} subdirectory. For unix,
-the compilation  produces the executable {\tt demo}  and for  VxWorks the
-object file {\tt demo.o}.
+the compilation  produces the executable {\tt demo}.
 
 You can change the standard Makefiles to suit your needs. In particular,
 you can:
@@ -373,7 +372,7 @@ that the module cannot restore a sane sate, it should put itself into the
 \subsection{Numerical values of reports}
 
 Reports which  are declared in the {\tt  fail\_msg} field are mapped into
-32 bits integers with the VxWorks format.
+32 bits integers using the VxWorks convention:
 
 The name of this integer is build as follow: {\tt S\_<source>\_<report>},
 where {\tt <source>} is the name of the module or the library which defines
@@ -1001,7 +1000,8 @@ important to respect a few coding rules.
 
 \item Avoid magic numbers (use constants and {\tt \#define}).
 
-\item Choose a uniform style, and follow it. For instance, VxWorks uses
+\item Choose a uniform style, and follow it. For instance, the VxWorks
+      programmers manual recommends the use of 
 all uppercased  words, separated by underscores  for constants (e.g. {\tt
 DEMO\_SPEED}) and lowercase words, with a first uppercase letter for each
 word but the first (e.g. {\tt controlSpeed}) for symbols;

@@ -96,67 +96,11 @@ $\rightarrow$ The  control poster already  exists: an  old module was not
 killed properly, see above.
 
 
-\subsection{Interactive ``Essay'' program failures}
+\subsection{Interactive ``Test'' program failures}
 
 The shell  blocks   after sending  a  request: launch  another  task with
 another number.
 
-
-% =======================================================================
-\section{VxWorks}
-
-\subsection{Loading failures}
-
-\begin{center}\begin{cartouche}\small\begin{verbatim}
-undefined symbol: rdima
-\end{verbatim}\end{cartouche}\end{center}
-
-$\rightarrow$ The dynamic link edition failed: the  symbol {\tt rdima} (a
-function, or  a variable) is undefined. You   must load the  library that
-defines it before the library that uses it.
-
-
-\subsection{Module startup failures}
-
-\subsection{Interactive ``Essay'' program failures}
-
-The terminal window does not show up.
-\begin{itemize}
-\item You didn't launch {\tt xes\_server} on the remote station.
-\item The {\tt DISPLAY} variable is unset, or is not properly set
-\item You do not authorize the remote machine to display on your display
-server. 
-\item You did not define under VxWorks which Unix machine will host the
-display:\\ use {\tt   xes\_set\_host <host>} and {\tt xes\_get\_host}  to
-check.
-\end{itemize}
-
-\subsection{It was working, but...}
-
-Besides problems specific to your codels, some common problems can be the
-cause of sudden failures:
-
-\bigbreak
-{\bf A stack is too small}
-
-You can easily   detect this  with the  command  {\tt checkStack}.   This
-command displays  the stack  usage  for all tasks.    If a stack  size is
-labeled {\tt OVERFLOW}, the stack is too small. If the corresponding task
-is an execution  task of a module, you   just have to increase its  size,
-recompile and run the module again ({\tt stack\_size} field). If the task
-is a control task, you have to  turn the control  codel into an execution
-codel (and increase the stack size of the consequent execution task).
-
-Local variables in your  functions are stored   on the stack.  Avoid  big
-arrays  and  other huge   structures.  Be  careful   with the {\tt stdio}
-functions such as {\tt fopen} which are great stack consumers!
-
-
-\bigbreak
-{\bf Not enough memory}
-
-You can detect this with the command {\tt memShow}. Check that you do not
-use huge data structures and that you free memory as often as possible.
 
 
 \bigbreak

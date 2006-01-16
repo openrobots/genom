@@ -99,7 +99,7 @@ done in non-blocking mode.
 C} function.
 \item A request generates at most two replies.
 \item There is no dynamic memory allocation.
-\item It runs under Unix and VxWorks.
+\item It runs under Unix (and VxWorks).
 \end{itemize}
 
 The client side provides the following functions:
@@ -118,8 +118,6 @@ name		& description \\
 % =======================================================================
 \section{Execution}
 
-\subsubsection{VxWorks} There is normally nothing to do
-
 \subsubsection{Unix} Launch {\tt h2 init}.
 
 To  access   remote posters   (on  another  machine),  define    the {\tt
@@ -130,6 +128,3 @@ by the same machine).
 The  poster server {\tt posterServ} is  launched by {\tt h2 init}, except
 if {\tt POSTER\_HOST} is defined.
 
-
-\subsubsection{Between Unix and VxWorks} This is not possible anymore
-with this version of \GenoM.

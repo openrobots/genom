@@ -499,10 +499,8 @@ match their requirements.  A common strategy is to use a priority roughly
 task. The size you  need  depends essentially on   the size of the  local
 variables you  use.  A   stack which  is {\em   too small} will   produce
 unpredictable results, so be sure  to largely {\bf overestimate} what you
-need.   A  good choice is  usually   $20.000$  bytes.  You can  then  use
-utilities   like {\tt checkStack}     for  VxWorks to   obtain a   better
-estimate. Note that under Unix, stack size are not used at this time (the
-stack is grown dynamically).
+need.   A  good choice is  usually   $20.000$  bytes. Note that under
+Unix, stack size are not used at this time (the stack is grown dynamically).
 
 \item {\tt c\_init\_func} is the initialization codel. It is called only
 once, just before the module is ready to answer requests.  It can be used

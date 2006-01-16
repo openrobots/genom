@@ -124,9 +124,8 @@ file {\tt demoMsgLib.h}, which must  be included by clients, contains the
 definitions for the server identification and communication establishment
 (name and size of the mailbox, \ldots).
 
-To use this  library, you must link your  program with {\tt demoMsgLib.o}
-under VxWorks (note that the  library {\tt demoClient.o} already includes
-{\tt demoMsgLib.o}) and {\tt demoClient.a} under Unix.
+To use this  library, you must link your  program with  {\tt
+-ldemoClient}. 
 
 
 \subsubsection{Posters library: {\tt demoPosterLib}}
@@ -139,9 +138,8 @@ posters along  with  their data structures.  The  {\em cIDS} structure is
 also defined there\footnote{the structures included by the {\em cIDS} are
 defined in the file {\tt modules.h}, located in the genom source tree.}.
 
-To  use this library,  you must link  with {\tt demoPosterLib.o} (or {\tt
-demoClient.o}  if you  want  to  use   posters and requests),  and   {\tt
-demoClient.a} under Unix.
+To  use this library,  you must link  with  {\tt 
+-ldemoClient}.
 
 
 % -----------------------------------------------------------------------
@@ -177,21 +175,20 @@ control the module. See section~\ref{sec|propice} in this document.
 % -----------------------------------------------------------------------
 \subsection{Executables: server, test program, initialization request}
 
-The executable {\tt demoEssay} is an interactive test program. To use it,
-you just have to  load  {\tt \$\{TARGET\}/demoClient.o} (VxWorks)  or run
-{\tt \$\{TARGET\}/demo\_essay} (Unix).
+The executable {\tt demoTest} is an interactive test program. To use it,
+you just have to  run
+{\tt \$\{TARGET\}/demoTest}.
 
 The  files    {\tt demoCntrlTask.c},   {\tt demoMotionTask.c}    and {\tt
 demoModuleInit.c} contain the module's execution tasks source code.  Once
-compiled, they produce the  files  {\tt demoModule.o} (VxWorks)  and {\tt
-demoServer.a} (Unix).  The   file  {\tt demoModuleInit.c} produces    the
+compiled, they produce the  files  {\tt
+libdemoServer.a}.  The   file  {\tt demoModuleInit.c} produces    the
 function {\tt demoTaskInit} which spawns the module.
 
 The file {\tt demoInit.c} contains the code that invokes the {\em
 Initialization} request of the module (if the module defines one). To use
-it, run {\tt demoInit} (under Unix, the executable is in {\tt
-\$\{TARGET\}} and under VxWorks, it is contained in the {\tt
-demoModule.o} object file).
+it, run {\tt demoInit} (the executable is in {\tt
+\$\{prefix\}/bin}.
 
 
 % -----------------------------------------------------------------------
@@ -199,7 +196,7 @@ demoModule.o} object file).
 
 The  files {\tt demoScan.h} and {\tt  demoPrint.h} contain the definition
 of  the interactive   functions  that scan  the  arguments  of the module
-requests. These functions are used by the test program {\tt demoEssay}.
+requests. These functions are used by the test program {\tt demoTest}.
 
 Appendix~\ref{anx|files} gives an exhaustive list  of the files  produced
 by \GenoM.
