@@ -394,12 +394,15 @@ configureServerGen(FILE *out, char const* cmdLine,
     return 0;
 }
 /*----------------------------------------------------------------------*/
-int pkgconfigGen(FILE *out, int genOpenprs)
+int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genOpenprs, char** cppOptions)
 {
     char* require = 0;
     char* require2 = 0;
     ID_LIST* ln, *ln2;
     char *pkgname;
+    char** cppOpt;
+    unsigned int cppOptStrLen;
+    char* cppOptStr;
 
     pkgname = pkgconfigName(module->name);
     if (pkgname == NULL) {
@@ -422,11 +425,26 @@ int pkgconfigGen(FILE *out, int genOpenprs)
 	    }
     }
     output(out, "require", require);
+    
+    cppOptStrLen = 0;
+    for (cppOpt = cppOptions; *cppOpt; ++cppOpt)
+        cppOptStrLen += strlen(*cppOpt) + 1;
+    cppOptStr = malloc(cppOptStrLen + 1);
+    *cppOptStr = 0;
+    for (cppOpt = cppOptions; *cppOpt; ++cppOpt)
+    {
+        strcat(cppOptStr, " ");
+        strcat(cppOptStr, *cppOpt);
+    }
 
     print_sed_subst(out, "module", module->name);
     print_sed_subst(out, "pkgname", pkgname);
     print_sed_subst(out, "genomMinor", genomMinor);
     print_sed_subst(out, "genomMajor", genomMajor);
+    print_sed_subst(out, "genomFile",   genomFile);
+    print_sed_subst(out, "genomFlags",  cmdLine);
+    print_sed_subst(out, "cppOptions",  cppOptStr);
+    free(cppOptStr);
     subst_end(out);
     script_close(out, "autoconf/%s.pc.in", pkgname);
 

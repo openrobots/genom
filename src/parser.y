@@ -1833,7 +1833,7 @@ main(int argc, char **argv)
                                 cwd,
 				genTcl, genOpenprs) != 0);
     /* pkgconfig data file */
-    fatalError |= (pkgconfigGen(sortie, genOpenprs) != 0);
+    fatalError |= (pkgconfigGen(sortie, cmdLine, genfile, genOpenprs, cppOptions) != 0);
 
     /* On termine */
     script_do(sortie, protoDir, "end.pl");

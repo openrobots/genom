@@ -66,6 +66,6 @@ int configureGen(FILE *out,
 int configureServerGen(FILE *out, 
         const char* cmdLine, const char *genomBin, const char *genomFile,
         int genTcl, int genOpenprs);
-int pkgconfigGen(FILE *out, int genOpenprs);
+int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genOpenprs, char** cppOptions);
 
 #endif /* H_CONFIGUREGEN */
