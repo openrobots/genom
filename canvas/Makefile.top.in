@@ -1,4 +1,17 @@
 #	$LAAS$
+
+
+
+#  WARNING 
+#  WARNING 	DO NOT CHANGE ANYTHING IN THIS FILE
+#  WARNING 	it is replaced at each module generation
+#  WARNING
+#  WARNING      If you want to install additional files, use the user-install
+#  WARNING	target in codels/Makefile.in (see the comments in this file)
+#  WARNING 
+
+
+
 $commentbegin$
 
 #
