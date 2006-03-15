@@ -203,6 +203,9 @@ int posterLibGen(FILE *out)
       fprintf(out, "/* --  %s ------------------------------------------------- */\n\n",
 	      p->name);
 
+      /* function to get the POSTER_ID value after a successful *Init call */
+      fprintf(out, "POSTER_ID %s%sPosterID() { return %sPosterId; }\n", module->name, p->name, p->name);
+
       /* la fonction pour lire tout le poster */
       fprintf(out,
 	      "STATUS %s%sPosterRead(%s *x)\n{\n"
@@ -333,12 +336,15 @@ int posterLibGen(FILE *out)
 	    "#endif\n");
 
     fprintf(out, "extern STATUS %sPosterInit ( void );\n", module->name);
+    fprintf(out, "extern POSTER_ID %sCntrlPosterID ();\n", module->name);
     fprintf(out, "extern STATUS %sCntrlPosterRead ( %s_CNTRL_STR *%sCntrlStrId );\n", module->name, module->NAME, module->name);
     fprintf(out, "extern STATUS %sCntrlPosterInit ( void );\n", module->name);
 
     for (p = posters; p != NULL; p = p->next) {
       /* la fonction pour lire tout le poster */
      fprintf(out, "extern STATUS %s%sPosterInit ( void );\n",
+	      module->name, p->name);
+     fprintf(out, "extern POSTER_ID %s%sPosterID ( void );\n",
 	      module->name, p->name);
       fprintf(out, "extern STATUS %s%sPosterRead ( %s *x );\n",
 	      module->name, p->name, p->type->name);

@@ -64,6 +64,8 @@ extern char const * h2GetEvnStateString(int num);
  *
  */
 
+POSTER_ID $module$CntrlPosterID () { return $module$CntrlPosterId; }
+
 STATUS $module$CntrlPosterRead ($MODULE$_CNTRL_STR *$module$CntrlStrId)
 {  
   if (!$module$CntrlPosterId)
