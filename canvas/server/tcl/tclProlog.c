@@ -89,7 +89,7 @@ $module$ClientInitCb(ClientData clientData, Tcl_Interp *interp,
    STATUS status;
    char strerr[64];
 
-  $module$RecordH2errMsgs();
+   $module$RecordH2errMsgs();
 
    m = malloc(sizeof(struct ModuleInfo));
    if (m == NULL) {
@@ -119,6 +119,7 @@ $module$ClientInitCb(ClientData clientData, Tcl_Interp *interp,
 
    if (status == ERROR) {
       Tcl_SetResult(interp, h2getErrMsg(errnoGet(), strerr, 64), TCL_VOLATILE);
+      Tcl_AppendResult(interp, ": \"", mboxName, "\"", NULL);
       return TCL_ERROR;
    }
 
