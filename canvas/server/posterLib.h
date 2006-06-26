@@ -49,6 +49,9 @@ typedef struct {
   EXEC_TASK_DESCRIPTION execTaskTab[$MODULE$_NB_EXEC_TASK];
   ACTIVITY_DESCRIPTION activityTab[MAX_ACTIVITIES];
 } $MODULE$_CNTRL_STR;
+
+/* For consistency with other posters */
+typedef $MODULE$_CNTRL_STR $MODULE$_CNTRL_POSTER_STR;
  
 /* 
  * Definition des structures de posters
@@ -61,7 +64,7 @@ typedef struct {
 
 
 /* Posters */
-#define $MODULE$_CNTRL_POSTER_NAME         "$module$CntrlPoster"
+#define $MODULE$_CNTRL_POSTER_NAME         "$module$Cntrl"
 $listPosterNameDeclare$
 
 
