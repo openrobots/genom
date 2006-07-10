@@ -329,15 +329,17 @@ static int addParamToStrings (char *prefix, DCL_NOM_STR *dcl_nom)
      (la taille de la somme des parametres est limitee pour VxWorks) */
   params_nb += nElts;
   if (params_nb > VX_MAX_PARAMS) {
-    fprintf (stderr, "initGen error: too many parameters (>%d) limited to %d\n", params_nb, VX_MAX_PARAMS);
-    return 1;
+    fprintf (stderr, "initGen warning: too many parameters (>%d) limited to %d on VxWorks\n", params_nb, VX_MAX_PARAMS);
+    /* only a problem for VxWorks */
+    /*     return 1; */
   }
 
   params_size += nElts * getsize(dcl_nom->type);
 
   if (params_size > VX_MAX_PARAMS_SIZE) {
-    fprintf (stderr, "initGen error: total size of the parameters (>%d) limited to %d\n", params_size, VX_MAX_PARAMS_SIZE);
-    return 1;
+    fprintf (stderr, "initGen warning: total size of the parameters (>%d) limited to %d on VxWorks\n", params_size, VX_MAX_PARAMS_SIZE);
+    /* only a problem for VxWorks */
+    /*     return 1; */
   }
 
   /* On traite chaque element */
