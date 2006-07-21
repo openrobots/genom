@@ -40,14 +40,28 @@ if (defined($pid)) {
   close PID;
   # send SIGTERM 
   kill 15, $pid;
-  # wait a bit
-  select(undef, undef, undef, 2.5);
 }
-# Remove the pid file
+# Wait a bit for the module to die cleanly
+$now = time();
+do {
+  select(undef, undef, undef, 1.0);
+} while (-f $pid_file && time() < $now + 10);
+
+# if file still there, use SIGINT
 if (-f $pid_file) {
-  unlink("$pid_file");
+  print("$module takes too long to die, sending SIGINT\n");
+  kill 2, $pid;
+  # wait
+  select(undef, undef, undef, 3.0);
+  
+  # Remove the pid file
+  if (-f $pid_file) {
+    unlink("$pid_file");
+  }
+  # Clean up pocolib devices of the module
+  system("h2 clean '*$module*'");
+} else {
+  print("done\n");
 }
-# Clean up pocolib devices of the module
-system("h2 clean '*$module*'");
 # done
 exit 0;
