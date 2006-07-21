@@ -63,8 +63,6 @@
 
 #include "genom/moduleEvents.h"
 
-/* En-tete du module */
-
 /* Print debugging information */
 #define GENOM_DEBUG_EXECTASK
 
@@ -74,60 +72,60 @@
 # define LOGDBG(x)
 #endif
 
-/* Taille de la bal de reception des repliques des serveurs */
+/* Size of the mailbox receiving replies from servers */
 #define $MODULE$_$EXECTASKNAME$_MBOX_REPLY_SIZE $maxMboxReplySize$
 
 
-/*--------------------------- VARIABLES EXTERNES -------------------------*/
-/* ATTENTION: donner un nom unique */
+/*--------------------------- EXTERNAL VARIABLES -------------------------*/
+/* WARNING: use unique names! */
 
-/* Semaphore d'initialisation */
+/* Initialization semaphore */
 extern SEM_ID sem$module$InitExecTab[];
 
-/*---------------- PROTOTYPES DES FONCTIONS INTERNES -----------------------*/
+/*---------------- PROTOTYPES OF INTERNAL FUNCTIONS ----------------------*/
 
-/* Initialisation de la tache d'execution */
+/* Execution task initialization */
 static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId);
 
-/* Suspension de la tache d'execution */
+/* Suspend the the execution task */
 static void $module$$execTaskName$Suspend (BOOL giveFlag);
 
-/* Appele des fonctions utilisateur */
+/* Call of user functions */
 static ACTIVITY_EVENT execTaskCallUserFunc (ACTIVITY_STATE state, 
 					    int activityId);
 
-/* Signal la une transition apres l'avoir validee */
+/* Signal a transition after handling it */
 static BOOL filterAndSendEvn (ACTIVITY_STATE state,
 			     ACTIVITY_EVENT evn);
 
-/* Retourne la chaine evnStateString caracterisant un etat ou un evenement */
+/* Returns a string representing the h2 event */
 char const * h2GetEvnStateString(int num);
 
-/*--------------------------- VARIABLES LOCALES -------------------------*/
-/* ATTENTION: donner un nom unique */
+/*--------------------------- LOCAL VARIABLES -------------------------*/
+/* WARNING: use unique names */
 
-/*---------------- PROTOTYPES DES FONCTIONS utilisateur -------------------*/
+/*---------------- User function prototypes -------------------*/
 
-/* La fonction d'execution permanente */
+/* Permanent activity function */
 #if ($cFuncExecFlag$)
 STATUS $cFuncExecName$ (int *bilan);
 #endif
 
-/* La fonction d'initialisation */
+/* Initialisation function */
 #if ($cFuncExecInitFlag$)
 int $cFuncExecInitName$ ();
 #endif
 
-/*---------------------- ROUTINES EXPORTEES --------------------------------*/
+/*---------------------- EXPORTED PROCEDURES --------------------------------*/
 
 /*****************************************************************************
  *
- *  $module$$execTaskName$  -  Tache d'execution
+ *  $module$$execTaskName$  -  Exec task
  *
- *  Description : Execution des fonctions 
+ *  Description : Execute fonctions in the module
  *
  *
- *  Retourne: Jamais
+ *  Returns: never
  */
 
 void $module$$execTaskName$ (void)
@@ -136,13 +134,13 @@ void $module$$execTaskName$ (void)
   int i, nb, nbActi;
   int prevExecTaskBilan;
   int wakeUpCntrlTask;
-#if($csServersFlag$ /* tache cliente */)
+#if ($csServersFlag$) /* client task */
   int extEvn;
 #endif
 
   MODULE_EVENT_STR moduleEvent;
 #ifdef HAS_POSIX_CLOCK
-  struct timespec tp; /*  mesure du temps */
+  struct timespec tp; /* time measure */
 #else
   struct timeval tv;
 #endif /* HAS_POSIX_CLOCK */
@@ -150,38 +148,36 @@ void $module$$execTaskName$ (void)
   unsigned long msec0=0, msec1, msec2;
   int firstChrono=TRUE;
 
-  /* Initialisation de la tache */
+  /* Initialization of task */
   errnoSet(0);
   EXEC_TASK_STATUS($execTaskNum$) = 
     $module$$execTaskName$InitTaskFunc (&$module$$execTaskName$TimerId);
   prevExecTaskBilan = EXEC_TASK_BILAN($execTaskNum$) = errnoGet();
   
-  /* Rendre le semaphore d'init */
+  /* Release the initialization semaphore */
   semGive (sem$module$InitExecTab[$execTaskNum$]);
   
-  /* Se suspendre en cas de probleme */
+  /* suspend ourselves in case of problems */
   if(EXEC_TASK_STATUS($execTaskNum$) != OK)
     $module$$execTaskName$Suspend (FALSE);
   moduleEvent.moduleNum = $numModule$;
   moduleEvent.taskNum = $execTaskNum$;
 
-  /* Boucler indefiniment */
+  /* main loop */
   FOREVER {
-#if($periodFlag$ /* Periodique */)
-    /* Attendre le declenchement du timer d'asservissement */
+#if ($periodFlag$) /* Periodic task */
     if (h2timerPause ($module$$execTaskName$TimerId) != OK) {
       logMsg("$module$$execTaskName$: h2timerPause error\n");
       $module$$execTaskName$Suspend (FALSE);
     }
-#else
-    /* Attendre un evenement interne ou externe */
+#else /* wait for external events */
     if (h2evnSusp(0) != TRUE) {
       printf ("$module$$execTaskName$: h2evnSusp error\n");
       $module$$execTaskName$Suspend (FALSE);
     }
 #endif
 
-    /* Lecture du temps */
+    /* Get time */
     moduleEvent.eventType = EXEC_START_EVENT;
     sendModuleEvent(&moduleEvent);
 
@@ -195,7 +191,7 @@ void $module$$execTaskName$ (void)
 
     if(firstChrono) {firstChrono=FALSE; msec0=msec1;}
 
-#if($periodFlag$ /* tache periodique */)
+#if ($periodFlag$) /* periodic task */
     if ((EXEC_TASK_ON_PERIOD($execTaskNum$) = msec1 - msec0) 
 	> EXEC_TASK_MAX_PERIOD($execTaskNum$))
       EXEC_TASK_MAX_PERIOD($execTaskNum$) = msec1 - msec0;
@@ -208,17 +204,17 @@ void $module$$execTaskName$ (void)
     if (STOP_MODULE_FLAG) {
       
 #if ($cFuncExecEndFlag$)
-      /* Execution de la fonction de terminaison */
+      /* Execute end codel */
       $cFuncExecEndName$ ();
 #endif
       
-      /* free les posters, clients, bal */
+      /* free posters, clients, mailboxes */
       $listPosterDelete$
-#if($csServersFlag$ /* Tache cliente */)
+#if ($csServersFlag$) /* client task */
       $listServerClientEnd$
       csMboxEnd();
 #else
-#if(!$periodFlag$ /* tache aperiodique */)
+#if (!$periodFlag$) /* non-periodic task */
       /* free device created to manage h2evn required to aperiodic tasks */
       mboxEnd(0);
 #endif
@@ -230,22 +226,22 @@ void $module$$execTaskName$ (void)
       return;
     }
 
-    /* Prendre l'acces aux SDI */
+    /* take IDS access */
       if (commonStructTake ($module$CntrlStrId) != OK ||
 	  commonStructTake ($module$DataStrId) != OK) {
 	logMsg("$module$$execTaskName$: commonStructTake error\n");
 	$module$$execTaskName$Suspend (FALSE);
       }
     
-    /* Test reception d'une replique (XXX: voir remarque plus loin) */
-#if($csServersFlag$ /* Tache cliente */)
+    /* Check for a received reply (XXX: see remark down) */
+#if ($csServersFlag$) /* client task */
     extEvn = FALSE;
     if (csMboxStatus(REPLY_MBOX) & REPLY_MBOX)
       extEvn = TRUE;
 #endif
 
 
-    /* Activite permanente */
+    /* permanent activity */
 #if ($cFuncExecFlag$) 
     moduleEvent.eventType = STATE_START_EVENT;
     moduleEvent.activityNum = -1;
@@ -263,35 +259,35 @@ void $module$$execTaskName$ (void)
     sendModuleEvent(&moduleEvent);   
 #endif
 
-    /* Recherche des activites */
+    /* Look for activities */
     nbActi = EXEC_TASK_NB_ACTI($execTaskNum$);
     for (i = 0, nb = 0; nb < nbActi && i < MAX_ACTIVITIES; i++) 
       if (ACTIVITY_TASK_NUM(i) == $execTaskNum$) {
 	
 	nb++;
 
-	/* Eveil des activites endormies */
+	/* Wake up sleeping activities */
 	/* XXX pb: on peut louper l'info extEvn: si la lecture est effectuer par une autre activite ou par la fonction permanente et que la "reply" arrive apres le test extEvn et avant la lecture !!!
 1ere solution: eveiller systematiquement les activites SLEEP ?!? 
 2nd solution: la fonction qui recoit la replique execute EXEC_TASK_WAKE_UP */
 	if (ACTIVITY_STATUS(i) == SLEEP && ACTIVITY_EVN(i) == NO_EVENT)
 	  ACTIVITY_EVN(i) = EXEC;
 
-	/* Execution en fonction de l'evenement */
+	/* Execute, depending on the event */
 	switch (ACTIVITY_EVN(i)) {
 	  
-	  /* Y'a rien (activite ZOMBIE, SLEEP) */
+	  /* Nothing (ZOMBIE, SLEEP activity) */
 	case NO_EVENT:
 	  break;
 	  
-	  /* C'est pour la tache de controle */
+	  /* Handled by the control task */
 	case ETHER:
 	case ZOMBIE:
 	case INIT:
 	case SLEEP:
 	  break;
 	  
-	  /* A nous de jouer */
+	  /* This is for us */
 	case START:
 	  EXEC_TASK_MAX_PERIOD($execTaskNum$) = 0;
 	case EXEC:
@@ -304,14 +300,14 @@ void $module$$execTaskName$ (void)
 	  moduleEvent.rqstType = ACTIVITY_RQST_TYPE(i);
 	  sendModuleEvent(&moduleEvent);
 
-	  /* On enregistre le nouvel etat */
+	  /* record new state */
 	  ACTIVITY_STATUS(i) = (ACTIVITY_STATE) ACTIVITY_EVN(i);
 	  
-	  /* On appele la fonction de traitement */
+	  /* Call the processing function */
 	  CURRENT_ACTIVITY_NUM($execTaskNum$) = i;
 	  ACTIVITY_EVN(i) = execTaskCallUserFunc(ACTIVITY_STATUS(i), i);
 	  
-	  /* Test validite de l'evenement */
+	  /* Check event validity */
 	  if(filterAndSendEvn(ACTIVITY_STATUS(i), ACTIVITY_EVN(i)))
 	    wakeUpCntrlTask = TRUE;
 
@@ -324,17 +320,17 @@ void $module$$execTaskName$ (void)
 		  i, h2GetEvnStateString (ACTIVITY_EVN(i)));
 	  $module$$execTaskName$Suspend (TRUE);
 	}           /* switch evn */ 
-      }        /* Tant qu'il y a des activites */ 
+      }        /* while there are activities */ 
     
-    /*****XXXX Test provisoire */
+    /*****XXXX Temporary test */
     if (nb != nbActi)
       logMsg("$module$$execTaskName$: invalid number of activities %d (expected %d) !\n", nb, nbActi);
 
     CURRENT_ACTIVITY_NUM($execTaskNum$) = -2;
-    /* Mise a jour des posters auto */
+    /* update "auto" posters */
     $listPosterUpdateFunc$
     
-    /* Temps ecoule depuis la precedente lecture */
+    /* Time elapsed since previous read */
     moduleEvent.eventType = EXEC_END_EVENT;
     sendModuleEvent(&moduleEvent);
 
@@ -352,13 +348,12 @@ void $module$$execTaskName$ (void)
       EXEC_TASK_MAX_PERIOD($execTaskNum$) = EXEC_TASK_ON_PERIOD($execTaskNum$);
 #endif
 
-    /* Bilan a change: on previent la tache de controle */
+    /* The result changed: inform the control task */
     if (prevExecTaskBilan != EXEC_TASK_BILAN($execTaskNum$)) {
       prevExecTaskBilan =  EXEC_TASK_BILAN($execTaskNum$);
       wakeUpCntrlTask = TRUE;
     }
 
-    /* On eveil la tache de controle */
     if(wakeUpCntrlTask)
       h2evnSignal(CNTRL_TASK_ID);
 
@@ -406,7 +401,7 @@ static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId)
     /* Enregistrer l'id de la tache */
   EXEC_TASK_ID($execTaskNum$) = taskIdSelf ();
 
-#if($csServersFlag$) /* Client */
+#if ($csServersFlag$) /* Client */
   /* Creation de la boite aux lettres de reception des repliques */
   if (csMboxInit ("$module$$execTaskName$", 0,  
                   $MODULE$_$EXECTASKNAME$_MBOX_REPLY_SIZE) != OK) {
@@ -418,7 +413,7 @@ static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId)
   $listServerClientInit$
 #endif
 
-#if($periodFlag$) /* Periodic */
+#if ($periodFlag$) /* Periodic */
 
     /*** XXXX
       Passer la periode en milliseconde. Verifier que c'est un
@@ -699,7 +694,7 @@ static BOOL filterAndSendEvn (ACTIVITY_STATE state,
   /* Transition autorisee */
   if (transition) {
 
-#if(!$periodFlag$) /* tache non periodique */
+#if (!$periodFlag$) /* tache non periodique */
     /* Tache non periodique: Auto reveille sauf evn SLEEP */
     if (evn != SLEEP)
       h2evnSignal(EXEC_TASK_ID($execTaskNum$));
