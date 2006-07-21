@@ -18,18 +18,11 @@ $host = `uname -n`;
 chop $host;
 # Nom du fichier contenant le process Id
 $pid_file = "$ENV{'HOME'}/.$module.pid-$host";
-# Ancien nom, utilisé pendant quelques mois
-$pid_file_old = "$ENV{'HOME'}/.$module.pid";
 $me = $ENV{'USER'};
 # Verifie l'existence du fichier pid
 if ( ! -f $pid_file) {
-  if ( -f $pid_file_old) {
-    # Module qui utilise l'ancien nom
-    $pid_file = $pid_file_old;
-  } else {
-    print STDERR "$0: il ne semble pas y avoir de module $module sur $host\n";
-    exit 1;
-  } 
+  print STDERR "$0: il ne semble pas y avoir de module $module sur $host\n";
+  exit 1;
 }
 # Verifie le proprietaire du fichier
 $uid = (stat($pid_file))[4];	# uid numerique du fichier
