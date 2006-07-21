@@ -1,53 +1,53 @@
 #!/usr/bin/env perl
 #
-# Tue un module Genom sous Unix
+# Kill a Genom module running under a Unix system
 #
 # Matthieu Herrb - Fevrier 2001
 #
 # $LAAS$
 #----------------------------------------------------------------------
 #
-# Verifie les arguments
+# Check arguments
 if ($#ARGV != 0) {
   print STDERR "syntaxe: $0 <module>\n";
   exit -1;
 }
 $module = $ARGV[0];
-# Nom de la machine
+# host name
 $host = `uname -n`;
 chop $host;
-# Nom du fichier contenant le process Id
+# name of the file holding the process id
 $pid_file = "$ENV{'HOME'}/.$module.pid-$host";
 $me = $ENV{'USER'};
-# Verifie l'existence du fichier pid
+# Check its existence
 if ( ! -f $pid_file) {
-  print STDERR "$0: il ne semble pas y avoir de module $module sur $host\n";
+  print STDERR "$0: the module $module doesn't seem to be running on $host\n";
   exit 1;
 }
-# Verifie le proprietaire du fichier
-$uid = (stat($pid_file))[4];	# uid numerique du fichier
-$name = (getpwuid($uid))[0];	# transforme en nom 
+# Check the owner of the file
+$uid = (stat($pid_file))[4];	# numerical uid of the file
+$name = (getpwuid($uid))[0];	# get the actual user name
 if ( $me ne $name ) {
-  print STDERR "$0: le processus $module appartient a $name $me\n";
+  print STDERR "$0: the $module process is owned by $name (not $me)\n";
   exit -1;
 }
-# Lecture du fichier 
-open PID,"<$pid_file" || die "impossible de lire $pid_file";
+# Read the file
+open PID,"<$pid_file" || die "can't read $pid_file";
 $pid = <PID>;
 if (defined($pid)) {
   print "pid ".$pid;
   chop $pid;
   close PID;
-  # Envoie SIGTERM au processus
+  # send SIGTERM 
   kill 15, $pid;
-  # Attend un peu
+  # wait a bit
   select(undef, undef, undef, 2.5);
 }
-# Detruit le fichier de pid
+# Remove the pid file
 if (-f $pid_file) {
   unlink("$pid_file");
 }
-# Nettoye les devices h2 du module
+# Clean up pocolib devices of the module
 system("h2 clean '*$module*'");
-# fini
+# done
 exit 0;
