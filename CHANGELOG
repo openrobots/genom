@@ -1,8 +1,9 @@
 $LAAS$
 
- 26. Update killmodule script for new SIGTERM behaviour.
- 25. Add a signal handler that allows to kill a module cleanly with SIGTERM.
- 25. Some more translations of module canvas files to english.
+ 28. Update killmodule script for new SIGTERM behaviour.
+ 27. Add a signal handler that allows to kill a module cleanly with SIGTERM.
+ 26. Some more translations of module canvas files to english.
+ 25. Renamed xxxEssay into xxxTest.
  24. Fix 'extern "C"' declaration for msgLibProto.h.
  23. Cleanup some duplicated comments in generated files. 
  22. Explicit '--help' and '-h' options for genom.
