@@ -53,7 +53,6 @@
 # ifndef VXWORKS
 #  include <sys/param.h>
 #  include <stdlib.h>
-#  include <signal.h>
 #  include <fcntl.h>
 #  include <string.h>
 #  include <errno.h>
