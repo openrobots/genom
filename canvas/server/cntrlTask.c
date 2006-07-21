@@ -47,6 +47,7 @@
 #else
 # include <stdlib.h>
 # include <unistd.h>
+# include <signal.h>
 # ifndef VXWORKS
 #  define PID_FILE
 # endif
@@ -90,6 +91,9 @@ static POSTER_ID $module$CntrlPosterId;            /* Poster de controle */
 static int $module$LastActivityNum=-1;
 static int $module$LastAbsolutActivityNum=-1;
 $execTaskNameTabDeclare$
+#ifndef VXWORKS
+static BOOL $module$SignalAbort;
+#endif
 
 #define TIMEOUT_CNTRL_TASK 2000 /* 10 sec (pas encore utilise) */
 
@@ -116,7 +120,10 @@ static void   $module$RqstAbortActivity (SERV_ID ServId, int rqstId);
 static void   $module$CntrlTaskSuspend  (BOOL giveFlag);
 static void   $module$ReplyAndSuspend   (SERV_ID servId, int rqstId, 
 					 BOOL giveFlag);      
-
+#ifndef VXWORKS
+static void   $module$SignalHandler(int);
+static void   $module$SignalEnd(void);
+#endif
 
 /*---------------------- FONCTION EXPORTEE ---------------------------------*/
 
@@ -154,6 +161,11 @@ $module$CntrlTask()
 
   moduleEventCntrl.moduleNum = $numModule$;
 
+#ifndef VXWORKS
+  /* Record a signal handler */
+  $module$SignalAbort = FALSE;
+  signal(SIGTERM, $module$SignalHandler);
+#endif
   /* Boucler indefiniment */
   FOREVER
     {
@@ -165,6 +177,11 @@ $module$CntrlTask()
       commonStructTake ((void *) $module$CntrlStrId);
       commonStructTake ((void *) $module$DataStrId);
  
+#ifndef VXWORKS
+      if ($module$SignalAbort) {
+	      $module$SignalEnd();
+      }
+#endif
       /* Traiter les evenements internes */
       $module$CntrlIntEvnExec ($module$ServId);
 
@@ -950,6 +967,64 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 		       (void *) NULL, 0, (FUNCPTR) NULL) != OK)
     $module$CntrlTaskSuspend (TRUE); 
 }
+
+#ifndef VXWORKS
+/****************************************************************************
+ * $module$SignalHandler - Handle signals in a module
+ */
+void
+$module$SignalHandler(int sig)
+{
+	printf("Signal received %d\n", sig);
+	$module$SignalAbort = TRUE;	/* indicate that we wanna end */
+	h2evnSignal(CNTRL_TASK_ID);	/* wake up control task */
+}
+
+/****************************************************************************
+ *
+ * $module$End - terminate a module upon signal reception
+ */
+static void
+$module$SignalEnd(void)
+{
+	int i;
+
+	STOP_MODULE_FLAG = TRUE;
+	for (i=$MODULE$_NB_EXEC_TASK-1; i > -1; i--) 
+		EXEC_TASK_WAKE_UP_FLAG(i) = TRUE;
+	
+	/* give back Internal Data Structures */
+	commonStructGive ((void *) $module$DataStrId);
+	commonStructGive ((void *) $module$CntrlStrId);
+	
+	/* Interrupt exec task */
+	for (i=$MODULE$_NB_EXEC_TASK-1; i > -1; i--) {
+		logMsg("Killing task %s ... \n", $module$ExecTaskNameTab[i]);
+		taskResume(EXEC_TASK_ID(i));
+		h2evnSignal(EXEC_TASK_ID(i));
+	}
+	
+	/* Wait end */
+	for (i=$MODULE$_NB_EXEC_TASK-1; i > -1; i--) {
+		while (EXEC_TASK_WAKE_UP_FLAG(i))
+			h2evnSusp(0);
+		logMsg("    ... task %s killed\n", $module$ExecTaskNameTab[i]);
+	}
+	
+	
+	/* Destruction of mboxes, SDI and posters and BYE ! */
+	csMboxEnd();
+	commonStructDelete ((void *) $module$DataStrId);
+	commonStructDelete ((void *) $module$CntrlStrId);
+	posterDelete($module$CntrlPosterId);
+	logMsg("$module$CntrlTask ended\n");
+#ifdef PID_FILE
+	  /* Remove PID file */
+	  unlink(pidFilePath);
+#endif
+	  exit(0);
+}
+#endif
 
 /* Requetes de types controle */
 /* Requetes de types execution */
