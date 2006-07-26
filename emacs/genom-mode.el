@@ -1,42 +1,45 @@
-;;----------------------------------------------------------------------
+;;------------------------------------------------------------
 ;;
-;;                    Style GenoM pour XEmacs 19 et 20
+;;                    GenoM mode for XEmacs 19 et 20
 ;;
-;;----------------------------------------------------------------------
-;----------------------------------------------------------------------
+;;------------------------------------------------------------
+;
+; KNOWN PROBLEM: 
+; Does not work any more with emacs because emacs and xemacs 
+; c-mode are now very differents. Contributions well come :-)
+;
+;------------------------------------------------------------
 ;     
-;  Date de création     : Avril 1997
+;  Creation date        : April 1997
 ;  Date de modification : 
-;  Fichier              : genom-mode.el
-;  Auteur               : Sara Fleury
+;  File                 : genom-mode.el
+;  Author               : Sara Fleury
 ;     
-;  Inspiré de:
+;  Inspired from:
 ;
 ;     /opt/gnu/lib/xemacs-19.14/lisp/modes/cc-mode.el
 ;     /opt/gnu/lib/xemacs-19.14/lisp/packages/font-lock.el
 ;     /opt/gnu/lib/xemacs-19.14/lisp/prim/help.el
 ;     /home/sara/h2/src/modules/genom/emacs/bib-mode.el
 ;
-; Pour compiler : appeler byte-compile-file  depuis XEmacs 
-;                (XEmacs-19 pour compatibilité)
+; To compile : appeler byte-compile-file  depuis XEmacs 
+;                (XEmacs-19 pour compatibilitÃ©)
 ;
-; Modifié le 17/02/98 pour compatibilité avec XEmacs 20:
-;     * adjonction de la fonction d'init: c-initialize-cc-mode 
-;     * adjonction de c-make-inherited-keymap
-;     * c-mode-menu est une fonction et non plus une variable
+; Modified the 17/02/98 for compatibility with XEmacs 20:
+;     * add init fonction: c-initialize-cc-mode 
+;     * add c-make-inherited-keymap
+;     * c-mode-menu is now a fonction
 ;
-; (voir /opt/gnu/lib/xemacs-20.3/lisp/cc-mode/...)
-;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
 ; GLOBAL VARIABLES
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
 ;; Variables configuration
-(defvar genom-comment-length  72 
+(defvar genom-comment-length  60 
 "Lenght of comment lines (number of minus characters) while creating a 
 new module using genom-mode.
 To change this value : (setq genom-comment-length <val>)")
@@ -56,11 +59,11 @@ eg : (setq genom-find-file-hook 'find-file)")
 (defvar genom-default-codel-name t 
 "t or nil. If t (default) a name is proposed for the new codels.")
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
 ; Emacs 19 - 20 compatibilities
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
 ; Missing definitions for emacs 19
 (defun-when-void c-initialize-cc-mode () "empty declaration for emacs versions less than 20" ())
@@ -69,21 +72,21 @@ eg : (setq genom-find-file-hook 'find-file)")
 ; Missing definitions for emacs 20
 (defun-when-void c-setup-dual-comments (table) "empty declaration for xemacs versions more than 19" ())
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
 ; Init c-mode
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
 ;; cc-mode init (emacs 20)
 (c-initialize-cc-mode)
 (font-lock-mode t)
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
 ; GenoM Commands Menu
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
 (defun genom-mode-menu (modestr)
   "XEmacs menu for GenoM mode. (XEmacs versions : 19 and 20)"
@@ -94,7 +97,7 @@ eg : (setq genom-find-file-hook 'find-file)")
     ["New Poster"              genom-make-poster t]
     ["New Execution Task"      genom-make-exec-task t]
     "---"
-    ["Update codels"              genom-make-extent t]
+    ["Refresh .gen"               genom-make-extent t]
     ["Delete Optional Lines"     genom-clean-structure t]
     ["Verify Buffer"             genom-verify-buffer t]
     "---"
@@ -119,16 +122,11 @@ eg : (setq genom-find-file-hook 'find-file)")
 (defvar genom-mode-map ()
   "Keymap used in genom-mode buffers.")
 
-; easy-menu ne marche pas pour Xemacs 19
-;(defvar c-genom-menu "TOTO")
-;(easy-menu-define c-genom-menu genom-mode-map "gENOM MODE COMMANDS"
-;		  (c-mode-menu "MMMMMM"))
-
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
-; Maping des clefs pour GenoM
+; Keys maping for GenoM
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
 
 (if genom-mode-map
@@ -172,7 +170,7 @@ eg : (setq genom-find-file-hook 'find-file)")
 
   ;; Emacs 19 defines menus in the mode map. This call will return t
   ;; on Emacs 19, otherwise no-op and return nil.
-;XXX Apparement ne sert plus (bizard ?) et gène emacs 20
+;XXX Apparement ne sert plus (bizard ?) et gÃ¨ne emacs 20
 ;  (if (memq 'v19 c-emacs-features)
 ;      (c-mode-fsf-menu "GenoM" genom-mode-map)
 ;    ())
@@ -181,11 +179,11 @@ eg : (setq genom-find-file-hook 'find-file)")
 ;;  (define-key genom-mode-map 'button3 'genom-popup-menu)
 )
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
-; Parametres Indentation C pour GenoM
+;  C Indentation for GenoM
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
 (defconst genom-style
   '((c-basic-offset . 4)
@@ -200,11 +198,11 @@ eg : (setq genom-find-file-hook 'find-file)")
   "GenoM programming style")
 
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
-; Mode GenoM
+; GenoM Mode
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
 (defvar genom-mode-hook nil
   "*Hook called by `genom-mode'.")
@@ -221,7 +219,7 @@ eg : (setq genom-find-file-hook 'find-file)")
   (setq genom-mode-syntax-table (make-syntax-table))
   (c-populate-syntax-table genom-mode-syntax-table)
   ;; add extra comment syntax
-  ;; nécessaire à emacs 19 mais perturbe emacs 20
+  ;; nÃ©cessaire Ã  emacs 19 mais perturbe emacs 20
   (if (memq 'v19 c-emacs-features)
       (c-setup-dual-comments genom-mode-syntax-table)
     ())
@@ -260,7 +258,7 @@ Key bindings:
   (use-local-map genom-mode-map)
   (c-common-init)
   ; add genom menu to the menubar 
-  ; (inspiré de easy-menu qui n'existe pas pour xemacs 19)
+  ; (inspirÃ© de easy-menu qui n'existe pas pour xemacs 19)
   (cond ((eq emacs-major-version 19)
 	 (add-submenu nil (genom-mode-menu 
 			   (concat mode-name " Mode Commands"))))
@@ -279,22 +277,22 @@ Key bindings:
   (c-set-style "genom")
   (run-hooks 'genom-mode-hook)
   (setq c-special-indent-hook 'genom-indent-line-c-hook)
-  ;; Construit des regions actives pour toutes les lignes correspondants
+  ;; Construit des regions actives pour toutes les lines correspondants
   ;; a des definitions de codels
   (genom-make-extent)
 )
 
-;XXX Ne semble indispensable et gène emacs 20
+;XXX Ne semble indispensable et gÃ¨ne emacs 20
 ;  (if (memq 'v19 c-emacs-features)
 ;(setq c-list-of-mode-names (cons "GenoM" c-list-of-mode-names))
 ;())
 
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
 ; Fontify
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 (put 'genom-mode 'font-lock-defaults 
      '((genom-font-lock-keywords
 	genom-font-lock-keywords-1
@@ -352,11 +350,11 @@ This does fairly subdued highlighting.")
 	(list
 	 ;;
 	 ;; fontify all types classes and type specifiers
-	 ;; Nom des champs (attribut)
+	 ;; name des field (attribut)
 	 (cons genom-fields 'font-lock-keyword-face)
-	 ;; Champs obligatoires (valeur)
+	 ;; Field obligatoires (valeur)
 	 (cons (concat "<<" "\\("  mand-var "\\)" ">>") 'font-lock-string-face)
-	 ;; Champs optionnels (valeur)
+	 ;; Field optionnels (valeur)
 	 (cons  genom-opt-var 'font-lock-doc-string-face)
 	 (cons genom-etc 'font-lock-doc-string-face)
 	 ;; Debut et fin de structures
@@ -380,11 +378,11 @@ This does fairly subdued highlighting.")
 (defvar genom-font-lock-keywords genom-font-lock-keywords-1
   "Additional expressions to highlight in Genom mode.")
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
-; Indentation GenoM
+; GenoM Indentation
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
 ;; To indent the current buffer
 (defun genom-indent-buffer ()
@@ -393,10 +391,10 @@ This does fairly subdued highlighting.")
   (c-indent-region (point-min) (point-max))
 )
 
-;; Cette fonction d'indentation prend la main apres une indentation "c" 
+;; Cette function d'indentation prend la main apres une indentation "c" 
 ;; (c-indent-command).
 ;;
-;; Elle indente la partie droite des lignes "attribut:   valeur;" 
+;; Elle indente la partie droite des lines "attribut:   valeur;" 
 ;; des structures genom (request, poster, ...).
 ;; L'indentation est sur la colonne genom-tab-right-column
 (defun genom-indent-line-c-hook ()
@@ -427,10 +425,39 @@ genom-tab-right-column."
 	  ;; on tabule et on remet le curseur a une position a peu 
 	  ;; pres coherente au dela de la colonne
 	  (if (genom-indent-right-column pos-semi-column)
-	      (skip-chars-forward "<>a-zA-Z\-;_,")))
-      )))
+	      (skip-chars-forward "<>a-zA-Z\-;_,"))
+	  )
 
-;; Cette fonction utilisee par genom-indent-line-c-hook
+      ;; else no ":" then indent to right all the line
+      ;; iff the previous line is a genom field
+      ;; XXXXX: pb: sets systematically the buffer status as modified !!
+      ;; XXXXX      even if there's nothing to do !! Probably a bad
+      ;; XXXXX      interaction with the initial c-indent procedure
+      (save-excursion
+	;; test it is NOT the end of a genom structure
+	(beginning-of-line)
+	(skip-chars-forward " \t")
+	(if (looking-at "}")()
+	  (save-excursion
+	    ;; test it is the next line of a genom-field line
+	    (forward-line -1)
+	    (beginning-of-line)
+	    (skip-chars-forward " \t")
+	    (if (looking-at genom-fields)
+		;; then indent needed
+		(save-excursion
+		  (forward-line 1)
+		  (beginning-of-line) 
+		  (skip-chars-forward " \t")
+		  (if (eq (point) genom-tab-right-column)()
+		    (genom-indent-right-column (point))
+		    )		  
+		  )))))
+      )
+    )
+  )
+
+;; Cette function utilisee par genom-indent-line-c-hook
 ;; procede a l'indentation sur la colonne genom-tab-right-column
 ;; a partir de la position passee en argument
 ;; Retourne t s'il y avait quelque chose a faire ou nil sinon
@@ -455,16 +482,16 @@ Indents the right column of a genom-field. Used by genom-indent-line-c-hook."
     )
   )
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
 ; Gestion des regions actives (extent) associees aux definitions de codels.
 ; Permet de chercher et ouvrir le fichier source d'un codel d'un
 ; clic-souris (bouton2).
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
 ;; On redefini un keymap local
-;; pour pouvoir associer le bouton2 a la fonction genom-find-code-extent
+;; pour pouvoir associer le bouton2 a la function genom-find-code-extent
 ;; lorsque la souris est dans une region active
 (defvar genom-extent-mode-map ()
   "Keymap used in genom-mode buffers.")
@@ -496,7 +523,7 @@ Delete all extents made by genom-make-extent"
 (defconst genom-parse-request "^request\\s \+\\(\\w\+\\)\\s \+{\*\\s \*")
 
 
-;; Recherche de toutes les lignes qui definissent des codels
+;; Look For de toutes les lines qui definissent des codels
 ;; pour en faire autant de regions actives
 (defun genom-make-extent ()
   "Makes extent regions for the lines that refere to codels or requests.
@@ -505,13 +532,13 @@ Works only if you keep the original codel file names."
 
   (interactive)
 
-  ;; On vire les precedents extent 
+  ;; Remove previous extents
   (genom-delete-extent)
 
-  ;; On les reconstruits
+  ;; Re-built
   (save-excursion
 
-    ;; Construit les extents associés aux requetes
+    ;; Build extents associaed to requests
     (goto-char (point-min))
     (while (re-search-forward genom-parse-request (end-of-line) t)
       (let (beg end)
@@ -524,7 +551,7 @@ Works only if you keep the original codel file names."
 	      (set-extent-property extent 'keymap genom-extent-mode-map)
 	      ))))
 
-    ;; Construit les extents associés aux codels
+    ;; Build extents associated to codels
     (goto-char (point-min))
     (while (re-search-forward genom-parse-codel (end-of-line) t)
       (let (extent)
@@ -536,7 +563,7 @@ Works only if you keep the original codel file names."
 
 
 
-;; Identifie et ouvre le fichier codel/*Codels.c qui correspond au codel
+;; Identifie et ouvre le file codel/*Codels.c qui correspond au codel
 ;; de la region active dans laquelle on a clique avec button2.
 (defun genom-find-code-extent (event)
   "Open the file of the codel on event on the current cursor line (if any).
@@ -544,25 +571,25 @@ Works only if you keep the original codel file name."
   (interactive "e")
   
   ;; On retourne dans la bonne fenetre si necessaire
-  ;; et on met le cuseur là où on a cliqué
+  ;; et on met le cuseur lÃ  oÃ¹ on a cliquÃ©
   (select-window (event-window event))
   (goto-char (event-point event))
 
   (let (objectname taskname startfrom endseparator)
 
-    ;; RECHERCHE NOM DE L'OBJET ET DE LA TACHE
+    ;; LOOK FOR NAME DE L'OBJET ET DE LA TACHE
     (save-excursion
       (beginning-of-line)
     
       ;; Si REQUETE
       (if (looking-at genom-parse-request)
 	  (progn
-	    ;; On recupere son nom
+	    ;; On recupere son name
 	    (setq objectname (buffer-substring (match-beginning 1) 
 						(match-end 1) nil))
 	    (setq objectname-origin objectname)
 	    (setq objectname (concat "/[*]-\*\n[^\n]\*\\b" objectname "\\b"))
-	    ;; On recupere le nom de la tache
+	    ;; On recupere le name de la tache
 	    (if (looking-at "[^}]\*exec_task:\\s \+\\(\\w\+\\);")
 		(setq taskname (buffer-substring (match-beginning 1) 
 						 (match-end 1) nil))
@@ -574,10 +601,10 @@ Works only if you keep the original codel file name."
       ;; sinon, si CODEL
       (if objectname ()
 	
-	;; On recupere son nom et son type
+	;; On recupere son name et son type
 	(if (looking-at genom-parse-codel)
 	    (progn
-	      ;; Nom du codel
+	      ;; name du codel
 	      (setq objectname (buffer-substring (match-beginning 2) 
 						 (match-end 2) nil))
 	      (setq objectname-origin objectname)
@@ -603,15 +630,15 @@ Works only if you keep the original codel file name."
 	      (setq startfrom "/[*]"))))
       )
 
-    ;; On a le nom de la tache (et du codel)
+    ;; On a le name de la tache (et du codel)
     (if taskname
 	(let (filename findres)
-	  ;; On en deduit le nom du fichier
+	  ;; On en deduit le name du file
 	  (setq filename (concat (genom-get-module-name) taskname "Codels.c"))
-	  ;; On charge le fichier et on cherche objectname	    
+	  ;; On charge le file et on cherche objectname	    
 	  (setq findres (genom-find-file (concat "codels/" filename)
 					 objectname))
-	  ;; Si on a le fichier mais pas objectname
+	  ;; Si on a le file mais pas objectname
 	  ;; on cherche object name dans server/codels/<filename>
 	  (if (eq findres 1)
 	      (if (genom-insert-code filename objectname 
@@ -625,10 +652,10 @@ Works only if you keep the original codel file name."
     )
   )
 
-;; Charge un fichier et cherche la chaine (optionel)
-;; Retourne : 0 si fichier pas trouve
-;;            1 si chaine pas trouve
-;;            2 si chaine trouve
+;; Charge un file et cherche la string (optionel)
+;; Retourne : 0 si file pas trouve
+;;            1 si string pas trouve
+;;            2 si string trouve
 (defun genom-find-file (filename &optional string)
   "Open file FILENAME using genom-find-file-hook function. Search and center on  STRING (optional)"
   (interactive)
@@ -657,7 +684,7 @@ Default FILENAME to look for the request is the current buffer filename.
 The filename must be of the following form : <moduleName><TaskName>Codels.c"
   (interactive)
 
-  ;; Recupere nom requete
+  ;; Recupere name requete
   (if request ()
     (progn
       (setq request (read-from-minibuffer "Name: " ))
@@ -690,7 +717,7 @@ STRING if founded, or end of file otherwise.
 If CONFIRM is t, a confirmation is asked in mini-buffer before insertion."
   (let (filebuf beg end bilan)
 
-    ;; Fichier ou chercher
+    ;; File where look for
     (setq filename (concat "../.genom/codels/" filename))
     (if (file-exists-p filename) 
 	(progn
@@ -699,7 +726,7 @@ If CONFIRM is t, a confirmation is asked in mini-buffer before insertion."
 	  (setq bilan t))
       (message (concat filename " not found. Call genom.")))
     
-    ;; On cherche le debut du code a extraire
+    ;; Look for begining of the code
     (if bilan
 	(if (re-search-forward string  nil t nil filebuf)
 	    (if startfrom
@@ -712,20 +739,20 @@ If CONFIRM is t, a confirmation is asked in mini-buffer before insertion."
 	  (message "Code not found. Call genom.")))
     (if beg () (setq bilan nil))
 	  
-    ;; On cherche la fin
+    ;; Look for end
     (if bilan
-	;; chaine terminale a parser
+	;; string terminale a parser
 	(if endseparator
 	    (progn 
 	      (if (re-search-forward endseparator nil t nil filebuf) 
 		  (setq end (match-beginning 0))
-		;; pas de separateur : on va a la fin du fichier
+		;; no separator : goto end of file
 		(setq end (point-max filebuf))))
-	  ;; chaine par defaut
+	  ;; defaut string
 	  (setq end (re-search-forward "}" nil t nil filebuf))))
     (if end () (setq bilan nil))
 
-    ;; On confirme l'insertion
+    ;; confirme insertion
     (if bilan
 	(if confirm
 	    (if (string= 
@@ -752,23 +779,23 @@ If CONFIRM is t, a confirmation is asked in mini-buffer before insertion."
   )
 
 
-;;----------------------------------------------------------------------
+;;------------------------------------------------------------
 ;;
-;;   Les fonctions asociees aux commandes GenoM:
+;;   Les functions asociees aux commandes GenoM:
 ;;       .  creation de structures GenoM
-;;       .  netoyage des champs optionnels
+;;       .  netoyage des field optionnels
 ;;       .  help 
 ;;
-;;----------------------------------------------------------------------
+;;------------------------------------------------------------
 
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
 ; Creation des structures de GenoM
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ; Creation des requetes
 
 (defun genom-make-request ()
@@ -877,7 +904,7 @@ request " request-name " {
 " 
 )))
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ; Creation des posters
 
 ;; Creates the canvas for a new poster
@@ -960,7 +987,7 @@ poster " poster-name " {
 };
 " ))))
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ; Creation des taches d'execution
 
 (defun genom-make-exec-task ()
@@ -995,7 +1022,7 @@ exec_task " (genom-upcase-initial exec-name) " {
 };
 " ))))))
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ; Creation d'un import from
 
 (defun genom-make-import ()
@@ -1016,7 +1043,7 @@ import from " (downcase import-name) " {
 " ))))))
 
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ; Creation d'un module
 
 (defun genom-make-module ()
@@ -1054,7 +1081,7 @@ module " module-name " {
 }; 
 
 /*" minus-char-string "
- *	                   Structures et SDI
+ *	                   Structures and SDI
  *" minus-char-string "*/
 
 #include \"" file-name "\"
@@ -1064,7 +1091,7 @@ typedef struct " MODULE-NAME "_STR {
 } " MODULE-NAME "_STR;
 
 /*" minus-char-string "
- *	                       Requetes
+ *	                       Requests
  *" minus-char-string "*/
 \n
 /*" minus-char-string "
@@ -1072,19 +1099,19 @@ typedef struct " MODULE-NAME "_STR {
  *" minus-char-string "*/
 \n
 /*" minus-char-string "
- *	                   Taches d'Execution
+ *	                   Execution Tasks
  *" minus-char-string "*/
 \n"
 ))))))
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
-; Nettoyage et controles divers
+; Clean-up and others controls 
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
-;----------------------------------------------------------------------
-; Recherche le nom du module
+;------------------------------------------------------------
+; Look for module name
 ; Returns a string : the name of the genom module
 (defun genom-get-module-name ()
 "
@@ -1098,8 +1125,8 @@ Returns a string : the name of the genom module"
     )
   )
 
-;----------------------------------------------------------------------
-; Netoyage des champs optionnels
+;------------------------------------------------------------
+; clean-up  optionnels field
 
 (defun genom-verify-buffer ()
   "Verifies that no uninstantiated fields remain"
@@ -1137,14 +1164,14 @@ Returns a string : the name of the genom module"
 Deletes non instanciated optional lines in region MIN MAX."
   (goto-char max)
   (while (re-search-backward (concat "[^<]" genom-opt-var "[^>]") min t)
-    (genom-delete-lignes 1))
+    (genom-delete-lines 1))
   )
 
 
-;; Deletes NB lignes from the cursor position
-(defun genom-delete-lignes (nb)
+;; Deletes NB lines from the cursor position
+(defun genom-delete-lines (nb)
   "
-Deletes NB lignes from the cursor position"
+Deletes NB lines from the cursor position"
   (save-excursion
     (let (deb)
       (beginning-of-line) 
@@ -1153,8 +1180,8 @@ Deletes NB lignes from the cursor position"
       (end-of-line)
       (delete-region deb (1+ (point))))))
 
-;; Insert la chaine en debut de ligne
-;; puis se met en position pour editer le premier champs
+;; Insert la string en debut de line
+;; puis se met en position pour editer le premier field
 (defun genom-insert-struct (struct-string)
   "
 Inserts STRING (a genom structure) and indents the structure."
@@ -1170,15 +1197,15 @@ Inserts STRING (a genom structure) and indents the structure."
       )
     )
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
-; Fonctions Utiles
+; Functions Utiles
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
 ;; Converti la premiere lettre en majuscule
-;; Voila une fonction qui existe deja (upcase-initials) mais 
-;; qui ne marche pas !!! En effet, elle fonctionne comme "capitalize" 
+;; Voila une function qui existe deja (upcase-initials) mais 
+;; qui ne marche pas !!! En effet, elle functionne comme "capitalize" 
 ;; alors qu' elle est sensee ne pas modifier les caracteres suivants
 ;; la premiere lettre
 (defun genom-upcase-initial (mot)
@@ -1195,11 +1222,11 @@ Inserts STRING (a genom structure) and indents the structure."
   )
 
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;
 ; Help
 ;
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 
 (defvar genom-help-map (let ((map (make-sparse-keymap)))
                    (set-keymap-name map 'genom-help-map)
@@ -1208,17 +1235,17 @@ Inserts STRING (a genom structure) and indents the structure."
                    map)
   "Keymap for characters following the Help key.")
 
-;; Les trois lignes suivantes permettent de prefixer les commandes de 
+;; Les trois lines suivantes permettent de prefixer les commandes de 
 ;; genom-help-map  par  "\C-c\C-h" en ajoutant cette sequence
 ;; dans global-map qui est toujours defini quelque soit le mode
 ;; (voir /opt/gnu/lib/xemacs-19.14/lisp/prim/keydefs.el).
-;; Les fonctions genom-help- seraient alors directement bindees et par
+;; Les functions genom-help- seraient alors directement bindees et par
 ;; consequent, cela eviterait de hardcoder ce prefixe dans tous les 
 ;; commentaires. Mais c'est genant car ces sequences seraient alors definies 
 ;; pour toute la session sous emacs quelque soit le mode.
 ;; Il aurait peut etre falu definir un mode genom-help-mode  au lieu 
 ;; d'utiliser help-mode (appelle dans with-displaying-help-buffer, 
-;; une fonction de help.el) ...
+;; une function de help.el) ...
 ;(setq genom-help-string "\C-c\C-h")
 ;(fset 'genom-help-command genom-help-map)
 ;(define-key global-map genom-help-string 'genom-help-command)
@@ -1237,7 +1264,7 @@ Inserts STRING (a genom structure) and indents the structure."
 
 (define-key genom-help-map "q" 'help-quit)
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;  genom-help-for-help 
 
 (defun genom-help-for-help ()
@@ -1302,7 +1329,7 @@ You have typed C-c C-h, the GenoM help.  Type a Help option:
  	  (call-interactively defn)
  	(ding)))))
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;  genom-help-genom-commands 
 
 
@@ -1335,7 +1362,7 @@ These functions are also available through the menu bar or the button 3 of the m
      ))
   )
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;  genom-help-module
 
 (defun genom-help-module ()
@@ -1364,7 +1391,7 @@ posters) are recorded in a database (an internal data structure) named SDI
 (for Structure de Donnees Internes). Thus, this database is a C structure 
 made of several substructures.
 
-Your fonctions are executed by processes named execution tasks. You may have 
+Your functions are executed by processes named execution tasks. You may have 
 one or several execution tasks. 
 
 To sumerize, the description of a module includes 5 parts:
@@ -1415,7 +1442,7 @@ How to create a new module ?
 
 "))))
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;  genom-help-request
 
 (defun genom-help-request ()
@@ -1524,7 +1551,7 @@ request Move {
 
 "))))
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;  genom-help-poster
 
 (defun genom-help-poster ()
@@ -1595,7 +1622,7 @@ poster Obstacles {
 
 "))))
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;  genom-help-import
 
 (defun genom-help-import ()
@@ -1646,7 +1673,7 @@ To compile, define in your Init.make file the path variable:
 LOCO = /opt/project/hilare/modules/loco
 "))))
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;  genom-help-exec-task
 
 (defun genom-help-exec-task ()
@@ -1755,7 +1782,7 @@ exec_task MotionTask {
 
 "))))
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;  genom-help-generate
 
 (defun genom-help-generate ()
@@ -1784,7 +1811,7 @@ exec_task MotionTask {
 
 "))))
 
-;----------------------------------------------------------------------
+;------------------------------------------------------------
 ;  genom-help-codels
 
 (defun genom-help-codels ()
