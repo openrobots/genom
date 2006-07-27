@@ -80,8 +80,16 @@ $listPosterId$
 $listExecTaskNum$
 
 
-/* Prototypes des fonctions utilisateur */
+/* User functions signatures */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 $listUserFuncProto$
+
+#ifdef __cplusplus
+}
+#endif
 
 
 /**
