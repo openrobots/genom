@@ -11,7 +11,10 @@ CPPFLAGS += -I. -I$(top_builddir) -I$(srcdir) -I$(top_srcdir)
 CPPFLAGS += $(GENOM_CFLAGS) $(EXTRA_INCLUDES)
 
 ifeq ($(USE_CXX),1)
-codels_obj=$(patsubst %.cpp,$(OBJDIR)/%.lo,$(codels_src:%.c=$(OBJDIR)/%.lo))
+codels_obj=\
+	$(patsubst %.c,$(OBJDIR)/%.lo,\
+	$(patsubst %.cpp,$(OBJDIR)/%.lo,\
+	$(patsubst %.cc,$(OBJDIR)/%.lo,$(codels_src))))
 else
 codels_obj= $(codels_src:%.c=$(OBJDIR)/%.lo)
 endif
@@ -35,12 +38,14 @@ $(OBJDIR)/$(MODULE_BIN):
 $(OBJDIR)/$(USER_LIB): $(codels_obj)
 	$(LTLD) $(CFLAGS) $(codels_obj) -o $@ $(LDFLAGS)
 
-$(OBJDIR)/%.lo: %.c
-	$(LTCC) -c $(CPPFLAGS) $(CODELS_CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
 ifeq ($(USE_CXX),1)
 $(OBJDIR)/%.lo: %.cpp
 	$(LTCXX) -c $(CPPFLAGS) $(CODELS_CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
+$(OBJDIR)/%.lo: %.cc
+	$(LTCXX) -c $(CPPFLAGS) $(CODELS_CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
 endif
+$(OBJDIR)/%.lo: %.c
+	$(LTCC) -c $(CPPFLAGS) $(CODELS_CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
 
 $(OBJDIR):
 	mkdir -p $@
