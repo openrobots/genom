@@ -1,5 +1,7 @@
 $LAAS$
-
+  
+ 30. Add preliminary Xenomai 2.x (using the POSIX skin) support.
+ 29. Disable old RTAI support in autoconf scripts.
  28. Update killmodule script for new SIGTERM behaviour.
  27. Add a signal handler that allows to kill a module cleanly with SIGTERM.
  26. Some more translations of module canvas files to english.
