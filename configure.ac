@@ -60,38 +60,32 @@ ROBOT_CPP_USES_STDIN
 ROBOT_PROG_MKDEP
 
 
-dnl --- RTAI support ----------------------------------------------------
+dnl --- Xenomai support -------------------------------------------------
 dnl
+OSAPI=posix
 
-# configure options
-AC_ARG_WITH(rtai,
-           AC_HELP_STRING([--with-rtai=yes|no],
-               [configure to use RTAI]),
-           [opt_rtai=$withval],[opt_rtai=no])
-AC_ARG_WITH(rtai-includes,
-           AC_HELP_STRING([--with-rtai-includes=DIR],
-               [RTAI headers are in DIR]),
-           [opt_rtai_includes=$withval])
-AC_ARG_WITH(linux-kernel-includes,
-           AC_HELP_STRING([--with-linux-kernel-includes=DIR],
-               [linux kernel headers are in DIR]),
-           [opt_lnxkern_includes=$withval])
+AC_ARG_WITH(xenomai,
+	AC_HELP_STRING([--with-xenomai=yes|no], [configure to use Xenomai]),
+	[opt_xenomai=$withval],[opt_xenomai=no])
+AC_ARG_VAR([XENO_CONFIG], [Path to the xeno-config command for xenomai])
 
-# make related stuff
-if test "x$opt_rtai" = "xyes"; then
-   OSAPI=rtai
-   AC_MSG_RESULT([Enabling RTAI kernel support])
-   AC_CHECK_RTAI_INCLUDES(RTAI_INC, $opt_rtai_includes)
-   AC_CHECK_LINUXKERNEL_INCLUDES(LNXKERN_INC, $opt_lnxkern_includes)
-
-elif test "x$opt_rtai" = "xno"; then :
-   OSAPI=posix
-   AC_MSG_RESULT([Configuring to use POSIX])
-else
-   AC_MSG_ERROR([invalid option --with-rtai=$opt_rtai], 2)
+if test "x$opt_xenomai" = "xyes"; then
+	AC_PATH_PROG([XENO_CONFIG], [xeno-config], [no],
+		[/usr/xenomai/bin:${PATH}])
+	if test "x$XENO_CONFIG" = "xno" ; then
+		AC_MSG_FAILURE([--with-xenomai=yes specified, but xeno-config not found])
+		opt_xenomai=no
+	else
+		AC_MSG_RESULT([Configuring to use Xenomai])
+		OSAPI=xenomai
+		XENO_CFLAGS=`${XENO_CONFIG} --posix-cflags`
+		XENO_LDFLAGS=`${XENO_CONFIG} --posix-ldflags`
+	fi
 fi
-AC_SUBST(OSAPI)
 
+AC_SUBST(OSAPI)
+AC_SUBST(XENO_CFLAGS)
+AC_SUBST(XENO_LDFLAGS)
 
 dnl --- Checks for functions --------------------------------------------
 dnl

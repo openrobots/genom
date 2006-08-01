@@ -47,6 +47,7 @@
 #define PROTO_CONFIG_MK		"autoconf/config.mk.in"
 #define PROTO_CONFIG_POSIX_MK	"autoconf/config.posix.mk"
 #define PROTO_CONFIG_RTAI_MK	"autoconf/config.rtai.mk"
+#define PROTO_CONFIG_XENOMAI_MK	"autoconf/config.xenomai.mk"
 #define PROTO_CONFIG_LOCAL_MK   "local.mk.in"
 #define PROTO_CONFIG_CODELS_MK	"autoconf/codels.mk"
 #define PROTO_GENOM_MK		"autoconf/genom.mk"

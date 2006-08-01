@@ -88,6 +88,9 @@ make_subdirs_osapi=\
 %-posix:
 	@OSAPI=posix; $(make_subdirs_osapi)
 
+%-xenomai:
+	@OSAPI=xenomai; $(make_subdirs_osapi)
+
 %-rtai:
 	@OSAPI=rtai;  $(make_subdirs_osapi)
 	@OSAPI=posix; $(make_subdirs_osapi)

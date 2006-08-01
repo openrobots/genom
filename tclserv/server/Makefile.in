@@ -125,3 +125,5 @@ depend DEPENDANCES:: $(SRCS)
 include DEPENDANCES
 endif
 
+# os-specific rules
+include $(top_srcdir)/config.$(OSAPI).mk
