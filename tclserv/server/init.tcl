@@ -31,8 +31,9 @@
 # Make packages in that directory available
 lappend auto_path $tclserv_library
 
-if { [info exists env(TCLSERVMODULEPATH)] } {
-    set tclserv_moduledir $env(TCLSERVMODULEPATH)
+# Make modules in these directories available
+if { [info exists env(TCLSERV_MODULE_PATH)] } {
+    set tclserv_moduledir [split $env(TCLSERV_MODULE_PATH) :]
 }
 
 # Require tclserv packages
