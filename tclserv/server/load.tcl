@@ -51,7 +51,7 @@ namespace eval modules {
 	    }
 	}
 	if { ![info exists path] } {
-	    set path "$tclserv_moduledir/$name $tclserv_moduledir"
+	    set path "$tclserv_moduledir"
 	}
 	if { ![info exists alias] } {
 	    # use default module name
@@ -68,7 +68,9 @@ namespace eval modules {
 
             set temp $path
             foreach dir $temp {
-                set path "$path ${dir}/lib/tclserv";
+		if {![regexp /lib/tclserv/*$ ${dir}]} {
+		    lappend path "${dir}/lib/tclserv"
+		}
             }
 
 	    set found 0
