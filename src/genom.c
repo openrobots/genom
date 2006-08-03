@@ -1485,13 +1485,14 @@ taille_obj(DCL_NOM_STR *t)
 	  case CHAR:
 	    return(tt);
 	  case SHORT:
-	    return(tt*2);
+	    return(tt*sizeof(short));
 	  case INT:
-	  case FLOAT:
 	  case ENUM:
-	    return(tt*4);
+	    return(tt*sizeof(int));
+	  case FLOAT:
+	    return(tt*sizeof(float));
 	  case DOUBLE:
-	    return(tt*8);
+	    return(tt*sizeof(double));
 	  case STRUCT:
 	    /* structures -> somme de la taille des membres */
 	    tot = 0;
@@ -1513,7 +1514,7 @@ taille_obj(DCL_NOM_STR *t)
 	    t1 = trouve_type(t->type);
 	    if (t1 == NULL) {
 		/* type inconnu - estime la taille a celle d'un pointeur */
-		return(tt*4);
+		return(tt*sizeof(void *));
 	    } else {
 		/* type connu - taille du type */
 		o = STR_ALLOC(DCL_NOM_STR);
@@ -1525,11 +1526,11 @@ taille_obj(DCL_NOM_STR *t)
 	  default:
 	    /* type inconnu */
 	    fprintf(stderr, "genom Error: taille_obj: unknown type %s\n", t->name);
-	    return(tt*4);
+	    return(tt* sizeof(void *));
 	} /* switch */
     } else {
 	/* pointeurs */
-	return(tt*4);
+	return(tt* sizeof(void *));
     }
 } /* taille_obj */
 
