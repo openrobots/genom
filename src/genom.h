@@ -82,11 +82,6 @@ typedef struct type_str {
     int flags;         /* See below */
 } TYPE_STR;
 
-/* Libtool version */
-typedef struct LIBTOOL_VERSION {
-    int current, revision, age;
-} LIBTOOL_VERSION;
-
 /* Flags for data types */
 #define    TYPE_INTERNAL_DATA 0x01 /* This is the type of the fids */
 #define    TYPE_POSTER        0x02 /* This is the type of a poster */
@@ -256,6 +251,11 @@ typedef struct {
     } value;
 } RQST_AV_STR;
 
+/* Libtool version */
+typedef struct LIBTOOL_VERSION {
+    int current, revision, age;
+} LIBTOOL_VERSION;
+
 /* Description of a module */
 typedef struct {
     ID_STR *name;
@@ -312,9 +312,53 @@ typedef struct POSTERS_INPUT_LIST {
     struct POSTERS_INPUT_LIST *next;
 } POSTERS_INPUT_LIST;
 
-/* Prototypes of some external functions */
+/*----------------------------------------------------------------------*/
+/* Prototypes of  external functions */
 extern void genom_get_requires(char* filename, char* cppOptions[]);
 extern ID_LIST* push_back(ID_LIST* list, ID_LIST* item);
+extern MODULE_STR * ajout_av_module ( MODULE_AV_STR *av, MODULE_STR *module );
+extern RQST_STR * ajout_av_requete ( RQST_AV_STR *av, RQST_STR *rqst );
+extern EXEC_TASK_STR * ajout_av_tache ( EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task );
+extern void ajout_type ( TYPE_STR *t );
+extern void bufcat ( char **buf, char *fmt, ... );
+extern int bufcatIfNotIn ( char **buf, char *fmt, ... );
+extern void cat_begin ( FILE *out );
+extern void cat_end ( FILE *out );
+extern void construitIncludeList ( void );
+extern TYPE_STR * copy_type ( TYPE_STR *t );
+extern void dcl_nom_decl ( DCL_NOM_STR *n, char **pType, char **pVar );
+extern char * genSizeof ( DCL_NOM_STR *n );
+extern void markUsed ( TYPE_STR *t );
+extern char * new_name ( void );
+extern char * nom_type ( TYPE_STR *type );
+extern char * nom_type1 ( TYPE_STR *type );
+extern void print_sed_subst(FILE *f, const char *from, const char *fmt, ...);
+extern int reentrant ( RQST_STR *r );
+extern void resolveRequests ( void );
+extern void resolveTasks ( void );
+extern void resolveTypes ( void );
+extern void script_close ( FILE *out, const char *newName, ... );
+extern void script_do ( FILE *out, const char *dir, const char *doFileName );
+extern void script_open ( FILE *out );
+extern void script_close_exec(FILE *out, const char *newName,...);
+extern void subst_begin ( FILE *out, const char *protoName );
+extern void subst_end ( FILE *out );
+extern int taille_obj ( DCL_NOM_STR *t );
+extern int trouve_abort_num ( void );
+extern EXEC_TASK_STR * trouve_exec_task ( char *name );
+extern int trouve_members ( TYPE_STR *t );
+extern RQST_STR * trouve_requete ( char *name );
+extern POSTERS_INPUT_LIST * trouve_poster_input(char *name);
+extern DCL_NOM_STR * trouve_sdi_ref ( STR_REF_STR *ref );
+extern TYPE_STR * trouve_type ( TYPE_STR *t );
+extern DCL_NOM_STR * trouve_typedef ( TYPE_STR *t );
+extern int trouve_value ( char *symbole, int *pVal );
+extern void upCaseNames ( void );
+extern void upCaseArguments ( void );
+extern void * xalloc ( size_t n );
+extern void * xrealloc ( void *p, size_t n );
+
+/*----------------------------------------------------------------------*/
 
 /* Global variables */
 extern int keyword;	
@@ -347,7 +391,5 @@ extern const char genomMajor[];
 extern const char genomMinor[];
 
 extern int verbose;
-
-#include "genomProto.h"
 
 #endif
