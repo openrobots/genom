@@ -67,9 +67,8 @@ all:;
 install: all
 	$(MKINSTALLDIRS) $(includedir)/genom
 	@for f in $(flist); do						\
-		if ! cmp -s $(srcdir)/$$f $(includedir)/$$f; then \
-				$(INSTALL_DATA) $(srcdir)/$$f $(includedir)/$$f;	\
-		fi; \
+		cmp -s $(srcdir)/$$f $(includedir)/$$f || \
+			$(INSTALL_DATA) $(srcdir)/$$f $(includedir)/$$f; \
 	done
 
 .PHONY: clean

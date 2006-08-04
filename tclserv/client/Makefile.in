@@ -77,10 +77,9 @@ $(pkgfile): $(pkgfile).in
 install:: $(pkgfile)
 	$(MKINSTALLDIRS) $(CANVASDIR)/tcl
 	@for f in $(tlist); do						\
-		if ! $(CMP) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f; then \
-				echo "$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f"; \
-				$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f;	\
-		fi; \
+		$(CMP) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f || (\
+			echo "$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f"; \
+			$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f; ) \
 	done
 	$(MKINSTALLDIRS) $(datadir)/genom
 	$(INSTALL_DATA) $(pkgfile) $(datadir)/genom/$(pkgfile)
