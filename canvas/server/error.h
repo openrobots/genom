@@ -54,7 +54,7 @@ $listStdFailures$
 #define $MODULE$_H2_ERR_MSGS {\$listTabFailures$
 }
 
-int $module$RecordH2errMsgs();
+extern int $module$RecordH2errMsgs(void);
 
 
 

@@ -2,7 +2,7 @@
 
 static const H2_ERROR const $module$H2errMsgs[] = $MODULE$_H2_ERR_MSGS;
 
-int $module$RecordH2errMsgs()
+int $module$RecordH2errMsgs(void)
 {
   /* std errors from genom */
   genomRecordH2errMsgs();
