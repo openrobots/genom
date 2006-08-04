@@ -33,7 +33,6 @@
 #define _INITGEN_H
 
 #define PROTO_INIT "server/init.c"
-#define PROTO_INIT_PROTO "server/initProto.h"
 
 /* initGen.c */
 extern int initGen(FILE *out);

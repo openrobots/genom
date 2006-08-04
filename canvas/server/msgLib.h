@@ -44,9 +44,6 @@
 #define TIME_WAIT_REPLY           /*2000*/ 0
  
 
-/*---------------- PROTOTYPES DES FONCTIONS EXTERNES ------------------*/
-
-#include "$module$MsgLibProto.h"
 
 
 /*----------- Tailles des messages et boites aux lettres  ----------*/
@@ -88,5 +85,28 @@
 
 $listRequests$
 
-/* Fin de chargement du fichier */
+/*---------------- PROTOTYPES DES FONCTIONS EXTERNES ------------------*/
+
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+STATUS $module$ClientInit (CLIENT_ID *pClientId);
+
+STATUS $module$ClientEnd (CLIENT_ID clientId);
+
+int $module$AbortRqstSend (CLIENT_ID clientId, 
+			   int *pRqstId,
+			   int *activity,
+			   int replyTimeOut);
+
+int $module$AbortReplyRcv (CLIENT_ID clientId, 
+			   int rqstId, 
+			   int block,  /* NO_BLOCK BLOCK_ON_FINAL_REPLY */
+			   int *bilan);
+
+int $module$AbortRqstAndRcv (CLIENT_ID clientId, 
+			     int *activity,
+			     int *bilan);
+
+

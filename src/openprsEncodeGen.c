@@ -103,16 +103,6 @@ openprsEncodeGen(FILE *out)
     cat_end(out);
     script_close(out, "server/openprs/%sEncodeOpenprs.c", module->name);
 
-    /* ------------------------------------------------------------
-     *  PROTO
-     */
-    script_open(out);
-    cat_begin(out);
-    genOpenprsEncode(out, 1 /* ! protos */);
-
-    cat_end(out);
-    script_close(out, "server/openprs/%sEncodeOpenprsProto.h", module->name);
-
     /* ---------------------------------------------------------------------
      * Generation fichier header
      */
@@ -135,6 +125,13 @@ openprsEncodeGen(FILE *out)
     print_sed_subst(out, "MODULE", module->NAME);
 
     subst_end(out);
+
+    /* prototypes */
+    cat_begin(out);
+    genOpenprsEncode(out, 1 /* ! protos */);
+    fprintf(out, "\n#endif /* %s_OPENPRS_ENCODE_H */\n", module->NAME);
+    cat_end(out);
+    
     script_close(out, "server/openprs/%sEncodeOpenprs.h", module->name);
 
     return(0);

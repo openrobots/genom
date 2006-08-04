@@ -63,32 +63,6 @@ endianGen(FILE *out)
 "void endianswap_%s(%s *x, int nDim, int *dims)\n{\n"
 "  FOR_EACH_elt(nDim,dims) {\n";
 
-    /* protos */
-    script_open(out);
-    cat_begin(out);
-    /* Generation des fonctions endian */
-    for (l = types; l != NULL; l = l->next) {
-	t = l->type;
-	if (/* t->used == 0 || */ (t->flags & TYPE_IMPORT)) {
-	    continue;
-	}
-	fprintf(out, func_header_proto, nom_type1(t), nom_type(t));
-    }
-
-    fprintf(out, "\n/* ======================== ENDIAN DES TYPEDEF ============================= */\n\n");
-    for (ltypedefs = typedefs; ltypedefs != NULL; 
-	 ltypedefs = ltypedefs->next) {
-	if (/* ltypedefs->dcl_nom->type->used == 0
-	       ||*/ (ltypedefs->dcl_nom->type->flags & TYPE_IMPORT)) {
-	    continue;
-	}
-	fprintf(out, func_header_proto, ltypedefs->dcl_nom->name, 
-		ltypedefs->dcl_nom->name);
-    }
-
-    cat_end(out);
-    script_close(out, "server/%sEndianProto.h", module->name);
-
 
     /* functions */
     script_open(out);
@@ -206,12 +180,32 @@ endianGen(FILE *out)
     fprintf(out, "#include \"genom/printScan.h\"\n");
     fprintf(out, "#include \"genom/h2endian.h\"\n");
     fprintf(out, "#include \"%sPosterLib.h\"\n", module->name);
-    fprintf(out, "#include \"%sEndianProto.h\"\n\n", module->name);
 
     /* Structures importees d'autres modules */
     for (ln = imports; ln != NULL; ln = ln->next) {
       fprintf(out, "\n#include \"server/%sEndian.h\"\n", ln->name);
     } /* for */
+
+    /* Generation des prototypes des fonctions endian */
+    fprintf(out, "\n/* Protoypes */\n\n");
+    for (l = types; l != NULL; l = l->next) {
+	t = l->type;
+	if (/* t->used == 0 || */ (t->flags & TYPE_IMPORT)) {
+	    continue;
+	}
+	fprintf(out, func_header_proto, nom_type1(t), nom_type(t));
+    }
+
+    fprintf(out, "\n/* ======================== ENDIAN DES TYPEDEF ============================= */\n\n");
+    for (ltypedefs = typedefs; ltypedefs != NULL; 
+	 ltypedefs = ltypedefs->next) {
+	if (/* ltypedefs->dcl_nom->type->used == 0
+	       ||*/ (ltypedefs->dcl_nom->type->flags & TYPE_IMPORT)) {
+	    continue;
+	}
+	fprintf(out, func_header_proto, ltypedefs->dcl_nom->name, 
+		ltypedefs->dcl_nom->name);
+    }
 
     fprintf(out, "#endif\n");
 

@@ -41,6 +41,5 @@
 $externPrintLibs$
 
 #include "$module$PosterLib.h"
-#include "$module$PrintProto.h"
 
-#endif /* $MODULE$_PRINT_H */
+/* Prototypes */

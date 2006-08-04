@@ -64,11 +64,10 @@
 
 /* Inclusions pour acceder au module */
 #include "$module$MsgLib.h"
-#include "$module$InitProto.h"
 
-/*------------------- PROTOTYPE DE LA FONCTION EXPORTEE --------------------*/
+/*------------------- PROTOTYPE DES FONCTIONS EXPORTEES -------------------*/
 
-STATUS $module$Init ($inputFlat$);
+STATUS $module$SendInitRqst ( $inputFlat$ );
 
 /*------------------- PROTOTYPES DES FONCTIONS LOCALES --------------------*/
 

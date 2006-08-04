@@ -43,6 +43,5 @@
 $externPrintXMLLibs$
 
 #include "$module$PosterLib.h"
-#include "$module$PrintXMLProto.h"
 
-#endif /* $MODULE$_PRINTXML_H */
+/* Prototypes */

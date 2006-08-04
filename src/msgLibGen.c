@@ -128,24 +128,9 @@ int msgLibGen(FILE *out)
     /* Taille max d'une requete et d'une replique */
     print_sed_subst(out, "maxRequestSize", "%d", maxRqstSize);
     print_sed_subst(out, "maxReplySize", "%d", maxReplySize);
-    
-    subst_end(out);
-    script_close(out, "server/%sMsgLib.h", module->name);
-
-
-    /*
-     * MsgLibProto.h
-     */
-    script_open(out);
-
-    subst_begin(out, PROTO_MSG_PROTO);
-    
-    /* nom du module */
-    print_sed_subst(out, "module", module->name);
-    print_sed_subst(out, "MODULE", module->NAME);
-
     subst_end(out);
 
+    /* Prototypes */
     /* Every request */
     for (l = requetes; l != NULL; l=l->next) {
         r=l->rqst;
@@ -159,10 +144,10 @@ int msgLibGen(FILE *out)
     fprintf(out, "#ifdef __cplusplus\n");
     fprintf(out, "}\n");
     fprintf(out, "#endif\n");
-    fprintf(out, "#endif /* %s_MSG_LIB_PROTO_H */\n", module->name);
+    fprintf(out, "#endif /* %s_MSG_LIB_H */\n", module->name);
     cat_end(out);
 
-    script_close(out, "server/%sMsgLibProto.h", module->name);
+    script_close(out, "server/%sMsgLib.h", module->name);
 
 
     return(0);

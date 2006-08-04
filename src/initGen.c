@@ -108,15 +108,7 @@ initGen(FILE *out)
 
     subst_end(out);
     script_close(out, "server/%sInit.c", module->name);
-     
-    /* PROTO */
-    script_open(out);
-    subst_begin(out, PROTO_INIT_PROTO);
-    print_sed_subst(out, "module", module->name);
-    print_sed_subst(out, "inputFlat", "void");    
-    subst_end(out);
-    script_close(out, "server/%sInitProto.h", module->name);
-    
+
     return(0);
   }
   
@@ -155,14 +147,6 @@ initGen(FILE *out)
     subst_end(out);
     script_close(out, "server/%sInit.c", module->name);
     
-    /* PROTO */
-    script_open(out);
-    subst_begin(out, PROTO_INIT_PROTO);
-    print_sed_subst(out, "module", module->name);
-    print_sed_subst(out, "inputFlat", "void");    
-    subst_end(out);
-    script_close(out, "server/%sInitProto.h", module->name);
-
     return(0);
   }
 
@@ -203,15 +187,7 @@ initGen(FILE *out)
   /* C'est fini */
   subst_end(out);
   script_close(out, "server/%sInit.c", module->name);
-  
-  /* PROTO */
-  script_open(out);
-  subst_begin(out, PROTO_INIT_PROTO);
-  print_sed_subst(out, "module", module->name);
-  print_sed_subst(out, "inputFlat", "%s", strList);
-  subst_end(out);
-  script_close(out, "server/%sInitProto.h", module->name);
-  
+    
   free_strings();
   return(0);
 

@@ -139,41 +139,6 @@ scopeGen(FILE *out)
   char *posterFunc;
 
   /**
-   ** Les prototypes
-   **/
-  script_open(out);
-  cat_begin(out);
-
-  fprintf (out, 
-	   "extern BOOL %sScopeAll (char *rack, char *cpu, H2_SCOPE_SIG_STR **scopeList,\n"
-	   "                    H2_SCOPE_SDI_OR_POSTER sdiOrPoster);\n",
-	   module->name);
-
-  fprintf (out, 
-	   "extern BOOL %sScopePoster (char *rack, H2_SCOPE_SIG_STR **scopeList);\n", module->name);
-
-  fprintf (out, 
-	   "extern BOOL %sScopeSdi (char *rack, char *cpu, H2_SCOPE_SIG_STR **scopeList);\n",
-	   module->name);
-
-  for (l = types; l != NULL; l = l->next) {
-    t = l->type;
-    if (t->used == 0 || (t->flags & TYPE_IMPORT)) {
-      continue;
-    }
-    
-    /* Structure: on traite chaque membre */
-    if (t->type == STRUCT || t->type == UNION) {
-	
-	/* Entete de la fonction */
-	fprintf(out, func_header_proto, nom_type1(t));
-    }
-  }
-
-  cat_end(out);
-  script_close(out, "server/%sScopeLibProto.h", module->name);
-
-  /**
    ** La fonction main totoScope dans totoScope.c
    **/
   script_open(out);
@@ -206,6 +171,52 @@ scopeGen(FILE *out)
   print_sed_subst(out, "MODULE", module->NAME);
   
   subst_end(out);
+
+
+  /**
+   ** Les prototypes
+   **/
+  cat_begin(out);
+
+  fprintf(out,
+      "#ifdef __cplusplus\n"
+      "extern \"C\" {\n"
+      "#endif\n");
+
+  fprintf (out, 
+	   "extern BOOL %sScopeAll (char *rack, char *cpu, H2_SCOPE_SIG_STR **scopeList,\n"
+	   "                    H2_SCOPE_SDI_OR_POSTER sdiOrPoster);\n",
+	   module->name);
+
+  fprintf (out, 
+	   "extern BOOL %sScopePoster (char *rack, H2_SCOPE_SIG_STR **scopeList);\n", module->name);
+
+  fprintf (out, 
+	   "extern BOOL %sScopeSdi (char *rack, char *cpu, H2_SCOPE_SIG_STR **scopeList);\n",
+	   module->name);
+
+  for (l = types; l != NULL; l = l->next) {
+    t = l->type;
+    if (t->used == 0 || (t->flags & TYPE_IMPORT)) {
+      continue;
+    }
+    
+    /* Structure: on traite chaque membre */
+    if (t->type == STRUCT || t->type == UNION) {
+	
+	/* Entete de la fonction */
+	fprintf(out, func_header_proto, nom_type1(t));
+    }
+  }
+  fprintf(out,
+      "#ifdef __cplusplus\n"
+      "}\n"
+      "#endif\n");
+  
+  fprintf(out, "\n#endif /* %s_SCOPE_H */\n", module->NAME);
+
+  cat_end(out);
+  
   script_close(out, "server/%sScopeLib.h", module->name);
 
   /**

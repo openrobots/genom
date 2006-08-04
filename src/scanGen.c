@@ -75,38 +75,6 @@ scanGen(FILE *out)
 "indentStr(indent-2), getIndexesStr(nDim, dims, elt));\n\n";
 
 
-    /* PROTOS */
-    script_open(out);
-    cat_begin(out);
-
-    /* Generation des fonctions scan */
-    for (l = types; l != NULL; l = l->next) {
-	t = l->type;
-	if (/* t->used == 0 || */ (t->flags & TYPE_IMPORT)) {
-	    continue;
-	}
-
-	/* Entete de la fonction */
-	fprintf(out, func_header_proto, nom_type1(t), nom_type(t));
-    }
-
-    /* 
-     * Affichage des typedef: on appelle les fonctions ci-dessus
-     */
-    fprintf(out, "\n/* ======================== SCAN DES TYPEDEF ============================= */\n\n");
-    for (ltypedefs = typedefs; ltypedefs != NULL; 
-	 ltypedefs = ltypedefs->next) {
-	if (/* ltypedefs->dcl_nom->type->used == 0
-	       || */ (ltypedefs->dcl_nom->type->flags & TYPE_IMPORT)) {
-	    continue;
-	}
-	fprintf(out, func_header_proto, ltypedefs->dcl_nom->name,
-		ltypedefs->dcl_nom->name);
-    }
-    cat_end(out);
-    script_close(out, "server/%sScanProto.h", module->name);
-
-
     /* FUNCS */
     script_open(out);
     cat_begin(out);
@@ -225,6 +193,46 @@ scanGen(FILE *out)
     print_sed_subst(out, "MODULE", module->NAME);
 
     subst_end(out);
+
+    /* PROTOS */
+    cat_begin(out);
+    fprintf(out,
+	"#ifdef __cplusplus\n"
+	"extern \"C\" {\n"
+	"#endif\n");
+
+    /* Generation des fonctions scan */
+    for (l = types; l != NULL; l = l->next) {
+	t = l->type;
+	if (/* t->used == 0 || */ (t->flags & TYPE_IMPORT)) {
+	    continue;
+	}
+
+	/* Entete de la fonction */
+	fprintf(out, func_header_proto, nom_type1(t), nom_type(t));
+    }
+
+    /* 
+     * Affichage des typedef: on appelle les fonctions ci-dessus
+     */
+    fprintf(out, "\n/* ======================== SCAN DES TYPEDEF ============================= */\n\n");
+    for (ltypedefs = typedefs; ltypedefs != NULL; 
+	 ltypedefs = ltypedefs->next) {
+	if (/* ltypedefs->dcl_nom->type->used == 0
+	       || */ (ltypedefs->dcl_nom->type->flags & TYPE_IMPORT)) {
+	    continue;
+	}
+	fprintf(out, func_header_proto, ltypedefs->dcl_nom->name,
+		ltypedefs->dcl_nom->name);
+    }
+    fprintf(out,
+	"#ifdef __cplusplus\n"
+	"}\n"
+	"#endif\n");
+
+    fprintf(out, "\n#endif /* %s_SCAN_H */\n", module->NAME);
+
+    cat_end(out);
     script_close(out, "server/%sScan.h", module->name);
 
     return(0);

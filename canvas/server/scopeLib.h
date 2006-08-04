@@ -44,6 +44,4 @@ $externScopeLibs$
 /* Structures du module */
 #include "$module$PosterLib.h"
 
-#include "$module$ScopeLibProto.h"
-
-#endif /* $MODULE$_SCOPE_H */
+/* Prototypes */

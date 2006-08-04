@@ -72,32 +72,6 @@ printXMLGen(FILE *out)
 "    fprintfBuf(out, \"%%s<%%s%%s>%s\", "
 "indstr, name, getIndexesStr2(nDim, dims, elt));\n\n";
 
-    /* protos */
-    script_open(out);
-    cat_begin(out);
-    /* Generation des fonctions print */
-    for (l = types; l != NULL; l = l->next) {
-	t = l->type;
-	if (/* t->used == 0 || */ (t->flags & TYPE_IMPORT)) {
-	    continue;
-	}
-	fprintf(out, func_header_proto, nom_type1(t), nom_type(t));
-    }
-
-    fprintf(out, "\n/* ======================== PRINT DES TYPEDEF ============================= */\n\n");
-    for (ltypedefs = typedefs; ltypedefs != NULL; 
-	 ltypedefs = ltypedefs->next) {
-	if (/* ltypedefs->dcl_nom->type->used == 0
-	       ||*/ (ltypedefs->dcl_nom->type->flags & TYPE_IMPORT)) {
-	    continue;
-	}
-	fprintf(out, func_header_proto, ltypedefs->dcl_nom->name, 
-		ltypedefs->dcl_nom->name);
-    }
-
-    cat_end(out);
-    script_close(out, "server/%sPrintXMLProto.h", module->name);
-
 
     /* functions */
     script_open(out);
@@ -218,6 +192,31 @@ printXMLGen(FILE *out)
     print_sed_subst(out, "MODULE", module->NAME);
 
     subst_end(out);
+
+    /* protos */
+    cat_begin(out);
+    /* Generation des fonctions print */
+    for (l = types; l != NULL; l = l->next) {
+	t = l->type;
+	if (/* t->used == 0 || */ (t->flags & TYPE_IMPORT)) {
+	    continue;
+	}
+	fprintf(out, func_header_proto, nom_type1(t), nom_type(t));
+    }
+
+    fprintf(out, "\n/* ======================== PRINT DES TYPEDEF ============================= */\n\n");
+    for (ltypedefs = typedefs; ltypedefs != NULL; 
+	 ltypedefs = ltypedefs->next) {
+	if (/* ltypedefs->dcl_nom->type->used == 0
+	       ||*/ (ltypedefs->dcl_nom->type->flags & TYPE_IMPORT)) {
+	    continue;
+	}
+	fprintf(out, func_header_proto, ltypedefs->dcl_nom->name, 
+		ltypedefs->dcl_nom->name);
+    }
+    fprintf(out, "\n#endif /* %s_PRINT_XML_H */\n", module->NAME);
+    cat_end(out);
+
     script_close(out, "server/%sPrintXML.h", module->name);
 
     return(0);

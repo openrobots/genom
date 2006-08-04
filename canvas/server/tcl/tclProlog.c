@@ -52,7 +52,8 @@
 #include "h2errorLib.h"
 #include "$module$MsgLib.h"
 #include "$module$PosterLib.h"
-#include "$module$TclProto.h"
+
+int $Module$_Init(Tcl_Interp *);
 
 struct ModuleInfo {
    char *name;

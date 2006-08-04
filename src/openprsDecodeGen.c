@@ -95,15 +95,6 @@ openprsDecodeGen(FILE *out)
     cat_end(out);
     script_close(out, "server/openprs/%sDecodeOpenprs.c", module->name);
 
-    /* ------------------------------------------------------------
-     *  PROTO
-     */
-    script_open(out);
-    cat_begin(out);
-    genOpenprsDecode(out, 1 /* ! protos */);
-
-    cat_end(out);
-    script_close(out, "server/openprs/%sDecodeOpenprsProto.h", module->name);
 
     /* ---------------------------------------------------------------------
      * Generation fichier header
@@ -127,6 +118,13 @@ openprsDecodeGen(FILE *out)
     print_sed_subst(out, "MODULE", module->NAME);
 
     subst_end(out);
+
+    /* Prototypes */
+    cat_begin(out);
+    genOpenprsDecode(out, 1 /* ! protos */);
+    fprintf(out, "\n#endif /* %s_OPENPRS_DECODE_H */\n", module->NAME);
+    cat_end(out);
+
     script_close(out, "server/openprs/%sDecodeOpenprs.h", module->name);
 
     return(0);

@@ -39,7 +39,5 @@
 
 #include "$module$PrintXML.h"
 #include "$module$PosterLib.h"
-#include "$module$PosterXMLLibProto.h"
 
-/*-------------------- Fin de chargement du fichier -----------------------*/
-#endif /* $module$_POSTER_XML_LIB_H */
+/* Prototypes */

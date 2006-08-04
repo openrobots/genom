@@ -58,15 +58,11 @@ typedef $MODULE$_CNTRL_STR $MODULE$_CNTRL_POSTER_STR;
  */
 #include "$module$PosterLibStruct.h"
 
-/*---------------- PROTOTYPES DES FONCTIONS EXTERNES ------------------*/
-
-#include "$module$PosterLibProto.h"
 
 
 /* Posters */
 #define $MODULE$_CNTRL_POSTER_NAME         "$module$Cntrl"
 $listPosterNameDeclare$
 
+/*---------------- PROTOTYPES DES FONCTIONS EXTERNES ------------------*/
 
-/*-------------------- Fin de chargement du fichier -----------------------*/
-#endif

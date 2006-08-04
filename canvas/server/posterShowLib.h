@@ -36,7 +36,5 @@
 #define $module$_POSTER_SHOW_LIB_H
 
 #include "$module$PosterLib.h"
-#include "$module$PosterShowLibProto.h"
 
-/*-------------------- Fin de chargement du fichier -----------------------*/
-#endif
+/* Prototypes */

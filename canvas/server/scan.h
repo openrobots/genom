@@ -43,6 +43,4 @@ $externScanLibs$
 /* Structures du module */
 #include "$module$PosterLib.h"
 
-#include "$module$ScanProto.h"
-
-#endif /* $MODULE$_SCAN_H */
+/* Prototypes */

@@ -77,7 +77,6 @@ flist+=\
 	server/execTaskHeader.h		\
 	server/header.h			\
 	server/init.c			\
-	server/initProto.h		\
 	server/moduleInit.c		\
 	server/msgCntrl.c		\
 	server/msgExec.c		\
@@ -85,7 +84,6 @@ flist+=\
 	server/msgLib.h			\
 	server/msgLibCntrlProto.h	\
 	server/msgLibExecProto.h	\
-	server/msgLibProto.h		\
 	server/posterLib.c		\
 	server/posterLib.h		\
 	server/posterLibStruct.h	\

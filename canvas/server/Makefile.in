@@ -89,28 +89,18 @@ client_src= \
 
 client_includes = \
 	server/$module$Type.h \
-	server/$module$ScopeLibProto.h \
 	server/$module$ScopeLib.h \
-	server/$module$ScanProto.h \
 	server/$module$Scan.h \
-	server/$module$PrintXMLProto.h \
 	server/$module$PrintXML.h \
-	server/$module$PrintProto.h \
 	server/$module$Print.h \
-	server/$module$PosterXMLLibProto.h \
 	server/$module$PosterXMLLib.h \
 	server/$module$PosterWriteLibProto.h \
-	server/$module$PosterShowLibProto.h \
 	server/$module$PosterShowLib.h \
 	server/$module$PosterReadLibProto.h \
 	server/$module$PosterLibStruct.h \
-	server/$module$PosterLibProto.h \
 	server/$module$PosterLib.h \
-	server/$module$MsgLibProto.h \
 	server/$module$MsgLib.h \
-	server/$module$InitProto.h \
 	server/$module$Error.h \
-	server/$module$EndianProto.h \
 	server/$module$Endian.h \
 $listIncludesInDotGen$
 
@@ -151,9 +141,7 @@ $genOpenprs$	openprs/$module$RequestsOpenprs.c
 $genOpenprs$openprsclient_obj=$(openprsclient_src:%.c=$(OBJDIR)/%.lo)
 $genOpenprs$oprsclient_headers = \
 $genOpenprs$	openprs/$module$DecodeOpenprs.h \
-$genOpenprs$	openprs/$module$DecodeOpenprsProto.h \
 $genOpenprs$	openprs/$module$EncodeOpenprs.h \
-$genOpenprs$	openprs/$module$EncodeOpenprsProto.h \
 $genOpenprs$	openprs/$module$RequestsOpenprsProto.h
 $genOpenprs$oprsclient_data = \
 $genOpenprs$	openprs/$module$Openprs.inc openprs/$module$Openprs.opf openprs/$module$Openprs.sym

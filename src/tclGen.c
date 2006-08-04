@@ -61,6 +61,7 @@ tclGen(FILE *out)
    int nDim, *dims;
    DCL_NOM_STR *dcln;
 
+#if 0
    /* proto */
    script_open(out);
    cat_begin(out);
@@ -73,6 +74,7 @@ tclGen(FILE *out)
 
    cat_end(out);
    script_close(out,  "server/tcl/%sTclProto.h", module->name);
+#endif
 
    /* func */
    script_open(out);
