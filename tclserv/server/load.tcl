@@ -108,7 +108,6 @@ namespace eval modules {
 
 	    if { [set loaded($module)] == 0 } {
 		set name [set aliases($module)]
-		server::log "connect $name $module"
 		${name}::connect $module
 		set loaded($module) 1
 	    }
