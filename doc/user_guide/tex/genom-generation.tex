@@ -119,10 +119,10 @@ This library implements  the basic requests  functions (request emission,
 replies reception) and is used by the clients of this module.
 
 The {\tt   C}  source code    of  this  library  can be   found  in  {\tt
-demoMsgLib.c} and the  prototypes in {\tt demoMsgLibProto.h}.  The header
+demoMsgLib.c}.  The header
 file {\tt demoMsgLib.h}, which must  be included by clients, contains the
 definitions for the server identification and communication establishment
-(name and size of the mailbox, \ldots).
+(name and size of the mailbox, function prototypes\ldots).
 
 To use this  library, you must link your  program with  {\tt
 -ldemoClient}. 
@@ -132,9 +132,11 @@ To use this  library, you must link your  program with  {\tt
 
 This library implements the basic posters functions for this module (read
 and display   functions).  The same    structure as above  is used:  {\tt
-demoPosterLib.c} is  the  source code and  {\tt demoPosterLibProto.h} the
-prototypes definition.  {\tt demoPosterLib.h}   defines the name  of  the
-posters along  with  their data structures.  The  {\em cIDS} structure is
+demoPosterLib.c} is  the  source code. 
+{\tt demoPosterLib.h}   defines the name  of  the
+posters along  with  their data structures and prototypes of access
+funtions.
+The  {\em cIDS} structure is
 also defined there\footnote{the structures included by the {\em cIDS} are
 defined in the file {\tt modules.h}, located in the genom source tree.}.
 
