@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2006 LAAS/CNRS
  * Matthieu Herrb - Tue Jul 13 1993
  * All rights reserved.
  *
@@ -34,99 +34,99 @@
 
 #include <sys/types.h>
 
-#define MAX_POSTERS 16		/* Verifier coherence avec modules.h */
+#define MAX_POSTERS 16		/* Keep coherent with modules.h */
 
 #define STR_ALLOC(s) ((s *)xalloc(sizeof(s)))
 
 
 /***
- *** De'finitions de la representation interne d'un module pour genom
+ *** Definitions for the internal representation of a Genom module
  ***/
 
 
-/* Description d'un identificateur */
+/* Identifier */
 typedef char ID_STR;
 
-/* Liste d'identificateurs */
+/* List of identifiers */
 typedef struct id_list {
     ID_STR *name;
-    ID_STR *NAME;
+    ID_STR *NAME;			/* ALL CAPS version of the name */
     struct id_list *next;
 } ID_LIST;
 
-/* Description d'un nom déclaré (partie droite de la déclaration) */
+/* Definition of a declared name (right side part of the declaration */
 typedef struct {
     char *name;
     struct type_str *type;
-    int pointeur;      /* Compte les "*" */
+    int pointeur;      /* counts the "*" */
     int *dimensions;
     int ndimensions;
   /*    int max_str_len;   */
     int flags;         /* ENUM_VALUE, ENUM_NO_VALUE, ARRAY, STRING */
 } DCL_NOM_STR;
 
-/* Liste de noms de'clare's */
+/* List of declared names */
 typedef struct dcl_nom_list {
     DCL_NOM_STR *dcl_nom;
     struct dcl_nom_list *next;
 } DCL_NOM_LIST;
 
-/* Descripteur de type (partie gauche de la déclaration) */
+/* Type descriptor (left side part of the declaration */
 typedef struct type_str {
     int type;
     ID_STR *name;
     DCL_NOM_LIST *members;
-    int used;         /* Indique si utilise */
+    int used;         /* Flag indicating use */
     int linenum;
     char *filename;
-    int flags;         /* Voir ci-dessous */
+    int flags;         /* See below */
 } TYPE_STR;
 
+/* Libtool version */
 typedef struct LIBTOOL_VERSION {
     int current, revision, age;
 } LIBTOOL_VERSION;
 
-/* Flags des types */
-#define    TYPE_INTERNAL_DATA 0x01 /* Ce type est celui de la SDI */
-#define    TYPE_POSTER        0x02 /* Ce type est celui d'un poster */
-#define    TYPE_IMPORT        0x04 /* Ce type est importe' d'un autre module */
-#define    ENUM_NO_VALUE      0x08 /* element d'une enum sans valeur */
-#define    ENUM_VALUE         0x10 /* element d'une enume avec valeur */
-#define    SHORT_INT          0x20 /* type 'short' */
-#define    LONG_INT           0x40 /* type 'long' */
-#define    UNSIGNED_TYPE      0x80 /* type 'unsigned' */
+/* Flags for data types */
+#define    TYPE_INTERNAL_DATA 0x01 /* This is the type of the fids */
+#define    TYPE_POSTER        0x02 /* This is the type of a poster */
+#define    TYPE_IMPORT        0x04 /* imported from anoter module */
+#define    ENUM_NO_VALUE      0x08 /* enum element without a declared value */
+#define    ENUM_VALUE         0x10 /* enum element with a declared value */
+#define    SHORT_INT          0x20 /* 'short' */
+#define    LONG_INT           0x40 /* 'long' */
+#define    UNSIGNED_TYPE      0x80 /* 'unsigned' */
 
-#define    TYPE_GENOM         0x100 /* type defini dans le .gen */
+#define    TYPE_GENOM         0x100 /* type defined in the .gen file */
 
 
-#define    ARRAY              0x200 /* les tableaux (de type ci-dessus) */
-#define    STRING             0x400 /* tableau de char */
+#define    ARRAY              0x200 /* array (of a type declared above) */
+#define    STRING             0x400 /* array of chars  */
 #define    POINTER            0x600
 
-/* POINTEUR */
+/* POINTER */
 #define IS_POINTER(n) ((n)->pointeur==0 ? 0==1:1==1)
 
-/* STRING ou tableau de STRING 
-   (actuellement tout tableau de char est une STRING,
-   mais ce serait plus propre (et plus souple) de definir 
-   explicitement un type string). */ 
+/* STRING or array of  STRINGs
+   Currently all arrays of chars are considered as strings.
+   It would be better to have an explicit string type of some kind. */ 
 #define IS_STRING(n)   (!((n)->type->flags & UNSIGNED_TYPE) && \
                         (n)->type->type==CHAR && (n)->ndimensions!=0 && \
 			!IS_POINTER(n) ? 1==1:0==1)
 /* #define IS_STRING(n)   ((n)->type->type==CHAR && (n)->ndimensions==1 && \ */
 /* 			!IS_POINTER(n) ? 1==1:0==1) */
 
-/* Tableau (sauf simple STRING) */
+/* ARRAY (except strings) */
 #define IS_ARRAY(n)    ((n)->ndimensions!=0 && \
 		       ((n)->ndimensions!=1 || !IS_STRING(n)) ? 1==1:0==1)
 
-/* Liste de types */
+/* List of types */
 typedef struct type_list {
     TYPE_STR *type;
     struct type_list *next;
 } TYPE_LIST;
 
-/* Liste de requetes */
+/* List of requests */
 typedef struct rqst_list {
     ID_STR *name;
     int flags;
@@ -134,18 +134,20 @@ typedef struct rqst_list {
     struct rqst_list *next;
 } RQST_LIST;
 
-/* Refe'rence a un membre de structure */
+/* Reference to a member of a structure */
 typedef struct {
     DCL_NOM_STR *dcl_nom;
     ID_LIST *sdi_ref;
 } STR_REF_STR;
 
+/* List of reference to structure members */
 typedef struct str_ref_list {
     STR_REF_STR *str_ref;
     struct str_ref_list *next;
 } STR_REF_LIST;
 
 
+/* List of "information" data about a variable */
 typedef struct rqst_input_info_list {
     int type;   /* INT, DOUBLE ou CHAR */
     union { 
@@ -157,7 +159,7 @@ typedef struct rqst_input_info_list {
     struct rqst_input_info_list *next;
 } RQST_INPUT_INFO_LIST;
     
-/* Description d'une ta^che d'exe'cution */
+/* Description of an execution task */
 typedef struct exec_task_str {
     ID_STR *name;
     ID_STR *NAME;
@@ -176,6 +178,7 @@ typedef struct exec_task_str {
     ID_LIST *fail_msg;
 } EXEC_TASK_STR;
 
+/* List of attribute/values for an execution task */
 typedef struct {
     int attribut;
     union {
@@ -196,13 +199,13 @@ typedef struct {
     } value;
 } EXEC_TASK_AV_STR;
 
-/* Liste de taches d'exection */
+/* List of execution tasks */
 typedef struct exec_task_list {
     EXEC_TASK_STR *exec_task;
     struct exec_task_list *next;
 } EXEC_TASK_LIST;
 
-/* Description d'une requete */
+/* Description of a request */
 typedef struct rqst_str {
     ID_STR *name;
     ID_STR *NAME;
@@ -228,6 +231,7 @@ typedef struct rqst_str {
     RQST_INPUT_INFO_LIST *input_info; 
 } RQST_STR;
 
+/* Attribute/value pair for a request */
 typedef struct {
     int attribut;
     union {
@@ -252,7 +256,7 @@ typedef struct {
     } value;
 } RQST_AV_STR;
 
-/* Description d'un module */
+/* Description of a module */
 typedef struct {
     ID_STR *name;
     ID_STR *NAME;
@@ -268,6 +272,7 @@ typedef struct {
 } MODULE_STR;
 
 
+/* Attribute/value pairs for a module */
 typedef struct {
     int attribut;
     union {
@@ -276,12 +281,12 @@ typedef struct {
 	ID_LIST *codel_files;
         ID_STR *email;
         ID_STR *version;
-        LIBTOOL_VERSION *iface_version;
+        LIBTOOL_VERSION *iface_version; /* interface versionning */
         int use_cxx;
     } value;
 } MODULE_AV_STR;
 
-/* Description d'un poster */
+/* Description of a poster */
 typedef struct POSTER_LIST {
     ID_STR  *name;
     ID_STR *NAME;
@@ -296,9 +301,8 @@ typedef struct POSTER_LIST {
     struct POSTER_LIST *next;
 } POSTER_LIST;
 
-extern const char *protoDir;
 
-/* Description d'un poster attendu en entree */
+/* List of references to posters used as input */
 typedef struct POSTERS_INPUT_LIST {
     ID_STR  *name;
     ID_STR *NAME;
@@ -308,9 +312,11 @@ typedef struct POSTERS_INPUT_LIST {
     struct POSTERS_INPUT_LIST *next;
 } POSTERS_INPUT_LIST;
 
+/* Prototypes of some external functions */
 extern void genom_get_requires(char* filename, char* cppOptions[]);
 extern ID_LIST* push_back(ID_LIST* list, ID_LIST* item);
 
+/* Global variables */
 extern int keyword;	
 extern int num_ligne;
 extern char nomfic[];
@@ -332,6 +338,7 @@ extern POSTER_LIST *posters;
 extern POSTERS_INPUT_LIST *posters_input;
 extern int initRequest;
 
+extern const char *protoDir;
 extern char *cppOptions[];
 extern int nCppOptions;
 
