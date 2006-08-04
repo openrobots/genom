@@ -1,5 +1,6 @@
 $LAAS$
-  
+
+ 33. Remove use of separate *Proto.h for function prototypes.
  32. Rename TCLSERVMODULEPATH environment variable to TCLSERV_MODULE_PATH
      and allow definition of a colon-separated list of paths.
  31. Add 'extern "C"' declaration for user codels prototypes in header.h.
