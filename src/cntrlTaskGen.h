@@ -36,6 +36,7 @@
 #define PROTO_RQST_CNTRL_C "server/requestCntrl.c" 
 #define PROTO_RQST_EXEC_C "server/requestExec.c" 
 
-#include "cntrlTaskGenProto.h"
+/* cntrlTaskGen.c */
+extern int cntrlTaskGen(FILE *out);
 
 #endif

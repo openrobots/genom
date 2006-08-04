@@ -34,6 +34,7 @@
 
 #define PROTO_START_USER "codels/start"
 
-#include "userStartGenProto.h" 
+/* userStartGen.c */
+extern int userStartGen(FILE *out, char *codelsDir);
 
 #endif

@@ -35,6 +35,7 @@
 #define PROTO_TCLCLIENTRQST	"server/tcl/tclClientRqst.tcl"
 #define PROTO_TCLCLIENTPOSTER	"server/tcl/tclClientPoster.tcl"
 
-#include "tclClientGenProto.h" 
+/* tclClientGen.c */
+extern int tclClientGen(FILE *out);
 
 #endif /* _TCLCLIENTGEN_H */

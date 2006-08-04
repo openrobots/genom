@@ -34,6 +34,7 @@
 
 #define PROTO_TYPE_H "server/type.h"
 
-#include "typeGenProto.h" 
+/* typeGen.c */
+extern int typeGen(FILE *out);
 
 #endif

@@ -40,7 +40,6 @@ __RCSID("$LAAS$");
 #include "genom.h"
 #include "parser.tab.h"
 #include "openprsGen.h"
-#include "openprsGenProto.h"
 
 static void declareRequests(FILE *out);
 static void declareAtoms(FILE *out);

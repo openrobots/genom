@@ -50,7 +50,8 @@ __RCSID("$LAAS$");
 
 POSTERS_INPUT_LIST *posters_input=NULL;
 
-ID_LIST* push_back(ID_LIST* list, ID_LIST* item)
+ID_LIST* 
+push_back(ID_LIST* list, ID_LIST* item)
 {
     ID_LIST* last;
 
@@ -68,7 +69,8 @@ ID_LIST* push_back(ID_LIST* list, ID_LIST* item)
  ***/
 /*----------------------------------------------------------------------*/
 
-static char* strcpytoupper(char const* value)
+static char* 
+strcpytoupper(char const* value)
 {
     char* result = (char*)xalloc(strlen(value) + 1);
     int i;
@@ -141,7 +143,8 @@ upCaseNames(void)
 
 } /* upCaseNames */
 
-static char* skip_spaces(char* buffer)
+static char *
+skip_spaces(char* buffer)
 {
     if (!buffer)
         return NULL;
@@ -158,7 +161,8 @@ static char* skip_spaces(char* buffer)
 /* Get require statements 
  * It changes the content of buffer, so take care of using its return value */
 #define MAX_REQUIRE_COUNT 256
-static void parse_require(char* buffer, int line)
+static void 
+parse_require(char* buffer, int line)
 {
     /* We split the string into tokens, removing the 'require' statement */
     size_t current = 0;

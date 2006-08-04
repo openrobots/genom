@@ -40,7 +40,6 @@ __RCSID("$LAAS$");
 #include "genom.h"
 #include "parser.tab.h"
 #include "openprsGen.h"
-#include "openprsGenProto.h"
 
 /* Production des OP */
 static int breakUpCStruct(DCL_NOM_STR *dcl, int *level, int *numvar);

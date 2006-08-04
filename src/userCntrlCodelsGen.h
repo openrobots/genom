@@ -32,7 +32,7 @@
 #ifndef _USERCNTRLCODELSGEN_H
 #define _USERCNTRLCODELSGEN_H
 
-
-#include "userCntrlCodelsGenProto.h" 
+/* userCntrlCodelsGen.c */
+extern int userCntrlCodelsGen(FILE *out);
 
 #endif

@@ -49,10 +49,11 @@
 #define PROTO_OPENPRS_ENCODE_H  "server/openprs/openprsEncode.h"
 
 /* Prototypes des fonctions de generation */
-#include "openprsGenProto.h"
-#include "openprsMakeGenProto.h"
-#include "openprsEncodeGenProto.h"
-#include "openprsDecodeGenProto.h"
-#include "openprsOpGenProto.h"
+extern int openprsGen(FILE *out);
+extern int openprsMakeGen ( FILE *out );
+extern int openprsEncodeGen ( FILE *out );
+extern int openprsDecodeGen ( FILE *out );
+extern int openprsOpGen(FILE *out);
+extern char *getOpenprsTYPE(TYPE_STR *type);
 
 #endif

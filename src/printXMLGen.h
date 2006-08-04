@@ -36,6 +36,8 @@
 
 #define PROTO_PRINTXML_H "server/printXML.h"
 
-#include "printXMLGenProto.h" 
+extern int printXMLGen ( FILE *out );
+extern void genPrintXMLVal ( FILE *out, DCL_NOM_STR *n, char *muette );
+extern void genPrintXMLEnum ( FILE *out, DCL_NOM_LIST *members );
 
 #endif /* PRINTXMLGEN_H */

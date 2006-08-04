@@ -34,6 +34,7 @@
 
 #define PROTO_EXEC_TASK "server/execTask.c"
 
-#include "execTaskGenProto.h" 
+/* execTaskGen.c */
+extern int execTaskGen(FILE *out);
 
 #endif

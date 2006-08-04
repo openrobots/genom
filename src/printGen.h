@@ -36,6 +36,9 @@
 
 #define PROTO_PRINT_H "server/print.h"
 
-#include "printGenProto.h" 
+/* printGen.c */
+extern int printGen(FILE *out);
+extern void genPrintVal(FILE *out, DCL_NOM_STR *n, char *muette);
+extern void genPrintEnum(FILE *out, DCL_NOM_LIST *members);
 
 #endif

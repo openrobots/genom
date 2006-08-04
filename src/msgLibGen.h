@@ -40,6 +40,8 @@
 #define PROTO_MSG_HEADER  "server/msgLib.h"
 #define PROTO_MSG_TITLE   "server/msgLib.c"
 #define PROTO_MSG_CONNECT "server/connectLib.c"
-#include "msgLibGenProto.h" 
+
+/* msgLibGen.c */
+extern int msgLibGen(FILE *out);
 
 #endif

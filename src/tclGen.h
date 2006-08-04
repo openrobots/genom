@@ -36,6 +36,7 @@
 #define PROTO_TCL_POSTER	"server/tcl/tclPoster.c" 
 #define PROTO_TCL_EPILOG	"server/tcl/tclEpilog.c" 
 
-#include "tclGenProto.h"
+/* tclGen.c */
+extern int tclGen(FILE *out);
 
 #endif /* _TCLGEN_H */

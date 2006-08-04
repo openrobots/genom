@@ -42,6 +42,6 @@
 #define PROTO_POSTER_XML_LIB "server/posterXMLLib.c"
 #define PROTO_POSTER_XML_LIB_H "server/posterXMLLib.h"
 
-#include "posterLibGenProto.h"
+extern int posterLibGen ( FILE *out );
 
 #endif

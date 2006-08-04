@@ -35,6 +35,7 @@
 #define PROTO_INIT "server/init.c"
 #define PROTO_INIT_PROTO "server/initProto.h"
 
-#include "initGenProto.h" 
+/* initGen.c */
+extern int initGen(FILE *out);
 
 #endif

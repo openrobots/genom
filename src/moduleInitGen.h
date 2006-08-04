@@ -34,6 +34,7 @@
 
 #define PROTO_MODULE_INIT "server/moduleInit.c"
 
-#include "moduleInitGenProto.h" 
+/* moduleInitGen.c */
+extern int moduleInitGen(FILE *out);
 
 #endif

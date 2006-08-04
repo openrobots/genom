@@ -32,7 +32,7 @@
 #ifndef _USEREXECCODELSGEN_H
 #define _USEREXECCODELSGEN_H
 
-
-#include "userExecCodelsGenProto.h" 
+/* userExecCodelsGen.c */
+extern int userExecCodelsGen(FILE *out);
 
 #endif

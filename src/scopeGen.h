@@ -35,6 +35,7 @@
 #define PROTO_SCOPE_LIB_H "server/scopeLib.h"
 #define PROTO_SCOPE_MAIN_C "server/scopeMain.c"
 
-#include "scopeGenProto.h" 
+/* scopeGen.c */
+extern int scopeGen(FILE *out);
 
 #endif

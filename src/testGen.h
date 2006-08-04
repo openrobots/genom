@@ -36,6 +36,6 @@
 #define PROTO_TEST_EXEC_RQST "server/testExec.c"
 #define PROTO_TEST_CNTRL_RQST "server/testCntrl.c"
 
-#include "testGenProto.h" 
+extern int testGen ( FILE *out );
 
 #endif

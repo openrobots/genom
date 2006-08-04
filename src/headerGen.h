@@ -34,6 +34,7 @@
 
 #define PROTO_HEADER "server/header.h"
 
-#include "headerGenProto.h"
+/* headerGen.c */
+extern int headerGen(FILE *out);
 
 #endif

@@ -35,6 +35,7 @@
 #define PROTO_ERROR_H "server/error.h"
 #define PROTO_ERROR_C "server/error.c"
 
-#include "errorGenProto.h" 
+/* errorGen.c */
+extern int errorGen(FILE *out);
 
 #endif

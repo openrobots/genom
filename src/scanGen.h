@@ -34,6 +34,8 @@
 
 #define PROTO_SCAN_H "server/scan.h"
 
-#include "scanGenProto.h" 
+/* scanGen.c */
+extern int scanGen(FILE *out);
+extern void genScanEnum(FILE *out, DCL_NOM_LIST *members);
 
 #endif
