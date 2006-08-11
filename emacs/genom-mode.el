@@ -430,6 +430,8 @@ genom-tab-right-column."
 
       ;; else no ":" then indent to right all the line
       ;; iff the previous line is a genom field
+      ;; For input_info parameters, works well if the first parameter
+      ;; is in a line bellow input_info field...
       ;; XXXXX: pb: sets systematically the buffer status as modified !!
       ;; XXXXX      even if there's nothing to do !! Probably a bad
       ;; XXXXX      interaction with the initial c-indent procedure
