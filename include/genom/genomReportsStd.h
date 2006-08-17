@@ -45,6 +45,7 @@
 #define S_genom_CONTROL_CODEL_ERROR          10
 #define S_genom_EXEC_TASK_SUSPENDED          11
 #define S_genom_BAD_BLOCK_TYPE               12
+#define S_genom_BAD_POSTER_TYPE              13
 
 #define GENOM_STD_FAILED \
 { \
@@ -59,7 +60,7 @@
   {"WAIT_INIT_RQST",         S_genom_WAIT_INIT_RQST}, \
   {"CONTROL_CODEL_ERROR",  S_genom_CONTROL_CODEL_ERROR},\
   {"EXEC_TASK_SUSPENDED", S_genom_EXEC_TASK_SUSPENDED},	\
-  {"BAD_BLOCK_TYPE",         S_genom_BAD_BLOCK_TYPE} \
+  {"BAD_POSTER_TYPE",         S_genom_BAD_POSTER_TYPE} \      
 }
 
 

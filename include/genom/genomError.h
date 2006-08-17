@@ -47,6 +47,7 @@
 #define S_stdGenoM_CONTROL_CODEL_ERROR           H2_ENCODE_STD_ERR(M_stdGenoM, 10)
 #define S_stdGenoM_EXEC_TASK_SUSPENDED           H2_ENCODE_STD_ERR(M_stdGenoM, 11)
 #define S_stdGenoM_BAD_BLOCK_TYPE                H2_ENCODE_STD_ERR(M_stdGenoM, 12)
+#define S_stdGenoM_BAD_POSTER_TYPE               H2_ENCODE_STD_ERR(M_stdGenoM, 13)
 
 
 /* H2_ERROR[] */
@@ -63,7 +64,8 @@
   {"WAIT_INIT_RQST",                S_stdGenoM_WAIT_INIT_RQST}, \
   {"CONTROL_CODEL_ERROR",           S_stdGenoM_CONTROL_CODEL_ERROR},\
   {"EXEC_TASK_SUSPENDED",           S_stdGenoM_EXEC_TASK_SUSPENDED},	\
-  {"BAD_BLOCK_TYPE",                S_stdGenoM_BAD_BLOCK_TYPE} \
+  {"BAD_BLOCK_TYPE",                S_stdGenoM_BAD_BLOCK_TYPE},	\
+  {"BAD_POSTER_TYPE",               S_stdGenoM_BAD_POSTER_TYPE} \
 }
 
 extern int genomRecordH2errMsgs();
