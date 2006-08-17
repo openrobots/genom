@@ -449,6 +449,51 @@ int posterLibGen(FILE *out)
     script_close(out, "server/%sPosterShowLib.c", module->name);
 
 
+    /**----------------------------------------------------------------------
+     ** PosterXMLLib.h
+     **/
+    script_open(out);
+    subst_begin(out, PROTO_POSTER_XML_LIB_H);
+
+    /* Nom du  module */
+    print_sed_subst(out, "module", module->name);
+    print_sed_subst(out, "MODULE", module->NAME);
+
+    subst_end(out);
+
+    /* Prototypes */
+    cat_begin(out);
+
+    fprintf (out, "void web%s(FILE *f, int argc, char **argv, char **argn);\n",
+	     module->name);
+    fprintf (out, "extern STATUS %sCntrlPosterXML (FILE *f);\n",
+	     module->name);
+    fprintf (out, "extern STATUS %sCntrlPosterActivityXML (FILE *f);\n",
+	     module->name);
+    /*
+     * fonction de lecture donnees XML  des posters
+     */
+    for (p = posters; p != NULL; p = p->next) {
+
+      /* la fonction pour afficher tout le poster */
+      fprintf(out, "extern STATUS %s%sPosterXML (FILE *f);\n",
+	      module->name, p->name);
+
+      if (tabPosterXML != NULL) bufcat(&tabPosterXML, ", \\\\\n");
+      bufcat(&tabPosterXML, "{\"%s\", \"\", %s%sPosterXML}",
+	     p->name, module->name, p->name);
+      nbPosterXML++;
+	     
+      /* Les fonctions pour les e'le'ments de la structure */
+      posterLibMemberGen(out, p, 2 /* ! read */, 1 /* protos */); 
+
+    } /* for */
+
+    fprintf(out, "#endif /* %s_POSTER_XML_LIB_H */\n", module->NAME);    
+ 
+    cat_end(out);
+    script_close(out, "server/%sPosterXMLLib.h", module->name);
+
     /** ----------------------------------------------------------------------
      ** PosterXMLLib.c
      **/
@@ -645,51 +690,6 @@ int posterLibGen(FILE *out)
     fprintf(out, "#endif /* %s_POSTER_SHOW_LIB_H */\n", module->NAME);    
     cat_end(out);
     script_close(out, "server/%sPosterShowLib.h", module->name);
-
-    /**----------------------------------------------------------------------
-     ** PosterXMLLib.h
-     **/
-    script_open(out);
-    subst_begin(out, PROTO_POSTER_XML_LIB_H);
-
-    /* Nom du  module */
-    print_sed_subst(out, "module", module->name);
-    print_sed_subst(out, "MODULE", module->NAME);
-
-    subst_end(out);
-
-    /* Prototypes */
-    cat_begin(out);
-
-    fprintf (out, "void web%s(FILE *f, int argc, char **argv, char **argn);\n",
-	     module->name);
-    fprintf (out, "extern STATUS %sCntrlPosterXML (FILE *f);\n",
-	     module->name);
-    fprintf (out, "extern STATUS %sCntrlPosterActivityXML (FILE *f);\n",
-	     module->name);
-    /*
-     * fonction de lecture donnees XML  des posters
-     */
-    for (p = posters; p != NULL; p = p->next) {
-
-      /* la fonction pour afficher tout le poster */
-      fprintf(out, "extern STATUS %s%sPosterXML (FILE *f);\n",
-	      module->name, p->name);
-
-      if (tabPosterXML != NULL) bufcat(&tabPosterXML, ", \\\\\n");
-      bufcat(&tabPosterXML, "{\"%s\", \"\", %s%sPosterXML}",
-	     p->name, module->name, p->name);
-      nbPosterXML++;
-	     
-      /* Les fonctions pour les e'le'ments de la structure */
-      posterLibMemberGen(out, p, 2 /* ! read */, 1 /* protos */); 
-
-    } /* for */
-
-    fprintf(out, "#endif /* %s_POSTER_XML_LIB_H */\n", module->NAME);    
- 
-    cat_end(out);
-    script_close(out, "server/%sPosterXMLLib.h", module->name);
 
 
     /** ----------------------------------------------------------------------
