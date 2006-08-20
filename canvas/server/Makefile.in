@@ -239,7 +239,7 @@ install-bin:
 	$genTcl$$(MKINSTALLDIRS) $(libdir)/tclserv
 	$genTcl$$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/tclserv/$(TCLCLIENT_LIB)
 	$genOpenprs$$(MKINSTALLDIRS) $(libdir)/openprs
-	$genOpenprs$$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) $(libdir)/openprs/$(OPRSCLIENT_LIB)
+	$genOpenprs$$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) $(libdir)/openprs/$(OPENPRSCLIENT_LIB)
 	$(MKINSTALLDIRS) $(bindir)
 	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
 	$(LTINSTALL) $(OBJDIR)/$(TEST_BIN) $(bindir)/$(TEST_BIN)
@@ -272,7 +272,7 @@ CLEAN_FILES = \
     $(test_obj) $(OBJDIR)/$(TEST_BIN)
 
 $genTcl$CLEAN_FILES += $(tclclient_obj) $(OBJDIR)/$(TCLCLIENT_LIB)
-$genOpenprs$CLEAN_FILES += $(openprsclient_obj) $(OBJDIR)/$(OPRSCLIENT_LIB)
+$genOpenprs$CLEAN_FILES += $(openprsclient_obj) $(OBJDIR)/$(OPENPRSCLIENT_LIB)
 
 clean:
 	$(LTRM) $(CLEAN_FILES)
