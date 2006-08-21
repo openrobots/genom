@@ -1,5 +1,5 @@
 %
-% Copyright (c) 2001 LAAS/CNRS                        --  Sat Nov  3 2001
+% Copyright (c) 2001-2005 LAAS/CNRS                   --  Sat Nov  3 2001
 % All rights reserved.                                     Anthony Mallet
 %
 % This document is a translation of the French documentation of GenoM,
@@ -112,7 +112,7 @@ execution  request,  the  activity is  not  started.   The error code  is
 fundamental: if it is  not  set, the client   will have no idea  of  what
 happened.
 
-As an example, here  is the control  codel {\tt demoControlSpeed} of  the
+As an example, here  is the control  codel {\tt demoSetSpeedCntrl} of  the
 request {\tt SetSpeed} of the module {\tt  demo}.  This request expects a
 speed as input (structure {\tt DEMO\_SPEED}).  Therefore, the codel takes
 a pointer   to  this structure as  first  parameter.   The structure {\tt
@@ -121,7 +121,7 @@ chapter~\ref{cha|session}).
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 STATUS
-demoControlSpeed(DEMO_SPEED *speed, int *report)
+demoSetSpeedCntrl(DEMO_SPEED *speed, int *report)
 {
    /* Refuse *speed if the value is erroneous */
    if (*speed != DEMO_SLOW && *speed != DEMO_FAST) {
@@ -419,7 +419,7 @@ h2errorLib} (installed in {\tt /usr/local/hilare2/src/errorLib/}).
 
 \begin{center}\begin{tabularx}{\linewidth}{|lX|}
 \hline
-\tt void h2printErrno(int bilan); & display the string associated to the
+\tt void h2printErrno(int report); & display the string associated to the
 report \\
 \hline
 \tt char const *h2getMsgErrno(int numErr); & return the string associated
@@ -553,7 +553,7 @@ the execution codel will be called at the next task's wake up.
 
 Consider request {\tt Monitor},   which monitorates the position   of the
 mobile and  throw an  alert when it   has the requested value, say,  {\tt
-myPos}.  The  execution codel  {\tt  demoMonitor} (see below)  is invoked
+myPos}.  The  execution codel  {\tt  demoMonitorExec} (see below)  is invoked
 ({\tt return EXEC;}) until the position {\tt myPos}  has not been reached
 with the {\tt DEMO\_THRESHOLD} precision. Once  this position is reached,
 the activity ends ({\tt return  ETHER;}) and the  final reply is sent  to
@@ -561,7 +561,7 @@ the client.
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 ACTIVITY_EVENT
-demoMonitor(double *monPos, double *pos, int *bilan)
+demoMonitorExec(double *monPos, double *pos, int *report)
 {
    /* Get the current position */
    *pos = SDI_F->state.position;
@@ -763,7 +763,7 @@ the mobile to the requested position at the requested speed.
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 ACTIVITY_EVENT
-demoGotoPosition(double *goal, int *bilan)
+demoGotoPosition(double *goal, int *report)
 {
    double remain;       /* remaining distance (m) */
    double speed;        /* requested speed (m/s) */
@@ -771,7 +771,7 @@ demoGotoPosition(double *goal, int *bilan)
 
    /* Measure current speed and position */
    if (mobileState(&(SDI_F->state.position), &(SDI_F->state.speed)) != OK) {
-        *bilan = S_demo_MOBILE_OUT_OF_ORDER;
+        *report = S_demo_MOBILE_OUT_OF_ORDER;
         return ETHER;
    }
 
@@ -790,7 +790,7 @@ demoGotoPosition(double *goal, int *bilan)
    /* Are we done? */
    if (fabs(remain) < increment) {
         if (mobileMove(*goal, 0) != OK) {
-            *bilan = S_demo_MOBILE_OUT_OF_ORDER;
+            *report = S_demo_MOBILE_OUT_OF_ORDER;
             return ETHER;
         }
         return END;
@@ -799,7 +799,7 @@ demoGotoPosition(double *goal, int *bilan)
    /* Continue */
    if (mobileMove(SDI_F->state.position +
                       SIGN(remain) * increment, speed) != OK) {
-        *bilan = S_demo_MOBILE_OUT_OF_ORDER;
+        *report = S_demo_MOBILE_OUT_OF_ORDER;
         return ETHER;
    }
    return EXEC;
@@ -834,7 +834,7 @@ a header file in the main directory  of the module. In  that case this is
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 STATUS
-demoInit(int *bilan)
+demoInit(int *report)
 {
   SDI_F->state.position = 0.;
   SDI_F->state.speed = 0;
@@ -919,7 +919,7 @@ static int demoMotionLast = -1;
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 /* Start codel c_exec_func_start of the "Motion" activity */
 ACTIVITY_EVENT
-demoMotionStart(MOTION_STR *params, int *bilan)
+demoMotionStart(MOTION_STR *params, int *report)
 {
     int current = CURRENT_ACTIVITY_NUM(DEMO_MOTIONTASK_NUM);
 
@@ -946,7 +946,7 @@ demoMotionStart(MOTION_STR *params, int *bilan)
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 /* Termination codel c_exec_func_end of the "Motion" activity */
 ACTIVITY_EVENT
-demoMotionEnd(MOTION_STR *params, int *bilan)
+demoMotionEnd(MOTION_STR *params, int *report)
 {
     int current = CURRENT_ACTIVITY_NUM(DEMO_MOTIONTASK_NUM);
     int next;

@@ -1,5 +1,5 @@
 %
-% Copyright (c) 2001 LAAS/CNRS                        --  Thu Oct 18 2001
+% Copyright (c) 2001-2005 LAAS/CNRS                   --  Thu Oct 18 2001
 % All rights reserved.                                     Anthony Mallet
 %
 % This document is a translation of the French documentation of GenoM,
@@ -44,7 +44,7 @@ module is generated and used.
 One can distinguish two main parts in a module:
 
 \begin{itemize}
-   \item A {\em server}, which encapsulate algorithms and is generated
+   \item A {\em server}, which encapsulates algorithms and is generated
 automatically by \GenoM\ from the description file,
    \item The set of {\em algorithms} that you have developed, and that
 will be included into the module.
@@ -66,7 +66,7 @@ your own code.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\hsize]{fig/cycle-en}
-\caption{Development cycle and separation between sever and codels.}
+\caption{Development cycle and separation between server and codels.}
 \label{fig|session|cycle}
 \end{figure}
 
@@ -131,6 +131,8 @@ look like this (see next page):
 module demo {
    number:            9000;            /* module id: unique number */
    internal_data:     DEMO_STR;        /* C typedef (defined below) */
+   version:           "0.1";
+   email:             "openrobots@laas.fr";
 };
 
 
@@ -155,7 +157,7 @@ typedef struct DEMO_STR {
 request SetSpeed {
    type:                control;              /* request's type  */
    input:               speed::speedRef;      /* input: speed chosen */
-   c_control_func:      demoControlSpeed;     /* codel for validity checks */
+   c_control_func:      demoSetSpeedCntrl;    /* codel for validity checks */
    fail_msg:            INVALID_SPEED;        /* possible error messages */
 };
 
@@ -186,17 +188,17 @@ request Stop {
 \begin{verbatim}
 /* Execution request: translate of a given distance */
 request MoveDistance {
-   type:                exec;                 /* request's type */
-   input:               distance::distRef;    /* input: distance */
-   c_control_func:      demoControlDistance;  /* codel for validity checks */
-   fail_msg:            TOO_FAR_AWAY;         /* possible error messages */
-   c_exec_func_start:   demoStartEngin;       /* initialization codel */
-   c_exec_func:         demoGotoPosition;     /* main codel */
-   c_exec_func_end:     demoStopEngin;        /* termination codel */
-   c_exec_func_inter:   demoStopEngin;        /* interruption codel */
-   incompatible_with:   MoveDistance;         /* incompatible requests */
-   exec_task:           MotionTask;           /* task (thread) executing
-                                               * the codel */
+   type:                exec;                  /* request's type */
+   input:               distance::distRef;     /* input: distance */
+   c_control_func:      demoMoveDistanceCntrl; /* codel for validity checks */
+   fail_msg:            TOO_FAR_AWAY;          /* possible error messages */
+   c_exec_func_start:   demoStartEngin;        /* initialization codel */
+   c_exec_func:         demoGotoPosition;      /* main codel */
+   c_exec_func_end:     demoStopEngin;         /* termination codel */
+   c_exec_func_inter:   demoStopEngin;         /* interruption codel */
+   incompatible_with:   MoveDistance;          /* incompatible requests */
+   exec_task:           MotionTask;            /* task (thread) executing
+                                                * the codel */
 };
 
 /* Execution request: monitor a particular mobile's position */
@@ -204,7 +206,7 @@ request Monitor {
    type:                exec;                 /* request's type */
    input:               position::monitor;    /* inputs: position */
    output:              position::state.position; /* outputs: actual pos. */
-   c_exec_func:         demoMonitor;          /* main codel */
+   c_exec_func:         demoMonitorExec;      /* main codel */
    fail_msg:            TOO_FAR_AWAY;         /* possible error messages */
    incompatible_with:   none;                 /* no incompatible requests */
    exec_task:           MotionTask;           /* task (thread) */
@@ -377,7 +379,6 @@ Some comments on this run:
 \begin{enumerate}
    \item  The {\tt   .gen}  extension   needs   not  to be    explicitely
    given. \GenoM\ appends it automatically.
-
 
    \item \GenoM\ creates two directories and a great number of files. You
    do not need to know them all, and they will be described later in this
