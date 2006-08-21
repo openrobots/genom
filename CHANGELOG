@@ -1,5 +1,6 @@
 $LAAS$
 
+ 34. New option '-a' to generate module api only (not the module server)
  33. Remove use of separate *Proto.h for function prototypes.
  32. Rename TCLSERVMODULEPATH environment variable to TCLSERV_MODULE_PATH
      and allow definition of a colon-separated list of paths.
