@@ -293,9 +293,9 @@ request <<request-name>> {
      input:              <name>::<sdi-ref>; 
      input_info:         <default-val>::"<name>", ...;
      output:             <name>::<sdi-ref>; 
-     c_control_func:     <codel>; 
-     fail_msg:           <msg-name>, ...;
-     incompatible_with:  <exec-rqst-name>, ...;
+     codel_control:      <codel>; 
+     fail_reports:       <report-name>, ...;
+     interrupts_activities:  <exec-rqst-name>, ...;
 };
 \end{verbatim}\end{cartouche}\end{center}
 
@@ -311,14 +311,14 @@ of the fIDS (e.g. {\tt input: position::state.position}).
 comment for {\em  each}   member  of  the  {\tt  input}  structure.  This
 information is used for interactive  requests invocation.
 
-\item {\tt c\_control\_func} is a codel ({\tt C} function) which is
+\item {\tt codel\_control} is a codel ({\tt C} function) which is
 executed by the control task and which controls the validity of the input
 parameter.
 
-\item {\tt fail\_msg} is a list of possible reports returned by the
+\item {\tt fail\_reports} is a list of possible reports returned by the
 control codel (the special report "OK" is always implicitly defined).
 
-\item {\tt incompatible\_with} is a list of requests of {\em this module}
+\item {\tt interrupts\_activities} is a list of requests of {\em this module}
 that   are    declared   incompatible  with     this request.  Activities
 corresponding to the listed requests will  be interrupted upon invocation
 of this service.  Two special keywords {\tt  all} and {\tt none} let  you
@@ -334,20 +334,20 @@ will be executed and they define a few more fields:
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 request <<request-name>> {
-     doc:                 "doc";
-     type:                exec;
-     exec_task:           <<exec-task-name>>; 
-     input:               <name>::<sdi-ref>; 
-     input_info:          <default-val>::"<name>", ...; 
-     output:              <name>::<sdi-ref>; 
-     c_control_func:      <codel>; 
-     c_exec_func_start:   <codel>; 
-     c_exec_func:         <codel>; 
-     c_exec_func_end:     <codel>; 
-     c_exec_func_inter:   <codel>; 
-     c_exec_func_fail:    <codel>; 
-     fail_msg:            <msg-name>, ... ; 
-     incompatible_with:   <exec-rqst-name>, ... ; 
+     doc:                   "doc";
+     type:                  exec;
+     exec_task:             <<exec-task-name>>; 
+     input:                 <name>::<sdi-ref>; 
+     input_info:            <default-val>::"<name>", ...; 
+     output:                <name>::<sdi-ref>; 
+     codel_control:         <codel>; 
+     codel_start:           <codel>; 
+     codel_main:            <codel>; 
+     codel_end:             <codel>; 
+     codel_inter:           <codel>; 
+     codel_fail:            <codel>; 
+     fail_reports:          <report-name>, ... ; 
+     interrupts_activities: <exec-rqst-name>, ... ; 
 };
 \end{verbatim}\end{cartouche}\end{center}
 
@@ -355,11 +355,11 @@ request <<request-name>> {
 \item {\tt exec\_task} is the name of the execution task in charge of the
 codels execution.
 
-\item {\tt c\_exec\_func\_start}, {\tt c\_exec\_func}, {\tt
-c\_exec\_func\_end},     {\tt    c\_exec\_func\_inter}    and \\     {\tt
-c\_exec\_func\_fail} are  the  codels of  this  service.  All  fields are
-optional,  but at least one  of  {\tt  func\_start},  {\tt func} or  {\tt
-func\_end}  must  be   defined.    Codels   are  further described     in
+\item {\tt codel\_start}, {\tt codel\_main}, {\tt
+codel\_end},     {\tt    codel\_inter}    and \\     {\tt
+codel\_fail} are  the  codels of  this  service.  All  fields are
+optional,  but at least one  of  {\tt  codel\_start},  {\tt codel\_main} or  {\tt
+codel\_end}  must  be   defined.    Codels   are  further described     in
 chapter~\ref{cha|codels}.
 
 \item All other fields serve the same purpose  as in control  requests.
@@ -444,16 +444,16 @@ For this kind of posters, two new fields are defined:
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 poster <<poster-name>> {
-     update:             user;
-     type:               <<type-name>>;
-     exec_task:          <<exec-task-name>>; 
-     c_create_func:      <codel>;
+     update:               user;
+     type:                 <<type-name>>;
+     exec_task:            <<exec-task-name>>; 
+     codel_poster_create:  <codel>;
 };
 \end{verbatim}\end{cartouche}\end{center}
 
 \begin{itemize}
 \item {\tt type} is the name of the {\tt C} type of the data structure.
-\item {\tt c\_create\_func} optionally designates the name of a {\tt C}
+\item {\tt codel\_poster\_create} optionally designates the name of a {\tt C}
 function which is   used to create the  poster  structure. If  it is  not
 given,  the  module performs the memory  allocation  by itself, using the
 size of the  given {\tt C} type.
@@ -468,12 +468,10 @@ exec_task <<exec-task-name>> {
      delay:              <number>;
      priority:           <<number>>;
      stack_size:         <<number>>;
-     c_init_func:        <codel>;
-     c_end_func:         <codel>;
-     c_func:             <codel>;
-     cs_client_from:     <module-name>, ... ;
-     poster_client_from: <module-name>::<poster-name>, ... ;
-     fail_msg:           <msg-name>, ... ;
+     codel_task_start:   <codel>;
+     codel_task_end:     <codel>;
+     codel_task_main:    <codel>;
+     fail_reports:       <report-name>, ... ;
 };
 \end{verbatim}\end{cartouche}\end{center}
 
@@ -502,28 +500,20 @@ unpredictable results, so be sure  to largely {\bf overestimate} what you
 need.   A  good choice is  usually   $20.000$  bytes. Note that under
 Unix, stack size are not used at this time (the stack is grown dynamically).
 
-\item {\tt c\_init\_func} is the initialization codel. It is called only
+\item {\tt codel\_task\_start} is the initialization codel. It is called only
 once, just before the module is ready to answer requests.  It can be used
 to initialize internal variables (see also  the {\em init request}, which
 can be used if the initialization requires user inputs).
 
-\item {\tt c\_end\_func} is the symmetric of the {\tt c\_init\_func}. It
+\item {\tt codel\_task\_end} is the symmetric of the {\tt codel\_task\_start}. It
 is called once, just before the module exits.
 
-\item {\tt c\_func} is a {\em permanent} codel. It is executed each time
+\item {\tt codel\_task\_main} is a {\em permanent} codel. It is executed each time
 the execution tasks wakes  up. Thus, for  a  periodical task, it is  also
 periodical.
 
-\item {\tt cs\_client\_from} is a list of modules you wish to send
-requests to. It might be deprecated in future releases.
-
-\item {\tt poster\_client\_from} is a list of posters from other modules
-that  you wish  to use  in this  module.  This list is   made  up of coma
-separated items,  where each item is  of the  form <module>::<poster>. It
-might be deprecated in future releases.
-
-\item {\tt fail\_msg} is a list of reports that can be reported by the
-permanent activity {\tt c\_func}. Since  this activity does not belong to
+\item {\tt fail\_reports} is a list of reports that can be reported by the
+permanent activity {\tt codel\_task\_main}. Since  this activity does not belong to
 a request, its  reports are  stored in  the  {\em control poster} of  the
 module.
 \end{itemize}

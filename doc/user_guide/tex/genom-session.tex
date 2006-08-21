@@ -157,8 +157,8 @@ typedef struct DEMO_STR {
 request SetSpeed {
    type:                control;              /* request's type  */
    input:               speed::speedRef;      /* input: speed chosen */
-   c_control_func:      demoSetSpeedCntrl;    /* codel for validity checks */
-   fail_msg:            INVALID_SPEED;        /* possible error messages */
+   codel_control:      demoSetSpeedCntrl;    /* codel for validity checks */
+   fail_reports:            INVALID_SPEED;        /* possible error messages */
 };
 
 /* Control request: return the default speed */
@@ -170,7 +170,7 @@ request GetSpeed {
 /* Control request:  interrupt the mobile */
 request Stop {
    type:                control;              /* request's type */
-   incompatible_with:   MoveDistance;         /* request to interrupt */
+   interrupts_activities:   MoveDistance;         /* request to interrupt */
 };
 \end{verbatim}
 \end{cartouche}
@@ -187,29 +187,29 @@ request Stop {
 \begin{cartouche}\small
 \begin{verbatim}
 /* Execution request: translate of a given distance */
-request MoveDistance {
-   type:                exec;                  /* request's type */
-   input:               distance::distRef;     /* input: distance */
-   c_control_func:      demoMoveDistanceCntrl; /* codel for validity checks */
-   fail_msg:            TOO_FAR_AWAY;          /* possible error messages */
-   c_exec_func_start:   demoStartEngin;        /* initialization codel */
-   c_exec_func:         demoGotoPosition;      /* main codel */
-   c_exec_func_end:     demoStopEngin;         /* termination codel */
-   c_exec_func_inter:   demoStopEngin;         /* interruption codel */
-   incompatible_with:   MoveDistance;          /* incompatible requests */
-   exec_task:           MotionTask;            /* task (thread) executing
-                                                * the codel */
+request Goto {
+   type:                  exec;              /* request's type */
+   input:                 distance::distRef; /* input: distance */
+   codel_control:         demoGotoCntrl;     /* codel for validity checks */
+   fail_reports:          TOO_FAR_AWAY;      /* possible error messages */
+   codel_start:           demoGotoStart;     /* initialization codel */
+   codel_main:            demoGotoMain;      /* main codel */
+   codel_end:             demoGotoEnd;       /* termination codel */
+   codel_inter:           demoGotoInter;     /* interruption codel */
+   interrupts_activities: Goto;              /* incompatible requests */
+   exec_task:             MotionTask;        /* task (thread) executing
+                                              * the codel */
 };
 
 /* Execution request: monitor a particular mobile's position */
 request Monitor {
-   type:                exec;                 /* request's type */
-   input:               position::monitor;    /* inputs: position */
-   output:              position::state.position; /* outputs: actual pos. */
-   c_exec_func:         demoMonitorExec;      /* main codel */
-   fail_msg:            TOO_FAR_AWAY;         /* possible error messages */
-   incompatible_with:   none;                 /* no incompatible requests */
-   exec_task:           MotionTask;           /* task (thread) */
+   type:                  exec;                 /* request's type */
+   input:                 position::monitor;    /* inputs: position */
+   output:                position::state.position; /* outputs: actual pos. */
+   codel_main:            demoMonitorExec;      /* main codel */
+   fail_reports:          TOO_FAR_AWAY;         /* possible error messages */
+   interrupts_activities: none;                 /* no incompatible requests */
+   exec_task:             MotionTask;           /* task (thread) */
 };
 
 

@@ -47,12 +47,12 @@ Sending a request to a module ends up in executing the code of the codels
 associated to the request. Two types of codels can be distinguished:
 
 \begin{itemize}
-\item {\bf control codels} (defined with {\tt c\_control\_func}) are
+\item {\bf control codels} (defined with {\tt codel\_control}) are
 executed by the control task. They are essentially  used for checking the
 validity    of the input parameters of    the  request, just before these
 parameters are actually written into the fIDS.
 
-\item {\bf execution codels} (defined with {\tt c\_exec\_func*}) are
+\item {\bf execution codels} (defined with {\tt codel\_main*}) are
 executed by  an execution task  and  represent the actual  action of  the
 service.    Their execution  create   an  activity,   which lasts   until
 completion  of  the service.   These  codels  exist   only for  execution
@@ -71,12 +71,12 @@ the output structure.
 Three codels can be optionally defined for each execution task:
 
 \begin{itemize}
-\item {\bf Initialization codel} ({\tt c\_init\_func}). This codel is
+\item {\bf Initialization codel} ({\tt codel\_task\_start}). This codel is
 executed  only once, when  the  execution task   is initialized and  just
 before it starts serving requests.  One can use  this codel to initialize
 the fIDS, and set default values to parameters.
 
-\item {\bf Termination codel} ({\tt c\_end\_func}). This codel is
+\item {\bf Termination codel} ({\tt codel\_task\_end}). This codel is
 executed by the execution task upon destruction of the module, just after
 it has stopped serving requests.
 
@@ -168,18 +168,18 @@ typedef struct DEMO_STR {
 
 /* Hypot request */
 request Hypot {
-   doc:                 "compute sqrt(x*x+y*y)";
-   type:                exec;                  /* execution request */
+   doc:                   "compute sqrt(x*x+y*y)";
+   type:                  exec;                /* execution request */
 
-   input:               vector::vector;        /* vector (x, y) */
+   input:                 vector::vector;      /* vector (x, y) */
    input_info:                                 /* default values and */
       0.0::"X coordinate",                     /* description of */
       0.0::"Y coordinate";                     /* parameters */
    
-   output:              norm::norm;            /* norm (result) */
-   c_exec_func:         demoHypotExec;         /* execution codel */
-   exec_task:           MotionTask;            /* execution task */
-   incompatible_with:   Hypot;                 /* incompatibilities */
+   output:                norm::norm;          /* norm (result) */
+   codel_main:            demoHypotExec;       /* execution codel */
+   exec_task:             MotionTask;          /* execution task */
+   interrupts_activities: Hypot;               /* incompatibilities */
 };
 \end{verbatim}\end{cartouche}\end{center}
 
@@ -350,7 +350,7 @@ locally, to be able to restart another  execution and {\em ii.}  report a
 precise information   to the  client so  that   it can   take appropriate
 decisions.
 
-The list of abnormal situations is defined with the field {\tt fail\_msg}
+The list of abnormal situations is defined with the field {\tt fail\_reports}
 of every   request.  These   are strings,   wich are   meant to be  human
 readable:       for      instance  {\tt      INVALID\_PARAMETERS},   {\tt
 POSTER\_NOT\_FOUND}, {\tt NOT\_ENOUGH\_MEMORY},   {\tt IMPORTANT\_DRIFT},
@@ -371,7 +371,7 @@ that the module cannot restore a sane sate, it should put itself into the
 
 \subsection{Numerical values of reports}
 
-Reports which  are declared in the {\tt  fail\_msg} field are mapped into
+Reports which  are declared in the {\tt  fail\_reports} field are mapped into
 32 bits integers using the VxWorks convention:
 
 The name of this integer is build as follow: {\tt S\_<source>\_<report>},
@@ -545,7 +545,7 @@ be associated  to  a periodical  execution task  and  the  codel will  be
 invoked at each period.
 
 Typically, this codel  will be the {\em  execution codel} of the  request
-({\tt  c\_exec\_func}).  To let   the    execution task call   the  codel
+({\tt  codel\_main}).  To let   the    execution task call   the  codel
 periodically, the latter must let the task know that  the activity is not
 finished  when the codel  returns.  This is done  by returning {\tt EXEC}
 instead  of {\tt ETHER}.  The activity stays  in the state {\tt EXEC} and
@@ -583,14 +583,14 @@ periodically.
 
 If an algorithm had required an  initialization step (e.g.  for a sensor,
 a variable, starting another service, \ldots), this  would have been done
-thanks to the {\em start} codel ({\tt c\_exec\_func\_start}).  This codel
+thanks to the {\em start} codel ({\tt codel\_start}).  This codel
 corresponds to the {\tt START} state, and  is always executed first if it
 is  defined. At the  end  of this codel,  we  would {\tt return EXEC;} to
 switch to  the {\tt  EXEC} state, or   {\tt ETHER} if   we  want to  stop
 everything.
 
 Similarily, a termination phasis   would be defined   thanks to the  {\em
-termination codel} (the {\tt c\_exec\_func\_end} field) associated to the
+termination codel} (the {\tt codel\_end} field) associated to the
 {\tt END} state. To indicate, at the end of  the execution codel, that we
 want to go through this  termination state, we just  have to {\tt  return
 END;} instead of {\tt ETHER}.
@@ -611,7 +611,7 @@ previous section to glue pieces together.
 An activity that  goes through several  codels (or  several times through
 the  same codel), can  be  interrupted.  (as  we already  mentioned it, a
 single codel cannot be interrupted). When  this occurs, the activity goes
-into the  {\tt INTER}rupted  state,  and the  {\tt  c\_exec\_func\_inter}
+into the  {\tt INTER}rupted  state,  and the  {\tt  codel\_inter}
 codel is executed.  By default, there is  no such codel, and the activity
 goes immediatly into the {\tt ETHER} state.
 
@@ -619,7 +619,7 @@ A  sudden  interruption can   sometimes  be problematic.  You  might  for
 instance  want  to stabilize a dynamic   system before actually stopping,
 free some memory, or stop another activity which is correlated to the one
 which   is  beeing     interrupted.  In   that  case,   define    a  {\tt
-c\_exec\_func\_inter} codel which will handle the necessary operations.
+codel\_inter} codel which will handle the necessary operations.
 
 
 \subsection{States and transitions of activities}
@@ -653,14 +653,14 @@ recalled in the following table:
 state 	& comments 	& codel (if defined)	  \\
 \hline
 \tt START  & startup state 
-		& \tt c\_exec\_func\_start 	\\
-\tt EXEC   & main execution state & \tt c\_exec\_func  \\
-\tt END    & termination state 	& \tt c\_exec\_func\_end \\
+		& \tt codel\_start 	\\
+\tt EXEC   & main execution state & \tt codel\_main  \\
+\tt END    & termination state 	& \tt codel\_end \\
 \tt FAIL   & failure (and module freeze) \em 
-					& \tt c\_exec\_func\_fail \\
+					& \tt codel\_fail \\
 \hline
 \tt INTER  & interruption state 
-					& \tt c\_exec\_func\_inter  \\
+					& \tt codel\_inter  \\
 \hline
 \tt SLEEP     	&  suspended activity (waits an external event to go back
 into  {\tt EXEC} ) & \\
@@ -716,11 +716,11 @@ The following table summarize the possible transitions, for each state:
 \hline
 state & (codel) & \tt START & \tt EXEC/SLEEP & \tt END & \tt ETHER & \tt FAIL & \tt ZOMBIE \\
 \hline
-\tt START  & \tt (c\_exec\_func\_start)	& X & X & X & X & X & X \\
-\tt EXEC   & \tt (c\_exec\_func) 	&   & X & X & X & X & X \\
-\tt END    & \tt (c\_exec\_func\_end) 	&   &   & X & X & X & X \\
-\tt INTER  & \tt (c\_exec\_func\_inter) &   &   &   & X & X & X \\
-\tt FAIL   & \tt (c\_exec\_func\_fail) 	&   &   &   &   & X & X \\
+\tt START  & \tt (codel\_start)	& X & X & X & X & X & X \\
+\tt EXEC   & \tt (codel\_main) 	&   & X & X & X & X & X \\
+\tt END    & \tt (codel\_end) 	&   &   & X & X & X & X \\
+\tt INTER  & \tt (codel\_inter) &   &   &   & X & X & X \\
+\tt FAIL   & \tt (codel\_fail) 	&   &   &   &   & X & X \\
 \hline
 \end{tabular}}
 
@@ -734,12 +734,12 @@ interrupted.
 \label{sec|codels|writing}
 
 
-\subsection{Control codels  {\tt c\_control\_func}}
+\subsection{Control codels  {\tt codel\_control}}
 
 See        example            in           section~\ref{ssec|control|ex},
 page~\pageref{ssec|control|ex}.
 
-\subsection{Execution codels  {\tt c\_exec\_func\_*}}
+\subsection{Execution codels  {\tt codel\_*}}
 
 Execution  codels have 1,  2 or 3  parameters,  depending on the request.
 These codels can have,  in this order and   if the corresponding  data is
@@ -747,7 +747,7 @@ defined,  a pointer to  the   input structure,  a pointer  to  the output
 structure and a pointer to the report (always  defined). Codels return an
 {\tt ACTIVITY\_EVENT}, as exposed in the previous section.
 
-Here is the {\tt demoGotoPosition}  execution codel ({\tt c\_exec\_func})
+Here is the {\tt demoGotoPosition}  execution codel ({\tt codel\_main})
 of the {\tt MoveDistance} request of the module {\tt demo}. This codel,
 invoked periodically, controls the speed of the mobile (according to the
 one specified with the {\tt SetSpeed} request), and stops when the
@@ -816,10 +816,10 @@ The {\tt SDI\_F} macro let you acces the fIDS structure.
 We will see later how one can access IDSs and how reports can be used.
 
 
-\subsection{Initialization codel {\tt c\_init\_func}}
+\subsection{Initialization codel {\tt codel\_task\_start}}
 
 One initialization codel can be associated to any  execution task, by the
-mean of the field {\tt  c\_init\_func}. It is  usually used to initiliaze
+mean of the field {\tt  codel\_task\_start}. It is  usually used to initiliaze
 the fIDS to a known state. It takes only one  parameter: a pointer to the
 report.   It returns either {\tt  OK}  or {\tt ERROR}  (in  that case the
 module does not start).
@@ -896,10 +896,10 @@ must be  synchronized with the  transition {\tt  EXEC} $\rightarrow$ {\tt
 END} of the activity.
 
 Such  a  synchronization     can  be  achieved   in     the   codel  {\tt
-c\_exec\_func\_start}. This codel can register new activities in a global
+codel\_start}. This codel can register new activities in a global
 array, attach to them the previous activity, and  stay in the {\tt START}
 state  until the previous activity  stops. The latter information will be
-registered by the codel {\tt c\_exec\_func\_end}.
+registered by the codel {\tt codel\_end}.
 
 The following  code  proposes an  example of such   start and end codels,
 along with the global data definition:
@@ -917,7 +917,7 @@ static int demoMotionLast = -1;
 \end{verbatim}\end{cartouche}\end{center}
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
-/* Start codel c_exec_func_start of the "Motion" activity */
+/* Start codel codel_start of the "Motion" activity */
 ACTIVITY_EVENT
 demoMotionStart(MOTION_STR *params, int *report)
 {
@@ -944,7 +944,7 @@ demoMotionStart(MOTION_STR *params, int *report)
 \end{verbatim}\end{cartouche}\end{center}
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
-/* Termination codel c_exec_func_end of the "Motion" activity */
+/* Termination codel codel_end of the "Motion" activity */
 ACTIVITY_EVENT
 demoMotionEnd(MOTION_STR *params, int *report)
 {
