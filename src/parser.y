@@ -30,9 +30,9 @@
  */
 
 /***
- *** Ge'ne'rateur de modules h2
+ *** Modules generation (GenoM)
  ***
- *** Analyseur Syntaxique
+ *** Syntaxic analysis
  ***
  *** Matthieu Herrb & Sara Fleury -- Juillet 1993
  ***/
@@ -148,7 +148,7 @@ int nCppOptions = 0;
 /*----------------------------------------------------------------------*/
 
 /**
- ** La grammaire proprement dite
+ ** The grammar
  **/
 
 %start liste_declaration_top
@@ -277,7 +277,7 @@ int nCppOptions = 0;
 %%
 
 /*
- * Un fichier contient une liste de declarations
+ * A .gen file is a list of declaration
  */
 
 liste_declaration_top: declaration_top
@@ -863,10 +863,10 @@ declaration_de_typedef:
 	{ DCL_NOM_LIST *l;
 	  for (l=$3; l!= NULL; l=l->next) {
 	      l->dcl_nom->type = $2;
-	      /* Identification des types STRING et ARRAY */
+	      /* Identification of STRING and ARRAY types */
 	      if(IS_STRING(l->dcl_nom)) {
 		l->dcl_nom->flags = STRING;
-		/* Est-ce une bonne idee ? */
+		/* Is it a good idea  ? */
 		/* l->dcl_nom->ndimensions--;
 		l->dcl_nom->max_str_len = l->dcl_nom->dimensions[l->dcl_nom->ndimensions]; */
 		printf ("type STRING: %s\n", l->dcl_nom->name);
@@ -1056,7 +1056,7 @@ type_complexe:
     ;
 
 /*
- * Les elements declares ou les noms dans un typedef
+ * Declared elements or names in typedef definition
  */
 liste_decl:
     elt_declarable 
@@ -1068,7 +1068,7 @@ liste_decl:
     ;
 
 /*
- * La declaration de structures et d'unions
+ * Structures and unions declarations
  */
 indicateur_structure_union:
     STRUCT '{' liste_decl_struct '}' 
@@ -1082,7 +1082,7 @@ indicateur_structure_union:
 	  ajout_type($$);
         }
 
-    /* Structure nommee */
+    /* A named structure */
     | STRUCT identificateur '{' liste_decl_struct '}'
 	{ $$ = STR_ALLOC(TYPE_STR);
 	  $$->type = $1;
@@ -1094,7 +1094,7 @@ indicateur_structure_union:
 	  ajout_type($$);
         }
 
-    /* reference a une structure non definie */
+    /* reference to a non-defined structure */
     | STRUCT identificateur 
 	{ $$ = STR_ALLOC(TYPE_STR);
 	  $$->type = $1;
@@ -1104,7 +1104,7 @@ indicateur_structure_union:
 	  $$->filename = strdup(nomfic);
         }
 
-    /* Union sans nom */
+    /* unnamed union */
     | UNION '{' liste_decl_struct '}' 
 	{ $$ = STR_ALLOC(TYPE_STR);
 	  $$->type = $1;
@@ -1116,7 +1116,7 @@ indicateur_structure_union:
 	  ajout_type($$);
         }
 
-    /* union non definie */
+    /* non-defined union */
     | UNION identificateur 
 	{ $$ = STR_ALLOC(TYPE_STR);
 	  $$->type = $1;
@@ -1125,7 +1125,7 @@ indicateur_structure_union:
 	  $$->filename = strdup(nomfic);
 	  $$->members = NULL; }
     
-    /* union nommee */
+    /* named union */
     | UNION identificateur '{' liste_decl_struct '}'
 	{ $$ = STR_ALLOC(TYPE_STR);
 	  $$->type = $1;
@@ -1150,11 +1150,11 @@ liste_decl_struct:
 
 declaration_struct:
     indicateur_de_type liste_mem_struct ';' 
-        { /* Association variable/type */
+        { /* variable/type associations */
 	  DCL_NOM_LIST *l;
 	  TYPE_STR *t = trouve_type($1);
 
-	  /* Pas trouve le type correspondant */
+	  /* corresponding type not found */
 	  if (t == NULL) {
 	      fprintf(stderr, "%s:%d: warning: type inconnu %s\n",
 		      nomfic, num_ligne, $1->name);
@@ -1168,7 +1168,7 @@ declaration_struct:
 	  for (l = $2; l != NULL; l = l->next) {
 	      l->dcl_nom->type = $1;
 
-	      /* Identification des ARRAY et des STRING */
+	      /* Identification of ARRAY and STRING */
 	      if(IS_STRING(l->dcl_nom)) {
 		l->dcl_nom->flags = STRING;
 		/* l->dcl_nom->ndimensions--;
@@ -1193,7 +1193,7 @@ liste_mem_struct:
     ;
 
 /*
- * Ici on analyse un membre de structure:
+ * structure membre analysis
  */
 mem_struct:
     elt_declarable
@@ -1232,7 +1232,7 @@ nom_typedef:
     ;
 
 /*
- * Analyse des enum
+ * enum analysis
  */
 indicateur_enum:
     ENUM '{' liste_elt_enum '}'
@@ -1262,7 +1262,7 @@ liste_elt_enum:
 	{ $$ = STR_ALLOC(DCL_NOM_LIST);
 	  $$->dcl_nom = $1; 
 	  $$->next = NULL;
-	  /* premier element */
+	  /* first element */
 	  if ($1->flags == ENUM_NO_VALUE) {
 	      $1->pointeur = 0;
 	      $1->flags = ENUM_VALUE;
@@ -1301,7 +1301,7 @@ elt_enum:
 
     ;
 /*
- * Analyse des expressions constantes 
+ * constant expressions analysis 
  */
 
 expression_constante:
@@ -1417,7 +1417,7 @@ identificateur:
 /*--------------------------------------------------------------------*/
 
 /***
- *** Le code C
+ *** The code C
  ***/
 
 int yydebug = 0;
@@ -1425,7 +1425,7 @@ int verbose = 0;
 /*----------------------------------------------------------------------*/
 
 /**
- ** Programme principal
+ ** Main program
  **/
 
 int
@@ -1735,7 +1735,7 @@ main(int argc, char **argv)
     }
 
     /* 
-     * Faut-il regenerer ? 
+     * re-generation needed ?
      */
 
     if(genIfChange && fopen(nomstamp, "r") != NULL) {
@@ -1750,12 +1750,12 @@ main(int argc, char **argv)
 	  statgen.st_mtime = 0;
        }
        if (stat(nomstamp, &statstamp) == 0) {
-	  /* Fichier .gen a jour */
+	  /* File .gen up-to-date */
 	  if (statstamp.st_mtime > statfile.st_mtime && 
 	      statstamp.st_mtime > statgen.st_mtime) {
 	     upToDate = 1;
 
-	     /* Test date fichiers inclus dans .gen */
+	     /* Test date files included in .gen */
 	     for (il = allIncludeFiles; il != NULL; il = il->next) {
 		stat(il->name, &statfile);
 		if (statstamp.st_mtime < statfile.st_mtime) {
@@ -1778,7 +1778,7 @@ main(int argc, char **argv)
      * Generate perl script
      */
 
-    /* En-tete du fichier */
+    /* file header */
     sprintf(nomout, "./%s.pl", module->name);
     if ((sortie = fopen(nomout, "w")) == NULL) {
         perror(argv[0]);
@@ -1791,7 +1791,7 @@ main(int argc, char **argv)
 	"my $commentMode;\n");
     fprintf(sortie, "# Generateur du module %s\n\n", module->name);
 
-    /* Variables generales pour perl */
+    /* Variables for perl */
     fprintf(sortie, "use vars qw($module $moduleOprs $genOpenprs $genTcl $codelsDir $autoconfDir $serverDir $installUserPart $openprsDir $tclDir);\n");
     fprintf(sortie, "$module=\"%s\";\n", module->name);
     fprintf(sortie, "$moduleOprs=\"%s-oprs\";\n", module->name);
@@ -1808,10 +1808,10 @@ main(int argc, char **argv)
     fprintf(sortie, "use vars qw($OVERWRITE $ASK_IF_CHANGED $SKIP_IF_CHANGED);\n");
     fprintf(sortie, "($OVERWRITE, $ASK_IF_CHANGED, $SKIP_IF_CHANGED) = (0, 1, 2);\n");
 
-    /* Debut du fichier perl */
+    /* start perl fle */
     script_do(sortie, protoDir, "start.pl");
 
-    /* Le module */
+    /* the module */
     fatalError = 0;
 
     fatalError |= (configureServerGen(sortie, 
@@ -1867,13 +1867,13 @@ main(int argc, char **argv)
     fatalError |= (pkgconfigGen(sortie, cmdLine, genfile, 
 				genOpenprs, genServer, cppOptions) != 0);
 
-    /* On termine */
+    /* finishing up */
     script_do(sortie, protoDir, "end.pl");
     fclose(sortie);
 
     if (!fatalError) {
 	/* 
-	 * Execution de perl 
+	 * Execution of perl 
 	 */
 	
 	if (chmod(nomout, 0755) < 0) {
@@ -1890,7 +1890,7 @@ main(int argc, char **argv)
 	    status = 0;
 	}
     
-	/* Mise a jour du fichier stamp */
+	/* Update stamp files */
 	if (status == 0) {
 	    stamp = fopen(nomstamp, "w");
 	    fclose(stamp);
@@ -1898,18 +1898,18 @@ main(int argc, char **argv)
 	    fprintf(stderr, "Done.\n");
 	    exit(0);
 	} else {
-	    /* erreur durant l'execution du script */
+	    /* error while executing script */
 	    perror ("Fatal error");
 	    exit(2);
 	}
 	    
     } else {
-	/* Erreur detecte'e pendant la generation */
+	/* error during generation */
 	fprintf(stderr, "No code generated.\n");
 	unlink(nomout);
 	exit (2);
     }
-    /* on ne devrait pas arriver la` */
+    /* we should not be there */
     return(2);
 } /* main */
 
@@ -1917,7 +1917,7 @@ main(int argc, char **argv)
 /*------------------------------------------------------------------------*/
 
 /**
- ** Traitement des erreurs lors du parsing
+ ** parsing errors treatment
  **/
 static void 
 yyerror(char *s)
