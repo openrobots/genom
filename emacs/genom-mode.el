@@ -338,7 +338,7 @@ This does fairly subdued highlighting.")
 		 "exec-task-name\\|number\\|struct-name\\|name\\|sdi-ref\\|"
 		 "file-name"))
       (opt-var (concat
-		"name\\|sdi-ref\\|codel\\|number\\|msg-name\\|default-value\\|"
+		"name\\|sdi-ref\\|codel\\|number\\|report-name\\|default-value\\|"
 		"exec-rqst-name\\|module-name\\|poster-name\\|file-name"))
       (reserved-words (concat 
 		       "control\\|exec\\|init\\|user\\|auto\\|all\\|none\\|"
@@ -845,7 +845,7 @@ request " request-name " {
      output:             <name>::<sdi-ref>; 
      codel_control:     " (if codel-name 
 			       (concat codel-name "Cntrl;") "<codel>;") "
-     fail_reports:        <msg-name>" genom-etc ";
+     fail_reports:        <report-name>" genom-etc ";
      interrupt_activity:  <exec-rqst-name>" genom-etc ";
 };
 " )))
@@ -872,7 +872,7 @@ request " request-name " {
 			       (concat codel-name "End;") "<codel>;") "
      codel_inter:   " (if codel-name 
 			       (concat codel-name "Inter;") "<codel>;") "
-     fail_reports:          <msg-name>" genom-etc "; 
+     fail_reports:          <report-name>" genom-etc "; 
      interrupt_activity:    all;
 };
 " )))
@@ -901,7 +901,7 @@ request " request-name " {
 			       (concat codel-name "End;") "<codel>;") "
      codel_inter:   " (if codel-name 
 			       (concat codel-name "Inter;") "<codel>;") "
-     fail_reports:           <msg-name>" genom-etc "; 
+     fail_reports:           <report-name>" genom-etc "; 
      interrupt_activity:    " request-name ", <exec-rqst-name>" genom-etc "; 
 };
 " 
@@ -1019,7 +1019,7 @@ exec_task " (genom-upcase-initial exec-name) " {
 				(concat codel-name "End;") "<codel>;") "
      codel_task_main:     " (if codel-name 
 				(concat codel-name "Perm;") "<codel>;") "
-     fail_reports:         <msg-name>" genom-etc ";
+     fail_reports:         <report-name>" genom-etc ";
 };
 " ))))))
 
