@@ -1,45 +1,76 @@
 #	$LAAS$
 
-Copyright (c) 1993-2004 LAAS/CNRS
+Copyright (c) 1993-2006 LAAS/CNRS
 
 
---- PREREQUISITES -------------------------------------------------------
+-- EXTERNAL TOOLS REQUIREMENTS ------------------------------
 
-You need the following tools installed on the system before you can
-compile genom:
-
-- pocolibs library.
-  (<http://softs.laas.fr/openrobots/libs/pocolibs.php>). 
-
-- The GNU make utility, version 3.79 or higher.
-  (<http://www.gnu.org/software/make/make.html>).
-
-- Optionnaly, Tcl/Tk. 8.4 is recommended, but it works with 8.3 too, and
-  might work with all versions from 8.0.
-  (<http://tcl.tk/>). 
+ - autoconf version 2.59 or later
+ - automake version 1.8 or later
+ - make version 3.79 or later  <http://www.gnu.org/software/make/make.html>
+ - pkgconfig version 0.15 or later (usually part of Gnome devlpmt packages)
+ - groff 1.10 or later (Usually part of system packages).
+ - Tcl/Tk 8.0 or later development files (for eltclsh)  <http://tcl.tk/> 
 
 
---- GETTING GENOM -------------------------------------------------------
 
-The lastest version is available from:
-<http://softs.laas.fr/openrobots/tools/genom.php>
+-- GETTING LAAS/OPENROBOTS TOOLS -----------------------------
+
+<http://softs.laas.fr/openrobots/>
+
+ - mkdep: LAAS tool to determine dependencies
+ - pocolibs: system communication and real-time primitives
+ - libedit (editline): generic line editing and history functions
+ - eltclsh: interactive TCL shell (optional but very practical)
+ - GenoM: generator of modules
 
 
---- INSTALLATION INSTRUCTIONS -------------------------------------------
 
-genom uses the GNU configure system to handle most of the system
-dependencies configuration. So you can build and install it with the
-following commands: 
+--- INSTALLATION INSTRUCTIONS --------------------------------
 
-        ./configure [options]
-        make
-        make install
+Most of the time, it is a simple sequence of untar, autogen, configure,
+build, and install. Configure options may vary, and some packages don't
+require the autogen step. It is recommended that you build in a separate
+directory. 
 
 Use './configure --help' to find out all the available configure
-options. On most systems, --with-tcl=DIR and --with-tk=DIR will be
-required to specify where to find tclConfig.sh (resp. tkConfig.h). 
-You might also need to use --with-includes and --with-libraries to
-specify the path to pocolibs headers and library, respectively.
+options. 
 
 The --prefix option (default: /usr/local) defines the base directory
-of the installation. 
+of the installation. We recommend a dedicated path (eg,
+$PREFIX=/usr/local/openrobots).
+
+The --exec-prefix option allows to specify where to install binaries. 
+The default value (equal to --prefix) is usualy great. But if you have 
+different type of machine sharing this files tree, you will have to define
+dedicated path like --exec-prefix=$PREFIX/$MACHTYPE-$OSTYPE (eg,
+--exec-prefix=$PREFIX/i386-linux, for a PC running linux).
+
+On some systems, --with-tcl=DIR and --with-tk=DIR will be
+required to specify where to find tclConfig.sh (resp. tkConfig.h). 
+
+
+
+-- EXAMPLE for "mkdep-XYZ" :
+
+tar xfvz mkdep-XYZ.tar.gz
+cd mkdep-XYZ
+[./autogen.sh] (only for libedit, eltclsh and GenoM)
+mkdir build
+cd build
+../configure --prefix=$PREFIX 
+make
+make install
+
+
+--- CONFIGURATIONS -----------------------------------------
+
+Modify (or set if not previously defined) the following 
+environment variables :
+
+PATH :  add ${exec_prefix}/bin
+
+PKG_CONFIG_PATH :  add ${exec_prefix}/lib/pkgconfig
+
+LD_LIBRARY_PATH :  add ${exec_prefix}/lib:${exec_prefix}/lib/openprs
+
