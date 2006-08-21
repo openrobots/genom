@@ -326,7 +326,7 @@ This does fairly subdued highlighting.")
 	       "c_init_func\\|c_end_func\\|c_create_func\\|"
 	       "resources\\|incompatible_with\\|activity\\|exec_task\\|"
 	       "update\\|address\\|number\\|internal_data\\|version\\|"
-	       "email\\|uses_cxx\\|requires\\|data\\|"
+	       "email\\|uses_cxx\\|requires\\|codels_requires\\|data\\|"
 	       "cs_client_from\\|poster_client_from\\|"
 	       "period\\|delay\\|priority\\|stack_size"))
       (mand-var (concat
@@ -1078,6 +1078,7 @@ module " module-name " {
      version: \"0.1\";
      email:   <email>;
      requires: <package-or-module>" genom-etc ";
+     codels_requires: <package-or-module>" genom-etc ";
      internal_data: " MODULE-NAME "_STR;
      uses_cxx:     0;
 }; 
