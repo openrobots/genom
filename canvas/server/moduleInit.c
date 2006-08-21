@@ -115,7 +115,7 @@ $module$TaskInit()
 #ifdef PID_FILE
   FILE* pidFile;
   int pidFileFd;
-  char *home;
+  char *pidDir;
   struct utsname uts;
 #endif /* PID_FILE */
   char strerr[64];
@@ -144,15 +144,18 @@ $module$TaskInit()
   /*
    * Create pid file
    */
-  home = getenv("HOME");
-  if (home == NULL) {
-      home = "/tmp";
+  pidDir = getenv("H2DEV_DIR");
+  if (pidDir == NULL) {
+      pidDir = getenv("HOME");
+  }
+  if (pidDir == NULL) {
+      pidDir = "/tmp";
   }
   if (uname(&uts) == -1) {
       errnoSet(errno);
       goto error;
   }
-  snprintf(pidFilePath, MAXPATHLEN, "%s/%s-%s", home, PID_FILE, uts.nodename);
+  snprintf(pidFilePath, MAXPATHLEN, "%s/%s-%s", pidDir, PID_FILE, uts.nodename);
   pidFileFd = open(pidFilePath, O_CREAT|O_EXCL|O_WRONLY, 0644);
   if (pidFileFd < 0) {
       fprintf(stderr, "$module$: error creating %s: %s\n",
