@@ -1,0 +1,158 @@
+%
+% Copyright (c) 2001-2005 LAAS/CNRS                   --  Sat Nov 19 2005
+% All rights reserved.                                     Sara Fleury
+%
+% This document is a translation of the French documentation of GenoM,
+% originally written by Sara Fleury and Matthieu Herrb.
+%
+% Redistribution  and  use in source   and binary forms,  with or without
+% modification, are permitted provided that  the following conditions are
+% met:
+%
+%   1. Redistributions  of  source code must  retain  the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%   2. Redistributions in binary form must  reproduce the above copyright
+%      notice,  this list of  conditions and  the following disclaimer in
+%      the  documentation   and/or  other  materials   provided with  the
+%      distribution.
+%
+% THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+% ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+% IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+% PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+% BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+% CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+% SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+% BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+% WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+% OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+% ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+% $Id$
+%
+
+% -----------------------------------------------------------------------
+
+\section{Requirements}
+\label{sec|configuration|requirements}
+
+\subsection{Operating systems}
+
+
+\subsection{External tools}
+
+/GenoM/ needs the following tools.
+They are generally available on most systems. If not, download
+them from the indicatedXXX web sites. 
+
+\begin{itemize}
+\item {\tt autoconf} version 2.59 or later
+\item {\tt automake} version 1.8 or later
+\item {\tt GNU make} version 3.79 or later
+\item {\tt pkgconfig} version 0.15 or later (usually part of Gnome development packages).
+\item {\tt groff} 1.10 or later (usually part of system packages).
+\item {\tt Tcl/Tk} 8.0 or later development files (for eltclsh)
+\end{itemize}
+
+To edit /GenoM/ modules it is also recommended to use {\tt xemacs} to take
+advantage of {\tt genom-mode}.
+
+\section{What to download ?}
+\label{sec|configuration|download}
+
+\subsection{OpenRobots tools and libraries}
+
+/GenoM/ is part of a suite of open-sources tools. 
+
+In order to install and use /GenoM/ you will have to download and install
+the following libraries and tools from  {\tt
+http://softs.laas.fr/openrobots/} :
+
+\begin{itemize}
+\item {\tt mkdep}: LAAS tool to determine dependencies
+\item {\tt pocolibs}: system communication and real-time primitives
+\item {\tt libedit} (editline): generic line editing and history
+functions (for eltclsh)
+\item {\tt eltclsh}: interactive TCL shell (optional but very practical)
+\item {\tt /GenoM/}: the generator of modules
+\end{itemize}
+
+Later on you can also be interested in the following opensource softwares
+that are part of the OpenRobots suite and work nicely with /GenoM/:
+
+\begin{itemize}
+\item {\tt GDHE}: a tool to design 3D interface
+\item {\tt OpenPRS}: a tool to design complexe supervisors
+\end{itemize}
+
+\subsubsection{mkdep}
+
+{\tt Mkdep} is a tool to manage dependencies for make(1) automatically on
+Unix-like systems.  The original feature of this version is to be able to
+handle incremental updates of the dependencies.  The current release
+version is 2.4 released on August 29, 2005.
+
+It is recommended to install it.
+
+\subsubsection{pocolibs}
+
+{\tt Pocolib} is a system communication and real-time primitive layers used by
+/GenoM/ modules. 
+
+These libraries run on systems with POSIX.1 threads and basic real-time
+extensions. It has been tested successfully on Solaris (7and above),
+Linux (with glibc2), and NetBSD (2.0 and later). 
+
+There is also some code to support RTAI and LXRT 3.0, but it is currently
+untested and unsupported (this may change again in the future) 
+
+\subsubsection{libedit / editline}
+
+The {\tt editline} library provides generic line editing and history
+functions, similar to those found in tcsh(1). This package contains a
+Makefile for compiling the -current version of NetBSD's library which
+provides the same consistent installation and compilation environments as
+for the other tools found in this repository. 
+
+Editline is used by eltclsh.
+
+\subsubsection{eltclsh}
+
+
+
+\section{Installation}
+\label{sec|configuration|installation}
+
+To install all these softwares, you will have to follow always the same
+usual configuration/compilation/installation sequence. Here is the
+example pocolibs. 
+
+In this example, the environment variable {\tt PREFIX} allows to specify
+the root path where the binaries, the libraries, the include files, and
+so on will be installed. Typically you can set this variable to {\tt
+/usr/local/openrobots}.
+
+\begin{cartouche}
+\begin{verbatime}
+tar xfvz pocolibs-XYZ.tar.gz
+cd pocolibs-XYZ
+./autogen.sh
+mkdir build
+cd build
+../configure --prefix=$PREFIX
+make
+make install
+\end{verbatime}
+\end{cartouche}
+
+The command {\tt ./autogen.sh} is not always necessary. If there is
+already a script {\tt configure} you can try it directly.
+
+The {\tt configure} command has many options. You can see them with the
+option {\tt --help}. For /eltclsh/ and /GenoM/
+
+% -----------------------------------------------------------------------
+\section{Configuration}
+\label{sec|configuration|configuration}
+
+
