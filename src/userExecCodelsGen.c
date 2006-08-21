@@ -98,46 +98,46 @@ userExecCodelsGen(FILE *out)
     /* 
      * Codel d'initialisation 
      */
-    if (t->c_init_func != NULL) {
+    if (t->codel_task_start != NULL) {
       fprintf(out, 
 	      "/*------------------------------------------------------------------------\n *\n"
 	      " * %s  --  Initialization codel (fIDS, ...)\n *\n"
 	      " * Description: \n * \n"
-	      " * Returns:    OK or ERROR\n */\n\n", t->c_init_func);
+	      " * Returns:    OK or ERROR\n */\n\n", t->codel_task_start);
       fprintf(out, 
 	      "STATUS\n%s(int *report)\n"
 	      "{\n"
 	      "  /* ... add your code here ... */\n"
 	      "  return OK;\n"
-	      "}\n\n", t->c_init_func);
+	      "}\n\n", t->codel_task_start);
     }
 
     /* 
      * Codel de terminaison
      */
-    if (t->c_end_func != NULL) {
+    if (t->codel_task_end != NULL) {
       fprintf(out, 
 	      "/*------------------------------------------------------------------------\n *\n"
 	      " * %s  --  Termination codel\n *\n"
 	      " * Description: \n * \n"
-	      " * Returns:    OK or ERROR\n */\n\n", t->c_end_func);
+	      " * Returns:    OK or ERROR\n */\n\n", t->codel_task_end);
       fprintf(out, 
 	      "STATUS\n%s(void)\n"
 	      "{\n"
 	      "  return OK;\n"
-	      "}\n\n", t->c_end_func);
+	      "}\n\n", t->codel_task_end);
     }
 
     /* 
      * Codel activite permanente 
      */
-    if (t->c_func != NULL) {
+    if (t->codel_task_main != NULL) {
       fprintf(out, 
 	      "/*------------------------------------------------------------------------\n *\n"
 	      " * %s  --  codel of permanent activity\n *\n"
 	      " * Description: \n * \n"
-	      " * Reports:      OK\n", t->c_func);
-      for (lf=t->fail_msg; lf != NULL; lf=lf->next) {
+	      " * Reports:      OK\n", t->codel_task_main);
+      for (lf=t->fail_reports; lf != NULL; lf=lf->next) {
 	fprintf(out, " *              S_%s_%s\n",  
 		module->name, lf->name);
       }
@@ -149,7 +149,7 @@ userExecCodelsGen(FILE *out)
 	      "{\n"
 	      "  /* ... add your code here ... */\n"
 	      "  return OK;\n"
-	      "}\n", t->c_func);
+	      "}\n", t->codel_task_main);
     }
       
     /* 
@@ -167,7 +167,7 @@ userExecCodelsGen(FILE *out)
 	      " * %s\n *\n"
 	      " * Description: \n *\n"
 	      " * Reports:      OK\n", r->name);
-      for (lf=r->fail_msg; lf != NULL; lf=lf->next) {
+      for (lf=r->fail_reports; lf != NULL; lf=lf->next) {
 	fprintf(out, " *              S_%s_%s\n",  module->name, lf->name);
       }
       fprintf(out, " */\n\n");
@@ -196,77 +196,77 @@ userExecCodelsGen(FILE *out)
       /* Codels */
 
       /* START */
-      if (r->c_exec_func_start != NULL) {
-	if ((prev_rqst_name = inList(r->c_exec_func_start,r->name))) {
+      if (r->codel_start != NULL) {
+	if ((prev_rqst_name = inList(r->codel_start,r->name))) {
 	  fprintf(out, formatAlreadyCodel, 
-		  r->c_exec_func_start, "START", r->name, 
+		  r->codel_start, "START", r->name, 
 		  prev_rqst_name); 
 	}
 	else {
 	  fprintf(out, formatCodel, 
-		  r->c_exec_func_start, "START", 
+		  r->codel_start, "START", 
 		  r->name, "START EXEC END ETHER FAIL ZOMBIE",
-		  r->c_exec_func_start, params);
+		  r->codel_start, params);
 	}
       }
 
       /* EXEC */
-      if (r->c_exec_func != NULL) {
-	if ((prev_rqst_name = inList(r->c_exec_func,r->name))) {
+      if (r->codel_main != NULL) {
+	if ((prev_rqst_name = inList(r->codel_main,r->name))) {
 	    fprintf(out, formatAlreadyCodel, 
-		    r->c_exec_func, "EXEC", r->name, 
+		    r->codel_main, "EXEC", r->name, 
 		    prev_rqst_name); 
 	}
 	else {
 	  fprintf(out, formatCodel, 
-		  r->c_exec_func, "EXEC", 
+		  r->codel_main, "EXEC", 
 		  r->name, "EXEC END ETHER FAIL ZOMBIE",
-		  r->c_exec_func, params);
+		  r->codel_main, params);
 	}
       }
 
       /* END */
-      if (r->c_exec_func_end != NULL) {
-	if ((prev_rqst_name = inList(r->c_exec_func_end,r->name))) {
+      if (r->codel_end != NULL) {
+	if ((prev_rqst_name = inList(r->codel_end,r->name))) {
 	  fprintf(out, formatAlreadyCodel, 
-		  r->c_exec_func_end, "END", r->name, 
+		  r->codel_end, "END", r->name, 
 		  prev_rqst_name); 
 	}
 	else {
 	  fprintf(out, formatCodel, 
-		  r->c_exec_func_end, "END", 
+		  r->codel_end, "END", 
 		  r->name, "END ETHER FAIL ZOMBIE",
-		  r->c_exec_func_end, params);
+		  r->codel_end, params);
 	}
       }
 
       /* FAIL */
-      if (r->c_exec_func_fail != NULL) {
-	if ((prev_rqst_name = inList(r->c_exec_func_fail,r->name))) {
+      if (r->codel_fail != NULL) {
+	if ((prev_rqst_name = inList(r->codel_fail,r->name))) {
 	  fprintf(out, formatAlreadyCodel, 
-		  r->c_exec_func_fail, "FAIL", r->name, 
+		  r->codel_fail, "FAIL", r->name, 
 		  prev_rqst_name); 
 	}
 	else {
 	  fprintf(out, formatCodel, 
-		  r->c_exec_func_fail, "FAIL", 
+		  r->codel_fail, "FAIL", 
 		  r->name, "FAIL ZOMBIE",
-		  r->c_exec_func_fail, params);
+		  r->codel_fail, params);
 	}
       }
 
       /* INTER */
-      if (r->c_exec_func_inter != NULL) {
-	if ((prev_rqst_name = inList(r->c_exec_func_inter,r->name))) {
+      if (r->codel_inter != NULL) {
+	if ((prev_rqst_name = inList(r->codel_inter,r->name))) {
 	  fprintf(out, formatAlreadyCodel, 
-		  r->c_exec_func_inter, "INTER", r->name, 
+		  r->codel_inter, "INTER", r->name, 
 		  prev_rqst_name); 
 	}
 	else {
 	  fprintf(out, formatCodel, 
-		  r->c_exec_func_inter, "INTER", 
+		  r->codel_inter, "INTER", 
 		  r->name, "INTER ETHER FAIL ZOMBIE",
-		  r->c_exec_func_inter, params);
+		  r->codel_inter, params);
 	}
       }
 
@@ -280,12 +280,12 @@ userExecCodelsGen(FILE *out)
 	if (p->exec_task != t) {
 	    continue;
 	}
-	if (p->create_func != NULL) {
+	if (p->codel_poster_create != NULL) {
 	    fprintf(out, "/*----------------------------------------------------------------------\n *\n");
-	    fprintf(out, " * %s\n", p->create_func);
+	    fprintf(out, " * %s\n", p->codel_poster_create);
 	    fprintf(out, " */\n");
 	    fprintf(out, "STATUS\n%s(char *name, int size, "
-		    "POSTER_ID *pPosterId)\n", p->create_func);
+		    "POSTER_ID *pPosterId)\n", p->codel_poster_create);
 	    fprintf(out, "{\n  /* ... add your code here ... */\n  return OK;\n}\n");
 	}
     }

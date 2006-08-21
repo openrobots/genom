@@ -94,27 +94,27 @@ execTaskGen(FILE *out)
 	}
 	    
 	/* init func */
-	if (t->c_init_func != NULL) {
+	if (t->codel_task_start != NULL) {
 	    print_sed_subst(out, "cFuncExecInitFlag", "1");
-	    print_sed_subst(out, "cFuncExecInitName", t->c_init_func);
+	    print_sed_subst(out, "cFuncExecInitName", t->codel_task_start);
 	} else {
 	    print_sed_subst(out, "cFuncExecInitFlag", "0");
 	    print_sed_subst(out, "cFuncExecInitName", "dummy");
 	}
 
 	/* end func */
-	if (t->c_end_func != NULL) {
+	if (t->codel_task_end != NULL) {
 	    print_sed_subst(out, "cFuncExecEndFlag", "1");
-	    print_sed_subst(out, "cFuncExecEndName", t->c_end_func);
+	    print_sed_subst(out, "cFuncExecEndName", t->codel_task_end);
 	} else {
 	    print_sed_subst(out, "cFuncExecEndFlag", "0");
 	    print_sed_subst(out, "cFuncExecEndName", "dummy");
 	}
 
-	/* c_func */
-	if (t->c_func != NULL) {
+	/* codel_task_main */
+	if (t->codel_task_main != NULL) {
 	    print_sed_subst(out, "cFuncExecFlag", "1");
-	    print_sed_subst(out, "cFuncExecName", t->c_func);
+	    print_sed_subst(out, "cFuncExecName", t->codel_task_main);
 	} else {
 	    print_sed_subst(out, "cFuncExecFlag", "0");
 	    print_sed_subst(out, "cFuncExecName", "dummy");
@@ -133,7 +133,7 @@ execTaskGen(FILE *out)
 	    if (p->address == NULL) {
 	      
 	      /* create posters */
-		if (p->create_func == NULL) {
+		if (p->codel_poster_create == NULL) {
 		    /* appel standard de posterCreate */
 		    bufcat(&str, "  if (posterCreate(%s_%s_POSTER_NAME,\n",
 			   module->NAME, p->NAME);
@@ -141,7 +141,7 @@ execTaskGen(FILE *out)
 		    /* Appel d'une fonction utilisateur pour creer le 
 		       poster */
 		    bufcat(&str, "  if (%s(%s_%s_POSTER_NAME,\n",
-			   p->create_func, module->NAME, p->NAME);
+			   p->codel_poster_create, module->NAME, p->NAME);
 		}
 		bufcat(&str, "    sizeof(%s),\n", p->type->name);
 		bufcat(&str, "    &(EXEC_TASK_POSTER_ID(%d)[%d])) != OK) {\n"
@@ -151,7 +151,7 @@ execTaskGen(FILE *out)
 		       module->name, t->name, p->name);
 
 		/* init posters created automatically */
-		if (p->create_func == NULL) {
+		if (p->codel_poster_create == NULL) {
 		  bufcat(&str, 
 		         "    {\n"
 			 "       int size = sizeof(%s);\n"
@@ -279,15 +279,15 @@ execTaskGen(FILE *out)
 	}
 
 	/*
-	 * liste des exec_func 
+	 * liste des execodel_task_main 
 	 */
 	str = NULL;
 	bufcat(&str, "static ACTIVITY_EVENT (*%s%sExecFuncTab[])() = {\n", 
 	       module->name, t->name);
 	for (lr = requetes; lr != NULL; lr = lr->next) {
 	    r = lr->rqst;
-	    if (r->c_exec_func != NULL && r->exec_task == t) {
-		bufcat(&str, "  %s,\n", r->c_exec_func);
+	    if (r->codel_main != NULL && r->exec_task == t) {
+		bufcat(&str, "  %s,\n", r->codel_main);
 	    } else {
 		bufcat(&str, "  NULL,\n");
 	    }
@@ -297,15 +297,15 @@ execTaskGen(FILE *out)
 	free(str);
 
 	/* 
-	 * liste des exec_func_start 
+	 * liste des execodel_task_main_start 
 	 */
 	str = NULL;
 	bufcat(&str, "static ACTIVITY_EVENT (*%s%sExecFuncStartTab[])()"
 	       " = {\n", module->name, t->name);
 	for (lr = requetes; lr != NULL; lr = lr->next) {
 	    r = lr->rqst;
-	    if (r->c_exec_func_start != NULL && r->exec_task == t) {
-		bufcat(&str, "  %s,\n", r->c_exec_func_start);
+	    if (r->codel_start != NULL && r->exec_task == t) {
+		bufcat(&str, "  %s,\n", r->codel_start);
 	    } else {
 		bufcat(&str, "  NULL,\n");
 	    }
@@ -315,15 +315,15 @@ execTaskGen(FILE *out)
 	free(str);
 
 	/* 
-	 * liste des exec_func_end 
+	 * liste des execodel_task_main_end 
 	 */
 	str = NULL;
 	bufcat(&str, "static ACTIVITY_EVENT (*%s%sExecFuncEndTab[])()"
 	       " = {\n", module->name, t->name);
 	for (lr = requetes; lr != NULL; lr = lr->next) {
 	    r = lr->rqst;
-	    if (r->c_exec_func_end != NULL && r->exec_task == t) {
-		bufcat(&str, "  %s,\n", r->c_exec_func_end);
+	    if (r->codel_end != NULL && r->exec_task == t) {
+		bufcat(&str, "  %s,\n", r->codel_end);
 	    } else {
 		bufcat(&str, "  NULL,\n");
 	    }
@@ -333,15 +333,15 @@ execTaskGen(FILE *out)
 	free(str);
 
 	/* 
-	 * liste des exec_func_fail 
+	 * liste des execodel_task_main_fail 
 	 */
 	str = NULL;
 	bufcat(&str, "static ACTIVITY_EVENT (*%s%sExecFuncFailTab[])()"
 	       " = {\n", module->name, t->name);
 	for (lr = requetes; lr != NULL; lr = lr->next) {
 	    r = lr->rqst;
-	    if (r->c_exec_func_fail != NULL && r->exec_task == t) {
-		bufcat(&str, "  %s,\n", r->c_exec_func_fail);
+	    if (r->codel_fail != NULL && r->exec_task == t) {
+		bufcat(&str, "  %s,\n", r->codel_fail);
 	    } else {
 		bufcat(&str, "  NULL,\n");
 	    }
@@ -351,15 +351,15 @@ execTaskGen(FILE *out)
 	free(str);
 
 	/* 
-	 * liste des exec_func_inter 
+	 * liste des execodel_task_main_inter 
 	 */
 	str = NULL;
 	bufcat(&str, "static ACTIVITY_EVENT (*%s%sExecFuncInterTab[])()"
 	       " = {\n", module->name, t->name);
 	for (lr = requetes; lr != NULL; lr = lr->next) {
 	    r = lr->rqst;
-	    if (r->c_exec_func_inter != NULL && r->exec_task == t) {
-		bufcat(&str, "  %s,\n", r->c_exec_func_inter);
+	    if (r->codel_inter != NULL && r->exec_task == t) {
+		bufcat(&str, "  %s,\n", r->codel_inter);
 	    } else {
 		bufcat(&str, "  NULL,\n");
 	    }

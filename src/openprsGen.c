@@ -469,7 +469,7 @@ static void declareReportAtoms(FILE *out)
   /* Construction d'une liste unique de reports */
   for (l = requetes; l != NULL; l = l->next) {
     r = l->rqst;
-    for (m = r->fail_msg; m != NULL; m = m->next) {
+    for (m = r->fail_reports; m != NULL; m = m->next) {
       if (!id_member(m, reportList)) {
 	tmp = (ID_LIST *)xalloc(sizeof(ID_LIST));
 	tmp->name = m->name;

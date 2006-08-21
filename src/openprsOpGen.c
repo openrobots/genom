@@ -136,7 +136,7 @@ openprsOpGen(FILE *out)
 
     /* DOC : reports and enums */
     bufcat(&docString, "\nReports: ");
-    for (mess = rqst->fail_msg; mess != NULL; mess = mess->next) {
+    for (mess = rqst->fail_reports; mess != NULL; mess = mess->next) {
       bufcat(&docString, "%s  ", mess->name);
     }
     print_sed_subst(out, "DOC", "%s", docString);

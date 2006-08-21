@@ -395,68 +395,68 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	}
 	rqst->output = av->value.input;
 	break;
-      case C_CONTROL_FUNC:
-	if (rqst->c_control_func) {
+      case CODEL_CONTROL:
+	if (rqst->codel_control) {
 	  fprintf(stderr, 
-		  "genom %s: Error: twice field 'c_control_func:' in request %s",
+		  "genom %s: Error: twice field 'codel_control:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
-	rqst->c_control_func = av->value.c_control_func;
+	rqst->codel_control = av->value.codel_control;
 	break;
-      case C_EXEC_FUNC:
-	if (rqst->c_exec_func) {
+      case CODEL_MAIN:
+	if (rqst->codel_main) {
 	  fprintf(stderr, 
-		  "genom %s: Error: twice field 'c_exec_func:' in request %s",
+		  "genom %s: Error: twice field 'codel_main:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
-	rqst->c_exec_func = av->value.c_exec_func;
+	rqst->codel_main = av->value.codel_main;
 	break;
-      case C_EXEC_FUNC_START:
-	if (rqst->c_exec_func_start) {
+      case CODEL_START:
+	if (rqst->codel_start) {
 	  fprintf(stderr, 
-		  "genom %s: Error: twice field 'c_exec_func_start:' in request %s",
+		  "genom %s: Error: twice field 'codel_start:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
-	rqst->c_exec_func_start = av->value.c_exec_func_start;
+	rqst->codel_start = av->value.codel_start;
 	break;
-      case C_EXEC_FUNC_END:
-	if (rqst->c_exec_func_end) {
+      case CODEL_END:
+	if (rqst->codel_end) {
 	  fprintf(stderr, 
-		  "genom %s: Error: twice field 'c_exec_func_end:' in request %s",
+		  "genom %s: Error: twice field 'codel_end:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
-	rqst->c_exec_func_end = av->value.c_exec_func_end;
+	rqst->codel_end = av->value.codel_end;
 	break;
-      case C_EXEC_FUNC_FAIL:
-	if (rqst->c_exec_func_fail) {
+      case CODEL_FAIL:
+	if (rqst->codel_fail) {
 	  fprintf(stderr, 
-		  "genom %s: Error: twice field 'c_exec_func_fail:' in request %s",
+		  "genom %s: Error: twice field 'codel_fail:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
-	rqst->c_exec_func_fail = av->value.c_exec_func_fail;
+	rqst->codel_fail = av->value.codel_fail;
 	break;
-      case C_EXEC_FUNC_INTER:
-	if (rqst->c_exec_func_inter) {
+      case CODEL_INTER:
+	if (rqst->codel_inter) {
 	  fprintf(stderr, 
-		  "genom %s: Error: twice field 'c_exec_func_inter:' in request %s",
+		  "genom %s: Error: twice field 'codel_inter:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
-	rqst->c_exec_func_inter = av->value.c_exec_func_inter;
+	rqst->codel_inter = av->value.codel_inter;
 	break;
-      case INCOMPATIBLE_WITH:
-	if (rqst->incompatible_with) {
+      case INTERRUPT_ACTIVITY:
+	if (rqst->interrupt_activity) {
 	  fprintf(stderr, 
-		  "genom %s: Error: twice field 'incompatible_with:' in request %s",
+		  "genom %s: Error: twice field 'interrupt_activity:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
-	rqst->incompatible_with = av->value.incompatible_with;
+	rqst->interrupt_activity = av->value.interrupt_activity;
 	break;
       case EXEC_TASK:
 	rqst->exec_task = NULL;
@@ -468,14 +468,14 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	}
 	rqst->exec_task_name = av->value.exec_task_name;
 	break;
-      case FAIL_MSG:
-	if (rqst->fail_msg) {
+      case FAIL_REPORTS:
+	if (rqst->fail_reports) {
 	  fprintf(stderr, 
-		  "genom %s: Error: twice field 'fail_msg:' in request %s",
+		  "genom %s: Error: twice field 'fail_reports:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
-	rqst->fail_msg = av->value.fail_msg;
+	rqst->fail_reports = av->value.fail_reports;
 	break;
       case RESOURCES:
 	if (rqst->resource_list) {
@@ -563,32 +563,32 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
 	}
 	task->stack_size = av->value.stack_size;
 	break;
-      case C_INIT_FUNC:
-	if (task->c_init_func) {
+      case CODEL_TASK_START:
+	if (task->codel_task_start) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'c_init_func' in task %s\n",
+		  "genom %s: Error: twice field 'codel_task_start' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
-	task->c_init_func = av->value.c_init_func;
+	task->codel_task_start = av->value.codel_task_start;
 	break;
-      case C_END_FUNC:
-	if (task->c_end_func) {
+      case CODEL_TASK_END:
+	if (task->codel_task_end) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'c_end_func' in task %s\n",
+		  "genom %s: Error: twice field 'codel_task_end' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
-	task->c_end_func = av->value.c_end_func;
+	task->codel_task_end = av->value.codel_task_end;
 	break;
-      case C_FUNC:
-	if (task->c_func) {
+      case CODEL_TASK_MAIN:
+	if (task->codel_task_main) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'c_func' in task %s\n",
+		  "genom %s: Error: twice field 'codel_task_main' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
-	task->c_func = av->value.c_func;
+	task->codel_task_main = av->value.codel_task_main;
 	break;
       case POSTERS_INPUT:
 	if (task->posters_input_types) {
@@ -620,14 +620,14 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
 	}
 	task->resource_list = av->value.resource_list;
 	break;
-      case FAIL_MSG:
-	if (task->fail_msg) {
+      case FAIL_REPORTS:
+	if (task->fail_reports) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'fail_msg' in task %s\n",
+		  "genom %s: Error: twice field 'fail_reports' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
-	task->fail_msg = av->value.fail_msg;
+	task->fail_reports = av->value.fail_reports;
 	break;
     }
     return(task);
@@ -719,7 +719,7 @@ reentrant(RQST_STR *r)
 {
     RQST_LIST *l;
     
-    for (l = r->incompatible_with; l != NULL; l = l->next) {
+    for (l = r->interrupt_activity; l != NULL; l = l->next) {
 	if (l->rqst == r) {
 	    break;
 	}
@@ -1232,16 +1232,16 @@ resolveRequests(void)
 	r = lr->rqst;
 	r->num = n++;
 	if (r->rqst_num < 0) r->rqst_num = r->num;
-	if (r->incompatible_with == NULL) {
+	if (r->interrupt_activity == NULL) {
 	    continue;
 	}
-	if (r->incompatible_with->flags == ALL) {
+	if (r->interrupt_activity->flags == ALL) {
 	    /* traite le cas particulier ALL */
-	    free(r->incompatible_with);
-	    r->incompatible_with = requetes;
+	    free(r->interrupt_activity);
+	    r->interrupt_activity = requetes;
 	} else {
 	    /* liste "normale" */
-	    for (li = r->incompatible_with; li != NULL; li = li->next) {
+	    for (li = r->interrupt_activity; li != NULL; li = li->next) {
 		r = trouve_requete(li->name);
 		if (r == NULL) {
 		    fprintf(stderr, "genom %s: warning: unknown request %s\n",

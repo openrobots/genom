@@ -199,9 +199,9 @@ cntrlTaskGen(FILE *out)
 	    }
 	    strcat(buf, ")");
 	    print_sed_subst(out, "inputRefPtr", buf);
-	    if (rqst->rqst->c_control_func != NULL) {
+	    if (rqst->rqst->codel_control != NULL) {
 		print_sed_subst(out, "cControlFunc", 
-				rqst->rqst->c_control_func);
+				rqst->rqst->codel_control);
 	    }
 	} else {
 	    print_sed_subst(out, "inputFlag", "(0)");
@@ -255,7 +255,7 @@ cntrlTaskGen(FILE *out)
 	for (i = 0; i < nbRequest; i++) {
 	    tabCompat[i] = 1;
 	}
-	for (li = rqst->rqst->incompatible_with; li != NULL; li = li->next) {
+	for (li = rqst->rqst->interrupt_activity; li != NULL; li = li->next) {
 	    if (li->rqst != NULL) {
 		tabCompat[li->rqst->num] = 0;
 	    }
@@ -281,19 +281,19 @@ cntrlTaskGen(FILE *out)
 
 
 	/* Fonction de controle */
-	if (rqst->rqst->c_control_func != NULL) {
+	if (rqst->rqst->codel_control != NULL) {
 	    print_sed_subst(out, "controlFuncFlag", "1");
 	    print_sed_subst(out, "cControlFunc", 
-			    rqst->rqst->c_control_func);
+			    rqst->rqst->codel_control);
 	    if (rqst->rqst->input != NULL) {
 		dcl_nom_decl(rqst->rqst->input->dcl_nom, &type, &var);
 		print_sed_subst(out, "cControlFuncProto", "int %s(%s *%s);", 
-				rqst->rqst->c_control_func, type, var);
+				rqst->rqst->codel_control, type, var);
 		free(type);
 		free(var);
 	    } else {
 		print_sed_subst(out, "cControlFuncProto", "int %s(void *);", 
-				rqst->rqst->c_control_func);
+				rqst->rqst->codel_control);
 	    }
 	} else {
 	    print_sed_subst(out, "controlFuncFlag", "0");

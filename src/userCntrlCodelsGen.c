@@ -89,19 +89,19 @@ userCntrlCodelsGen(FILE *out)
     r = lr->rqst;
 
     /* Pas de controle */
-    if (r->c_control_func == NULL) continue;
+    if (r->codel_control == NULL) continue;
 
     /* Codel deja traite */
-    if ((prev_rqst_name = inList(r->c_control_func,r->name))) {
+    if ((prev_rqst_name = inList(r->codel_control,r->name))) {
       fprintf(out, 
 	      "/*------------------------------------------------------------------------\n"
 	      " * %s  -  control codel of %s request %s\n *\n"
 	      " * Description:    see above (request %s)\n *\n"
 	      " * Report: OK\n", 
-	      r->c_control_func, 
+	      r->codel_control, 
 	      r->type == EXEC ? "EXEC" : r->type == INIT ? "INIT" : "CONTROL",
 	      r->name, prev_rqst_name);
-      for (lf=r->fail_msg; lf != NULL; lf=lf->next) {
+      for (lf=r->fail_reports; lf != NULL; lf=lf->next) {
 	fprintf(out, " *                 S_%s_%s\n",  
 		module->name, 
 		lf->name);
@@ -119,10 +119,10 @@ userCntrlCodelsGen(FILE *out)
 	    " * %s  -  control codel of %s request %s\n *\n"
 	    " * Description:    \n"
 	    " * Report: OK\n",
-	    r->c_control_func, 
+	    r->codel_control, 
 	    r->type == EXEC ? "EXEC" : r->type == INIT ? "INIT" : "CONTROL",
 	    r->name);
-    for (lf=r->fail_msg; lf != NULL; lf=lf->next) {
+    for (lf=r->fail_reports; lf != NULL; lf=lf->next) {
       fprintf(out, " *                 S_%s_%s\n",  
 	      module->name, 
 	      lf->name);
@@ -149,7 +149,7 @@ userCntrlCodelsGen(FILE *out)
 	    "STATUS\n%s(%s)\n"
 	    "{\n"
 	    "  /* ... add your code here ... */\n"
-	    "  return OK;\n}\n\n", r->c_control_func, params); 
+	    "  return OK;\n}\n\n", r->codel_control, params); 
   
   } /* for (requetes) */
   

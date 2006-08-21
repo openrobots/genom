@@ -162,8 +162,8 @@ int headerGen(FILE *out)
     str = NULL;
     for (lr = requetes; lr != NULL; lr = lr->next) {
 	r = lr->rqst;
-	if (r->c_control_func != NULL) {
-	    bufcat(&str, "extern STATUS %s(", r->c_control_func);
+	if (r->codel_control != NULL) {
+	    bufcat(&str, "extern STATUS %s(", r->codel_control);
 	    if (r->input != NULL) {
 		dcl_nom_decl(r->input->dcl_nom, &type, &var);
 		bufcat(&str, "%s %s(%s), ", type, 
@@ -174,29 +174,29 @@ int headerGen(FILE *out)
 	    }
 	    bufcat(&str, "int *bilan);\n");
 	}
-	gen_c_exec_proto(&str, r, r->c_exec_func_start);
-	gen_c_exec_proto(&str, r, r->c_exec_func_end);
-	gen_c_exec_proto(&str, r, r->c_exec_func_fail);
-	gen_c_exec_proto(&str, r, r->c_exec_func_inter);
-	gen_c_exec_proto(&str, r, r->c_exec_func);
+	gen_c_exec_proto(&str, r, r->codel_start);
+	gen_c_exec_proto(&str, r, r->codel_end);
+	gen_c_exec_proto(&str, r, r->codel_fail);
+	gen_c_exec_proto(&str, r, r->codel_inter);
+	gen_c_exec_proto(&str, r, r->codel_main);
     } /* for */
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
-	if (t->c_init_func != NULL) {
-	    bufcat(&str, "extern STATUS %s(int *bilan);\n", t->c_init_func);
+	if (t->codel_task_start != NULL) {
+	    bufcat(&str, "extern STATUS %s(int *bilan);\n", t->codel_task_start);
 	}
-	if (t->c_end_func != NULL) {
-          bufcat(&str, "extern STATUS %s(void);\n", t->c_end_func);
+	if (t->codel_task_end != NULL) {
+          bufcat(&str, "extern STATUS %s(void);\n", t->codel_task_end);
 	}
-	if (t->c_func != NULL) {
-	    bufcat(&str, "extern STATUS %s(int *bilan);\n", t->c_func);
+	if (t->codel_task_main != NULL) {
+	    bufcat(&str, "extern STATUS %s(int *bilan);\n", t->codel_task_main);
 	}
     } /* for */
     /* Prototypes des fonctions de creation des posters */
     for (p = posters; p!= NULL; p = p->next) {
-	if (p->create_func != NULL) {
+	if (p->codel_poster_create != NULL) {
 	    bufcat(&str, "extern STATUS %s(char *name, int size, "
-		   "POSTER_ID *pPosterId);\n", p->create_func);
+		   "POSTER_ID *pPosterId);\n", p->codel_poster_create);
 	}
     } /* for */
     print_sed_subst(out, "listUserFuncProto", str);

@@ -163,14 +163,14 @@ typedef struct exec_task_str {
     int delay;
     int priority;
     int stack_size;
-    ID_STR *c_init_func;
-    ID_STR *c_end_func;
-    ID_STR *c_func;
+    ID_STR *codel_task_start;
+    ID_STR *codel_task_end;
+    ID_STR *codel_task_main;
     TYPE_LIST *posters_input_types;
     ID_LIST *cs_client_from;
     ID_LIST *poster_client_from;
     ID_LIST *resource_list;
-    ID_LIST *fail_msg;
+    ID_LIST *fail_reports;
 } EXEC_TASK_STR;
 
 /* List of attribute/values for an execution task */
@@ -181,16 +181,16 @@ typedef struct {
 	int delay;
 	int priority;
 	int stack_size;
-	ID_STR *c_init_func;
-	ID_STR *c_end_func;
-        ID_STR *c_func;
+	ID_STR *codel_task_start;
+	ID_STR *codel_task_end;
+        ID_STR *codel_task_main;
         TYPE_LIST *posters_input_types;
 	ID_STR *poster_name;
 	STR_REF_LIST *poster_data;
 	ID_LIST *cs_client_from;
 	ID_LIST *poster_client_from;
 	ID_LIST *resource_list;
-	ID_LIST *fail_msg;
+	ID_LIST *fail_reports;
     } value;
 } EXEC_TASK_AV_STR;
 
@@ -209,16 +209,16 @@ typedef struct rqst_str {
     STR_REF_STR *input;
     TYPE_LIST *posters_input_types;
     STR_REF_STR *output;
-    ID_STR *c_control_func;
-    ID_STR *c_exec_func;
-    ID_STR *c_exec_func_start;
-    ID_STR *c_exec_func_end;
-    ID_STR *c_exec_func_fail;
-    ID_STR *c_exec_func_inter;
-    RQST_LIST *incompatible_with;
+    ID_STR *codel_control;
+    ID_STR *codel_main;
+    ID_STR *codel_start;
+    ID_STR *codel_end;
+    ID_STR *codel_fail;
+    ID_STR *codel_inter;
+    RQST_LIST *interrupt_activity;
     ID_STR *exec_task_name;
     EXEC_TASK_STR *exec_task;
-    ID_LIST *fail_msg;
+    ID_LIST *fail_reports;
     ID_LIST *resource_list;
     int activity;
     int rqst_num;
@@ -234,15 +234,15 @@ typedef struct {
 	STR_REF_STR *input;
         TYPE_LIST *posters_input_types;
 	STR_REF_STR *output;
-	ID_STR *c_control_func;
-	ID_STR *c_exec_func;
-	ID_STR *c_exec_func_start;
-	ID_STR *c_exec_func_end;
-	ID_STR *c_exec_func_fail;
-	ID_STR *c_exec_func_inter;
-	RQST_LIST *incompatible_with;
+	ID_STR *codel_control;
+	ID_STR *codel_main;
+	ID_STR *codel_start;
+	ID_STR *codel_end;
+	ID_STR *codel_fail;
+	ID_STR *codel_inter;
+	RQST_LIST *interrupt_activity;
 	ID_STR *exec_task_name;
-	ID_LIST *fail_msg;
+	ID_LIST *fail_reports;
 	ID_LIST *resource_list;
 	int activity;
 	int rqst_num;
@@ -297,7 +297,7 @@ typedef struct POSTER_LIST {
     TYPE_STR *type;
     void *address;
     char *bus_space;
-    ID_STR *create_func;
+    ID_STR *codel_poster_create;
     struct POSTER_LIST *next;
 } POSTER_LIST;
 

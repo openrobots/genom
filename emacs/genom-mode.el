@@ -320,11 +320,17 @@ This does fairly subdued highlighting.")
 		     "import from\\|poster\\|exec_task"))
       (fields (concat
 	       "type\\|doc\\|input\\|posters_input\\|input_info\\|output\\|"
-	       "c_control_func\\|fail_msg\\|"
-	       "c_exec_func_start\\|c_exec_func_end\\|c_exec_func_inter\\|"
-	       "c_exec_func_fail\\|c_exec_func\\|c_func\\|"
-	       "c_init_func\\|c_end_func\\|c_create_func\\|"
-	       "resources\\|incompatible_with\\|activity\\|exec_task\\|"
+	       "codel_control\\|fail_reports\\|"
+	       "codel_start\\|codel_end\\|codel_inter\\|"
+	       "codel_fail\\|codel_main\\|codel_task_main\\|"
+	       "codel_task_start\\|codel_task_end\\|codel_poster_create\\|"
+	       "interrupt_activity\\|"
+               "c_control_func\\|fail_msg\\|"
+               "c_exec_func_start\\|c_exec_func_end\\|c_exec_func_inter\\|"
+               "c_exec_func_fail\\|c_exec_func\\|c_func\\|"
+               "c_init_func\\|c_end_func\\|c_create_func\\|"
+               "incompatible_with\\|"
+	       "resources\\|activity\\|exec_task\\|"
 	       "update\\|address\\|number\\|internal_data\\|version\\|"
 	       "email\\|uses_cxx\\|requires\\|codels_requires\\|data\\|"
 	       "period\\|delay\\|priority\\|stack_size"))
@@ -837,10 +843,10 @@ request " request-name " {
      input:              <name>::<sdi-ref>;
      input_info:         <default-value>::\"<doc>\"" genom-etc ";
      output:             <name>::<sdi-ref>; 
-     c_control_func:     " (if codel-name 
+     codel_control:     " (if codel-name 
 			       (concat codel-name "Cntrl;") "<codel>;") "
-     fail_msg:           <msg-name>" genom-etc ";
-     incompatible_with:  <exec-rqst-name>" genom-etc ";
+     fail_reports:        <msg-name>" genom-etc ";
+     interrupt_activity:  <exec-rqst-name>" genom-etc ";
 };
 " )))
 
@@ -856,20 +862,18 @@ request " request-name " {
      exec_task:           <<exec-task-name>>; 
      input:              <name>::<sdi-ref>; 
      input_info:         <default-value>::\"<doc>\"" genom-etc ";
-     c_control_func:     " (if codel-name 
+     codel_control:     " (if codel-name 
 			       (concat codel-name "Cntrl;") "<codel>;") "
-     c_exec_func_start:   " (if codel-name 
+     codel_start:       " (if codel-name 
 			       (concat codel-name "Start;") "<codel>;") "
-     c_exec_func:         " (if codel-name 
-			       (concat codel-name "Exec;") "<codel>;") "
-     c_exec_func_end:     " (if codel-name 
+     codel_main:         " (if codel-name 
+			       (concat codel-name "Main;") "<codel>;") "
+     codel_end:     " (if codel-name 
 			       (concat codel-name "End;") "<codel>;") "
-     c_exec_func_inter:   " (if codel-name 
+     codel_inter:   " (if codel-name 
 			       (concat codel-name "Inter;") "<codel>;") "
-     c_exec_func_fail:    " (if codel-name 
-			       (concat codel-name "Fail;") "<codel>;") "
-     fail_msg:           <msg-name>" genom-etc "; 
-     incompatible_with:    all;
+     fail_reports:          <msg-name>" genom-etc "; 
+     interrupt_activity:    all;
 };
 " )))
 
@@ -887,20 +891,18 @@ request " request-name " {
      input_info:          <default-value>::\"<doc>\"" genom-etc ";
      posters_input:       <struct-name>" genom-etc ";
      output:              <name>::<sdi-ref>; 
-     c_control_func:      " (if codel-name 
+     codel_control:      " (if codel-name 
 			       (concat codel-name "Cntrl;") "<codel>;") "
-     c_exec_func_start:   " (if codel-name 
+     codel_start:   " (if codel-name 
 			       (concat codel-name "Start;") "<codel>;") "
-     c_exec_func:         " (if codel-name 
-			       (concat codel-name "Exec;") "<codel>;") "
-     c_exec_func_end:     " (if codel-name 
+     codel_main:         " (if codel-name 
+			       (concat codel-name "Main;") "<codel>;") "
+     codel_end:     " (if codel-name 
 			       (concat codel-name "End;") "<codel>;") "
-     c_exec_func_inter:   " (if codel-name 
+     codel_inter:   " (if codel-name 
 			       (concat codel-name "Inter;") "<codel>;") "
-     c_exec_func_fail:    " (if codel-name 
-			       (concat codel-name "Fail;") "<codel>;") "
-     fail_msg:            <msg-name>" genom-etc "; 
-     incompatible_with:    " request-name ", <exec-rqst-name>" genom-etc "; 
+     fail_reports:           <msg-name>" genom-etc "; 
+     interrupt_activity:    " request-name ", <exec-rqst-name>" genom-etc "; 
 };
 " 
 )))
@@ -984,7 +986,7 @@ poster " poster-name " {
      update:             user;
      type:               <<struct-name>>" genom-etc ";
      exec_task:          <<exec-task-name>>; 
-     c_create_func:      " codel-name ";
+     codel_poster_create:      " codel-name ";
 };
 " ))))
 
@@ -1011,13 +1013,13 @@ exec_task " (genom-upcase-initial exec-name) " {
      priority:           <<number>>;
      stack_size:         <<number>>;
      posters_input:       <struct-name>" genom-etc ";
-     c_init_func:        " (if codel-name 
-			       (concat codel-name "Init;") "<codel>;") "
-     c_end_func:         " (if codel-name 
-			       (concat codel-name "End;") "<codel>;") "
-     c_func:             " (if codel-name 
-			       (concat codel-name "Perm;") "<codel>;") "
-     fail_msg:           <msg-name>" genom-etc ";
+     codel_task_start:    " (if codel-name 
+				(concat codel-name "Init;") "<codel>;") "
+     codel_task_end:      " (if codel-name 
+				(concat codel-name "End;") "<codel>;") "
+     codel_task_main:     " (if codel-name 
+				(concat codel-name "Perm;") "<codel>;") "
+     fail_reports:         <msg-name>" genom-etc ";
 };
 " ))))))
 
@@ -1491,11 +1493,11 @@ How to instantiate the fields ?
                           <name>    : A name for this parameter
                           <sdi-ref> : The corresponding data in the SDI
   * output:            Output parameter of the request (same as input)
-  * c_control_func:    A name of a codel (a C function). This codel is often
+  * codel_control:    A name of a codel (a C function). This codel is often
                        used to control the validity of the input parameter 
                        before recording it in the SDI. 
-  * fail_msg:          The list of all the possible reports (disfunctions).
-  * incompatible_with: The list of the activities (ie, the names of the 
+  * fail_reports:      The list of all the possible reports (disfunctions).
+  * interrupt_activity: The list of the activities (ie, the names of the 
                        corresponding execution requests) that will be 
                        interrupted on the reception of this request. 
 
@@ -1512,22 +1514,22 @@ How to instantiate the fields ?
 
 And more fields for the execution requests:
 -------------------------------------------
-  * c_exec_func_start: Name of the corresponding codel (a C function).
+  * codel_start: Name of the corresponding codel (a C function).
                        This codel is the first one which is executed by the 
                        activity. If you do not defined it, then the 
                        c-exec-func codel will be executed first.
-  * c_exec_func:       Name of the corresponding codel.
+  * codel_main:  Name of the corresponding codel.
                        This codel generally corresponds to the main loop.
-  * c_exec_func_end:   Name of the corresponding codel.
+  * codel_end:   Name of the corresponding codel.
                        This codel generally corresponds to the termination 
                        of the activity (freeing of allocated memory, freeing 
                        connections, ...).
-  * c_exec_func_inter: Name of the corresponding codel.
+  * codel_inter: Name of the corresponding codel.
                        This codel is very important: it is the last executed 
                        codel (if defined!) when an interruption has occurred. 
                        It often refers to the same codel as the 
-                       c_exec_func_end codel.
-  * c_exec_func_fail:  Name of the corresponding codel.
+                       codel_end codel.
+  * codel_fail:  Name of the corresponding codel.
                        This codel is usually dedicated for debugging purpose:
                        after its execution, the module is \"frozen\".
   * exec_task:         Name of the execution task that manages this activity 
@@ -1539,13 +1541,13 @@ request Move {
     type:		    exec; 
     input:		    moveParameters::moveParams;
     output:                 finalPosition::robot.position;
-    c_exec_func_start:	    startMove;
-    c_exec_func:	    execMove;
-    c_exec_func_end:	    endMove;
-    c_exec_func_inter:	    endMove;
+    codel_start:	    demoMoveStart;
+    codel_main:	            demoMoveMain;
+    codel_end:	            demoMoveEnd;
+    codel_inter:	    demoMoveInter;
     exec_task:		    MotionTask;
-    incompatible_with:	    Move, Turn;
-    fail_msg:		    BAD_PARAMETERS, BUMPER_STOP, 
+    interrupt_activity:	    Move, Turn;
+    fail_reports:	    BAD_PARAMETERS, BUMPER_STOP, 
 			    IMPORTANT_DRIFT;
 };
 
@@ -1730,19 +1732,19 @@ How to instantiate the fields ?
             From these indications you will be able to dimension 
             correctly your stack (the bytes attributed to your stack can not 
             be used by others tasks). 
-  * c_init_func:  
+  * codel_task_start:  
             Name of the corresponding codel.
             This codel is called only once at the starting of the task.
             It is generally used to initialize the SDI with coherent default
             values.
-  * c_func:  
+  * codel_task_main:  
             Name of the corresponding codel.
             This codel is called each time the execution task is waked up (at
             each period for a periodic task). It can be assimilated to a 
             permanent activity.
-  * fail_msg: 
+  * fail_reports: 
             The list of all the reports that can be set by the permanent 
-            activity (ie, by the codel c_func).
+            activity (ie, by the codel codel_task_main).
 
 Examples:
 ---------
@@ -1750,7 +1752,7 @@ Examples:
 exec_task PlanningTask {
     priority:		    200;     /* Low priority */
     stack_size:		    8000; 
-    c_init_func:	    initSdi;
+    codel_task_start:	    initSdi;
 };
 
 /* A task for motion purpose with hight temporal constraints */
@@ -1759,9 +1761,9 @@ exec_task MotionTask {
     delay:                  0;      /* No delay */
     priority:		    20;     /* High priority */
     stack_size:		    5000; 
-    c_init_func:	    initSdi;          /* Initialization codel */
-    c_func:                 computePosition;  /* A permanent activity */
-    fail_msg:               CAN_NOT_COMPUTE_POSITION;
+    codel_task_start:	    initSdi;          /* Initialization codel */
+    codel_task_main:                 computePosition;  /* A permanent activity */
+    fail_reports:           CAN_NOT_COMPUTE_POSITION;
 }; 
 
 

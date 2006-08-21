@@ -86,7 +86,7 @@ int errorGen(FILE *out)
 
     /* Liste des taches d'exec */
     for (lt = taches; lt != NULL; lt = lt->next) {
-	for (m = lt->exec_task->fail_msg; m != NULL; m = m->next) {
+	for (m = lt->exec_task->fail_reports; m != NULL; m = m->next) {
 	    if (!id_member(m, execFailList)) {
 		tmp = STR_ALLOC(ID_LIST);
 		tmp->name = m->name;
@@ -99,7 +99,7 @@ int errorGen(FILE *out)
     /* list des requetes */
     for (l = requetes; l != NULL; l = l->next) {
 	r = l->rqst;
-	for (m = r->fail_msg; m != NULL; m = m->next) {
+	for (m = r->fail_reports; m != NULL; m = m->next) {
 	    if (!id_member(m, cntrlFailList) && !id_member(m, execFailList)) {
 		tmp = (ID_LIST *)xalloc(sizeof(ID_LIST));
 		tmp->name = m->name;

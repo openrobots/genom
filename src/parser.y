@@ -193,17 +193,18 @@ int nCppOptions = 0;
 %token <ival> EMAIL
 %token <ival> USE_CXX
 %token <ival> NUMBER CODEL_FILES
-%token <ival> TYPE INPUT OUTPUT C_CONTROL_FUNC C_EXEC_FUNC INCOMPATIBLE_WITH
+%token <ival> TYPE INPUT OUTPUT INTERRUPT_ACTIVITY
 %token <ival> POSTERS_INPUT
-%token <ival> C_EXEC_FUNC_START C_EXEC_FUNC_END
-%token <ival> C_EXEC_FUNC_FAIL C_EXEC_FUNC_INTER
-%token <ival> PERIOD C_INIT_FUNC C_END_FUNC PRIORITY STACK_SIZE C_FUNC
-%token <ival> FAIL_MSG RESOURCES T_DELAY
+%token <ival> CODEL_CONTROL CODEL_MAIN
+%token <ival> CODEL_START CODEL_END CODEL_FAIL CODEL_INTER
+%token <ival> PERIOD PRIORITY STACK_SIZE
+%token <ival> CODEL_TASK_MAIN CODEL_TASK_START CODEL_TASK_END
+%token <ival> FAIL_REPORTS RESOURCES T_DELAY
 %token <ival> CONTROL EXEC ALL G_NONE INIT
 %token <ival> POSTER DATA UPDATE ADDRESS 
 %token <idStr>  POSTER_LOCAL POSTER_SM_MEM POSTER_VME24 POSTER_VME32
 %token <ival> USER
-%token <ival> C_CREATE_FUNC
+%token <ival> CODEL_POSTER_CREATE
 %token <ival> CS_CLIENT_FROM POSTER_CLIENT_FROM
 %token <ival> RQST_NUM RQST_DOC RQST_INPUT_INFO
 
@@ -403,6 +404,7 @@ libtool_version: expression_constante ':' expression_constante ':' expression_co
       $$->current=$1;
       $$->revision=$3;
       $$->age=$5; }
+;
 
 declaration_de_requete: REQUEST identificateur attributs_de_requete  
     { $3->name = $2; $$ = $3; }
@@ -443,42 +445,42 @@ av_requete: TYPE {keyword = 0;} ':' type_requete
 	{ $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1; 
 	  $$->value.output = $3; }
-    | C_CONTROL_FUNC ':' identificateur
+    | CODEL_CONTROL ':' identificateur
 	{ $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1;
-	  $$->value.c_control_func = $3; }
-    | C_EXEC_FUNC ':' identificateur
+	  $$->value.codel_control = $3; }
+    | CODEL_MAIN ':' identificateur
 	{ $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1;
-	  $$->value.c_exec_func = $3; }
-    | C_EXEC_FUNC_START ':' identificateur
+	  $$->value.codel_main = $3; }
+    | CODEL_START ':' identificateur
 	{ $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1;
-	  $$->value.c_exec_func_start = $3; }
-    | C_EXEC_FUNC_END ':' identificateur
+	  $$->value.codel_start = $3; }
+    | CODEL_END ':' identificateur
 	{ $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1;
-	  $$->value.c_exec_func_end = $3; }
-    | C_EXEC_FUNC_FAIL ':' identificateur
+	  $$->value.codel_end = $3; }
+    | CODEL_FAIL ':' identificateur
 	{ $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1;
-	  $$->value.c_exec_func_fail = $3; }
-    | C_EXEC_FUNC_INTER ':' identificateur
+	  $$->value.codel_fail = $3; }
+    | CODEL_INTER ':' identificateur
 	{ $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1;
-	  $$->value.c_exec_func_inter = $3; }
-    | INCOMPATIBLE_WITH ':' liste_requete
+	  $$->value.codel_inter = $3; }
+    | INTERRUPT_ACTIVITY ':' liste_requete
         { $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1;
-	  $$->value.incompatible_with = $3; }
+	  $$->value.interrupt_activity = $3; }
     | EXEC_TASK ':' identificateur
         { $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1; 
 	  $$->value.exec_task_name = $3; }
-    | FAIL_MSG ':' liste_echecs
+    | FAIL_REPORTS ':' liste_echecs
 	{ $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1;
-	  $$->value.fail_msg = $3; }
+	  $$->value.fail_reports = $3; }
     | RESOURCES ':' liste_ressources
 	{ $$ = STR_ALLOC(RQST_AV_STR);
 	  $$->attribut = $1;
@@ -688,18 +690,18 @@ av_tache: PERIOD ':' valeur_periode
 	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
 	  $$->attribut = $1;
 	  $$->value.stack_size = $3; }
-    | C_INIT_FUNC ':' identificateur
+    | CODEL_TASK_START ':' identificateur
 	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
 	  $$->attribut = $1;
-	  $$->value.c_init_func = $3; }
-    | C_END_FUNC ':' identificateur
+	  $$->value.codel_task_start = $3; }
+    | CODEL_TASK_END ':' identificateur
       { $$ = STR_ALLOC(EXEC_TASK_AV_STR);
         $$->attribut = $1;
-        $$->value.c_end_func = $3; }
-    | C_FUNC ':' identificateur
+        $$->value.codel_task_end = $3; }
+    | CODEL_TASK_MAIN ':' identificateur
 	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
 	  $$->attribut = $1;
-	  $$->value.c_func = $3; }
+	  $$->value.codel_task_main = $3; }
     | POSTERS_INPUT ':' liste_indicateur_de_type
 	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
 	  $$->attribut = $1; 
@@ -716,10 +718,10 @@ av_tache: PERIOD ':' valeur_periode
 	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
 	  $$->attribut = $1;
 	  $$->value.resource_list = $3; }
-    | FAIL_MSG ':' liste_echecs
+    | FAIL_REPORTS ':' liste_echecs
 	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
 	  $$->attribut = $1;
-	  $$->value.fail_msg = $3; }
+	  $$->value.fail_reports = $3; }
     ;
 
 
@@ -777,7 +779,7 @@ declaration_de_poster: POSTER identificateur '{'
 	  $$->exec_task = STR_ALLOC(EXEC_TASK_STR);
 	  $$->exec_task->name = $14;
 	  $$->address = NULL; 
-	  $$->create_func = NULL; }
+	  $$->codel_poster_create = NULL; }
     | POSTER identificateur '{' 
                  UPDATE ':' USER ';'
                  TYPE ':' named_type_list ';'
@@ -793,7 +795,7 @@ declaration_de_poster: POSTER identificateur '{'
 	  $$->exec_task = STR_ALLOC(EXEC_TASK_STR);
 	  $$->exec_task->name = $14;
 	  $$->address = NULL; 
-	  $$->create_func = NULL; }
+	  $$->codel_poster_create = NULL; }
     | POSTER identificateur '{' 
                  UPDATE ':' USER ';'
                  DATA ':' liste_ref_membre_struct ';'
@@ -809,7 +811,7 @@ declaration_de_poster: POSTER identificateur '{'
 	  $$->exec_task = STR_ALLOC(EXEC_TASK_STR);
 	  $$->exec_task->name = $14;
 	  $$->address = NULL; 
-          $$->create_func = NULL; }
+          $$->codel_poster_create = NULL; }
    | POSTER identificateur '{'
                  UPDATE ':' USER ';'
                  TYPE ':' named_type_list ';'
@@ -827,12 +829,12 @@ declaration_de_poster: POSTER identificateur '{'
 	  $$->exec_task->name = $14;
 	  $$->bus_space = $18;
 	  $$->address = (void *)$20; 
-	  $$->create_func = NULL; }
+	  $$->codel_poster_create = NULL; }
    | POSTER identificateur '{'
                  UPDATE ':' USER ';'
                  TYPE ':' named_type_list ';'
 		 EXEC_TASK ':' identificateur ';'
-                 C_CREATE_FUNC ':' identificateur ';'
+                 CODEL_POSTER_CREATE ':' identificateur ';'
       '}'
 	{ $$ = STR_ALLOC(POSTER_LIST);
 	  $$->update = $6;
@@ -845,7 +847,7 @@ declaration_de_poster: POSTER identificateur '{'
 	  $$->exec_task->name = $14;
 	  $$->bus_space = 0;
 	  $$->address = NULL;
-	  $$->create_func = $18; }
+	  $$->codel_poster_create = $18; }
     ;
 
 bus_space:

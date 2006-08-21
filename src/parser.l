@@ -103,15 +103,27 @@ WC      {W}*\:
 "input"/{WC}           {yylval.ival = INPUT; return(INPUT); }
 "posters_input"/{WC}    {yylval.ival = POSTERS_INPUT; return(POSTERS_INPUT); }
 "output"/{WC}          {yylval.ival = OUTPUT; return(OUTPUT); }
-"c_control_func"/{WC}  {yylval.ival = C_CONTROL_FUNC; return(C_CONTROL_FUNC); }
-"c_exec_func"/{WC}     {yylval.ival = C_EXEC_FUNC; return(C_EXEC_FUNC); }
-"c_exec_func_start"/{WC} {yylval.ival = C_EXEC_FUNC_START; 
-                     return(C_EXEC_FUNC_START); }
-"c_exec_func_end"/{WC} {yylval.ival = C_EXEC_FUNC_END; return(C_EXEC_FUNC_END); }
-"c_exec_func_fail"/{WC} {yylval.ival = C_EXEC_FUNC_FAIL; return(C_EXEC_FUNC_FAIL); }
-"c_exec_func_inter"/{WC} {yylval.ival = C_EXEC_FUNC_INTER; return(C_EXEC_FUNC_INTER); }
-"incompatible_with"/{WC} {yylval.ival = INCOMPATIBLE_WITH; return(INCOMPATIBLE_WITH); }
-"fail_msg"/{WC}        {yylval.ival = FAIL_MSG; return(FAIL_MSG); }
+
+"c_control_func"/{WC}  {yylval.ival = CODEL_CONTROL; return(CODEL_CONTROL); }
+"c_exec_func"/{WC}     {yylval.ival = CODEL_MAIN; return(CODEL_MAIN); }
+"c_exec_func_start"/{WC} {yylval.ival = CODEL_START; return(CODEL_START); }
+"c_exec_func_end"/{WC} {yylval.ival = CODEL_END; return(CODEL_END); }
+"c_exec_func_fail"/{WC} {yylval.ival = CODEL_FAIL; return(CODEL_FAIL); }
+"c_exec_func_inter"/{WC} {yylval.ival = CODEL_INTER; return(CODEL_INTER); }
+
+"codel_control"/{WC}  {yylval.ival = CODEL_CONTROL; return(CODEL_CONTROL); }
+"codel_main"/{WC}     {yylval.ival = CODEL_MAIN; return(CODEL_MAIN); }
+"codel_start"/{WC} {yylval.ival = CODEL_START; return(CODEL_START); }
+"codel_end"/{WC} {yylval.ival = CODEL_END; return(CODEL_END); }
+"codel_fail"/{WC} {yylval.ival = CODEL_FAIL; return(CODEL_FAIL); }
+"codel_inter"/{WC} {yylval.ival = CODEL_INTER; return(CODEL_INTER); }
+
+"incompatible_with"/{WC} {yylval.ival = INTERRUPT_ACTIVITY; return(INTERRUPT_ACTIVITY); }
+"interrupt_activity"/{WC} {yylval.ival = INTERRUPT_ACTIVITY; return(INTERRUPT_ACTIVITY); }
+
+"fail_reports"/{WC}     {yylval.ival = FAIL_REPORTS; return(FAIL_REPORTS); }
+"fail_msg"/{WC}        {yylval.ival = FAIL_REPORTS; return(FAIL_REPORTS); }
+
 "resources"/{WC}       {yylval.ival = RESOURCES; return(RESOURCES); }
 "doc"/{WC}             {yylval.ival = RQST_DOC; return(RQST_DOC); }
 "input_info"/{WC}    {yylval.ival = RQST_INPUT_INFO; return(RQST_INPUT_INFO); }
@@ -120,9 +132,15 @@ WC      {W}*\:
 "delay"/{WC}           {yylval.ival = T_DELAY; return(T_DELAY); }
 "priority"/{WC}        {yylval.ival = PRIORITY; return(PRIORITY); }
 "stack_size"/{WC}      {yylval.ival = STACK_SIZE; return(STACK_SIZE); }
-"c_init_func"/{WC}     {yylval.ival = C_INIT_FUNC; return(C_INIT_FUNC); }
-"c_end_func"/{WC}      {yylval.ival = C_END_FUNC; return(C_END_FUNC); }
-"c_func"/{WC}          {yylval.ival = C_FUNC; return(C_FUNC); }
+
+"c_init_func"/{WC}     {yylval.ival = CODEL_TASK_START; return(CODEL_TASK_START); }
+"c_end_func"/{WC}      {yylval.ival = CODEL_TASK_END; return(CODEL_TASK_END); }
+"c_func"/{WC}          {yylval.ival = CODEL_TASK_MAIN; return(CODEL_TASK_MAIN); }
+
+"codel_task_start"/{WC}  {yylval.ival = CODEL_TASK_START; return(CODEL_TASK_START); }
+"codel_task_end"/{WC}   {yylval.ival = CODEL_TASK_END; return(CODEL_TASK_END); }
+"codel_task_main"/{WC}  {yylval.ival = CODEL_TASK_MAIN; return(CODEL_TASK_MAIN); }
+
 "cs_client_from"/{WC}  {yylval.ival = CS_CLIENT_FROM; return(CS_CLIENT_FROM); }
 "poster_client_from"/{WC} {yylval.ival = POSTER_CLIENT_FROM; 
                                     return(POSTER_CLIENT_FROM); }
@@ -136,7 +154,8 @@ WC      {W}*\:
 "vme32"/{WC}           {yylval.ival = POSTER_VME32; return(POSTER_VME32); }
 "vme24"/{WC}           {yylval.ival = POSTER_VME24; return(POSTER_VME24); }
 
-"c_create_func"/{WC}   {yylval.ival = C_CREATE_FUNC; return(C_CREATE_FUNC); }
+"c_create_func"/{WC}   {yylval.ival = CODEL_POSTER_CREATE; return(CODEL_POSTER_CREATE); }
+"codel_poster_create"/{WC}   {yylval.ival = CODEL_POSTER_CREATE; return(CODEL_POSTER_CREATE); }
 
 "control"         {yylval.ival = CONTROL; return(CONTROL); }
 "exec"            {yylval.ival = EXEC; return(EXEC); }
