@@ -327,7 +327,6 @@ This does fairly subdued highlighting.")
 	       "resources\\|incompatible_with\\|activity\\|exec_task\\|"
 	       "update\\|address\\|number\\|internal_data\\|version\\|"
 	       "email\\|uses_cxx\\|requires\\|codels_requires\\|data\\|"
-	       "cs_client_from\\|poster_client_from\\|"
 	       "period\\|delay\\|priority\\|stack_size"))
       (mand-var (concat
 		 "exec-task-name\\|number\\|struct-name\\|name\\|sdi-ref\\|"
@@ -1018,8 +1017,6 @@ exec_task " (genom-upcase-initial exec-name) " {
 			       (concat codel-name "End;") "<codel>;") "
      c_func:             " (if codel-name 
 			       (concat codel-name "Perm;") "<codel>;") "
-     cs_client_from:     <module-name>" genom-etc ";
-     poster_client_from: <module-name>::<poster-name>" genom-etc ";
      fail_msg:           <msg-name>" genom-etc ";
 };
 " ))))))
@@ -1738,18 +1735,6 @@ How to instantiate the fields ?
             This codel is called only once at the starting of the task.
             It is generally used to initialize the SDI with coherent default
             values.
-  * cs_client_from:  
-            The list of the modules that this execution task is client from.
-            In other words, the modules that will received requests from 
-            the codels managed by this execution task.
-  * poster_client_from: 
-            The list of the posters that will be read by the execution task
-            (ie, by the codels managed by this execution task).
-            Each element has 2 parts:
-               <<module-name>> : name of the module that manage the poster
-               <<poster-name>> : name of the poster (in fact the concatenation
-                                 of the name of the module and the name of the
-                                 poster)
   * c_func:  
             Name of the corresponding codel.
             This codel is called each time the execution task is waked up (at
@@ -1776,9 +1761,6 @@ exec_task MotionTask {
     stack_size:		    5000; 
     c_init_func:	    initSdi;          /* Initialization codel */
     c_func:                 computePosition;  /* A permanent activity */
-    cs_client_from:	    loco, avoid; 
-    poster_client_from:	    loco::locoRobot, loco::locoStatus,
-			    planner::plannerObstacles; 
     fail_msg:               CAN_NOT_COMPUTE_POSITION;
 }; 
 
