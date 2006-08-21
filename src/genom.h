@@ -376,7 +376,8 @@ extern int nbExecTask;
 extern ID_LIST *includeFiles;
 extern ID_LIST *allIncludeFiles;
 extern ID_LIST *imports;            /* modules listed in import from */
-extern ID_LIST *requires;    /* packages listed in -P and require statements */
+extern ID_LIST *requires;    /* packages listed in -P and requires statements */
+extern ID_LIST *codels_requires;    /* packages listed in codels_requires statements */
 extern ID_LIST *externPath;         /* all the path from -I */
 extern POSTER_LIST *posters;
 extern POSTERS_INPUT_LIST *posters_input;

@@ -51,7 +51,9 @@ INSTALL=	@INSTALL@
 
 include $(top_builddir)/config.mk
 
-SUBDIRS= $(serverdir) @EXTRA_SUBDIRS@ $(codelsdir)
+SUBDIRS= \
+	$(serverdir) @EXTRA_SUBDIRS@ \
+$genServer$	$(codelsdir)
 
 config_files = \
 	Makefile \

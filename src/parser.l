@@ -90,6 +90,7 @@ WC      {W}*\:
 "from"            {yylval.ival = FROM; return(FROM); }
 
 "requires"/{WC}       {yylval.ival = REQUIRE; return(REQUIRE); }
+"codels_requires"/{WC}       {yylval.ival = REQUIRE; return(CODELS_REQUIRE); }
 "internal_data"/{WC}  {yylval.ival = INTERNAL_DATA; return(INTERNAL_DATA); }
 "number"/{WC}         {yylval.ival = NUMBER; return(NUMBER); }
 "version"/{WC}        {yylval.ival = VERSION; return(VERSION); }

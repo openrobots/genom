@@ -137,6 +137,7 @@ ID_LIST *includeFiles = NULL; /* Fichiers inclus dans .gen qui contiennent des d
 ID_LIST *allIncludeFiles = NULL; /* Tous les fichiers inclus (trouves par cpp) */
 ID_LIST *imports = NULL;
 ID_LIST *requires = NULL;
+ID_LIST *codels_requires = NULL;
 ID_LIST *externPath = NULL;
 
 char *cppOptions[MAX_CPP_OPT];
@@ -184,7 +185,7 @@ int nCppOptions = 0;
 %token <ival> STRUCT UNION ENUM
 %token <ival> MEMBER N_WHITE
 
-%token <ival> REQUIRE
+%token <ival> REQUIRE CODELS_REQUIRE
 %token <ival> MODULE REQUEST EXEC_TASK IMPORT_TYPE FROM
 %token <ival> INTERNAL_DATA
 %token <ival> VERSION
@@ -385,6 +386,9 @@ av_module: INTERNAL_DATA ':' indicateur_de_type
         { $$ = STR_ALLOC(MODULE_AV_STR);
           $$->attribut = $1; $$->value.email = $3; }
     | REQUIRE ':' list_packages
+        { $$ = STR_ALLOC(MODULE_AV_STR);
+	  $$->attribut = $1; $$->value.number = $3; }
+    | CODELS_REQUIRE ':' list_packages
         { $$ = STR_ALLOC(MODULE_AV_STR);
 	  $$->attribut = $1; $$->value.number = $3; }
     | USE_CXX ':' expression_constante
@@ -1447,6 +1451,7 @@ main(int argc, char **argv)
     int genIfChange = 0;
     int genTcl = 0;
     int genOpenprs = 0;
+    int genServer = 1;
     int upToDate;
     struct stat statfile, statstamp, statgen;
     static const char *nomstamp = "genom-stamp";
@@ -1472,7 +1477,8 @@ main(int argc, char **argv)
       "         have a pkg-config file installed for each -P\n"
       "     -I: path for included file. Use @PACKAGE_CFLAGS@\n"
       "         to reuse a prefix defined with -Ppackage\n"
-      "     -i: installs new templates for codels and makefiles (new module)\n"
+      "     -i: installs new templates for codels and makefiles\n"
+      "     -a: api part only. The module is not generated\n"
       "     -h|--help: this help text\n"
       "     -t: produces on-board tcl client code\n"
       "     -o: produces openprs interfaces\n\n"
@@ -1501,7 +1507,7 @@ main(int argc, char **argv)
     memset(cppOptions, 0, sizeof(cppOptions));
     nopt = argc;
 
-    while ((opt = getopt(argc, argv, "D:I:P:dnp:ciu:tos-:v")) != -1) {
+    while ((opt = getopt(argc, argv, "D:I:P:dnp:ciu:toas-:v")) != -1) {
 
 	switch (opt) {
 	  case 'D':
@@ -1541,7 +1547,6 @@ main(int argc, char **argv)
 	    il->name = strdup(optarg);
 	    il->next = 0;
 	    requires = push_back(requires, il);
-
 	    break;
 
 	  case 'v':
@@ -1552,6 +1557,11 @@ main(int argc, char **argv)
 	    break;
 	  case 'n':
 	    noExecFlag = 1;
+	    break;
+	  case 'a':
+	    bufcat(&cmdLine, "-a ", optarg);
+	    printf ("genom: API only (without the module server)\n");
+	    genServer = 0;
 	    break;
 	  case 'p':
 	    bufcat(&cmdLine, "-p%s ", optarg);
@@ -1624,13 +1634,21 @@ main(int argc, char **argv)
 	strcat(nomfic, extention);
     }
 
-    /* pre-parse the .gen file to get requires */
+    /* pre-parse the .gen file to get requires and codels_requires */
     genom_get_requires(nomfic, cppOptions);
 
     for (il = requires; il; il = il->next)
     {
         /* get_pkgconfig_cflags calls exit() itself if there is too much options */
         nCppOptions += get_pkgconfig_cflags(il->name, cppOptions, nCppOptions);
+    }
+
+    if (genServer) {
+      for (il = codels_requires; il; il = il->next)
+	{
+	  /* get_pkgconfig_cflags calls exit() itself if there is too much options */
+	  nCppOptions += get_pkgconfig_cflags(il->name, cppOptions, nCppOptions);
+	}
     }
 
     /*upCaseArguments();*/
@@ -1798,42 +1816,56 @@ main(int argc, char **argv)
 
     fatalError |= (configureServerGen(sortie, 
                                       cmdLine, argv[0], genfile,
-				      genTcl, genOpenprs)!=0);
+				      genTcl, genOpenprs, genServer)!=0);
     fatalError |= (typeGen(sortie) != 0);
     fatalError |= (errorGen(sortie) != 0);
-    fatalError |= (msgLibGen(sortie) != 0);
     fatalError |= (endianGen(sortie) != 0);
     fatalError |= (printGen(sortie) != 0);
     fatalError |= (printXMLGen(sortie) != 0);
     fatalError |= (scanGen(sortie) != 0);
     fatalError |= (scopeGen(sortie) != 0);
-    fatalError |= (headerGen(sortie) != 0);
-    fatalError |= (cntrlTaskGen(sortie) != 0);
-    fatalError |= (execTaskGen(sortie) != 0);
-    fatalError |= (moduleInitGen(sortie) != 0);
-    fatalError |= (testGen(sortie) != 0);
-    fatalError |= (posterLibGen(sortie) != 0);
-    fatalError |= (initGen(sortie) != 0);
 
+    /* even with no server, endianLin needs posterLib.h 
+       and tclLib and openprs seem to need posterLib.c (?) */
+    fatalError |= (posterLibGen(sortie) != 0);
+    /* even with no server, tclLib and openprsib seem to need msgLib.c  (?) */
+    fatalError |= (msgLibGen(sortie) != 0);
+    
+    /* useless if no server */
+    if (genServer) {
+      fatalError |= (headerGen(sortie) != 0);
+      fatalError |= (cntrlTaskGen(sortie) != 0);
+      fatalError |= (execTaskGen(sortie) != 0);
+      fatalError |= (moduleInitGen(sortie) != 0);
+      fatalError |= (testGen(sortie) != 0);
+      fatalError |= (initGen(sortie) != 0);
+    }
+
+    /* useless without openprs */
     if (genOpenprs)
       fatalError |= (openprsGen(sortie) != 0); 
+
+    /* useless without tcl */
     if (genTcl) {
        fatalError |= (tclGen(sortie) != 0);
        fatalError |= (tclClientGen(sortie) != 0);
     }
 
-    /* user templates */
-    fatalError |= (userExecCodelsGen(sortie) != 0);
-    fatalError |= (userCntrlCodelsGen(sortie) != 0);
+    /* codels templates */
+    if (genServer) {
+      fatalError |= (userExecCodelsGen(sortie) != 0);
+      fatalError |= (userCntrlCodelsGen(sortie) != 0);
+    }
 
     /* building environment */
     fatalError |= (configureGen(sortie,
 				codelsDir, 
                                 cmdLine, argv[0], genfile, 
                                 cwd,
-				genTcl, genOpenprs) != 0);
+				genTcl, genOpenprs, genServer) != 0);
     /* pkgconfig data file */
-    fatalError |= (pkgconfigGen(sortie, cmdLine, genfile, genOpenprs, cppOptions) != 0);
+    fatalError |= (pkgconfigGen(sortie, cmdLine, genfile, 
+				genOpenprs, genServer, cppOptions) != 0);
 
     /* On termine */
     script_do(sortie, protoDir, "end.pl");

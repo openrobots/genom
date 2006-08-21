@@ -62,7 +62,9 @@ CPPFLAGS+= -I. -I$(top_srcdir) -I$(srcdir)
 CPPFLAGS+= $(GENOM_CFLAGS)
 
 # Put this BEFORE including genom.mk since genom.mk defines the regen and regen-user targets
-all: dirs server client
+all: \
+	dirs client \
+$genServer$	server
 
 # GenoM flags
 include $(top_srcdir)/$(autoconfdir)/genom.mk
@@ -81,11 +83,11 @@ client_src= \
 	$module$Print.c		\
 	$module$PrintXML.c	\
 	$module$Scan.c		\
+	$module$PosterLib.c	\
 	$module$MsgLib.c	\
-	$module$PosterShowLib.c	\
-	$module$PosterXMLLib.c	\
-	$module$PosterReadLib.c	\
-	$module$PosterLib.c
+$genServer$	$module$PosterShowLib.c	\
+$genServer$	$module$PosterXMLLib.c	\
+$genServer$	$module$PosterReadLib.c	\
 
 client_includes = \
 	server/$module$Type.h \
@@ -93,16 +95,16 @@ client_includes = \
 	server/$module$Scan.h \
 	server/$module$PrintXML.h \
 	server/$module$Print.h \
-	server/$module$PosterXMLLib.h \
-	server/$module$PosterWriteLibProto.h \
-	server/$module$PosterShowLib.h \
-	server/$module$PosterReadLibProto.h \
 	server/$module$PosterLibStruct.h \
-	server/$module$PosterLib.h \
-	server/$module$MsgLib.h \
 	server/$module$Error.h \
 	server/$module$Endian.h \
-$listIncludesInDotGen$
+	server/$module$PosterLib.h \
+$listIncludesInDotGen$ \
+$genServer$	server/$module$PosterXMLLib.h \
+$genServer$	server/$module$PosterWriteLibProto.h \
+$genServer$	server/$module$PosterShowLib.h \
+$genServer$	server/$module$PosterReadLibProto.h \
+$genServer$	server/$module$MsgLib.h \
 
 init_src= \
 	$module$Init.c
@@ -116,42 +118,43 @@ connect_src= \
 posterwrite_src= \
 	$module$PosterWriteLib.c
 
-module_obj=	$(module_src:%.c=$(OBJDIR)/%.lo)
 client_obj=	$(client_src:%.c=$(OBJDIR)/%.lo)
+
+module_obj=	$(module_src:%.c=$(OBJDIR)/%.lo)
 init_obj=	$(init_src:%.c=$(OBJDIR)/%.lo)
 test_obj=	$(test_src:%.c=$(OBJDIR)/%.lo)
 connect_obj=	$(connect_src:%.c=$(OBJDIR)/%.lo)
 posterwrite_obj=$(posterwrite_src:%.c=$(OBJDIR)/%.lo)
 
 
-$genTcl$tclclient_src= \
-$genTcl$	tcl/$module$Tcl.c		\
-$genTcl$	$module$PosterLib.c	\
-$genTcl$	$module$Endian.c  \
-$genTcl$	$module$Error.c
-$genTcl$tclclient_obj=	$(tclclient_src:%.c=$(OBJDIR)/%.lo)
-$genTcl$
-$genTcl$tclclient_tcl= \
-$genTcl$	tcl/$module$Client.tcl
+tclclient_src= \
+	tcl/$module$Tcl.c	\
+	$module$PosterLib.c	\
+	$module$Endian.c  \
+	$module$Error.c
+tclclient_obj=	$(tclclient_src:%.c=$(OBJDIR)/%.lo)
 
-$genOpenprs$openprsclient_src= \
-$genOpenprs$	openprs/$module$DecodeOpenprs.c \
-$genOpenprs$	openprs/$module$EncodeOpenprs.c \
-$genOpenprs$	openprs/$module$RequestsOpenprs.c
-$genOpenprs$openprsclient_obj=$(openprsclient_src:%.c=$(OBJDIR)/%.lo)
-$genOpenprs$oprsclient_headers = \
-$genOpenprs$	openprs/$module$DecodeOpenprs.h \
-$genOpenprs$	openprs/$module$EncodeOpenprs.h \
-$genOpenprs$	openprs/$module$RequestsOpenprsProto.h
-$genOpenprs$oprsclient_data = \
-$genOpenprs$	openprs/$module$Openprs.inc openprs/$module$Openprs.opf openprs/$module$Openprs.sym
+tclclient_tcl= \
+	tcl/$module$Client.tcl
+
+openprsclient_src= \
+	openprs/$module$DecodeOpenprs.c \
+	openprs/$module$EncodeOpenprs.c \
+	openprs/$module$RequestsOpenprs.c
+openprsclient_obj=$(openprsclient_src:%.c=$(OBJDIR)/%.lo)
+oprsclient_headers = \
+	openprs/$module$DecodeOpenprs.h \
+	openprs/$module$EncodeOpenprs.h \
+	openprs/$module$RequestsOpenprsProto.h
+oprsclient_data = \
+	openprs/$module$Openprs.inc openprs/$module$Openprs.opf openprs/$module$Openprs.sym
 
 # --- what to do --------------------------------------------------------
 
 
 dirs: $(OBJDIR)
 $genTcl$dirs: $(OBJDIR)/tcl
-$genOpenprs$dirs: $(OBJDIR)/openprs
+$genOpenprs$ dirs: $(OBJDIR)/openprs
 
 $(OBJDIR):
 	mkdir -p $@
@@ -162,12 +165,13 @@ $(OBJDIR)/tcl:
 $(OBJDIR)/openprs:
 	mkdir -p $@
 
-server: $(OBJDIR)/$(MODULE_LIB)
-server: $(OBJDIR)/$(INIT_BIN)
-server: $(OBJDIR)/$(POSTERWRITE_LIB)
+$genServer$server: $(OBJDIR)/$(MODULE_LIB)
+$genServer$server: $(OBJDIR)/$(INIT_BIN)
+$genServer$server: $(OBJDIR)/$(POSTERWRITE_LIB)
 
-client:: $(OBJDIR)/$(TEST_BIN) $(OBJDIR)/$(CONNECT)
-$genTcl$client:: $(OBJDIR)/$(TCLCLIENT_LIB)
+client:: $(OBJDIR)/$(CLIENT_LIB)
+$genServer$client:: $(OBJDIR)/$(TEST_BIN) $(OBJDIR)/$(CONNECT)
+$genServer$$genTcl$client:: $(OBJDIR)/$(TCLCLIENT_LIB)
 $genOpenprs$client:: $(OBJDIR)/$(OPENPRSCLIENT_LIB)
 
 
@@ -189,14 +193,14 @@ $(OBJDIR)/$(CLIENT_LIB): $(client_obj)
 	$(LTLD) -o $@ $(LDFLAGS) $(client_obj) $(SERVERS_CLIENT_LIB) \
 		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LIBTOOL_VERSION_INFO)
 
-$genTcl$$(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj)
-$genTcl$	$(LTLD) $(CFLAGS) $(tclclient_obj) $(SERVERS_ENDIAN_LIB) -o $@	\
-$genTcl$		$(LIBTOOL_LINKOPT) $(GENOM_LIBS)			\
-$genTcl$		$(LDFLAGS) $(TCL_LDFLAGS) $(LIBTOOL_VERSION_INFO)
+$(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj)
+	$(LTLD) $(CFLAGS) $(tclclient_obj) $(SERVERS_ENDIAN_LIB) -o $@	\
+		$(LIBTOOL_LINKOPT) $(GENOM_LIBS)			\
+		$(LDFLAGS) $(TCL_LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
-$genOpenprs$$(OBJDIR)/$(OPENPRSCLIENT_LIB): $(openprsclient_obj)
-$genOpenprs$	$(LTLD) $(CFLAGS) $(openprsclient_obj) $(SERVERS_ENDIAN_LIB) -o $@ \
-$genOpenprs$		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LDFLAGS) $(LIBTOOL_VERSION_INFO)
+$(OBJDIR)/$(OPENPRSCLIENT_LIB): $(openprsclient_obj)
+	$(LTLD) $(CFLAGS) $(openprsclient_obj) $(SERVERS_ENDIAN_LIB) -o $@ \
+		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
 
 # --- binaries ----------------------------------------------------------
@@ -214,13 +218,13 @@ $(OBJDIR)/$(TEST_BIN): $(test_obj) $(OBJDIR)/$(CLIENT_LIB)
 
 # --- basic rules -------------------------------------------------------
 
-$genTcl$$(tclclient_obj): $(OBJDIR)/%.lo: %.c
-$genTcl$	$(LTCC) -c $(CPPFLAGS) $(TCL_CPPFLAGS) -DDATADIR='"$(datadir)"' \
-$genTcl$		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
+$(tclclient_obj): $(OBJDIR)/%.lo: %.c
+	$(LTCC) -c $(CPPFLAGS) $(TCL_CPPFLAGS) -DDATADIR='"$(datadir)"' \
+		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
-$genOpenprs$$(openprsclient_obj): $(OBJDIR)/%.lo: %.c
-$genOpenprs$	$(LTCC) -c $(CPPFLAGS) $(TRANSGEN_CFLAGS) \
-$genOpenprs$		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
+$(openprsclient_obj): $(OBJDIR)/%.lo: %.c
+	$(LTCC) -c $(CPPFLAGS) $(TRANSGEN_CFLAGS) \
+		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
 $(OBJDIR)/%.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
@@ -237,12 +241,12 @@ install-bin:
 	$(MKINSTALLDIRS) $(libdir)
 	$(LTINSTALL) $(OBJDIR)/$(CLIENT_LIB) $(libdir)/$(CLIENT_LIB)
 	$genTcl$$(MKINSTALLDIRS) $(libdir)/tclserv
-	$genTcl$$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/tclserv/$(TCLCLIENT_LIB)
+	$genServer$$genTcl$$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/tclserv/$(TCLCLIENT_LIB)
 	$genOpenprs$$(MKINSTALLDIRS) $(libdir)/openprs
 	$genOpenprs$$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) $(libdir)/openprs/$(OPENPRSCLIENT_LIB)
-	$(MKINSTALLDIRS) $(bindir)
-	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
-	$(LTINSTALL) $(OBJDIR)/$(TEST_BIN) $(bindir)/$(TEST_BIN)
+	$genServer$$(MKINSTALLDIRS) $(bindir)
+	$genServer$$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
+	$genServer$$(LTINSTALL) $(OBJDIR)/$(TEST_BIN) $(bindir)/$(TEST_BIN)
 
 install-data:
 	$(MKINSTALLDIRS) $(includedir)/server
@@ -264,15 +268,17 @@ install-data:
 .PHONY: clean
 
 CLEAN_FILES = \
+    $(client_obj) $(OBJDIR)/$(CLIENT_LIB) \
+
+CLEAN_FILES += \
     $(module_obj) $(OBJDIR)/$(MODULE_LIB) \
     $(posterwrite_obj) $(OBJDIR)/$(POSTERWRITE_LIB) \
-    $(client_obj) $(OBJDIR)/$(CLIENT_LIB) \
     $(connect_obj) \
     $(init_obj) $(OBJDIR)/$(INIT_BIN) \
     $(test_obj) $(OBJDIR)/$(TEST_BIN)
 
-$genTcl$CLEAN_FILES += $(tclclient_obj) $(OBJDIR)/$(TCLCLIENT_LIB)
-$genOpenprs$CLEAN_FILES += $(openprsclient_obj) $(OBJDIR)/$(OPENPRSCLIENT_LIB)
+CLEAN_FILES += $(tclclient_obj) $(OBJDIR)/$(TCLCLIENT_LIB)
+CLEAN_FILES += $(openprsclient_obj) $(OBJDIR)/$(OPENPRSCLIENT_LIB)
 
 clean:
 	$(LTRM) $(CLEAN_FILES)
@@ -293,18 +299,20 @@ make_depend=\
 ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 depend $(OBJDIR)/dependencies:: $(OBJDIR);
 
-depend $(OBJDIR)/dependencies:: $(module_src) $(posterwrite_src)
-	$(make_depend) $?
-depend $(OBJDIR)/dependencies::  $(client_src) $(connect_src)
-	$(make_depend) $?
-depend $(OBJDIR)/dependencies::  $(test_src)
+depend $(OBJDIR)/dependencies::  $(client_src)
 	$(make_depend) $?
 
-$genTcl$depend $(OBJDIR)/dependencies:: $(tclclient_src)
+$genServer$depend $(OBJDIR)/dependencies:: $(module_src) $(posterwrite_src)
+$genServer$	$(make_depend) $?
+
+$genServer$depend $(OBJDIR)/dependencies::   $(connect_src) $(test_src)
+$genServer$	$(make_depend) $?
+
+$genServer$$genTcl$depend $(OBJDIR)/dependencies:: $(tclclient_src)
 $genTcl$	$(make_depend) $(TCL_CPPFLAGS) $?
 
 $genOpenprs$depend $(OBJDIR)/dependencies:: $(openprsclient_src)
-$genOpenprs$	@$(make_depend) $(TRANSGEN_CFLAGS) $?
+$genOpenprs$	$(make_depend) $(TRANSGEN_CFLAGS) $?
 
 -include $(OBJDIR)/dependencies
 endif

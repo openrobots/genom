@@ -120,6 +120,9 @@ upCaseNames(void)
     for (ln = requires; ln != NULL; ln = ln->next)
         ln->NAME = strcpytoupper(ln->name);
 
+    for (ln = codels_requires; ln != NULL; ln = ln->next)
+        ln->NAME = strcpytoupper(ln->name);
+
     /* Noms des taches d'execution */
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
@@ -162,7 +165,7 @@ skip_spaces(char* buffer)
  * It changes the content of buffer, so take care of using its return value */
 #define MAX_REQUIRE_COUNT 256
 static void 
-parse_require(char* buffer, int line)
+parse_require(char* buffer, int line, ID_LIST **rquires)
 {
     /* We split the string into tokens, removing the 'require' statement */
     size_t current = 0;
@@ -207,7 +210,7 @@ parse_require(char* buffer, int line)
         il->name = strdup(packages[i]);
         il->next = 0;
 
-        requires = push_back(requires, il);
+        *rquires = push_back(*rquires, il);
     }
 
     free(statement);
@@ -248,8 +251,11 @@ genom_get_requires(char* filename, char* cppOptions[])
     {
         while (*current == ' ' || *current == '\t') 
 	    current++;
-        if (strncmp(current, "requires:", 9) == 0)
-            parse_require(current, line);
+        if (strncmp(current, "codels_requires:", 16) == 0) {
+	  parse_require(current, line, &codels_requires);
+	}
+        else if (strncmp(current, "requires:", 9) == 0)
+	  parse_require(current, line, &requires);
 
         current = strchr(current, '\n');
         if (current) ++current;
