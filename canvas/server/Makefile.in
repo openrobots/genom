@@ -132,7 +132,7 @@ tclclient_src= \
 	$module$PosterLib.c	\
 	$module$Endian.c  \
 	$module$Error.c
-tclclient_obj=	$(tclclient_src:%.c=$(OBJDIR)/tcl/%.lo)
+tclclient_obj=	$(tclclient_src:%.c=$(OBJDIR)/%.lo)
 
 tclclient_tcl= \
 	tcl/$module$Client.tcl
@@ -141,7 +141,7 @@ openprsclient_src= \
 	openprs/$module$DecodeOpenprs.c \
 	openprs/$module$EncodeOpenprs.c \
 	openprs/$module$RequestsOpenprs.c
-oprsclient_obj=$(openprsclient_src:%.c=$(OBJDIR)/oprs/%.lo)
+oprsclient_obj=$(openprsclient_src:%.c=$(OBJDIR)/%.lo)
 oprsclient_headers = \
 	openprs/$module$DecodeOpenprs.h \
 	openprs/$module$EncodeOpenprs.h \
@@ -154,7 +154,7 @@ oprsclient_data = \
 
 dirs: $(OBJDIR)
 $genTcl$dirs: $(OBJDIR)/tcl
-$genOpenprs$ dirs: $(OBJDIR)/openprs
+$genOpenprs$dirs: $(OBJDIR)/openprs
 
 $(OBJDIR):
 	mkdir -p $@
@@ -218,11 +218,11 @@ $(OBJDIR)/$(TEST_BIN): $(test_obj) $(OBJDIR)/$(CLIENT_LIB)
 
 # --- basic rules -------------------------------------------------------
 
-$(tclclient_obj): $(OBJDIR)/tcl/%.lo: %.c
+$(tclclient_obj): $(OBJDIR)/%.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(TCL_CPPFLAGS) -DDATADIR='"$(datadir)"' \
 		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
-$(oprsclient_obj): $(OBJDIR)/oprs/%.lo: %.c
+$(oprsclient_obj): $(OBJDIR)/%.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(TRANSGEN_CFLAGS) \
 		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
