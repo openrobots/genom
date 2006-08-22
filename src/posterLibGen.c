@@ -264,25 +264,13 @@ int posterLibGen(FILE *out)
       /* la fonction pour lire tout le poster */
       fprintf(out,
 	      "STATUS %s%sPosterRead(POSTER_ID posterId, %s *x)\n{\n"
-	      "  static int length;\n"
-	      "  static H2_ENDIANNESS posterDataEndianness;\n"
-	      "  if (!length) {\n"
-	      "    if (posterEndianness(posterId, &posterDataEndianness) == ERROR) {\n"
-	      "      h2perror(\"%s%sPosterRead endianness\");\n"
-	      "      return ERROR;\n"
-	      "    }\n"
-	      "    if (posterIoctl(posterId, FIO_GETSIZE, &length) == ERROR) {\n"
-	      "      h2perror(\"%s%sPosterRead ioctl\");\n"
-	      "      return ERROR;\n"
-	      "    }\n"
-	      "    if (length != sizeof(*x)) {\n"
-	      "      errnoSet(S_%s_stdGenoM_BAD_POSTER_TYPE);\n"
-	      "      h2perror(\"%s%sPosterRead bad data length\");\n"
-	      "      return ERROR;\n"
-	      "    }\n"
+	      "  int length=sizeof(%s);\n"
+	      "  H2_ENDIANNESS posterDataEndianness;\n"
+	      "  if (posterEndianness(posterId, &posterDataEndianness) == ERROR) {\n"
+	      "    h2perror(\"%s%sPosterRead endianness\");\n"
+	      "    return ERROR;\n"
 	      "  }\n"
 	      "  if (posterRead(posterId, 0, (char *)x, length) != length) {\n"
-	      "    length = 0;\n"
 	      "    h2perror(\"%s%sPosterRead read\");\n"
 	      "    return ERROR;\n"
 	      "  }\n"
@@ -290,62 +278,41 @@ int posterLibGen(FILE *out)
 	      "     endianswap_struct_%s(x, 0, NULL);\n"
 	      "  return OK;\n"
 	      "}\n\n",
-	      module->name, p_in->name, p_in->type->name, 
+	      module->name, p_in->name, p_in->type->name, /* proto */
+	      p_in->name,                /* sizeof */
 	      module->name, p_in->name,  /* endianness */
-	      module->name, p_in->name,  /* ioctl */
-	      module->name,              /* length */
-	      module->name, p_in->name,  /* length */
 	      module->name, p_in->name,  /* read */
 	      p_in->type->name);
 
-      /* la fonction pour lire tout le poster */
+      /* function to find out the poster (and check its length) */
       fprintf(out,
-	      "STATUS %s%sPosterNameRead(char * posterName, %s *x)\n{\n"
-	      "  static POSTER_ID posterId;\n"
-	      "  static H2_ENDIANNESS posterDataEndianness;\n"
-	      "  static int length;\n"
-	      "  if (!posterId) {\n"
-	      "     if (posterFind(posterName, &posterId) == ERROR) {\n"
-	      "        posterId=NULL;\n"
-	      "        h2perror(\"%s%sPosterNameRead find\");\n"
-	      "        return ERROR;\n"
-	      "      }\n"
-	      "     if (posterEndianness(posterId, &posterDataEndianness) == ERROR) {\n"
-	      "       posterId=NULL;\n"
-	      "       h2perror(\"%s%sPosterNameRead endianness\");\n"
-	      "       return ERROR;\n"
-	      "     }\n"
-	      "     if (posterIoctl(posterId, FIO_GETSIZE, &length) == ERROR) {\n"
-	      "       posterId=NULL;\n"
-	      "       h2perror(\"%s%sPosterNameRead ioctl\");\n"
-	      "       return ERROR;\n"
-	      "     }\n"
-	      "     if (length != sizeof(*x)) {\n"
-	      "       errnoSet(S_%s_stdGenoM_BAD_POSTER_TYPE);\n"
-	      "       h2perror(\"%s%sPosterNameRead warn bad data length\");\n"
-	      "       fprintf (stderr, \"%s%sPosterNameRead warn:  strlen %%d != poster %%d\\n\", sizeof(*x), length);\n"
-	      "       posterId=NULL;\n"
-	      "       return ERROR;\n"
-	      "     }\n"
-	      "  }\n"
-	      "  if (posterRead(posterId, 0, (char *)x, length) != length) {\n"
-	      "    h2perror(\"%s%sPosterNameRead read\");\n"
-	      "    posterId=NULL;\n"
-	      "    return ERROR;\n"
-	      "  }\n"
-	      "  if (posterDataEndianness != H2_LOCAL_ENDIANNESS)\n"
-	      "     endianswap_struct_%s(x, 0, NULL);\n"
+	      "STATUS %s%sPosterFind(char *posterName, POSTER_ID *posterId)\n{\n"
+	      "  int length;\n"
+	      "  if (posterFind(posterName, posterId) == ERROR) {\n"
+	      "     *posterId=NULL;\n"
+	      "     h2perror(\"%s%sPosterFind find\");\n"
+	      "     return ERROR;\n"
+	      "   }\n"
+	      "   if (posterIoctl(*posterId, FIO_GETSIZE, &length) == ERROR) {\n"
+	      "     *posterId=NULL;\n"
+	      "     h2perror(\"%s%sPosterFind ioctl\");\n"
+	      "     return ERROR;\n"
+	      "   }\n"
+	      "   if (length != sizeof(%s)) {\n"
+	      "     errnoSet(S_%s_stdGenoM_BAD_POSTER_TYPE);\n"
+	      "     h2perror(\"%s%sPosterFind warn bad data length\");\n"
+	      "     fprintf (stderr, \"%s%sPosterFind warn:  strlen %%d != poster %%d\\n\", sizeof(%s), length);\n"
+	      "     return ERROR;\n"
+	      "   }\n"
 	      "  return OK;\n"
 	      "}\n\n",
-	      module->name, p_in->name, p_in->type->name, /* proto */
+	      module->name, p_in->name,  /* proto */
 	      module->name, p_in->name,  /* posterFind */
-	      module->name, p_in->name,  /* posterEndianness */
 	      module->name, p_in->name,  /* posterIoctl */
-	      module->name,              /* length */
-	      module->name, p_in->name,  /* length */
-	      module->name, p_in->name,  /* length */
-	      module->name, p_in->name,  /* posterRead */
-	      p_in->type->name);         /* endianswap */
+	      p_in->name,                /* sizeof */
+	      module->name,              /* errnoSet */
+	      module->name, p_in->name,  /* h2perror  */
+	      module->name, p_in->name, p_in->name); /* printf warn */
 
       /* Les fonctions pour les e'le'ments de la structure 
 	 (pas utilise pour le moment) */
@@ -371,7 +338,7 @@ int posterLibGen(FILE *out)
       /* la fonction pour lire tout le poster */
       fprintf(out, "extern STATUS %s%sPosterRead (POSTER_ID posterId, %s *x );\n",
 	      module->name, p_in->name, p_in->type->name);
-      fprintf(out, "extern STATUS %s%sPosterNameRead (char *posterName, %s *x );\n",
+      fprintf(out, "extern STATUS %s%sPosterFind (char *posterName, %s *x );\n",
 	      module->name, p_in->name, p_in->type->name);
 
       /* Les fonctions pour les e'le'ments de la structure 
