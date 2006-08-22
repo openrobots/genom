@@ -221,7 +221,7 @@ int posterLibGen(FILE *out)
 	      "    return ERROR;\n"
 	      "  }\n"
 	      "  if (posterDataEndianness != H2_LOCAL_ENDIANNESS)\n"
-	      "     endianswap_%s(x, 0, NULL);\n"
+	      "     endianswap_struct_%s(x, 0, NULL);\n"
 	      "  return OK;\n"
 	      "}\n\n",
 	      module->name, p->name, p->type->name, 
@@ -287,7 +287,7 @@ int posterLibGen(FILE *out)
 	      "    return ERROR;\n"
 	      "  }\n"
 	      "  if (posterDataEndianness != H2_LOCAL_ENDIANNESS)\n"
-	      "     endianswap_%s(x, 0, NULL);\n"
+	      "     endianswap_struct_%s(x, 0, NULL);\n"
 	      "  return OK;\n"
 	      "}\n\n",
 	      module->name, p_in->name, p_in->type->name, 
@@ -334,7 +334,7 @@ int posterLibGen(FILE *out)
 	      "    return ERROR;\n"
 	      "  }\n"
 	      "  if (posterDataEndianness != H2_LOCAL_ENDIANNESS)\n"
-	      "     endianswap_%s(x, 0, NULL);\n"
+	      "     endianswap_struct_%s(x, 0, NULL);\n"
 	      "  return OK;\n"
 	      "}\n\n",
 	      module->name, p_in->name, p_in->type->name, /* proto */
@@ -1043,7 +1043,7 @@ static void posterInLibMemberGen(FILE *out, POSTERS_INPUT_LIST *p,
 		    "(char *)(%s), size) != size)\n"
 		    "    return ERROR;\n"
 		    "  if (posterDataEndianness != H2_LOCAL_ENDIANNESS)\n"
-		    "     endianswap_%s(%s, 0, NULL);\n"
+		    "     endianswap_struct_%s(%s, 0, NULL);\n"
 		    "  return OK;\n"
 		    "}\n\n",
 		    n->name,
