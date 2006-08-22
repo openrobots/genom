@@ -1,5 +1,7 @@
 $LAAS$
 
+ 36. New names for some fields in the .gen file (c_func -> codel). See 
+     documentation for details.
  35. If the H2DEV_DIR environment variable is set, we save the PID
      files in here. This envvar is used by pocolibs to set its device file
  34. New option '-a' to generate module api only (not the module server)
