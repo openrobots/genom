@@ -129,10 +129,14 @@ posterwrite_obj=$(posterwrite_src:%.c=$(OBJDIR)/%.lo)
 
 tclclient_src= \
 	tcl/$module$Tcl.c	\
+
+tclrequires_src= \
 	$module$PosterLib.c	\
 	$module$Endian.c  \
 	$module$Error.c
+
 tclclient_obj=	$(tclclient_src:%.c=$(OBJDIR)/%.lo)
+tclrequires_obj=$(tclrequires_src:%.c=$(OBJDIR)/%.lo)
 
 tclclient_tcl= \
 	tcl/$module$Client.tcl
@@ -193,8 +197,8 @@ $(OBJDIR)/$(CLIENT_LIB): $(client_obj)
 	$(LTLD) -o $@ $(LDFLAGS) $(client_obj) $(SERVERS_CLIENT_LIB) \
 		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LIBTOOL_VERSION_INFO)
 
-$(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj)
-	$(LTLD) $(CFLAGS) $(tclclient_obj) $(SERVERS_ENDIAN_LIB) -o $@	\
+$(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj) $(tclrequires_obj)
+	$(LTLD) $(CFLAGS) $(tclclient_obj)  $(tclrequires_obj) $(SERVERS_ENDIAN_LIB) -o $@	\
 		$(LIBTOOL_LINKOPT) $(GENOM_LIBS)			\
 		$(LDFLAGS) $(TCL_LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
@@ -240,13 +244,13 @@ install: all install-bin install-data
 install-bin:
 	$(MKINSTALLDIRS) $(libdir)
 	$(LTINSTALL) $(OBJDIR)/$(CLIENT_LIB) $(libdir)/$(CLIENT_LIB)
-	$genTcl$$(MKINSTALLDIRS) $(libdir)/tclserv
-	$genServer$$genTcl$$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/tclserv/$(TCLCLIENT_LIB)
-	$genOpenprs$$(MKINSTALLDIRS) $(libdir)/openprs
-	$genOpenprs$$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) $(libdir)/openprs/$(OPENPRSCLIENT_LIB)
-	$genServer$$(MKINSTALLDIRS) $(bindir)
-	$genServer$$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
-	$genServer$$(LTINSTALL) $(OBJDIR)/$(TEST_BIN) $(bindir)/$(TEST_BIN)
+$genTcl$	$(MKINSTALLDIRS) $(libdir)/tclserv
+$genServer$$genTcl$	$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/tclserv/$(TCLCLIENT_LIB)
+$genOpenprs$	$(MKINSTALLDIRS) $(libdir)/openprs
+$genOpenprs$	$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) $(libdir)/openprs/$(OPENPRSCLIENT_LIB)
+$genServer$	$(MKINSTALLDIRS) $(bindir)
+$genServer$	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
+$genServer$	$(LTINSTALL) $(OBJDIR)/$(TEST_BIN) $(bindir)/$(TEST_BIN)
 
 install-data:
 	$(MKINSTALLDIRS) $(includedir)/server
@@ -255,12 +259,12 @@ install-data:
 	done
 	$(MKINSTALLDIRS) $(datadir)/gen
 	$(INSTALL_DATA) $(top_srcdir)/$(GENFILE) $(datadir)/gen
-	$genTcl$$(MKINSTALLDIRS) $(datadir)/tcl
-	$genTcl$$(INSTALL_DATA) $(srcdir)/$(tclclient_tcl) $(datadir)/$(tclclient_tcl)
-	$genOpenprs$$(MKINSTALLDIRS) $(datadir)/openprs
-	$genOpenprs$( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_data) $(datadir)/openprs )
-	$genOpenprs$$(MKINSTALLDIRS) $(includedir)/server/openprs
-	$genOpenprs$( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_headers) $(includedir)/server/openprs )
+$genTcl$	$(MKINSTALLDIRS) $(datadir)/tcl
+$genTcl$	$(INSTALL_DATA) $(srcdir)/$(tclclient_tcl) $(datadir)/$(tclclient_tcl)
+$genOpenprs$	$(MKINSTALLDIRS) $(datadir)/openprs
+$genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_data) $(datadir)/openprs )
+$genOpenprs$	$(MKINSTALLDIRS) $(includedir)/server/openprs
+$genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_headers) $(includedir)/server/openprs )
 
 
 # --- clean -------------------------------------------------------------
