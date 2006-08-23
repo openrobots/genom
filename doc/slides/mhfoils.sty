@@ -1,0 +1,109 @@
+%
+% 
+%
+\RequirePackage{graphicx}
+\RequirePackage{foilhtml}
+\RequirePackage{color}
+\RequirePackage{hyperref}
+\RequirePackage{fancybox}
+\RequirePackage{calc}
+
+\hypersetup{urlcolor=blue}
+
+\newenvironment{tran}[1]{\foilhead{\color{darkblue}#1%
+        \ifx\pdfoutput\undefined%
+        \vspace{-1ex}%
+        \rule{\textwidth}{1.5pt}%
+        \vspace{-1ex}%
+        \else%
+        \hspace{-1pt}\includegraphics[width=\textwidth,height=0.5cm]{sep2}%
+        \vspace*{-1.5cm}
+        \fi}}{\vfill}
+
+%%----------------------------------------------------------------------
+%% Figures
+
+\newcommand\fig[2]{
+  \vspace{0.5cm}
+  \centerline{\includegraphics[height=#2]{#1}}}
+
+\newcommand\figsimple[2]{
+  \vspace{0.5cm}
+  \includegraphics[height=#2]{#1}}
+
+\newcommand\figtwoc[3]{
+\vspace{0.5cm}
+\centerline{\shadowbox{\includegraphics[height=#3]{#1}}\hfil%
+	\shadowbox{\includegraphics[height=#3]{#2}}}}
+
+\graphicspath{{/home/matthieu/doc/images/}}
+
+\newcommand{\myrl}[1]{%
+        \begin{otherlanguage}{english}%
+        \url{#1}%
+        \end{otherlanguage}{}}
+
+\definecolor{lightblue}{rgb}{.8,.85,1}
+\definecolor{darkblue}{rgb}{0,0,0.5}
+\definecolor{lightred}{rgb}{1,.85,.8}
+\definecolor{darkred}{rgb}{0.5,0,0}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{orange}{rgb}{1,0.3,0}
+\definecolor{darkyellow}{rgb}{1,0.6,0}
+\definecolor{brown}{rgb}{0.3,0.3,0}
+%%----------------------------------------------------------------------
+%% Encadrements
+
+\newdimen\cadrewidth
+\cadrewidth=\textwidth
+\advance\cadrewidth-1cm
+
+\def\cadre#1{
+\vspace{1ex}
+\centerline{\fbox{\parbox{\cadrewidth}{
+\tiny#1
+}}}
+}
+
+%%----------------------------------------------------------------------
+%% Polices
+
+%% Ajoute la police sltt
+%% Il faut le fichier 'sfonts.cfg' correspondant !
+\DeclareTextFontCommand{\textsltt}{\ttfamily\slshape}
+
+%% Le 'texttt' par défaut est trop petit...
+\newcommand{\mhtt}[1]{{\normalsize{\texttt{#1}}}}
+\newcommand{\mhsltt}[1]{{\normalsize{\textsltt{#1}}}}
+
+%%----------------------------------------------------------------------
+%% Variante pour les itemizes
+
+\def\blackbox{\vrule height .8ex width .6ex depth -.2ex}%
+\newcommand\itemb{\item[\blackbox~]}
+
+
+\parindent 0pt
+
+%% If French guillemets are available on your keyboard, you can use
+%% them instead of the commands \og and \fg: REPLACE << and >> in
+%% the following code by your ready-made guillemets (2 occurrences
+%% for each) AND uncomment the resulting code.
+%% WARNINGS:
+%% 1) This will reduce the portability of your source files!
+%% 2) This adds two active characters.
+%% 3) If you add this stuff to the preamble of a document, you'll
+%%    need to wrap it in \makeatletter ... \makeatother.
+%%
+% \ifx\mule@def\undefined
+%   \initiate@active@char{«}
+%   \initiate@active@char{»}
+%   \AtBeginDocument{%
+%     \def«{\og\ignorespaces}%
+%     \def»{{\fg}}%
+%     }%
+% \else %%% For the CJK package, see MULEenc.sty.
+%   \mule@def{11}{\og\ignorespaces}
+%   \mule@def{27}{{\fg}}
+% \fi
+%%
