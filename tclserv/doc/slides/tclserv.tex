@@ -1,0 +1,299 @@
+%%
+%% Anthony Mallet - Fri Dec  6 2002
+%% Copyright (C) 2002 LAAS/CNRS 
+%%
+%% $Id$
+%%
+\documentclass[a4paper,landscape,smooth]{show}
+\usepackage{depend,aeguill,cartouche}
+\usepackage[dpi=100,resample]{docfig}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{pp4/pause}
+
+\context{\vfill}
+\title{\Huge tclServ}
+\author{Anthony Mallet and Sara Fleury}
+\date{july 2006}
+
+\newcommand{\tclex}[2]{\texttt{#1}\\$\rightarrow$ \texttt{#2}}
+
+\begin{document}
+\maketitle
+
+% =======================================================================
+
+\begin{part}{Introduction}{}
+   \vfill
+   {\bf Motivations}
+   \begin{bitemize}{color@bulle}
+      \item Developed complex systems in a {\bf modular} and
+	    {\bf incremental} way.
+      \item {\bf Dynamic configuration}.
+   \end{bitemize}
+   \vfill
+   {\bf Architecture}
+   \begin{bitemize}{color@bulle}
+      \item  Functional level $\rightarrow$ GenoM components (modules).
+      \item System state,  inter-components coherency, configuration,
+	    communication $\rightarrow$ execution control.
+      \item Application $\rightarrow$ decisional level.
+   \end{bitemize}
+   \vfill
+\end{part}
+
+\begin{tslide}{tclServ}
+   \vfill
+   \begin{bitemize}{color@bulle}
+      \item Fast module tests. Equivalent to
+	    "test" tasks.
+      \item Simple scripts to coordonnate several modules.
+      \item Control interfaces (Tk).
+   \end{bitemize}
+   \vfill
+\end{tslide}
+
+% =======================================================================
+
+\begin{part}{tclServ}{Architecture}
+   \vfill
+   \docfig[width=0.9\linewidth,psfrag]{tclServ.fig}
+   \vfill
+\end{part}
+
+% -----------------------------------------------------------------------
+
+\begin{tslide}{Starting}
+   \vfill
+   {\bf Under Unix}
+   \begin{bitemize}{color@bulle}
+      \item On the machines executing the modules :\\
+	 \texttt{tclserv \&}
+
+      \item Every where:
+	 \texttt{eltclsh} (ASCII) or \texttt{elwish} (graphical with tk)\\
+	 \texttt{package require genom} (or option \texttt{-package}).
+
+   \end{bitemize}
+   \vfill
+   {\bf Under VxWorks}
+   \begin{bitemize}{color@bulle}
+      \item On {\em the card $0$ of the racks} where run the modules~:\\
+	 \texttt{ld < /usr/local/robots/tcl/ppc-vxworks/tcl.o}\\
+	 \texttt{ld < /usr/local/robots/tclServ/server/ppc-vxworks/tclServ.o}\\
+	 \texttt{tclserv}
+
+      \item Every-where (unix) :
+	 \texttt{eltclsh} or \texttt{elwish}\\
+	 \texttt{package require genom} (or option \texttt{-package}).
+
+   \end{bitemize}
+   \vfill
+\end{tslide}
+
+% -----------------------------------------------------------------------
+
+\begin{tslide}{Connection to the server}
+   \vfill
+   \begin{cartouche}
+   \texttt{connect {\em server}}
+   \end{cartouche}   
+   Connect to the server \texttt{\em server}. One can connect with several servers (example~:
+   \texttt{diligent} et \texttt{cabby}).
+   \vfill
+   \begin{cartouche}
+   \texttt{disconnect {\em server}}
+   \end{cartouche}   
+   Ends the connection with the server \texttt{\em server}.
+   \vfill
+   \begin{cartouche}
+   \texttt{die}
+   \end{cartouche}   
+   Ends all the servers (processes \texttt{tclserv}) connected, and
+   ends all the clients of all the servers.
+   \vfill
+\end{tslide}
+
+% -----------------------------------------------------------------------
+
+\begin{tslide}{Connections to the modules}
+   \vfill
+   \begin{cartouche}
+   \texttt{lm {\em <module>} [on {\em <server>}] [rpath {\em<path>}] {\em <path>}}
+   \end{cartouche}   
+   Loads the communications libraries with the \texttt{\em module}
+   in the directory \texttt{\em path} on client side --- and
+   \texttt{\em rpath} tclServ side, by default the path are identical.
+   \vfill
+   \begin{cartouche}
+   \texttt{mboxInit [{\em server}]}
+   \end{cartouche}   
+    Starts the connections to the modules on server side, on the 
+   \texttt{\em server} machine (or by default the last connected server).
+   \vfill
+   \begin{cartouche}
+   \texttt{mboxEnd [{\em server}]}
+   \end{cartouche}   
+   Ends the connections to the modules on the \texttt{\em server} (or by
+   default the last connected server).
+   \vfill
+\end{tslide}
+
+% -----------------------------------------------------------------------
+
+\begin{tslide}{Example}
+   \vfill
+   \parbox{0.45\linewidth}{\tt
+      {\bf diligent->} h2 init\\
+      {\bf diligent->} xr4000 \&\\
+      {\bf diligent->} platine \&\\
+      {\bf diligent->} tclserv \&\\
+   }\hfill\parbox{0.45\linewidth}{\tt
+      {\bf cabby->} h2 init\\
+      {\bf cabby->} camera \&\\
+      {\bf cabby->} tclserv \&\\
+   }
+   \vfill
+   {\tt
+      {\bf tcl->} connect diligent\\
+      {\bf tcl->} lm platine /usr/local/robots/nomadic/modules/platine\\
+      {\bf tcl->} lm xr4000 /usr/local/robots/nomadic/modules/xr4000\\
+      {\bf tcl->} mboxInit diligent\\
+\\
+      {\bf tcl->} connect cabby\\
+      {\bf tcl->} lm camera /usr/local/robots/nomadic/modules/camera\\
+      {\bf tcl->} mboxInit cabby\\
+   }
+   \vfill
+\end{tslide}
+
+% -----------------------------------------------------------------------
+
+\begin{tslide}{Send requests}
+   \vfill
+   \begin{cartouche}
+      \tt {\em module}::{\em request} [-doc|-ack|-raw] {\em arg1} {\em arg2} ...
+   \end{cartouche}
+   Send the request {\tt\em request} to the module {\tt\em module}, with the
+   arguments {\tt\em arg1} ... {\tt\em argn}. Returns a report and the
+   result formated or not (option {\tt -raw}).
+
+   With the option {\tt\em -doc}~: list the parameters waited by the
+   request, and their type type.
+
+   With the option {\tt\em -ack}~: does not block to wait the end of
+   the request, and returns immediatly an idendifier to read the result
+   later on.
+
+   \vfill
+   \begin{cartouche}
+      \tt replyof {\em rqstId}
+   \end{cartouche}
+   Returns the result of the request {\tt\em rqstId}. Blocking.
+   \vfill
+\end{tslide}
+
+% -----------------------------------------------------------------------
+
+\begin{tslide}{Example}
+   \vfill
+   {\tt {\bf tcl->} lloco::GotoSpeed\\
+   speedRef.v [0.000000] : 0.05\\
+   speedRef.w [0.000000] : 0.0}
+   \vfill
+   {\tt {\bf tcl->} lloco::GotoSpeed 0.05 0.0}
+
+   $\rightarrow$ blocked
+   \vfill
+   {\tt {\bf tcl->} set id [lloco::GotoSpeed -ack 0.05 0.0]\\
+	\{lama0 0\}\\
+	{\bf tcl->} puts "I'm not blocked"\\
+	I'm not blocked\\
+	{\bf tcl->} replyof \$id}
+
+   $\rightarrow$ blocked
+   \vfill
+\end{tslide}
+
+% -----------------------------------------------------------------------
+
+\begin{tslide}{Activites control}
+   \vfill
+   \begin{cartouche}
+      \tt abort {\em rqstId}
+   \end{cartouche}
+   Interrupts the request {\tt\em rqstId}. One can read the result with
+   {\tt replyof \em rqstid}.
+   \vfill
+   \begin{cartouche}
+      \tt kill {\em module}
+   \end{cartouche}
+   Kills the module, and returns a report. It is possible to start again the
+   module (by hand) and to connect again with {\tt mboxEnd; mboxInit}.
+   \vfill
+   \begin{cartouche}
+      \tt cs::term {\em rqstId} {\em block}
+   \end{cartouche}
+   Sends back $0$ or $1$ if the request {\tt\em rqstId} is end. Non
+   blocking if {\tt\em block} equal 0, blocking either .
+   \vfill
+\end{tslide}
+
+% -----------------------------------------------------------------------
+
+\begin{tslide}{Requests results}
+   \vfill
+   The procedures to send requests return a list~:
+   \begin{bitemize}{color@bulle}
+      \item one report ({\bfseries\tt OK} or one error)
+      \item the "flat" result structure of the request
+   \end{bitemize}
+   \vfill
+   {\tt
+   {\bf tcl->} camera::GetSaveParams \\
+   status = OK\\
+   saveP.directory = .\\
+   saveP.num = 0\\
+   saveP.format = CAMERA\_SAVE\_GZIPPED\_BITMAP\\
+   saveP.jpegQuality = 75\\
+   saveP.unused = 0\\
+\\
+   {\bf tcl->} camera::GetSaveParams -raw\\
+   OK . 0 CAMERA\_SAVE\_GZIPPED\_BITMAP 75 0\\
+   {\bf tcl->}}
+   \vfill
+\end{tslide}
+
+% -----------------------------------------------------------------------
+
+\begin{tslide}{Reading of the posters}
+   \vfill
+   \begin{cartouche}
+      \tt {\em <module>}::{\em <poster>}{\em <struct>}PosterRead [-raw]
+   \end{cartouche}
+   Reads the structure {\tt\em struct} of poster {\tt\em poster} of module
+   {\tt\em module}.
+   \vfill
+\end{tslide}
+
+
+% -----------------------------------------------------------------------
+
+\begin{tslide}{Automatismes}
+   \vfill
+   {\bf eltclsh {\em file}}
+   \begin{bitemize}{color@bulle}
+      \item Executes {\tt\em file} and quits.
+   \end{bitemize}
+   \vfill
+   {\bf \#!}
+   \begin{bitemize}{color@bulle}
+      \item \#!/usr/bin/env rtclsh
+      \item chmod a+x
+   \end{bitemize}
+   \vfill
+\end{tslide}
+
+\vfill\eject\null\vfill\eject
+
+\end{document}
