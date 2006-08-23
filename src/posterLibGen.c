@@ -338,8 +338,8 @@ int posterLibGen(FILE *out)
       /* la fonction pour lire tout le poster */
       fprintf(out, "extern STATUS %s%sPosterRead (POSTER_ID posterId, %s *x );\n",
 	      module->name, p_in->name, p_in->type->name);
-      fprintf(out, "extern STATUS %s%sPosterFind (char *posterName, %s *x );\n",
-	      module->name, p_in->name, p_in->type->name);
+      fprintf(out, "extern STATUS %s%sPosterFind (char *posterName, POSTER_ID *posterId);\n",
+	      module->name, p_in->name);
 
       /* Les fonctions pour les e'le'ments de la structure 
 	 (pas utilise pour le moment) */
