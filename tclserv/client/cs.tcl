@@ -93,6 +93,11 @@ namespace eval cs {
 	set reply [::server::rqstSend $server "${module}::$name $argList"]
 
 	if { "[lindex $reply 0]" != "OK" } {
+	    set m [lrange $reply 2 end]
+	    if { [ regexp -nocase {invalid\s+command} $m ] } {
+		return -code error "module not connected. try mboxInit."
+	    }
+
 	    return -code error "[lrange $reply 2 end]"
 	}
 
