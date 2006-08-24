@@ -1,5 +1,8 @@
 $LAAS$
 
+ 37. Added automatic mboxInit call after a successful lm in tclserv
+     client code. Can be disabled with a new option `-no-auto-connect' of
+     lm command.
  36. New names for some fields in the .gen file (c_func -> codel). See 
      documentation for details.
  35. If the H2DEV_DIR environment variable is set, we save the PID

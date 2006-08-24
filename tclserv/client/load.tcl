@@ -44,6 +44,7 @@ proc lm { name args } {
     set fullname "\"$name\""
     set remotepath ""
     set server [::server::defaultServer]
+    set autombox 1
     while {[llength $args] > 0} {
 	set arg [shift args]
 	if { "$arg" == "as" } {
@@ -61,8 +62,10 @@ proc lm { name args } {
 	    set remotepath "\"[shift args]\""
 	} elseif { "$arg" == "lpath" } {
 	    set localpath "[shift args]"
+	} elseif { "$arg" == "-no-auto-connect" } {
+	    set autombox 0
 	} else {
-	    error {lm <module> [as <alias>] [on <server>] [path <common path> | [rpath <remotepath>] [lpath <path>]]}
+	    error {lm <module> [as <alias>] [on <server>] [path <common path> | [rpath <remotepath>] [lpath <path>]] [-no-auto-connect]}
 	}
     }
 
@@ -91,6 +94,12 @@ proc lm { name args } {
 
     set ::cs::modules($alias) $name
     set ::cs::servers($alias) $server
+
+    # remove and recreate mbox on that server
+    if { $autombox } {
+	catch "::cs::mboxEnd $server"
+	::cs::mboxInit $server
+    }
 
     return "$alias loaded on $server from $localpath"
 }
