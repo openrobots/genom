@@ -57,9 +57,9 @@ include $(top_srcdir)/$(autoconfdir)/config.$(OSAPI).mk
 
 # --- flags -------------------------------------------------------------
 
-CPPFLAGS+= $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
+CPPFLAGS+= $(ENDIANNESS)
 CPPFLAGS+= -I. -I$(top_srcdir) -I$(srcdir)
-CPPFLAGS+= $(GENOM_CFLAGS)
+CPPFLAGS+= $(GENOM_DEFINES) $(GENOM_INCLUDES) $(GENOM_CFLAGS)
 
 # Put this BEFORE including genom.mk since genom.mk defines the regen and regen-user targets
 all: \
