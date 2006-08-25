@@ -46,8 +46,10 @@ include $(top_builddir)/config.mk
 CPPFLAGS+=	-I$(top_builddir) -I$(top_srcdir)/include -I$(srcdir) -I.
 CPPFLAGS+= $(PORTLIB_CFLAGS) -D$(ENDIANNESS)
 
-SHLIB_MAJOR=	1
-SHLIB_MINOR=	0
+SHLIB_CURRENT=	1
+SHLIB_REVISION=	0
+SHLIB_AGE=	0
+SHLIB_VERSION_INFO= $(SHLIB_CURRENT):$(SHLIB_REVISION):$(SHLIB_AGE)
 
 BASENAME=	$(GENOM)
 LIB=		lib$(BASENAME).la
@@ -81,9 +83,9 @@ install:: $(LIB)
 	$(LTINSTALL) $(LIB) $(libdir)/$(LIB)
 
 $(LIB): $(OBJS)
-	$(LTLD) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)			\
+	$(LTLD) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)		\
 		$(PORTLIB_LIBS) \
-		-version-info $(SHLIB_MAJOR):$(SHLIB_MINOR)		\
+		-version-info $(SHLIB_VERSION_INFO)		\
 		-rpath $(libdir) -R$(libdir)
 
 %.lo: %.c
