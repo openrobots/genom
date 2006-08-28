@@ -1,5 +1,7 @@
 $LAAS$
 
+ 38. Add support for 'long long' and 'unsigned long long' (64 bit integer
+     types) to genom. Not supported by OpenPRS bindings for now.
  37. Added automatic mboxInit call after a successful lm in tclserv
      client code. Can be disabled with a new option `-no-auto-connect' of
      lm command.

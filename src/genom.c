@@ -1497,6 +1497,14 @@ taille_obj(DCL_NOM_STR *t)
 	  case SHORT:
 	    return(tt*sizeof(short));
 	  case INT:
+		  if (t->type->flags & SHORT_INT)
+			  return(tt*sizeof(short));
+		  else if (t->type->flags & LONG_INT)
+			  return(tt*sizeof(long));
+		  else if (t->type->flags & LONG_LONG_INT)
+			  return(tt*sizeof(long long));
+		  else
+			  return(tt*sizeof(int));
 	  case ENUM:
 	    return(tt*sizeof(int));
 	  case FLOAT:
@@ -1597,6 +1605,9 @@ nom_type(TYPE_STR *type)
 	if (type->flags & LONG_INT) {
 	    bufcat(&res, "long ");
 	}
+	if (type->flags & LONG_LONG_INT) {
+	    bufcat(&res, "long long ");
+	}
 	bufcat(&res, "int");
 	break;
 
@@ -1650,6 +1661,9 @@ nom_type1(TYPE_STR *type)
 	}
 	if (type->flags & LONG_INT) {
 	    bufcat(&res, "long_");
+	}
+	if (type->flags & LONG_LONG_INT) {
+	    bufcat(&res, "long_long_");
 	}
 	bufcat(&res, "int");
 	break;

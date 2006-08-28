@@ -166,6 +166,20 @@ int scan_long_int(FILE *in, FILE *out, long int *x,
   return status;
 }
 
+int scan_long_long_int(FILE *in, FILE *out, long long int *x, 
+		  int indent, int nDim, int *dims) 
+{
+  int status=OK;
+  indent++;
+  FOR_EACH_elt(nDim,dims) {
+    fprintf(out, "%s%s (%lld) ", 
+	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+    if ((status = scan_type(in, out, "%lld", (x+elt))) != OK)
+      return status;
+  } END_FOR
+  return status;
+}
+
 int scan_unsigned_short_int(FILE *in, FILE *out, unsigned short *x, 
 			    int indent, int nDim, int *dims) 
 {
@@ -208,6 +222,19 @@ int scan_unsigned_long_int(FILE *in, FILE *out, unsigned long *x,
   return status;
 }
 
+int scan_unsigned_long_long_int(FILE *in, FILE *out, unsigned long long *x, 
+			   int indent, int nDim, int *dims) 
+{
+  int status=OK;
+  indent++;
+  FOR_EACH_elt(nDim,dims) {
+    fprintf(out, "%s%s (%llu) ", 
+	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+    if ((status = scan_type(in, out, "%llu", (x+elt))) != OK)
+      return status;
+  } END_FOR
+  return status;
+}
 int scan_float(FILE *in, FILE *out, float *x, 
 	       int indent, int nDim, int *dims) 
 {

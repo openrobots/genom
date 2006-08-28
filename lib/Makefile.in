@@ -46,9 +46,9 @@ include $(top_builddir)/config.mk
 CPPFLAGS+=	-I$(top_builddir) -I$(top_srcdir)/include -I$(srcdir) -I.
 CPPFLAGS+= $(PORTLIB_CFLAGS) -D$(ENDIANNESS)
 
-SHLIB_CURRENT=	1
+SHLIB_CURRENT=	2
 SHLIB_REVISION=	0
-SHLIB_AGE=	0
+SHLIB_AGE=	1
 SHLIB_VERSION_INFO= $(SHLIB_CURRENT):$(SHLIB_REVISION):$(SHLIB_AGE)
 
 BASENAME=	$(GENOM)

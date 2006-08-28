@@ -300,7 +300,10 @@ tclInputFormatGen(char **buf, char *name, DCL_NOM_STR *nom,
 	    break;
 
 	 case INT:
-	    bufcat(buf, "int");
+	    if (nom->type->flags & LONG_LONG_INT)
+	       bufcat(buf, "wide");
+	    else 
+	       bufcat(buf, "int");
 	    strcpy(defaultDefault, "0");
 	    break;
 		

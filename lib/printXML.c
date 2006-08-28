@@ -154,6 +154,17 @@ int printXML_long_int(FILE *out, char *name, long int *x, int indent, int nDim, 
   return 1;
 }
 
+int printXML_long_long_int(FILE *out, char *name, long long int *x, int indent, int nDim, int *dims, FILE *in) 
+{
+  indent++;
+  FOR_NB_elt(nDim,dims)
+    if (!(fprintfBuf(out, "%s<%s%s>%lld</%s%s>\n", 
+	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+  END_FOR
+  return 1;
+}
+
 int printXML_unsigned_short_int(FILE *out, char *name, unsigned short *x, int indent, 
 			      int nDim, int *dims, FILE *in) 
 {
@@ -184,6 +195,18 @@ int printXML_unsigned_long_int(FILE *out, char *name, unsigned long *x, int inde
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%lu</%s%s>\n", 
+	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
+		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+  END_FOR
+  return 1;
+}
+
+int printXML_unsigned_long_long_int(FILE *out, char *name, 
+    unsigned long long *x, int indent, int nDim, int *dims, FILE *in) 
+{
+  indent++;
+  FOR_NB_elt(nDim,dims)
+    if (!(fprintfBuf(out, "%s<%s%s>%llu</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
 		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR

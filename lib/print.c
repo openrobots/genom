@@ -118,6 +118,15 @@ void print_long_int(FILE *out, long int *x, int indent, int nDim, int *dims, FIL
   END_FOR
 }
 
+void print_long_long_int(FILE *out, long long int *x, int indent, int nDim, int *dims, FILE *in) 
+{
+  indent++;
+  FOR_NB_elt(nDim,dims)
+    fprintf(out, "%s%s %lld\n", 
+	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+  END_FOR
+}
+
 void print_unsigned_short_int(FILE *out, unsigned short *x, int indent, 
 			      int nDim, int *dims, FILE *in) 
 {
@@ -144,6 +153,16 @@ void print_unsigned_long_int(FILE *out, unsigned long *x, int indent,
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %lu\n", 
+	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+  END_FOR
+}
+
+void print_unsigned_long_long_int(FILE *out, unsigned long long *x, int indent,
+			     int nDim, int *dims, FILE *in) 
+{
+  indent++;
+  FOR_NB_elt(nDim,dims)
+    fprintf(out, "%s%s %llu\n", 
 	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
   END_FOR
 }

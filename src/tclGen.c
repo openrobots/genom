@@ -511,6 +511,11 @@ tclParseInputGen(char **buf, char *name, DCL_NOM_STR *nom, int level)
 		      "%sret = Tcl_GetLongFromObj(interp, objv[++curObjc], "
 		      "%s\t&%s);\n",
 		      indent, indent, name);
+	    } else if (nom->type->flags & LONG_LONG_INT) {
+	       bufcat(buf,
+		      "%sret = Tcl_GetWideIntFromObj(interp, objv[++curObjc], "
+		      "%s\t&%s);\n",
+		      indent, indent, name);
 	    } else {
 	       bufcat(buf,
 		      "%sret = Tcl_GetIntFromObj(interp, objv[++curObjc], "
@@ -669,7 +674,10 @@ tclOutputGen(char **buf, char *name, DCL_NOM_STR *nom, int level,
 	    /* fall through */
 	 case SHORT:
 	 case INT:
-	    bufcat(buf, "\tTcl_NewIntObj(%s));\n", name);
+	    if (nom->type->flags & LONG_LONG_INT)
+	       bufcat(buf, "\tTcl_NewWideIntObj(%s));\n", name);
+	    else
+	       bufcat(buf, "\tTcl_NewIntObj(%s));\n", name);
 	    break;
 		
 	 case FLOAT:

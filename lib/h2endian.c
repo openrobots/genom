@@ -95,6 +95,16 @@ void endianswap_longlong_elt(long long *thelonglong)
 #endif
 }
 
+void endianswap_long_long_int(long long *thelonglong, int nDim, int *dims)
+{
+	endianswap_longlong(thelonglong, nDim, dims);
+}
+
+void endianswap_unsigned_long_long_int(long long *thelonglong, int nDim, int *dims)
+{
+	endianswap_longlong(thelonglong, nDim, dims);
+}
+
 void endianswap_short_int(short int *theshort, int nDim, int *dims)
 {
   FOR_EACH_elt(nDim,dims)

@@ -111,6 +111,15 @@ proc aska { type prompt defaultValue args } {
 		    }
 		}
 
+		"^wide$" {
+		    set expect "wide integer"
+		    set value [uplevel \#0 expr $input]
+		    set answer [expr wide($value)]
+		    if { $answer != $value } {
+			error ""
+		    }
+		}
+
 		"^(float|double)$" {
 		    set answer [uplevel \#0 expr $input]
 		}

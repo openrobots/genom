@@ -1040,6 +1040,8 @@ attributs_type_entier:
     | UNSIGNED { $$ = UNSIGNED_TYPE; }
     | UNSIGNED SHORT { $$ = UNSIGNED_TYPE | SHORT_INT; } 
     | UNSIGNED LONG { $$ = UNSIGNED_TYPE | LONG_INT; }
+    | LONG LONG { $$ = LONG_LONG_INT; }
+    | UNSIGNED LONG LONG { $$ = UNSIGNED_TYPE | LONG_LONG_INT; }
     ;
 
 type_complexe:

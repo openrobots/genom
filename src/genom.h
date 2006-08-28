@@ -98,6 +98,7 @@ typedef struct type_str {
 #define    ARRAY              0x200 /* array (of a type declared above) */
 #define    STRING             0x400 /* array of chars  */
 #define    POINTER            0x600
+#define    LONG_LONG_INT      0x800 /* long long */
 
 /* POINTER */
 #define IS_POINTER(n) ((n)->pointeur==0 ? 0==1:1==1)
