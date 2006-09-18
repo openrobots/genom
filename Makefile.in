@@ -46,16 +46,19 @@ dist_path= genom-$(GENOM_MAJOR).$(GENOM_MINOR)$(GENOM_REV)
 dist_name= genom-$(GENOM_MAJOR).$(GENOM_MINOR)$(GENOM_REV)
 
 config_files = \
-	config.mk		\
-	Makefile		\
-	lib/Makefile		\
-	src/Makefile		\
-	include/Makefile	\
-	canvas/Makefile		\
-	tclserv/server/Makefile	\
-	tclserv/client/Makefile	\
-	doc/user_guide/Makefile	\
-	emacs/Makefile		\
+	config.mk			\
+	Makefile			\
+	genom.pc			\
+	lib/Makefile			\
+	src/Makefile			\
+	include/Makefile		\
+	canvas/Makefile			\
+        canvas/autogen			\
+        canvas/autoconf/configure.ac	\
+	tclserv/server/Makefile		\
+	tclserv/client/Makefile		\
+	doc/user_guide/Makefile		\
+	emacs/Makefile			\
 	scripts/Makefile
 
 config_headers = \
