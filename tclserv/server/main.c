@@ -70,27 +70,6 @@ Tcl_AppInit(Tcl_Interp *interp)
    const char *tclServLibrary[2];
    Tcl_DString initFile;
 
-#ifdef VXWORKS
-   if (xes_verbose) {
-      int fd;
-
-      /* Rediriger les E/S vers un xterm de la machine hote */
-
-      fd = xes_init(NULL); 
-      if (fd < 0) {
-	 fprintf(stderr, "Could not connect to xes_server\n");
-	 exit(2);
-
-      } else {
-	 xes_set_title("tclServ on %s", Tcl_GetHostName());
-
-	 /* stderr */
-	 ioTaskStdSet(0, 2, fd);
-	 setbuf(stderr, NULL);
-      }
-   }
-#endif
-
    if (Tcl_Init(interp) == TCL_ERROR) {
       fprintf(stderr, "Could not init tcl interpreter\n");
       return TCL_ERROR;
@@ -270,11 +249,6 @@ TclServExit(ClientData dummy, Tcl_Interp *interp,
    }
 
    tclServCsStop(interp);
-
-#ifdef VXWORKS
-   if (xes_verbose)
-      printf("\nType C-d to remove this window");
-#endif
 
    Tcl_Exit(value);
    /*NOTREACHED*/

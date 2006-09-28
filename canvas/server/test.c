@@ -64,8 +64,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "xes.h"
-
 /* Inclusions pour acceder au module */
 #include "$module$MsgLib.h"
 #include "$module$PosterShowLib.h" 

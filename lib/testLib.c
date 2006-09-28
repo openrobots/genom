@@ -52,7 +52,7 @@ __RCSID("$LAAS$");
 #else
 #include <portLib.h>
 #endif
-/* XXX #include "xes.h" */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -67,8 +67,6 @@ __RCSID("$LAAS$");
 
 #include "genom/modules.h"
 #include "genom/testLib.h"
-
-#include <xes.h>
 
 /*-------------------- PROTOTYPES FONCTIONS LOCALES -----------------------*/
 static int  testGetMenuSizes     (TEST_STR *eid, int *nblin, int *colwidth);
@@ -89,6 +87,8 @@ static BOOL testConfirmExecRqst  (BOOL *waitFinal, TEST_STR *eid);
 static BOOL testAllocData        (TEST_STR *test, int rqst);
 static int  testRqstType2RqstIndex(TEST_STR *test, int rqstType);
 static void testExitH2ScanfError(TEST_STR *eid);
+
+static int h2scanf(const char *fmt, void *addr);
 
 
 /* ----------------- FONCTIONS D'INIT ET DE TERMINAISON ------------------ */
@@ -118,20 +118,6 @@ testInit(int testNum, char *module, int mboxsize, int abortRqstNum,
   /* Mettre la bufferisation a zero char */
   setbuf (stdin, NULL);
   setbuf (stdout, NULL);
-
-
-#ifdef VXWORKS
-  /* Verifie que xes_host est definie */
-  if (xes_get_host() == -1) {
-    printf ("xes host not defined (call: xes_set_host \"<host_name>\")\n");
-    free(eid);
-    return NULL;
-  }
-  /* Rediriger les E/S vers un xterm de la machine hote */
-  xes_init (NULL); 
-  sprintf(buf, "%sTest %d   (VxWorks)", module, testNum);
-  xes_set_title(buf);
-#endif
 
   /* Copier le nom de base des mboxes */
   sprintf(buf, "t%s%d", module, testNum);
@@ -962,4 +948,21 @@ testExitH2ScanfError(TEST_STR *eid)
   fprintf (stderr, "%s%d: h2scanf ERROR -> exit\n", 
 	   TEST_NAME(eid), TEST_NUM(eid));
   testEnd(eid);
+}
+
+/*----------------------------------------------------------------------*/
+
+static int 
+h2scanf(const char *fmt, void *addr)
+{
+    static char buf[1024];
+    int n;
+
+    while (fgets(buf, sizeof(buf), stdin) == NULL) {
+	if (errno != EINTR) {
+	    return ERROR;
+	}
+    } /* while */
+    n = sscanf(buf, fmt, addr);
+    return(n < 0 ? 0 : n);
 }
