@@ -57,6 +57,14 @@ if (defined($pid)) {
   # send SIGTERM 
   kill 15, $pid;
 }
+# Empty file
+else {
+  print "No pid in $pid_file\n";
+  unlink("$pid_file");
+  # Clean up pocolib devices of the module
+  system("h2 clean '*$module*'");
+  exit 0;
+}
 # Wait a bit for the module to die cleanly
 $now = time();
 do {
