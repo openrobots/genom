@@ -199,16 +199,6 @@ testEnd(TEST_STR *eid)
   }
   free(TEST_RQSTS(eid));
   free(eid);
-
-#ifdef UNIX
-  printf ("\nType return again to remove this window");
-  /* Pour que la fenetre ne disparaisse pas tout de suite */
-  getchar();
-  exit(0);
-#else
-  printf ("\nType C^d to remove this window");
-  exit(0);
-#endif
 }
 
 /* ------------------------- FONCTION PRINCIPALE ----------------------- */
