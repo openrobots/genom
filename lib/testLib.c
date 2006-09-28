@@ -199,6 +199,7 @@ testEnd(TEST_STR *eid)
   }
   free(TEST_RQSTS(eid));
   free(eid);
+  exit(0);
 }
 
 /* ------------------------- FONCTION PRINCIPALE ----------------------- */
