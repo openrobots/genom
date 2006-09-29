@@ -168,6 +168,8 @@ $module$TaskInit()
       goto error;
   }
   fprintf(pidFile, "%d ", getpid());
+  fputc('\n', pidFile);
+  fclose(pidFile);
 #endif /* PID_FILE */
 
   /* 
@@ -245,11 +247,6 @@ $module$TaskInit()
    * Module is ready
    */
   logMsg("$module$: all tasks are spawned\n");
-
-#ifdef PID_FILE
-  fputc('\n', pidFile);
-  fclose(pidFile);
-#endif /* PID_FILE */
 
   return OK;
 
