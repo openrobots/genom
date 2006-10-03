@@ -1,5 +1,6 @@
 $LAAS$
-
+ 
+ 40. Add support for installing in DESTDIR to genom itself.
  39. Remove support for xes.
  38. Add support for 'long long' and 'unsigned long long' (64 bit integer
      types) to genom. Not supported by OpenPRS bindings for now.

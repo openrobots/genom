@@ -150,21 +150,21 @@ all:;
 .PHONY: install
 install: all
 	@for d in $(dirs); do \
-	    $(MKINSTALLDIRS) $(CANVASDIR)/$$d; \
+	    $(MKINSTALLDIRS) ${DESTDIR}$(CANVASDIR)/$$d; \
 	done
 	@for f in $(flist); do						\
-	    $(CMP) $(srcdir)/$$f $(CANVASDIR)/$$f ; \
+	    $(CMP) $(srcdir)/$$f ${DESTDIR}$(CANVASDIR)/$$f ; \
 	    if test $$? != 0  ; then \
-		echo "$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/$$f";	\
-		$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/$$f;	\
+		echo "$(INSTALL_DATA) $(srcdir)/$$f ${DESTDIR}$(CANVASDIR)/$$f";	\
+		$(INSTALL_DATA) $(srcdir)/$$f ${DESTDIR}$(CANVASDIR)/$$f;	\
 	    fi; \
 	done
 
 	@for f in $(genlist); do						\
-	    $(CMP) $(builddir)/$$f $(CANVASDIR)/$$f ; \
+	    $(CMP) $(builddir)/$$f ${DESTDIR}$(CANVASDIR)/$$f ; \
 	    if test $$? != 0 ; then \
-		echo "$(INSTALL_DATA) $(builddir)/$$f $(CANVASDIR)/$$f";	\
-		$(INSTALL_DATA) $(builddir)/$$f $(CANVASDIR)/$$f;	\
+		echo "$(INSTALL_DATA) $(builddir)/$$f ${DESTDIR}$(CANVASDIR)/$$f";	\
+		$(INSTALL_DATA) $(builddir)/$$f ${DESTDIR}$(CANVASDIR)/$$f;	\
 	    fi; \
 	done
 

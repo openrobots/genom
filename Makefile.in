@@ -93,8 +93,8 @@ install:: all
 	$(make_subdirs)
 
 install::  genom.pc
-	$(MKINSTALLDIRS) $(libdir)/pkgconfig
-	$(INSTALL) genom.pc $(libdir)/pkgconfig
+	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/pkgconfig
+	$(INSTALL) genom.pc ${DESTDIR}$(libdir)/pkgconfig
 
 depend:
 	$(make_subdirs)

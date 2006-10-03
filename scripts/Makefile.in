@@ -60,7 +60,7 @@ all:;
 .PHONY: install
 install: all
 	@for f in $(flist); do					\
-		$(LTINSTALL) $(srcdir)/$$f $(bindir)/$$f;	\
+		$(LTINSTALL) $(srcdir)/$$f ${DESTDIR}$(bindir)/$$f;	\
 	done
 
 .PHONY: clean

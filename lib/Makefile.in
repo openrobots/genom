@@ -79,8 +79,8 @@ all: all-os $(LIB)
 
 .PHONY: install
 install:: $(LIB)
-	$(MKINSTALLDIRS) $(libdir)
-	$(LTINSTALL) $(LIB) $(libdir)/$(LIB)
+	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)
+	$(LTINSTALL) $(LIB) ${DESTDIR}$(libdir)/$(LIB)
 
 $(LIB): $(OBJS)
 	$(LTLD) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)		\

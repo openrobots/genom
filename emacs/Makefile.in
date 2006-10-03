@@ -55,7 +55,7 @@ all:;
 .PHONY: install
 install: all
 	@for f in $(flist); do					\
-		$(INSTALL_DATA) $(srcdir)/$$f $(datadir)/$$f;	\
+		$(INSTALL_DATA) $(srcdir)/$$f ${DESTDIR}$(datadir)/$$f;	\
 	done
 
 .PHONY: clean 

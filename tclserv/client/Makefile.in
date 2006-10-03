@@ -75,14 +75,14 @@ $(pkgfile): $(pkgfile).in
 
 .PHONY: install
 install:: $(pkgfile)
-	$(MKINSTALLDIRS) $(CANVASDIR)/tcl
+	$(MKINSTALLDIRS) ${DESTDIR}$(CANVASDIR)/tcl
 	@for f in $(tlist); do						\
-		$(CMP) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f || (\
-			echo "$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f"; \
-			$(INSTALL_DATA) $(srcdir)/$$f $(CANVASDIR)/tcl/$$f; ) \
+		$(CMP) $(srcdir)/$$f ${DESTDIR}$(CANVASDIR)/tcl/$$f || (\
+			echo "$(INSTALL_DATA) $(srcdir)/$$f ${DESTDIR}$(CANVASDIR)/tcl/$$f"; \
+			$(INSTALL_DATA) $(srcdir)/$$f ${DESTDIR}$(CANVASDIR)/tcl/$$f; ) \
 	done
-	$(MKINSTALLDIRS) $(datadir)/genom
-	$(INSTALL_DATA) $(pkgfile) $(datadir)/genom/$(pkgfile)
+	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/genom
+	$(INSTALL_DATA) $(pkgfile) ${DESTDIR}$(datadir)/genom/$(pkgfile)
 
 
 # --- clean -------------------------------------------------------------

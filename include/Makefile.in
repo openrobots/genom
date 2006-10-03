@@ -65,10 +65,10 @@ all:;
 
 .PHONY: install
 install: all
-	$(MKINSTALLDIRS) $(includedir)/genom
+	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)/genom
 	@for f in $(flist); do						\
-		cmp -s $(srcdir)/$$f $(includedir)/$$f || \
-			$(INSTALL_DATA) $(srcdir)/$$f $(includedir)/$$f; \
+	    cmp -s $(srcdir)/$$f ${DESTDIR}$(includedir)/$$f || \
+		$(INSTALL_DATA) $(srcdir)/$$f ${DESTDIR}$(includedir)/$$f; \
 	done
 
 .PHONY: clean

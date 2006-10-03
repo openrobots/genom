@@ -94,15 +94,15 @@ main.lo: main.c
 
 .PHONY: install
 install:: $(TCLSERV)
-	$(MKINSTALLDIRS) $(bindir)
-	$(LTINSTALL) $(TCLSERV) $(bindir)/$(TCLSERV)
-	$(MKINSTALLDIRS) $(includedir)
+	$(MKINSTALLDIRS) ${DESTDIR}$(bindir)
+	$(LTINSTALL) $(TCLSERV) ${DESTDIR}$(bindir)/$(TCLSERV)
+	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)
 	@for f in $(ilist); do						\
-		$(INSTALL_DATA) $(srcdir)/$$f $(includedir)/$$f;	\
+		$(INSTALL_DATA) $(srcdir)/$$f ${DESTDIR}$(includedir)/$$f; \
 	done
-	$(MKINSTALLDIRS) $(datadir)
+	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)
 	@for f in $(tlist); do						\
-		$(INSTALL_DATA) $(srcdir)/$$f $(datadir)/$$f;		\
+		$(INSTALL_DATA) $(srcdir)/$$f ${DESTDIR}$(datadir)/$$f;	\
 	done
 
 

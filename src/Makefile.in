@@ -95,8 +95,8 @@ OBJS = $(SRCS:.c=.lo)
 all: $(GENOM)
 
 install: all
-	$(MKINSTALLDIRS) $(bindir)
-	$(LTINSTALL) $(GENOM) $(bindir)
+	$(MKINSTALLDIRS) ${DESTDIR}$(bindir)
+	$(LTINSTALL) $(GENOM) ${DESTDIR}$(bindir)
 
 $(GENOM): $(OBJS) ../lib/lib$(GENOM).la
 	$(LTLD) -static $(CFLAGS) $(OBJS) -o $@ \
