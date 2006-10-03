@@ -58,7 +58,7 @@ install: all install-bin user-install
 
 user-install:
 install-bin:
-	$(LTINSTALL) $(OBJDIR)/$(MODULE_BIN) $(bindir)/$(MODULE_BIN)
+	$(LTINSTALL) $(OBJDIR)/$(MODULE_BIN) ${DESTDIR}$(bindir)/$(MODULE_BIN)
 
 
 # --- clean -------------------------------------------------------------

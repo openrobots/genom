@@ -114,8 +114,8 @@ regen: standalone-regen
 ALL_PKGCONFIG := $pkgname$.pc $(addsuffix .pc,@EXTRA_PKGCONFIG@)
 $genOpenprs$ALL_PKGCONFIG += $pkgname$-oprs.pc
 install:: $(ALL_PKGCONFIG)
-	$(MKINSTALLDIRS) $(libdir)/pkgconfig
-	$(INSTALL) $(ALL_PKGCONFIG) $(libdir)/pkgconfig
+	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/pkgconfig
+	$(INSTALL) $(ALL_PKGCONFIG) ${DESTDIR}$(libdir)/pkgconfig
 
 # --- autoconf/autoheader -----------------------------------------------
 

@@ -242,29 +242,29 @@ install: all install-bin install-data
 
 # Install libraries first
 install-bin:
-	$(MKINSTALLDIRS) $(libdir)
-	$(LTINSTALL) $(OBJDIR)/$(CLIENT_LIB) $(libdir)/$(CLIENT_LIB)
-$genTcl$	$(MKINSTALLDIRS) $(libdir)/tclserv
-$genServer$$genTcl$	$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) $(libdir)/tclserv/$(TCLCLIENT_LIB)
-$genOpenprs$	$(MKINSTALLDIRS) $(libdir)/openprs
-$genOpenprs$	$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) $(libdir)/openprs/$(OPENPRSCLIENT_LIB)
-$genServer$	$(MKINSTALLDIRS) $(bindir)
-$genServer$	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) $(bindir)/$(INIT_BIN)
-$genServer$	$(LTINSTALL) $(OBJDIR)/$(TEST_BIN) $(bindir)/$(TEST_BIN)
+	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)
+	$(LTINSTALL) $(OBJDIR)/$(CLIENT_LIB) ${DESTDIR}$(libdir)/$(CLIENT_LIB)
+$genTcl$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/tclserv
+$genServer$$genTcl$	$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) ${DESTDIR}$(libdir)/tclserv/$(TCLCLIENT_LIB)
+$genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/openprs
+$genOpenprs$	$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) ${DESTDIR}$(libdir)/openprs/$(OPENPRSCLIENT_LIB)
+$genServer$	$(MKINSTALLDIRS) ${DESTDIR}$(bindir)
+$genServer$	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) ${DESTDIR}$(bindir)/$(INIT_BIN)
+$genServer$	$(LTINSTALL) $(OBJDIR)/$(TEST_BIN) ${DESTDIR}$(bindir)/$(TEST_BIN)
 
 install-data:
-	$(MKINSTALLDIRS) $(includedir)/server
+	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)/server
 	@for f in $(client_includes); do \
-		$(INSTALL_DATA) $(top_srcdir)/$$f $(includedir)/$$f;\
+		$(INSTALL_DATA) $(top_srcdir)/$$f ${DESTDIR}$(includedir)/$$f;\
 	done
-	$(MKINSTALLDIRS) $(datadir)/gen
-	$(INSTALL_DATA) $(top_srcdir)/$(GENFILE) $(datadir)/gen
-$genTcl$	$(MKINSTALLDIRS) $(datadir)/tcl
-$genTcl$	$(INSTALL_DATA) $(srcdir)/$(tclclient_tcl) $(datadir)/$(tclclient_tcl)
-$genOpenprs$	$(MKINSTALLDIRS) $(datadir)/openprs
-$genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_data) $(datadir)/openprs )
-$genOpenprs$	$(MKINSTALLDIRS) $(includedir)/server/openprs
-$genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_headers) $(includedir)/server/openprs )
+	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/gen
+	$(INSTALL_DATA) $(top_srcdir)/$(GENFILE) ${DESTDIR}$(datadir)/gen
+$genTcl$	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/tcl
+$genTcl$	$(INSTALL_DATA) $(srcdir)/$(tclclient_tcl) ${DESTDIR}$(datadir)/$(tclclient_tcl)
+$genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/openprs
+$genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_data) ${DESTDIR}$(datadir)/openprs )
+$genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)/server/openprs
+$genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_headers) ${DESTDIR}$(includedir)/server/openprs )
 
 
 # --- clean -------------------------------------------------------------

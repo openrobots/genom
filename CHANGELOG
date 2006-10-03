@@ -1,5 +1,6 @@
 $LAAS$
  
+ 41. Add support for installing generated modules in DESTDIR.
  40. Add support for installing in DESTDIR to genom itself.
  39. Remove support for xes.
  38. Add support for 'long long' and 'unsigned long long' (64 bit integer
