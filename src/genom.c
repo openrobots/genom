@@ -336,14 +336,14 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
 	}
         module->email = av->value.email;
         break;
-      case USE_CXX:
-	if (module->use_cxx) {
+      case LANG:
+	if (module->lang != MODULE_LANG_DEFAULT) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'use_cxx' in module %s\n",
+		  "genom %s: Error: duplicate field 'lang' in module %s\n",
 		  nomfic, module->name);
 	  exit(2);
 	}
-        module->use_cxx = av->value.use_cxx;
+        module->lang = av->value.lang;
         break;
     }
     return(module);
@@ -1854,6 +1854,28 @@ construitIncludeList(void)
     } /* for */
     
 } /* construitIncludeList */
+
+
+/* --- langFileExt --------------------------------------------------- */
+
+/** Return file extension for programming language */
+
+const char *
+langFileExt(MODULE_LANG lang)
+{
+  switch(lang) {
+    case MODULE_LANG_DEFAULT:
+    case MODULE_LANG_C:
+      return "c";
+
+    case MODULE_LANG_CXX:
+      return "cc";
+  }
+
+  /* sane fallback - we shouldn't ever end up here */ 
+  return "c";
+}
+
 
 /*----------------------------------------------------------------------*/
 

@@ -257,6 +257,13 @@ typedef struct LIBTOOL_VERSION {
     int current, revision, age;
 } LIBTOOL_VERSION;
 
+/* Module language */
+typedef enum MODULE_LANG {
+  MODULE_LANG_DEFAULT,
+  MODULE_LANG_C,
+  MODULE_LANG_CXX
+} MODULE_LANG;
+
 /* Description of a module */
 typedef struct {
     ID_STR *name;
@@ -269,7 +276,7 @@ typedef struct {
     ID_STR *email;
     ID_STR *version;
     LIBTOOL_VERSION *iface_version;
-    int use_cxx;
+    MODULE_LANG lang;
 } MODULE_STR;
 
 
@@ -283,7 +290,7 @@ typedef struct {
         ID_STR *email;
         ID_STR *version;
         LIBTOOL_VERSION *iface_version; /* interface versionning */
-        int use_cxx;
+        MODULE_LANG lang;
     } value;
 } MODULE_AV_STR;
 
@@ -358,6 +365,7 @@ extern void upCaseNames ( void );
 extern void upCaseArguments ( void );
 extern void * xalloc ( size_t n );
 extern void * xrealloc ( void *p, size_t n );
+extern const char *	langFileExt(MODULE_LANG lang);
 
 /*----------------------------------------------------------------------*/
 

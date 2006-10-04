@@ -96,7 +96,8 @@ WC      {W}*\:
 "version"/{WC}        {yylval.ival = VERSION; return(VERSION); }
 "iface_version"/{WC}  {yylval.ival = IFACE_VERSION; return(IFACE_VERSION); }
 "email"/{WC}          {yylval.ival = EMAIL; return(EMAIL); }
-"uses_cxx"/{WC}       {yylval.ival = USE_CXX; return(USE_CXX); }
+"use_cxx"/{WC}	      {yylval.ival = USE_CXX; return(USE_CXX); }
+"lang"/{WC}	      {yylval.ival = LANG; return(LANG); }
 "codel_files"/{WC}    {yylval.ival = CODEL_FILES; return(CODEL_FILES); }
 
 "type"/{WC}            {yylval.ival = TYPE; return(TYPE); }

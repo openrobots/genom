@@ -79,14 +79,16 @@ userExecCodelsGen(FILE *out)
      */
     fprintf(out, 
 	    "/**\n"
-	    " ** %s%sCodels.c\n"
+	    " ** %s%sCodels.%s\n"
 	    " **\n"
 	    " ** Codels called by execution task %s%s\n"
 	    " **\n"
 	    " ** Author: \n"
 	    " ** Date: \n"
 	    " **\n"
-	    " **/\n\n", module->name, t->name, module->name, t->name);
+	    " **/\n\n",
+	    module->name, t->name, langFileExt(module->lang),
+	    module->name, t->name);
 
     fprintf(out, "#ifdef VXWORKS\n");
     fprintf(out, "# include <vxWorks.h>\n");
@@ -292,7 +294,8 @@ userExecCodelsGen(FILE *out)
 	
     cat_end(out);
 
-    script_close(out, "codels/%s%sCodels.c", module->name, t->name);
+    script_close(out, "codels/%s%sCodels.%s",
+		 module->name, t->name, langFileExt(module->lang));
     
   } /* for */
   return(0);

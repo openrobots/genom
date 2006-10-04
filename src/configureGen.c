@@ -232,10 +232,11 @@ configureGen(FILE *out,
    codel_files = NULL;
    if (module->codel_files == NULL) {
       for (lt = taches; lt != NULL; lt = lt->next) {
-	 bufcat(&codel_files, "\t%s%sCodels.c \\\\\n",
-		module->name, lt->exec_task->name);
+	 bufcat(&codel_files, "\t%s%sCodels.%s \\\\\n",
+		module->name, lt->exec_task->name, langFileExt(module->lang));
       }
-      bufcat(&codel_files, "\t%sCntrlTaskCodels.c", module->name);
+      bufcat(&codel_files, "\t%sCntrlTaskCodels.%s",
+	     module->name, langFileExt(module->lang));
    } else
       for (ln = module->codel_files; ln; ln = ln->next) {
 	 bufcat(&codel_files, "\t%s \\\\%s", ln->name, ln->next?"\n":"");
@@ -289,10 +290,11 @@ configureGen(FILE *out,
        print_sed_subst(out, "email", "%s\\@%s", module->email, at_sign + 1);
        *at_sign = '@';
    }
-   print_sed_subst(out, "use_cxx",   module->use_cxx ? "1" : "0" );
+   print_sed_subst(out, "lang_c",    module->lang == MODULE_LANG_C ? "yes" : "no" );
+   print_sed_subst(out, "lang_cxx",  module->lang == MODULE_LANG_CXX ? "yes" : "no" );
    print_sed_subst(out, "module",    module->name);
    print_sed_subst(out, "pkgname",   pkgname);
-   print_sed_subst(out, "genTcl",     genTcl?     "yes":"no");
+   print_sed_subst(out, "genTcl",    genTcl?     "yes":"no");
    print_sed_subst(out, "genOpenprs", genOpenprs? "yes":"no");
    print_sed_subst(out, "genServer", genServer? "yes":"no");
    print_sed_subst(out, "genomBin",  genomBin);

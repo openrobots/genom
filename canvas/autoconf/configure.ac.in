@@ -15,11 +15,11 @@ AC_CANONICAL_HOST
 
 dnl --- checks for programs ---------------------------------------------
 dnl
-USE_CXX=$use_cxx$
-AC_SUBST(USE_CXX)
+LANG_CXX=$lang_cxx$
+AC_SUBST(LANG_CXX)
 
 AC_PROG_CC
-if test "x$USE_CXX" = "x1"; then
+if test "x$LANG_CXX" = "xyes"; then
     AC_PROG_CXX
 fi
 

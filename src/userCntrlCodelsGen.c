@@ -65,14 +65,14 @@ userCntrlCodelsGen(FILE *out)
    */
   fprintf(out, 
 	  "/**\n"
-	  " ** %sCntrlTaskCodels.c\n"
+	  " ** %sCntrlTaskCodels.%s\n"
 	  " **\n"
 	  " ** Codels used by the control task %sCntrlTask\n"
 	  " **\n"
 	  " ** Author: \n"
 	  " ** Date: \n"
 	  " **\n"
-	  " **/\n\n", module->name, module->name);
+	  " **/\n\n", module->name, langFileExt(module->lang), module->name);
   
   fprintf(out, "#ifdef VXWORKS\n");
   fprintf(out, "# include <vxWorks.h>\n");
@@ -155,7 +155,8 @@ userCntrlCodelsGen(FILE *out)
   
   cat_end(out);
   
-  script_close(out, "codels/%sCntrlTaskCodels.c", module->name);
+  script_close(out, "codels/%sCntrlTaskCodels.%s",
+	       module->name, langFileExt(module->lang));
     
   return(0);
 

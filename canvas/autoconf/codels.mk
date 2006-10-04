@@ -10,7 +10,7 @@ CPPFLAGS += $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
 CPPFLAGS += -I. -I$(top_builddir) -I$(srcdir) -I$(top_srcdir)
 CPPFLAGS += $(GENOM_CFLAGS) $(EXTRA_INCLUDES)
 
-ifeq ($(USE_CXX),1)
+ifeq ($(LANG_CXX),yes)
 codels_obj=\
 	$(patsubst %.c,$(OBJDIR)/%.lo,\
 	$(patsubst %.cpp,$(OBJDIR)/%.lo,\
@@ -38,7 +38,7 @@ $(OBJDIR)/$(MODULE_BIN):
 $(OBJDIR)/$(USER_LIB): $(codels_obj)
 	$(LTLD) $(CFLAGS) $(codels_obj) -o $@ $(LDFLAGS)
 
-ifeq ($(USE_CXX),1)
+ifeq ($(LANG_CXX),yes)
 $(OBJDIR)/%.lo: %.cpp
 	$(LTCXX) -c $(CPPFLAGS) $(CODELS_CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
 $(OBJDIR)/%.lo: %.cc

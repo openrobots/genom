@@ -191,7 +191,7 @@ int nCppOptions = 0;
 %token <ival> VERSION
 %token <ival> IFACE_VERSION
 %token <ival> EMAIL
-%token <ival> USE_CXX
+%token <ival> LANG USE_CXX
 %token <ival> NUMBER CODEL_FILES
 %token <ival> TYPE INPUT OUTPUT INTERRUPT_ACTIVITY
 %token <ival> POSTERS_INPUT
@@ -359,6 +359,7 @@ attributs_de_module: '{' liste_av_module '}' { $$ = $2; }
 
 liste_av_module: paire_av_module
         { $$ = STR_ALLOC(MODULE_STR);
+	  $$->lang = MODULE_LANG_DEFAULT; /* default value */
           $$ = ajout_av_module($1, $$); 
 	  free($1); } 
     | paire_av_module liste_av_module 
@@ -394,7 +395,27 @@ av_module: INTERNAL_DATA ':' indicateur_de_type
 	  $$->attribut = $1; $$->value.number = $3; }
     | USE_CXX ':' expression_constante
         { $$ = STR_ALLOC(MODULE_AV_STR);
-          $$->attribut = $1; $$->value.use_cxx = $3; }
+	  $$->attribut = LANG; $$->value.lang = MODULE_LANG_CXX;
+	  fprintf(stderr,
+		  "%s:%d: usage of use_cxx is deprecated. Use lang: \"c++\".\n",
+		  nomfic, num_ligne);
+	}
+    | LANG ':' quoted_string
+        { $$ = STR_ALLOC(MODULE_AV_STR);
+          $$->attribut = $1;
+	  if (!strcmp($3, "c"))
+	    $$->value.lang = MODULE_LANG_C;
+	  else if (!strcmp($3, "cxx"))
+	    $$->value.lang = MODULE_LANG_CXX;
+	  else if (!strcmp($3, "c++"))
+	    $$->value.lang = MODULE_LANG_CXX;
+	  else {
+	    $$->value.lang = MODULE_LANG_C;
+	    fprintf(stderr,
+		    "%s:%d: unknown language %s. Valid languages are c, c++.\n",
+		    nomfic, num_ligne, $3);
+	  }
+	}
     ;
 
 /*----------------------------------------------------------------------*/

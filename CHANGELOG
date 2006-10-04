@@ -1,5 +1,8 @@
 $LAAS$
  
+ 42. Add lang keyword in module declaration. Supported options are `lang: c'
+     (default) and `lang: c++'. Old syntax `use_cxx: 1' supported but
+     deprecated. Generate codel files with proper extension (.cc for c++).
  41. Add support for installing generated modules in DESTDIR.
  40. Add support for installing in DESTDIR to genom itself.
  39. Remove support for xes.
