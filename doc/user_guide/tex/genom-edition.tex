@@ -149,6 +149,10 @@ A module declaration looks like this:
 module <<module-name>> {
     number:          <<module-number>>;
     internal_data:   <<SDI-type>>;
+    version:         <<version-string>>;
+    email:           <<address>>;
+    requires:        <<list of dependencies>>;
+    lang:            <<c or c++>>;
 };
 \end{verbatim}\end{cartouche}\end{center}
 
@@ -158,11 +162,35 @@ for {\tt  $<<$module-number$>>$}. This number must  be a multiple of $10$
 greater that  $1000$. It should be unique  and no other module should use
 the same one.
 
-The last  field you have  to fill-in  is {\tt  $<<$SDI-type$>>$}, and you
+The next  field you have  to fill-in  is {\tt  $<<$SDI-type$>>$}, and you
 must choose the name of  a valid {\tt C} type  (this probably should be a
 typedef  for  a   structure type).   This  will  be  the  module internal
 database. {\tt   genom-mode} provides you with  a  default value for this
 field.
+
+Other fields are optionnal :
+
+\begin{itemize}
+
+\item \texttt{version} is a string enclosed in
+double-quotes that defines the external version of your module. This
+is used by the GNU build tools in various places. You should
+incremement it before releasing a new version of a module.
+
+\item \texttt{email} is the contact address for the module. This will
+      be copied in some files generates by the GNU build tools. Make
+      sure you use an address that will be valid in the future if you
+      plan to release and distribute your module.
+
+\item \texttt{requires} describes the dependencies of the module. It's
+      a comma-separated list of identifiers. Each dependency will be
+      fetched by \emph{pkg-config} during the build phase of the
+      module.
+
+\item \texttt{lang} sets the programming language used by the
+      codels. It defaults to ``C''. ``C++'' can be used to set the
+      language of the codels to C++.
+\end{itemize}
 
 % -----------------------------------------------------------------------
 \subsection{{\tt C} structures and fIDS declaration}
@@ -290,10 +318,10 @@ They are defined with the keyword {\tt control} in the field {\tt type}:
 request <<request-name>> {
      doc:                "doc";
      type:               control;
-     input:              <name>::<sdi-ref>; 
+     input:              <name>::<sdi-ref>;
      input_info:         <default-val>::"<name>", ...;
-     output:             <name>::<sdi-ref>; 
-     codel_control:      <codel>; 
+     output:             <name>::<sdi-ref>;
+     codel_control:      <codel>;
      fail_reports:       <report-name>, ...;
      interrupts_activities:  <exec-rqst-name>, ...;
 };
@@ -336,18 +364,18 @@ will be executed and they define a few more fields:
 request <<request-name>> {
      doc:                   "doc";
      type:                  exec;
-     exec_task:             <<exec-task-name>>; 
-     input:                 <name>::<sdi-ref>; 
-     input_info:            <default-val>::"<name>", ...; 
-     output:                <name>::<sdi-ref>; 
-     codel_control:         <codel>; 
-     codel_start:           <codel>; 
-     codel_main:            <codel>; 
-     codel_end:             <codel>; 
-     codel_inter:           <codel>; 
-     codel_fail:            <codel>; 
-     fail_reports:          <report-name>, ... ; 
-     interrupts_activities: <exec-rqst-name>, ... ; 
+     exec_task:             <<exec-task-name>>;
+     input:                 <name>::<sdi-ref>;
+     input_info:            <default-val>::"<name>", ...;
+     output:                <name>::<sdi-ref>;
+     codel_control:         <codel>;
+     codel_start:           <codel>;
+     codel_main:            <codel>;
+     codel_end:             <codel>;
+     codel_inter:           <codel>;
+     codel_fail:            <codel>;
+     fail_reports:          <report-name>, ... ;
+     interrupts_activities: <exec-rqst-name>, ... ;
 };
 \end{verbatim}\end{cartouche}\end{center}
 
@@ -398,7 +426,7 @@ the fIDS or not.
 poster <<poster-name>> {
      update:             <<update-type>>;
      data:               <<name>>::<<sdi-ref>>, ... ;
-     exec_task:          <<exec-task-name>>; 
+     exec_task:          <<exec-task-name>>;
 };
 \end{verbatim}\end{cartouche}\end{center}
 
@@ -446,7 +474,7 @@ For this kind of posters, two new fields are defined:
 poster <<poster-name>> {
      update:               user;
      type:                 <<type-name>>;
-     exec_task:            <<exec-task-name>>; 
+     exec_task:            <<exec-task-name>>;
      codel_poster_create:  <codel>;
 };
 \end{verbatim}\end{cartouche}\end{center}
@@ -480,7 +508,7 @@ exec_task <<exec-task-name>> {
 given as an integer number in {\tt ticks} (at the moment, a tick is $5ms$
 under VxWorks and $10ms$ under Unix). {\em Take care:} the period must be
 {\em a divisor or a multiple} of $20$. (e.g. 1, 2, 4, 5, 10, 20, 40, 60,
-\ldots). 
+\ldots).
 
 \item {\tt delay} (optional integer in {\em ticks}). All periodical
 tasks with the same period  will wake up at the  same time. The delay can
