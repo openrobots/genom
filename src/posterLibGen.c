@@ -332,7 +332,10 @@ int posterLibGen(FILE *out)
 
     fprintf(out,
 	    "#ifndef %s_POSTER_READ_LIB_PROTO_H\n"
-	    "#define %s_POSTER_READ_LIB_PROTO_H\n",
+	    "#define %s_POSTER_READ_LIB_PROTO_H\n\n"
+	    "#ifdef __cplusplus\n"
+	    "extern \"C\" {\n"
+	    "#endif\n\n",
 	    module->NAME, module->NAME);
     for (p_in = posters_input; p_in != NULL; p_in = p_in->next) {
       /* la fonction pour lire tout le poster */
@@ -345,7 +348,11 @@ int posterLibGen(FILE *out)
 	 (pas utilise pour le moment) */
       posterInLibMemberGen(out, p_in, 1 /* protos */); 
     } /* for */
-    fprintf(out, "#endif\n");
+    fprintf(out,
+	    "#ifdef __cplusplus\n"
+	    "}\n"
+	    "#endif\n\n",
+	    "#endif\n");
 
     cat_end(out);
     script_close(out, "server/%sPosterReadLibProto.h", module->name);
