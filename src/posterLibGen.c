@@ -351,7 +351,7 @@ int posterLibGen(FILE *out)
     fprintf(out,
 	    "#ifdef __cplusplus\n"
 	    "}\n"
-	    "#endif\n\n",
+	    "#endif\n\n"
 	    "#endif\n");
 
     cat_end(out);
