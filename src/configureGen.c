@@ -312,6 +312,8 @@ configureGen(FILE *out,
    print_sed_subst(out, "pkgname",   pkgname);
    print_sed_subst(out, "genomBin",  genomBin);
    print_sed_subst(out, "codelsDir", codelsDir);
+   print_sed_subst(out, "genTcl",    genTcl?     "":"# ");
+   print_sed_subst(out, "genOpenprs", genOpenprs? "":"# ");
 
    /* GenoM -D options */
    genomDefines(out);
