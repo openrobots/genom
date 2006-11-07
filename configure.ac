@@ -49,7 +49,21 @@ AC_SUBST(LIBTOOL_DEPS)
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_LEX
+if test "x$LEX" = "x:" 
+then 
+	AC_MSG_ERROR([No flex nor lex found, please install flex first.])
+fi
 AC_PROG_YACC
+dnl the above macro defaults to 'yacc' even if the yacc binary isn't there...
+if test "$YACC" = "yacc"
+then
+	AC_PATH_PROG(YACC, $YACC)
+	if test "x$YACC" = "x" 
+	then 
+		AC_MSG_ERROR([No bison nor yacc found, please install bison first.])
+	fi
+fi
+		 
 AC_PROG_INSTALL
 
 AC_ARG_VAR(LATEX, "LaTeX text formatting and typesetting")
