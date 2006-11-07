@@ -42,8 +42,7 @@ INSTALL=	@INSTALL@
 
 include config.mk
 
-dist_path= genom-$(GENOM_MAJOR).$(GENOM_MINOR)$(GENOM_REV)
-dist_name= genom-$(GENOM_MAJOR).$(GENOM_MINOR)$(GENOM_REV)
+dist_name= @PACKAGE_TARNAME@-@PACKAGE_VERSION@
 
 config_files = \
 	config.mk			\
@@ -110,12 +109,12 @@ distclean:
 # --- build distribution ------------------------------------------------
 
 dist:
-	mkdir -p $(dist_path)
-	(cd $(top_srcdir); tar cf - .) | (cd $(dist_path); tar xpf -)
-	find $(dist_path) -name "CVS" -o -name "*~" -o -name ".#*" \
+	mkdir -p $(dist_name)
+	(cd $(top_srcdir); tar cf - .) | (cd $(dist_name); tar xpf -)
+	find $(dist_name) -name "CVS" -o -name "*~" -o -name ".#*" \
 		-o -name "autom4te.cache"| xargs rm -rf
-	tar cf - $(dist_path) | gzip -c -9 > $(dist_name).tar.gz
-	rm -rf $(dist_path)
+	tar cf - $(dist_name) | gzip -c -9 > $(dist_name).tar.gz
+	rm -rf $(dist_name)
 
 
 # --- autoconf/autoheader -----------------------------------------------

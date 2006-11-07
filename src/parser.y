@@ -116,12 +116,7 @@ static void yyerror(char *s);
 #ifndef GENOM_VERSION
 # error GENOM_VERSION not defined!
 #endif
-#if !defined(GENOM_MAJOR) || ! defined(GENOM_MINOR)
-# error either GENOM_MAJOR or GENOM_MINOR is not defined
-#endif
 const char genomVersion[] = GENOM_VERSION;
-const char genomMajor[] = GENOM_MAJOR;
-const char genomMinor[] = GENOM_MINOR;
 
 MODULE_STR *module;
 RQST_LIST *requetes = NULL;

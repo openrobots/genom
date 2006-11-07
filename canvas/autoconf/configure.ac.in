@@ -75,7 +75,7 @@ dnl --- checks for libraries --------------------------------------------
 dnl
 
 dnl GenoM and pocolibs
-PKG_CHECK_MODULES(GENOM, genom >= @GENOM_MAJOR@.@GENOM_MINOR@)
+PKG_CHECK_MODULES(GENOM, genom >= @PACKAGE_VERSION@)
 AC_SUBST(GENOM_CFLAGS)
 AC_SUBST(GENOM_LIBS)
 

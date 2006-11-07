@@ -5,24 +5,10 @@ dnl	process this file with autoconf to produce a configure script.
 dnl
 AC_REVISION($LAAS$)
 
-AC_INIT(src/genom.c)
+AC_INIT([genom],[1.2],[openrobots@laas.fr])
+AC_PREREQ(2.59)
+
 AC_CONFIG_HEADER(genom-config.h)
-
-PACKAGE=genom
-GENOM_MAJOR=1
-GENOM_MINOR=2
-GENOM_REV=
-GENOM_VERSION=${GENOM_MAJOR}.${GENOM_MINOR}${GENOM_REV}
-
-AC_SUBST(PACKAGE)
-AC_SUBST(GENOM_MAJOR)
-AC_SUBST(GENOM_MINOR)
-AC_SUBST(GENOM_REV)
-AC_SUBST(GENOM_VERSION)
-
-AC_DEFINE_UNQUOTED(GENOM_VERSION, "$GENOM_VERSION", [The complete version of GenoM])
-AC_DEFINE_UNQUOTED(GENOM_MAJOR, "$GENOM_MAJOR", [The major revision of GenoM])
-AC_DEFINE_UNQUOTED(GENOM_MINOR, "$GENOM_MINOR", [The minor revision of GenoM])
 
 AC_CANONICAL_HOST
 
@@ -32,6 +18,7 @@ AC_ARG_WITH(libsonly,
            [LIBSONLY=yes],[LIBSONLY=no])
 AC_SUBST(LIBSONLY)
 
+AC_DEFINE_UNQUOTED([GENOM_VERSION], "AC_PACKAGE_VERSION", [Genom's version])
 
 dnl --- Programs names --------------------------------------------------
 dnl

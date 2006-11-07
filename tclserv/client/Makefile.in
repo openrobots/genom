@@ -67,7 +67,7 @@ all: $(pkgfile)
 $(pkgfile): $(pkgfile).in
 	$(SED) \
 		-e 's,@canvasdir\@,$(CANVASDIR),g'			\
-		-e 's,@genomversion\@,$(GENOM_MAJOR).$(GENOM_MINOR),g'	\
+		-e 's,@genomversion\@,@PACKAGE_VERSION@,g'	\
 		< $< > $@
 
 

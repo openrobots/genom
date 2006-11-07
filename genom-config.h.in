@@ -50,7 +50,5 @@
 #endif
 
 #undef GENOM_VERSION
-#undef GENOM_MINOR
-#undef GENOM_MAJOR
 
 #endif /* H_GENOM_CONFIG */

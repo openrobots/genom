@@ -9,6 +9,6 @@ cppflags=$cppOptions$
 Name: $pkgname$
 Description: $module$ Genom module
 Version: @PACKAGE_VERSION@
-Requires: genom >= $genomMajor$.$genomMinor$ $require$
+Requires: genom >= $genomVersion$ $require$
 Libs: -L${libdir} -l$module$Client
 Cflags: -I${includedir}

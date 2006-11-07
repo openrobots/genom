@@ -461,8 +461,7 @@ int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genO
 
     print_sed_subst(out, "module", module->name);
     print_sed_subst(out, "pkgname", pkgname);
-    print_sed_subst(out, "genomMinor", genomMinor);
-    print_sed_subst(out, "genomMajor", genomMajor);
+    print_sed_subst(out, "genomVersion", genomVersion);
     print_sed_subst(out, "genomFile",   genomFile);
     print_sed_subst(out, "genomFlags",  cmdLine);
     print_sed_subst(out, "cppOptions",  cppOptStr);
@@ -493,8 +492,7 @@ int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genO
       
       print_sed_subst(out, "module", module->name);
       print_sed_subst(out, "pkgname", pkgname);
-      print_sed_subst(out, "genomMinor", genomMinor);
-      print_sed_subst(out, "genomMajor", genomMajor);
+      print_sed_subst(out, "genomVersion", genomVersion);
       subst_end(out);
       script_close(out, "autoconf/%s-oprs.pc.in", pkgname);
     } /* -oprs.pc.in */

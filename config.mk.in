@@ -30,12 +30,6 @@
 
 host_cpu=	@host_cpu@
 
-# --- Version -----------------------------------------------------------
-
-GENOM_MAJOR=	@GENOM_MAJOR@
-GENOM_MINOR=	@GENOM_MINOR@
-GENOM_REV=	@GENOM_REV@
-
 
 # --- Programs ----------------------------------------------------------
 
@@ -90,4 +84,4 @@ LIBTOOL_DEPS=   @LIBTOOL_DEPS@
 
 # --- Paths -------------------------------------------------------------
 
-CANVASDIR=	$(datadir)/genom/$(GENOM_MAJOR).$(GENOM_MINOR)$(GENOM_REV)
+CANVASDIR=	$(datadir)/genom/@PACKAGE_VERSION@
