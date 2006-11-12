@@ -46,43 +46,48 @@ standard way.
 
 The services are controlled ({\em  i.e.} parameterized, started or stopped)
 with  {\em   requests},  that  represent  the    visible  part   of   the
-module. Requests  can be used either  by an  operator, another module, or
-any other program.
-
-To each request can  be associated an {\em  input parameter} and an  {\em
+module. Requests  will be sent by the operator using various interfaces
+({\tt  Test} program  generated   by /GenoM/ or  {\tt  tcl}  shell  - see 
+paragraph~\vref{sec|tcl})    or  by a  program,    usually  named a  {\em
+supervisor},  that  will supervised  the  robot  (for  intance using {\tt
+OpenPRS} - see paragraph~\vref{sec|propice}).
+ 
+Each request can  have an {\em  input parameter} and an  {\em
 output parameter} ({\tt C} structures as  of today). When a service ends,
-a   {\em  reply} is sent to   the   client who invoked  the corresponding
-request. To  each reply  is  associated an  {\em  execution  report}:  it
-describes the execution of  the service and  lets  the client  know about
+a   {\em  reply} is sent to   the   client who invoked  the 
+request. Each reply  is  associated with an  {\em  execution  report}:  it
+reports on the execution of  the service and  lets  the client  know about
 problems that might have occured.
 
 There are two kind of requests: the {\em execution} requests and the {\em
 control} requests. Execution requests  start  an actual service,  whereas
 control requests control the  execution of the services. Control requests
-can set parameters,  interrupt services, and so  on... Each module has  a
+mainy allow to set parameters or  interrupt services. Each module has  a
 predefined control request whose name  is  {\tt Abort}: it can  interrupt
 any running service as well as the module itself.
 
 The execution time of  a control request  is considered to be zero. Thus,
 they have only one final reply, which is  sent to the client immediately.
 On the other hand, execution requests can last for an arbitrary amount of
-time. Thus they send an {\em intermediate} reply,  as soon as the service
-starts.  The final reply is sent when the service ends.
+time (even indefinitely). Thus they send an {\em intermediate} reply,  as
+soon as the service 
+starts.  The final reply is sent when the service is over.
 
 A running  service is called an   {\em activity}. Some function,  such as
-monitoring services,  can start {\em several}  activity and  execute them
+monitoring services,  can start {\em several}  activities and  execute them
 simultaneously. Other  kind   of function,  such as   servoing functions,
 cannot handle  parallelism  and can only  start  {\em one} activity at  a
-time.
+time. This constraint has to be indicated by the developer.
 
-Activities can control a physical   device (sensors, actuators), use  the
-services offered by  other modules (by  the mean of  requests) or produce
+Activities can control a physical device (sensors, actuators), read  data
+produced by  other modules (by  the mean of  posters) or produce
 data. These data can  be transfered at the end  of the  execution through
 the final reply, or at any time by the mean of {\em posters}.
 
-A {\em  poster} is a structure ({\tt  C} structure as  of  today) that is
-updated by an activity and shared in the global system. It can be read by
-any other component of the system (a module, an operator, ...).
+A {\em  poster} is a structure ({\tt  C} and {\tt XML} structure as  of  
+today) that is
+updated by an {\tt activity} and shared in the global system. It can be read by
+any other component of the system (a module, an operator, ...) at any time.
 
 Every piece  of data that goes through  a module (requests or posters) is
 stored  in an internal database  which is called {\em Functional Internal
@@ -100,9 +105,9 @@ dedicated to the internal routines.  The module also defines {\em  tasks}
 (threads under Unix) that execute code. There are at least two tasks:
 
 \begin{itemize}
-\item One (or several) {\em execution tasks} that run your services and
-the algorithms they are made of,
 \item One {\em control task} that controls the module.
+\item One (or several) {\em execution tasks} that run your services and
+the algorithms they are made of.
 \end{itemize}
 
 \begin{figure}[htbp]
@@ -118,24 +123,24 @@ You normally do not have to care about the control task, but it's a good
 idea to learn what it does. The control task
 
 \begin{enumerate}
-\item receives the requests for the module,
-\item checks the validity of the input parameters and store them in the fIDS,
-\item checks if the module can start a given service (handles conflicts
+\item it receives the requests for the module,
+\item it checks the validity of the input parameters and store them in the fIDS,
+\item it checks if the module can start a given service (handles conflicts
 between requests),
-\item tells the right execution task to start the service,
+\item it tells the right execution task to start the service,
 \item and upon the termination of a service it sends back to the client
-any output produced by the service (the execution report and --- if
-needed --- the C structure declared for that service).
+any output produced by the service (the execution report and possibly the
+C structure declared for that service).
 \end{enumerate}
 
 Beside    this, the control task  maintains   a poster  (the {\em control
 poster}) that contains informations on   the current state of the  module
 (running services, activities, and so on).
 
-Conflicts between services are   handled  by the following  procedure:  if
+Conflicts between services are   handled  according to the following  rule:  if
 incompatible  services are to  be run  at the  same  time, {\bf  the last
-request   has  the  highest  priority}. Activities    that  happen to  be
-incompatible  with that request are  interrupted. This strategy matches a
+request   has  the  priority}. Activities    that  happen to  be
+incompatible  with that new request are  interrupted. This strategy matches a
 {\em reactivity} criterion and is systematically applied.
 
 You must  declare  yourself which  services  are incompatible with  which
@@ -150,8 +155,8 @@ Your own code is executed by the execution(s) task(s).
 If  this code is to  be periodical (servoing,  monitoring, filters, ...),
 you will have to use a periodical  execution task and specify its period.
 It   is  also  possible   to use   a-periodical  tasks  and  a  sequential
-scheduling. Tasks are  given priorities (supported under VxWorks only
-at this time),
+scheduling. Tasks are  given priorities (supported under real-time
+operating systems only),
 depending on their constrains in terms of resources and CPU requirements.
 
 In the  {\tt  demo} example,  there were  only one  execution  task ({\tt
@@ -163,7 +168,8 @@ have to declare several execution tasks.
 
 \subsubsection{Interface libraries:}
 
-Modules provide two standard interface libraries:
+Modules provide two standard interface libraries in various programming
+languages (for now: {\tt C, tcl, XML, open-prs)).
 
 \begin{itemize}
 \item A service library, which handles requests emission and reception,
