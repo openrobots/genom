@@ -56,13 +56,19 @@
 
 /* Inclusions concernant le module */
 #include "$module$PosterLib.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "$module$PosterWriteLibProto.h"
 #include "$module$PosterReadLibProto.h"
+#ifdef __cplusplus
+}
+#endif
 
 /* Inclusions des bibliotheques des serveurs du module */
 $listServerHeader$
 $listPosterHeader$
-
 
 /* Nombre de types requetes definies pour ce serveur */
 #define NB_RQST_TYPE                   ($nbRequest$+1)
