@@ -3,6 +3,9 @@
 ###### Default target
 codels-mk-all: $(OBJDIR) $(OBJDIR)/$(MODULE_BIN)
 
+vpath %.c  	$(srcdir)
+vpath %.cc  	$(srcdir)
+
 ###### GenoM flags
 include $(top_srcdir)/$(autoconfdir)/genom.mk
 
