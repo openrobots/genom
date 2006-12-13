@@ -302,6 +302,7 @@ Key bindings:
 (defvar genom-opt-var nil "Regexp that matches the optional variable names ( <opt_var_name> )")
 (defvar genom-mand-var nil "Regexp that matches the mandatory variable names( <<mand_var_name>> ) ")
 (defvar genom-fields nil "Regexp that matches the field names ( field_name: )")
+(defvar genom-codel-fields nil "Regexp that matches the codel field names ( field_name: )")
 (defvar genom-types nil "Regexp that matches the genom structure type")
 (defvar genom-end-types nil "String that indicates the end of a genom structure declaration")
 
@@ -320,20 +321,22 @@ This does fairly subdued highlighting.")
 		     "import from\\|poster\\|exec_task"))
       (fields (concat
 	       "type\\|doc\\|input\\|posters_input\\|input_info\\|output\\|"
-	       "codel_control\\|fail_reports\\|"
-	       "codel_start\\|codel_end\\|codel_inter\\|"
-	       "codel_fail\\|codel_main\\|codel_task_main\\|"
-	       "codel_task_start\\|codel_task_end\\|codel_poster_create\\|"
 	       "interrupt_activity\\|"
-               "c_control_func\\|fail_msg\\|"
-               "c_exec_func_start\\|c_exec_func_end\\|c_exec_func_inter\\|"
-               "c_exec_func_fail\\|c_exec_func\\|c_func\\|"
-               "c_init_func\\|c_end_func\\|c_create_func\\|"
+               "fail_msg\\|fail_reports\\|"
                "incompatible_with\\|"
 	       "resources\\|activity\\|exec_task\\|"
 	       "update\\|address\\|number\\|internal_data\\|version\\|"
-	       "email\\|uses_cxx\\|requires\\|codels_requires\\|data\\|"
+	       "email\\|uses_cxx\\|lang\\|requires\\|codels_requires\\|data\\|"
 	       "period\\|delay\\|priority\\|stack_size"))
+      (codel-fields (concat
+	       "codel_control\\|"
+	       "codel_start\\|codel_end\\|codel_inter\\|"
+	       "codel_fail\\|codel_main\\|codel_task_main\\|"
+	       "codel_task_start\\|codel_task_end\\|codel_poster_create\\|"
+               "c_control_func\\|"
+               "c_exec_func_start\\|c_exec_func_end\\|c_exec_func_inter\\|"
+               "c_exec_func_fail\\|c_exec_func\\|c_func\\|"
+               "c_init_func\\|c_end_func\\|c_create_func"))
       (mand-var (concat
 		 "exec-task-name\\|number\\|struct-name\\|name\\|sdi-ref\\|"
 		 "file-name"))
@@ -345,7 +348,8 @@ This does fairly subdued highlighting.")
 		       "server\\|filter\\|servo_process\\|surveillance\\|"
 		       "local\\|sm\\|vme24\\|vme32"))
       )
-  (setq genom-fields (concat "\\<\\(" fields "\\)" "\:"))
+  (setq genom-codel-fields (concat "\\<\\(" codel-fields "\\)" "\:"))
+  (setq genom-fields (concat "\\<\\(" fields "\\|" codel-fields "\\)" "\:"))
   (setq genom-mand-var (concat "<<" "\\("  mand-var "\\)" ">>"))
   (setq genom-opt-var (concat "<" "\\("  opt-var "\\)" ">"))
   (setq genom-types (concat "\\<\\(" types "\\) \+\\w\+ \*{"))
@@ -526,7 +530,7 @@ Delete all extents made by genom-make-extent"
     )
 )) 
 
-(defconst genom-parse-codel "\\s \+c_\\(\\w\+\\)_\*\\w\*_\*\\w\*:\\s \*\\(\\(\\w\\|_\\)\+\\)\\s \*;")
+(defconst genom-parse-codel (concat "\\s \*" genom-codel-fields "\\s \*\\(\\(\\w\\|_\\)\+\\)\\s \*;"))
 (defconst genom-parse-request "^request\\s \+\\(\\w\+\\)\\s \+{\*\\s \*")
 
 
@@ -618,22 +622,29 @@ Works only if you keep the original codel file name."
 	      (setq objectname (concat 
 				"\\<\\(ACTIVITY_EVENT\\|STATUS\\)\\W\+\\b" 
 				objectname "\\b"))
+
 	      ;; Directement un codel de controle : tache de controle
-	      (if (string= "control" (buffer-substring (match-beginning 1) 
+		(if (string= "c_control_func" (buffer-substring (match-beginning 1) 
 						       (match-end 1) nil)) 
 		  (setq taskname "CntrlTask")
 
-		;; sinon, cherche la tache d'exec
-		(if (re-search-backward genom-types (point-min) t)
-		    ;; C'est une tache d'execution
-		    (if (looking-at "\\<exec_task\\s \+\\(\\w\+\\)\\s \*")
-			(setq taskname (buffer-substring (match-beginning 1) 
-							 (match-end 1) nil))
-		      ;; Sinon ca doit etre une requete
-		      (if (looking-at "\\<request[^}]\*exec_task:\\s \+\\(\\w\+\\);")
-			  (setq taskname (buffer-substring (match-beginning 1) 
-							   (match-end 1) nil))
-			))))
+		  ;; peut-etre avec l'autre nom ...
+		  (if (string= "codel_control" (buffer-substring (match-beginning 1) 
+								 (match-end 1) nil)) 
+		      (setq taskname "CntrlTask")
+
+		    ;; sinon, cherche la tache d'exec
+		    (if (re-search-backward genom-types (point-min) t)
+			;; C'est une tache d'execution
+			(if (looking-at "\\<exec_task\\s \+\\(\\w\+\\)\\s \*")
+			    (setq taskname (buffer-substring (match-beginning 1) 
+							     (match-end 1) nil))
+			  ;; Sinon ca doit etre une requete
+			  (if (looking-at "\\<request[^}]\*exec_task:\\s \+\\(\\w\+\\);")
+			      (setq taskname (buffer-substring (match-beginning 1) 
+							       (match-end 1) nil))
+			    )))
+		))
 	      (setq startfrom "/[*]"))))
       )
 
@@ -654,8 +665,9 @@ Works only if you keep the original codel file name."
 	    ))
       
       ;; Pas trouve : bilan
-      (if objectname
-	  (message "Task not found")))
+;      (if objectname
+;	  (message "Task not found"))
+      )
     )
   )
 
@@ -1079,7 +1091,7 @@ module " module-name " {
      requires: <package-or-module>" genom-etc ";
      codels_requires: <package-or-module>" genom-etc ";
      internal_data: " MODULE-NAME "_STR;
-     uses_cxx:     0;
+     lang:     <\"c++\">;
 }; 
 
 /*" minus-char-string "
