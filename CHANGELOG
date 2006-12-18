@@ -1,5 +1,6 @@
 $LAAS$
  
+ 43. Use g++ as the linker of modules declared with lang: "c++".
  42. Add lang keyword in module declaration. Supported options are `lang: c'
      (default) and `lang: c++'. Old syntax `use_cxx: 1' supported but
      deprecated. Generate codel files with proper extension (.cc for c++).

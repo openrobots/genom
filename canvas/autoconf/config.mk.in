@@ -62,7 +62,11 @@ CXX=		@CXX@
 LTCXX=		$(LIBTOOL) --mode=compile $(CXX)
 endif
 
+ifeq ($(LANG_CXX),yes)
+LTLD=           $(LIBTOOL) --mode=link $(PURIFY) $(CXX)
+else
 LTLD=           $(LIBTOOL) --mode=link $(PURIFY) $(CC)
+endif
 LTRM=           $(LIBTOOL) --mode=clean rm -f
 LTINSTALL=	$(LIBTOOL) --mode=install $(INSTALL)
 
