@@ -306,13 +306,25 @@ depend $(OBJDIR)/dependencies:: $(OBJDIR);
 depend $(OBJDIR)/dependencies::  $(client_src)
 	$(make_depend) $?
 
-$genServer$depend $(OBJDIR)/dependencies:: $(module_src) $(posterwrite_src)
+$genServer$depend $(OBJDIR)/dependencies:: $(module_src)
 $genServer$	$(make_depend) $?
 
-$genServer$depend $(OBJDIR)/dependencies::   $(connect_src) $(test_src)
+$genServer$depend $(OBJDIR)/dependencies:: $(posterwrite_src)
+$genServer$	$(make_depend) $?
+
+$genServer$depend $(OBJDIR)/dependencies::   $(connect_src)
+$genServer$	$(make_depend) $?
+
+$genServer$depend $(OBJDIR)/dependencies::  $(test_src)
+$genServer$	$(make_depend) $?
+
+$genServer$depend $(OBJDIR)/dependencies::  $(init_src)
 $genServer$	$(make_depend) $?
 
 $genTcl$depend $(OBJDIR)/dependencies:: $(tclclient_src)
+$genTcl$	$(make_depend) $(TCL_CPPFLAGS) $?
+
+$genTcl$depend $(OBJDIR)/dependencies:: $(tclrequires_src)
 $genTcl$	$(make_depend) $(TCL_CPPFLAGS) $?
 
 $genOpenprs$depend $(OBJDIR)/dependencies:: $(openprsclient_src)
