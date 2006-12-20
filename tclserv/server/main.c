@@ -61,12 +61,13 @@ __RCSID("$LAAS$");
 #include <taskLib.h>
 
 static int xes_verbose = 0;
+#define TCLSERV_MAX_STRLEN	50
+static char tclservPortStr[TCLSERV_MAX_STRLEN];
 
 int
 Tcl_AppInit(Tcl_Interp *interp)
 {
-#define MAX_STRLEN	50
-   char portStr[MAX_STRLEN], *tmp;
+   char *tmp;
    const char *tclServLibrary[2];
    Tcl_DString initFile;
 
@@ -81,21 +82,30 @@ Tcl_AppInit(Tcl_Interp *interp)
       return TCL_ERROR;
    }
 
-   /* Create global useful variables */
-   tmp = getenv("TCLSERV_PORT");
-   if (tmp) {
-      strncpy(portStr, tmp, MAX_STRLEN);
-   } else if (sprintf(portStr, "%d", TCLSERV_CMDPORT) >= MAX_STRLEN) {
-      fprintf(stderr,
-	      "Warning: string overflow in \"%s\", line %d\n",
-	      __FILE__,__LINE__);
-   }      
+   /* get tclserv port */
+   /* if not already initialized with option -p */
+   if (tclservPortStr[0] == '\0') {
+     tmp = getenv("TCLSERV_PORT");
+     if (tmp) {
+       strncpy(tclservPortStr, tmp, TCLSERV_MAX_STRLEN);
+     } else if (sprintf(tclservPortStr, "%d", TCLSERV_CMDPORT) >= TCLSERV_MAX_STRLEN) {
+       fprintf(stderr,
+	       "Warning: string overflow in \"%s\", line %d\n",
+	       __FILE__,__LINE__);
+     }      
+     printf ("tclserv port %s\n", tclservPortStr);
+   }
+   else {
+     setenv("TCLSERV_PORT", tclservPortStr, 1);
+     printf ("Don't forget to set TCLSERV_PORT to %s for tcl client\n", tclservPortStr);
+   }
 
+   /* Create global useful variables */
    Tcl_CreateObjCommand(interp, "exit", TclServExit, 0, NULL);
 
    Tcl_SetVar(interp, "verbose", xes_verbose ? "1":"0", TCL_GLOBAL_ONLY);
    Tcl_SetVar(interp, "hostname", Tcl_GetHostName(), TCL_GLOBAL_ONLY);
-   Tcl_SetVar(interp, "port", portStr, TCL_GLOBAL_ONLY);
+   Tcl_SetVar(interp, "port", tclservPortStr, TCL_GLOBAL_ONLY);
    Tcl_SetVar(interp, "tclserv_moduledir", TCLSERV_LIBDIR, TCL_GLOBAL_ONLY);
 
    if (xes_verbose) {
@@ -128,7 +138,6 @@ Tcl_AppInit(Tcl_Interp *interp)
    /* A pure cheat code */
    return Tcl_Eval(interp, "vwait forever");
 
-#undef MAX_STRLEN
 }
  
 static STATUS
@@ -152,8 +161,9 @@ tclServReal(char *verbose)
 void 
 usage(char *name)
 {
-  printf("usage: %s [-f][-h][-v]\n", name);
+  printf("usage: %s [-f][-h][-v][-p]\n", name);
   printf("\t-c: (console) stay in foreground and be verbose\n"
+	 "\t-p: set port number (overwrites environment variable TCLSERV_PORT)\n"
 	 "\t-h: print this help text\n"
 	 "\t-v: print version\n\n");
 }
@@ -162,11 +172,15 @@ int
 main(int argc, char *argv[])
 {
   int ch, errFlag = 0, foregroundFlag = 0;
-  
-  while ((ch = getopt(argc, argv, "chv-:")) != -1) {
+  extern char *optarg;
+
+  while ((ch = getopt(argc, argv, "chv-:p:")) != -1) {
     switch (ch) {
     case 'c':
       foregroundFlag++;
+      break;
+    case 'p':
+      strncpy(tclservPortStr, optarg, TCLSERV_MAX_STRLEN);
       break;
     case 'h':
       usage(argv[0]);

@@ -394,9 +394,12 @@ tclServCsWakeUpTask(int port, int timeout, int parentId)
    struct timespec wait, waited;
 #endif
 
-   tmp = getenv("TCLSERV_PORT");
-   if (tmp) { port = atoi(tmp); }
-   fputs("starting tclServ daemon\n", stdout);
+   /* port not redefined with option -p, then test env(TCLSERV_PORT) */
+   if (port == TCLSERV_CMDPORT) {
+     tmp = getenv("TCLSERV_PORT");
+     if (tmp) { port = atoi(tmp); }
+     fprintf(stdout, "(re)starting tclServ cs daemon on port %d\n", port);
+   }
 
    sock = socket(AF_INET, SOCK_STREAM, 0);
    if (sock == ERROR) { perror("socket"); return ERROR; }
