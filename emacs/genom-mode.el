@@ -652,7 +652,9 @@ Works only if you keep the original codel file name."
     (if taskname
 	(let (filename findres)
 	  ;; On en deduit le name du file
-	  (setq filename (concat (genom-get-module-name) taskname "Codels.c"))
+	  (if (genom-module-lang-cxx)
+	      (setq filename (concat (genom-get-module-name) taskname "Codels.cc"))
+	    (setq filename (concat (genom-get-module-name) taskname "Codels.c")))
 	  ;; On charge le file et on cherche objectname	    
 	  (setq findres (genom-find-file (concat "codels/" filename)
 					 objectname))
@@ -720,7 +722,8 @@ The filename must be of the following form : <moduleName><TaskName>Codels.c"
 			     "/[*]-\+"
 			     nil)
 	  ()
-	(message (concat request " not found")))
+	(message (concat request " not found"))
+	)
     )
   )
 
@@ -743,7 +746,8 @@ If CONFIRM is t, a confirmation is asked in mini-buffer before insertion."
 	  (setq filebuf (find-file-noselect filename))
 	  (goto-char (point-min) filebuf)
 	  (setq bilan t))
-      (message (concat filename " not found. Call genom.")))
+      (message (concat filename " not found. Call genom."))
+      )
     
     ;; Look for begining of the code
     (if bilan
@@ -1134,6 +1138,21 @@ Returns a string : the name of the genom module"
     (goto-char (point-min))
     (if (re-search-forward (concat "\\<module \+\\(\\w\+\\) \*{") (point-max) t)
 	(buffer-substring (match-beginning 1) (match-end 1) nil)
+      nil
+      )
+    )
+  )
+
+;------------------------------------------------------------
+; Look for module lang
+; Returns a string : the lang of the genom module
+(defun genom-module-lang-cxx ()
+"
+Returns a string : the lang of the genom module"
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward "lang:\\W+c\\+\\+\";" (point-max) t)
+	t
       nil
       )
     )
