@@ -64,7 +64,7 @@ namespace eval server {
 	    }
 
 	    "CSREPLY" {
-		log "csLib wakeup"
+##		log "csLib wakeup"
 		eval [ ::cs::mboxEvent ]
 		answer $channel "OK"
 	    }
