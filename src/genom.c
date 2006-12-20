@@ -67,6 +67,25 @@ push_back(ID_LIST* list, ID_LIST* item)
 /***
  *** Fonctions d'usage ge'ne'ral dans genom
  ***/
+
+/*----------------------------------------------------------------------*/
+
+char* 
+strcpytolower(char const* value)
+{
+    char* result = (char*)xalloc(strlen(value) + 1);
+    int i;
+    for (i = 0; value[i] != '\0'; ++i)
+    {
+	if (value[i] == '-')
+	    result[i] = '_';
+	else
+	    result[i] = tolower(value[i]);
+    }
+    result[i] = '\0';
+    return result;
+}
+	
 /*----------------------------------------------------------------------*/
 
 static char* 

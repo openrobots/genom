@@ -972,7 +972,7 @@ named_type:
     {
        $$ = STR_ALLOC(DCL_NOM_STR);
        if ($1->name)
-	  $$->name = strdup($1->name);
+	  $$->name = strcpytolower($1->name);
        else
 	  $$->name = new_name();
        $$->type = $1;
