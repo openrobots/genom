@@ -1,5 +1,14 @@
 $LAAS$
  
+ 48. The TCP port used by tclserv can now also be given with 
+     option -p<port>.
+ 47. Message 'csLib wakeup' was too much verbose with -c option.
+ 46. Name of a variable cannot be identical to the name of the C type 
+     (it was the case for user posters with only a type)
+ 45. In Emacs genom-mode, Select codel files according to lang.
+ 44. Fix dependencies in generated server Makefile. 
+
+genom 2.0 Release Candidate 1, December 19, 2006.
  43. Use g++ as the linker of modules declared with lang: "c++".
  42. Add lang keyword in module declaration. Supported options are `lang: c'
      (default) and `lang: c++'. Old syntax `use_cxx: 1' supported but
