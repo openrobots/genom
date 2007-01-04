@@ -116,7 +116,7 @@ int main() {
 	AC_LANG_RESTORE
 ])
 
-AC_DEFUN([[AC_CHECK_PTHREADS]],
+AC_DEFUN([AC_CHECK_PTHREADS],
 [
 AC_CACHE_CHECK(
 	[if compiler recognizes -pthread],
