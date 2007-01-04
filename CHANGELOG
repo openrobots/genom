@@ -1,5 +1,7 @@
 $LAAS$
- 
+
+ 49. Check for the need for the -pthread option to get functionnal POSIX
+     threads. 
  48. The TCP port used by tclserv can now also be given with 
      option -p<port>.
  47. Message 'csLib wakeup' was too much verbose with -c option.
