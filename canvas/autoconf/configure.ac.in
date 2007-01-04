@@ -61,6 +61,9 @@ if test "x$opt_xenomai" = "xyes"; then
 fi
 AC_SUBST(OSAPI)
 
+if test "$OSAPI" = "posix"; then
+	AC_CHECK_PTHREADS
+fi
 
 dnl --- checks for functions --------------------------------------------
 dnl
