@@ -524,7 +524,7 @@ type_requete: EXEC
 ref_membre_struct: indicateur_de_type 
         { TYPE_STR *t = trouve_type($1);
 	  if (t == NULL) {
-	    fprintf(stderr, "%s:%d: warning: type inconnu %s\n",
+	    fprintf(stderr, "%s:%d: warning: unkown type %s\n",
 		    nomfic, num_ligne, $1->name);
 	  } else if ($1 != t) {
 	    free($1->name);
@@ -1183,7 +1183,7 @@ declaration_struct:
 
 	  /* corresponding type not found */
 	  if (t == NULL) {
-	      fprintf(stderr, "%s:%d: warning: type inconnu %s\n",
+	      fprintf(stderr, "%s:%d: warning: unkown type %s\n",
 		      nomfic, num_ligne, $1->name);
 	  } else if ($1 != t) {
 	      free($1->name);
