@@ -394,6 +394,7 @@ av_module: INTERNAL_DATA ':' indicateur_de_type
 	  fprintf(stderr,
 		  "%s:%d: usage of use_cxx is deprecated. Use lang: \"c++\".\n",
 		  nomfic, num_ligne);
+	  if (!accept_obsolete) YYERROR;
 	}
     | LANG ':' quoted_string
         { $$ = STR_ALLOC(MODULE_AV_STR);
@@ -535,8 +536,9 @@ ref_membre_struct: indicateur_de_type
 	}
 	sdi_ref elt_declarable
         {
-	  fprintf(stderr, "%s:%d: warning syntaxe obsolete. "
-		  "Utilisez `variable::sdi_ref'\n", nomfic, num_ligne);
+	  fprintf(stderr, "%s:%d: warning deprecated syntax."
+		  "Use `<variable>::<ids_ref>'\n", nomfic, num_ligne);
+	  if (!accept_obsolete) YYERROR;
 	  $$ = STR_ALLOC(STR_REF_STR);
 	  $4->type = $1;
 	  $$->dcl_nom = $4;
@@ -975,6 +977,11 @@ named_type:
 	  $$->name = strcpytolower($1->name);
        else
 	  $$->name = new_name();
+
+       fprintf(stderr, "%s:%d: unamed poster member is deprecated\n"
+	   "\t use type: <variable_name>::<type_name>; instead\n",
+	   nomfic, num_ligne);
+       if (!accept_obsolete) YYERROR;
        $$->type = $1;
        $$->pointeur = 0;
        $$->dimensions = NULL;
@@ -1442,6 +1449,7 @@ identificateur:
 
 int yydebug = 0;
 int verbose = 0;
+int accept_obsolete = 0;
 /*----------------------------------------------------------------------*/
 
 /**
@@ -1509,6 +1517,7 @@ main(int argc, char **argv)
       "     -d: debug \n"
       "     -v: verbose (for debugging pruposes)\n"
       "     -n: produces \".pl\" without execution (for debugging purposes)\n"
+      "     -O: accepts obsolete syntax (warning: may generate incompatible code)\n"
       "     --includes:  print path to libgenom includes\n"
       "     --libraries: print path to libgenom libraries\n";
 
@@ -1527,7 +1536,7 @@ main(int argc, char **argv)
     memset(cppOptions, 0, sizeof(cppOptions));
     nopt = argc;
 
-    while ((opt = getopt(argc, argv, "D:I:P:dnp:ciu:toas-:v")) != -1) {
+    while ((opt = getopt(argc, argv, "D:I:OP:dnp:ciu:toas-:v")) != -1) {
 
 	switch (opt) {
 	  case 'D':
@@ -1557,6 +1566,10 @@ main(int argc, char **argv)
 	    il->name = strdup(optarg);
 	    il->next = 0;
             externPath = push_back(externPath, il);
+	    break;
+	    
+	  case 'O': /* accept obsolete constructs */
+	    accept_obsolete++;
 	    break;
 
 	  case 'P': /* define a package */
