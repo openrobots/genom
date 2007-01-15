@@ -50,21 +50,29 @@ if ( $me ne $name ) {
 # Read the file
 open PID,"<$pid_file" || die "can't read $pid_file";
 $pid = <PID>;
-if (defined($pid)) {
-  print "pid ".$pid;
-  chop $pid;
-  close PID;
-  # send SIGTERM 
-  kill 15, $pid;
-}
-# Empty file
-else {
+if (!defined($pid)) {
+  # Empty file
   print "No pid in $pid_file\n";
   unlink("$pid_file");
   # Clean up pocolib devices of the module
   system("h2 clean '*$module*'");
   exit 0;
 }
+print "pid ".$pid;
+chop $pid;
+close PID;
+
+# Check if process still alive
+if (kill(0, $pid) == 0) {
+  # no more process
+  print("$module seems to be dead already, cleaning up\n");
+  unlink("$pid_file");
+  system("h2 clean '*$module*'");
+  exit(0);
+}
+# send SIGTERM 
+kill 15, $pid;
+
 # Wait a bit for the module to die cleanly
 $now = time();
 do {
