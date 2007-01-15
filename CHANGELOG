@@ -1,5 +1,9 @@
 $LAAS$
 
+ 51. User-controlled poster declarations without an explicit variable name
+     are now obsolete (forbidden).
+ 50. Obsolete syntax now generate an error by default. The new -O option
+     can be used to force genom to accept it, at the users' risk.
  49. Check for the need for the -pthread option to get functionnal POSIX
      threads. 
  48. The TCP port used by tclserv can now also be given with 
