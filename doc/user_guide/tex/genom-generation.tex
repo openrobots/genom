@@ -38,7 +38,7 @@
 
 \item{\bf Synopsis}
 
-{\tt genom [-ictxnd] [-I{\em path}] [-D{\em macro}] <module>[.gen]}
+{\tt genom [-Ocdintx] [-I{\em path}] [-D{\em macro}] <module>[.gen]}
 
 \item{\bf Description}
 
@@ -50,6 +50,12 @@ omitted.
 {\tt genom} accepts the following options:
 
 \begin{tabularx}{\linewidth}{lX}
+{\tt -O} & {\em Accept \textbf{O}bsolete syntax:} the syntax of
+\texttt{.gen} files has changed a bit over time. This option tells
+genom to still accept input syntax that is now considered as obsolete.
+Warning: this option can produce output code that is incompatible with
+what is generated without it. Use at your own risk. \\
+
 {\tt -i} &  {\em Installs the  directory  {\tt codels/}:} you should  use
 this option when  generating the module  for the first time. When  called
 with {\tt -i}, {\tt  genom} will install  the directory {\tt  codels/} as
