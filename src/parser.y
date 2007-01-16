@@ -110,7 +110,7 @@ FILE *sortie;
 int enumValue = 0;
 
 static int import_flag = 0;
-
+static int accept_obsolete = 0;
 static void yyerror(char *s);
 
 #ifndef GENOM_VERSION
@@ -1449,7 +1449,6 @@ identificateur:
 
 int yydebug = 0;
 int verbose = 0;
-int accept_obsolete = 0;
 /*----------------------------------------------------------------------*/
 
 /**
