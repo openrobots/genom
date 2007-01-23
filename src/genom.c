@@ -136,11 +136,17 @@ upCaseNames(void)
         ln->NAME = strcpytoupper(ln->name);
 
     /* Required packages */
-    for (ln = requires; ln != NULL; ln = ln->next)
+    for (ln = requires; ln != NULL; ln = ln->next) {
         ln->NAME = strcpytoupper(ln->name);
+	/* stop at first blank */
+	{ char *tmp = ln->NAME; strsep(&tmp, " \t"); }
+    }
 
-    for (ln = codels_requires; ln != NULL; ln = ln->next)
+    for (ln = codels_requires; ln != NULL; ln = ln->next) {
         ln->NAME = strcpytoupper(ln->name);
+	/* stop at first blank */
+	{ char *tmp = ln->NAME; strsep(&tmp, " \t"); }
+    }
 
     /* Noms des taches d'execution */
     for (lt = taches; lt != NULL; lt = lt->next) {
@@ -214,8 +220,18 @@ parse_require(char* buffer, int line, ID_LIST **rquires)
         packages[current] = skip_spaces(delim + 1);
         if (! packages[current])
             break;
+	
+	delim = packages[current];
 
-        delim = strchr(packages[current], ',');
+	/* handle double quote protection */
+	if (*delim == '"') {
+	  packages[current]++;
+	  *delim = '\0';
+	  do { delim = strchr(delim+1, '"'); } while(delim[-1] == '\\');
+	  *delim++ = '\0';
+	}
+
+        delim = strchr(delim, ',');
         if (++current > MAX_REQUIRE_COUNT)
         {
             fprintf(stderr, "genom: 0:%i: too many arguments to 'require' (%i max)\n", line, MAX_REQUIRE_COUNT);

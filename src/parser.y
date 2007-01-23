@@ -341,6 +341,7 @@ liste_declaration_de_posters: declaration_de_poster ';'
 list_packages: 
 	     PACKAGENAME { $$ = 0; }
              | IDENTIFICATEUR { $$ = 0; }
+             | QUOTED_STRING { $$ = 0; }
              | list_packages ',' PACKAGENAME
              | list_packages ',' IDENTIFICATEUR
              ;
