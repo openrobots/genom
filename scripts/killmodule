@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# Copyright (c) 2001-2006 CNRS/LAAS
+# Copyright (c) 2001-2007 CNRS/LAAS
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -33,11 +33,17 @@ $module = $ARGV[0];
 $host = `uname -n`;
 chop $host;
 # name of the file holding the process id
-$pid_file = "$ENV{'HOME'}/.$module.pid-$host";
+$h2owner = $ENV{'H2DEV_DIR'};
+if (defined($h2owner)) {
+  $pid_file = "$h2owner/.$module.pid-$host";
+} else {
+  $pid_file = "$ENV{'HOME'}/.$module.pid-$host";
+}
 $me = $ENV{'USER'};
 # Check its existence
 if ( ! -f $pid_file) {
   print STDERR "$0: the module $module doesn't seem to be running on $host\n";
+  print STDERR "$0: no file $pid_file\n";
   exit 1;
 }
 # Check the owner of the file
