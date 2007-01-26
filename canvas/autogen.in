@@ -9,8 +9,7 @@ sub check_aclocal_version {
     my @version = `aclocal --version`;
 
     my $version_line = shift @version;
-    if (($version_line !~ /^aclocal \(GNU automake\) (\d+)\.(\d+)\.\d+$/)
-        && ($version_line !~ /^aclocal \(GNU automake\) (\d+)\.(\d+)-p\d$/)) 
+    if ($version_line !~ /^aclocal \(GNU automake\) (\d+)\.(\d+)/) 
     {
         print <<EOF;
 You don't seem to have a valid version of aclocal. I was expecting
