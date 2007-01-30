@@ -1,0 +1,287 @@
+%
+% Copyright (c) 2001 LAAS/CNRS                        --  Wed Nov  7 2001
+% All rights reserved.                                   Florent Lamiraux
+%
+% This document is a translation of the French documentation of GenoM,
+% originally written by Sara Fleury and Matthieu Herrb.
+%
+% Redistribution  and  use in source   and binary forms,  with or without
+% modification, are permitted provided that  the following conditions are
+% met:
+%
+%   1. Redistributions  of  source code must  retain  the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%   2. Redistributions in binary form must  reproduce the above copyright
+%      notice,  this list of  conditions and  the following disclaimer in
+%      the  documentation   and/or  other  materials   provided with  the
+%      distribution.
+%
+% THIS SOFTWARE IS PROVIDED BY THE  AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+% ANY  EXPRESS OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE
+% IMPLIED WARRANTIES   OF MERCHANTABILITY AND  FITNESS  FOR  A PARTICULAR
+% PURPOSE ARE DISCLAIMED.  IN NO  EVENT SHALL THE AUTHOR OR  CONTRIBUTORS
+% BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
+% CONSEQUENTIAL DAMAGES (INCLUDING,  BUT  NOT LIMITED TO, PROCUREMENT  OF
+% SUBSTITUTE  GOODS OR SERVICES;  LOSS   OF  USE,  DATA, OR PROFITS;   OR
+% BUSINESS  INTERRUPTION) HOWEVER CAUSED AND  ON ANY THEORY OF LIABILITY,
+% WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+% OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
+% ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
+
+This chapter gives a description of the different commands defining
+a {\GenoM} module. These commands are organized into sections
+corresponding to the different parts of a GenoM module.
+
+\section{Module Declaration}
+\label{sec|declaration}
+
+\noindent
+{\tt module <moduleName> \{ ... \};} declaration of module with name
+{\tt moduleName}. \\
+
+\noindent
+The sub-commands of {\tt module} are the following:\\
+
+\noindent
+{\tt internal\_data}: specifies the name of the internal database
+C data-structure.\\
+
+\noindent
+{\tt number}: non-negative integer uniquely identifying the module in
+a given control architecture.\\
+
+\section{Internal Database}
+\label{sec|database}
+The internal database is a standard C datas-tructure defined by\\
+{\tt typedef struct <internalDatabaseName>}\\
+\\
+{\tt \} <internalDatabaseName>; }\\ 
+as specified in Section~\ref{sec|declaration}. Note that the above
+data-structure should not include pointers.
+
+\section{Requests}
+\label{sec|requests}
+
+{\tt Request <requestName> \{ ... \};} declaration of a request with
+name {\tt requestName}.\\
+
+\noindent
+The sub-commands of {\tt Request} are the following.\\
+\noindent
+{\tt doc: }''{\tt<comment>}''{\tt;} inline help of the request.\\
+
+\noindent
+{\tt type:  control}, {\tt exec} or {\tt init} defines the type of the request:\\
+\begin{itemize}
+\item {\tt control}: for a control request; control requests do not
+  trigger any specific action. they are mostly used for accessing the
+  internal database (reading or changing parameters),
+\item {\tt exec}: for an execution request; execution requests trigger
+  (periodic or not) actions defined into execution codels,
+\item {\tt init}: for the initialization request of the module. No
+  execution request can be treated until this request has been
+  called and has returned success.
+\end{itemize}
+
+\noindent 
+{\tt exec\_task:  <execTaskName>;} defines which execution task
+executes the request. Applies only for {\em execution} and {\em
+  initialization} tasks.\\
+
+\noindent
+{\tt input: <name>::<idbRef>;} defines the input of the request. {\tt
+  <name>} is the name of the variable that will be defined in the
+request codels. {\tt <idbRef>} is the field of the internal database
+defining the type of the codels input. For instance:\\
+\begin{center}
+\begin{verbatim}
+module Test {
+    internal_data:	    TEST_STR;
+    number:		    100;
+}; 
+
+typedef struct MY_STR {
+  double a1;
+  double a2;
+} MY_STR;
+
+typedef struct TEST_STR {
+  MY_STR myStr;
+} TEST_STR;
+
+request Req {
+  ...
+  input:              a1::mStr.a1;
+  ...
+}
+\end{verbatim}
+\end{center}
+defines a request with as input a {\tt double}\\
+
+\noindent
+{\tt input\_info:  <defaultValue1>::"<doc1>" , ..., <defaultValueN>::"<docN>";} \\
+
+\noindent
+{\tt posters\_input:  <STRUCT\_NAME\_1> , ..., <STRUCT\_NAME\_N>;}
+specifies that the codels of the request need to read information on posters exporting
+data-structures of types {\tt <STRUCT\_NAME\_1>}, ..., {\tt
+  <STRUCT\_NAME\_N>}. {\GenoM} server part then defines functions to read
+the poster with the following prototypes:\\{\small
+{\tt STATUS moduleNameSTRUCT\_NAME\_1PosterRead(POSTER\_ID posterId,
+  STRUCT\_NAME\_1* x);}\\
+{\tt STATUS moduleNameSTRUCT\_NAME\_1PosterFind(char *posterName,
+  POSTER\_ID *posterId);}\\
+...\\
+{\tt STATUS moduleNameSTRUCT\_NAME\_NPosterRead(POSTER\_ID posterId,
+  STRUCT\_NAME\_1* x);}\\
+{\tt STATUS moduleNameSTRUCT\_NAME\_NPosterFind(char *posterName,
+  POSTER\_ID *posterId);}\\
+}
+
+\noindent
+{\tt output:  <name>::<idbRef>;} output of the request. The type of
+the output is defined by field {\tt <idbRef>} of internal database
+similarly as input.\\
+
+\noindent
+{\tt codel\_control: codelName;} specifies the name of the
+control codel of the request. The control codel is called before
+any other codels when request is triggered. If the control codel returns {\tt ERROR}, the
+request ends. The prototype of the control codels is defined by the
+input and output of the request.
+\\
+
+\noindent
+{\tt codel\_start: codelName;} (only for initialization and execution
+tasks.) specifies the name of the start codel of the request. Called
+after the control codel. The start codel can return:
+\begin{itemize}
+\item {\tt EXEC}: the function defined by {\tt codel\_main} is called
+  at the next execution period,
+\item {\tt END}: the function defined by {\tt codel\_end} is called at the
+  next execution period,
+\item {\tt ETHER}: the request terminates.
+\end{itemize}
+
+\noindent
+{\tt codel\_main: codelName;} (only for initialization and execution
+tasks) specifies the name of the main codel of the request. The main
+codel can return:
+\begin{itemize}
+\item {\tt EXEC}: the main codel is called again
+  at the next execution period,
+\item {\tt END}: the function defined by {\tt codel\_end} is called at the
+  next execution period,
+\item {\tt ETHER} the request terminates.
+\end{itemize}
+
+\noindent
+{\tt codel\_end:  codelName;} (only for initialization and execution
+tasks) terminates request execution and returns {\tt ETHER}.\\
+
+\noindent
+{\tt codel\_inter: codelName;} (only for initialization and execution
+tasks) specifies the name of the interruption codel. The interruption
+codel is called when the request is interrupted by another request
+defined by field {\tt interrupt\_activity}\\
+
+\noindent
+{\tt fail\_reports:  <reportName1> , ..., <reportNameN>;}
+possible error messages generated by the request. Error messages are
+transformed into unique integer values stored into C macros with
+names:
+\begin{verbatim}
+S_moduleName_reportName1, ..., S_moduleName_reportNameN
+\end{verbatim}
+where \texttt{moduleName} is the name of the module.\\
+
+\noindent
+{\tt interrupt\_activity:	    RequestName1, ..., RequestNameN;}
+defines the names of the requests of this module that interrupt this request when
+triggered by a client. {\tt RequestName1, ..., RequestNameN} can be
+replaced by {\tt all} to denote all the requests of the module.\\
+
+
+\section{Posters}
+\label{sec|posters}
+
+{\tt poster posterName \{ ... \};} declaration of poster with name {\tt
+  posterName}.\\
+
+\noindent
+The sub-commands of {\tt poster} are the following.
+
+\noindent
+{\tt update:  user} or {\tt auto;} defines how the poster is updated,
+either automatically ({\tt auto}) or by the user in the codels ({\tt user}).\\
+
+\noindent
+{\tt type:  <structName1>, ..., <structNameN>;} defines the types of
+the sub-fields of the poster. Can be used only with {\tt update:  user;}.\\
+
+\noindent
+{\tt data:  <name1>::<idbRef1> , ..., <nameN>::<idbRefN>;} defines the
+types of the sub-fields of the poster by internal database fields.\\
+
+\noindent
+{\tt exec\_task:  taskName;} defines the name of the task that updates
+the poster.\\
+
+\noindent
+{\tt codel\_poster\_create:  codelName;} defines the codel that creates
+the poster. Can be used only with {\tt update:  user;}.\\
+
+\section{Execution Tasks}
+\label{sec|exec-task}
+
+\noindent
+{\tt exec\_task taskName \{ ... \};} defines a new execution task. The
+sub-commands of an execution task declaration are the following.\\
+
+\noindent
+{\tt period:  <number>;} defines the period of the task in tics.\\
+
+\noindent
+{\tt delay:  <number>;} defines the offset of the task with respect to
+the beginning of the period.\\
+
+\noindent
+{\tt priority:  <number>;} defines the priority of the task.\\
+
+\noindent
+{\tt stack\_size:  <size>;} defines the size of the task stack.\\
+
+\noindent
+{\tt posters\_input:  <STRUCT\_NAME\_1> , ..., <STRUCT\_NAME\_N>;}
+specifies that the codels of the task need to read information on posters exporting
+data-structures of types {\tt <STRUCT\_NAME\_1>}, ..., {\tt
+  <STRUCT\_NAME\_N>}. {\GenoM} server part then defines functions to read
+the poster with the following prototypes:\\ {\small
+{\tt STATUS moduleNameSTRUCT\_NAME\_1PosterRead(POSTER\_ID posterId,
+  STRUCT\_NAME\_1* x);}\\
+{\tt STATUS moduleNameSTRUCT\_NAME\_1PosterFind(char *posterName,
+  POSTER\_ID *posterId);}\\
+...\\
+{\tt STATUS moduleNameSTRUCT\_NAME\_NPosterRead(POSTER\_ID posterId,
+  STRUCT\_NAME\_1* x);}\\
+{\tt STATUS moduleNameSTRUCT\_NAME\_NPosterFind(char *posterName,
+  POSTER\_ID *posterId);}\\
+}
+
+\noindent
+{\tt codel\_task\_start:  codelName;} defines the codel called at
+initialization of the task when the module is launched.\\
+
+\noindent
+{\tt codel\_task\_end:  codelName;} defines the codel called when the task ends.\\
+
+\noindent
+{\tt codel\_task\_main:  codelName;} defines the codel periodically
+called by the task. Applicable only for a periodic task.\\
+
+\noindent
+{\tt fail\_reports:  <reportName1> , ..., <reportNameN>;} 
+possible error messages generated by the task. Error messages are
+transformed into unique integer values.
+
