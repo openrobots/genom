@@ -137,6 +137,7 @@ ID_LIST *externPath = NULL;
 
 char *cppOptions[MAX_CPP_OPT];
 int nCppOptions = 0;
+int parseError = 0;
 
 %}
 
@@ -278,7 +279,7 @@ int nCppOptions = 0;
 
 liste_declaration_top: declaration_top
     | declaration_top liste_declaration_top 
-    | error liste_declaration_top
+    | error liste_declaration_top { parseError = 1; }
     ;
 
 declaration_top: declaration_de_module ';' { $$ = 0; }
@@ -975,7 +976,7 @@ named_type:
     {
        $$ = STR_ALLOC(DCL_NOM_STR);
        if ($1->name)
-	  $$->name = strcpytolower($1->name);
+	  $$->name = strdup($1->name);
        else
 	  $$->name = new_name();
 
@@ -1709,7 +1710,8 @@ main(int argc, char **argv)
 	perror(nomTemp);
 	exit(2);
     }
-    if (yyparse() == 1) {
+    yyparse();
+    if (parseError == 1) {
 	exit(2);
     }
     if (yydebug == 0) {
