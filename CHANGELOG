@@ -1,5 +1,6 @@
 $LAAS$
 
+genom 2.0 Release Candidate 2, February 7, 2007.
  56. Make Genom actually stop after errors int the parser.
  55. Add a chapter in the manual on Genom's syntax.
  54. Fix autogen script to work with aclocal 1.10.
