@@ -1,5 +1,10 @@
 $LAAS$
 
+ 56. Make Genom actually stop after errors int the parser.
+ 55. Add a chapter in the manual on Genom's syntax.
+ 54. Fix autogen script to work with aclocal 1.10.
+ 53. Speed up the killmodule script in the case where the process already
+     died, and make it take the H2DEV_DIR environment variable into account.
  52. Allow package names in require and codels_requires field to be
      protected by double quote, so that require: "pkg >= n.n" works.
  51. User-controlled poster declarations without an explicit variable name
