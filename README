@@ -1,6 +1,6 @@
 #	$LAAS$
 
-Copyright (c) 1993-2006 LAAS/CNRS
+Copyright (c) 1993-2007 LAAS/CNRS
 
 
 -- EXTERNAL TOOLS REQUIREMENTS ------------------------------
@@ -16,7 +16,7 @@ Copyright (c) 1993-2006 LAAS/CNRS
 
 -- GETTING LAAS/OPENROBOTS TOOLS -----------------------------
 
-<http://softs.laas.fr/openrobots/>
+<http://softs.laas.fr/openrobots/wiki/>
 
  - mkdep: LAAS tool to determine dependencies
  - pocolibs: system communication and real-time primitives

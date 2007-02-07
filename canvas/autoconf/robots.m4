@@ -1,7 +1,7 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2002-2003 LAAS/CNRS                   --  Fri Mar 15 2002
+# Copyright (c) 2002-2007 LAAS/CNRS                   --  Fri Mar 15 2002
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
