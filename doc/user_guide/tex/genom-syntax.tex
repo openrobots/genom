@@ -37,7 +37,7 @@ corresponding to the different parts of a GenoM module.
 \label{sec|declaration}
 
 \noindent
-{\tt module <moduleName> \{ ... \};} declaration of module with name
+{\tt module moduleName \{ ... \};} declaration of module with name
 {\tt moduleName}. \\
 
 \noindent
@@ -50,22 +50,22 @@ a given control architecture.
 \item[]\texttt{version:  "major.minor";} defines the version number of the 
 module
 
-\item[]\texttt{email:  <email>;} defines the e-mail address of
+\item[]\texttt{email:  email;} defines the e-mail address of
 the person to contact for information about this module.
 
-\item[]\texttt{requires:  <packageOrModule1> , ..., <packageOrModuleN>;}
+\item[]\texttt{requires:  packageOrModule1 , ..., packageOrModuleN;}
 specifies the dependency of the module. When generating the module,
 {\GenoM} will look for \texttt{pkgconfig} input files
 \texttt{packageOrModule1.pc},...,\texttt{packageOrModuleN.pc} and set
 the necessary compilation flags accordingly. 
 
-\item[]\texttt{codels\_requires:  <packageOrModule1> , ..., <packageOrModuleN>;}
+\item[]\texttt{codels\_requires:  packageOrModule1 , ..., packageOrModuleN;}
 specifies the dependency of the codels. When configuring the codels,
 {\GenoM} will look for \texttt{pkgconfig} input files
 \texttt{packageOrModule1.pc},...,\texttt{packageOrModuleN.pc} and set
 the necessary compilation flags accordingly. 
 
-\item[]\texttt{lang:  <"c++"} or \texttt{c>;} specifies the programming
+\item[]\texttt{lang:  "c++"} or \texttt{c;} specifies the programming
 language with which the codels are developed.
 
 \item[]{\tt internal\_data}: specifies the name of the internal database.
@@ -76,14 +76,14 @@ include no pointer.
 \section{Requests}
 \label{sec|requests}
 
-{\tt Request <requestName> \{ ... \};} declaration of a request with
+{\tt Request requestName \{ ... \};} declaration of a request with
 name {\tt requestName}.\\
 
 \noindent
 The sub-commands of {\tt Request} are the following.\\
 
 \begin{itemize}
-\item[]{\tt doc: }''{\tt<comment>}''{\tt;} inline help of the request.
+\item[]{\tt doc: }''\texttt{comment}''{\tt;} inline help of the request.
 \item[]{\tt type:  control}, {\tt exec} or {\tt init} defines the type of the request:
   \begin{itemize}
   \item {\tt control}: for a control request; control requests do not
@@ -96,13 +96,13 @@ The sub-commands of {\tt Request} are the following.\\
     called and has returned success.
   \end{itemize}
 
-\item[]{\tt exec\_task:  <execTaskName>;} defines which execution task
+\item[]{\tt exec\_task:  execTaskName;} defines which execution task
 executes the request. Applies only for {\em execution} and {\em
   initialization} tasks.
 
-\item[]\texttt{input: <name>::<idbRef>;} defines the input of the
-  request. \texttt{<name>} is the name of the variable that will be
-  defined in the request codels. \texttt{<idbRef>} is the field of the
+\item[]\texttt{input: name::idbRef;} defines the input of the
+  request. \texttt{name} is the name of the variable that will be
+  defined in the request codels. \texttt{idbRef} is the field of the
   internal database defining the type of the codels input. For instance:\\
 \begin{verbatim}
 module Test {
@@ -127,11 +127,11 @@ request Req {
 \end{verbatim}
 defines a request with as input a {\tt double}\\
 
-\item[]{\tt input\_info:  <defaultValue1>::"<doc1>" , ..., <defaultValueN>::"<docN>";}
-\item[]{\tt posters\_input:  <STRUCT\_NAME\_1> , ..., <STRUCT\_NAME\_N>;}
+\item[]{\tt input\_info:  defaultValue1::"doc1" , ..., defaultValueN::"docN";}
+\item[]{\tt posters\_input:  STRUCT\_NAME\_1 , ..., STRUCT\_NAME\_N;}
 specifies that the codels of the request need to read information on posters exporting
-data-structures of types {\tt <STRUCT\_NAME\_1>}, ..., {\tt
-  <STRUCT\_NAME\_N>}. {\GenoM} server part then defines functions to read
+data-structures of types {\tt STRUCT\_NAME\_1}, ..., {\tt
+  STRUCT\_NAME\_N}. {\GenoM} server part then defines functions to read
 the poster with the following prototypes:\\{\small
 {\tt STATUS moduleNameSTRUCT\_NAME\_1PosterRead(POSTER\_ID posterId,
   STRUCT\_NAME\_1* x);}\\
@@ -143,8 +143,8 @@ the poster with the following prototypes:\\{\small
 {\tt STATUS moduleNameSTRUCT\_NAME\_NPosterFind(char *posterName,
   POSTER\_ID *posterId);}\\
 }
-\item[]{\tt output:  <name>::<idbRef>;} output of the request. The type of
-the output is defined by field {\tt <idbRef>} of internal database
+\item[]{\tt output:  name::idbRef;} output of the request. The type of
+the output is defined by field {\tt idbRef} of internal database
 similarly as input.\\
 
 \item[]{\tt codel\_control: codelName;} specifies the name of the
@@ -183,7 +183,7 @@ tasks) specifies the name of the interruption codel. The interruption
 codel is called when the request is interrupted by another request
 defined by field {\tt interrupt\_activity}\\
 
-\item[]{\tt fail\_reports:  <reportName1> , ..., <reportNameN>;}
+\item[]{\tt fail\_reports:  reportName1 , ..., reportNameN;}
 possible error messages generated by the request. Error messages are
 transformed into unique integer values stored into C macros with
 names:
@@ -212,10 +212,10 @@ The sub-commands of {\tt poster} are the following.
 \item[]{\tt update:  user} or {\tt auto;} defines how the poster is updated,
 either automatically ({\tt auto}) or by the user in the codels ({\tt user})
 
-\item[]{\tt type:  <structName1>, ..., <structNameN>;} defines the types of
+\item[]{\tt type:  structName1, ..., structNameN;} defines the types of
 the sub-fields of the poster. Can be used only with {\tt update:  user;}.
 
-\item[]{\tt data:  <name1>::<idbRef1> , ..., <nameN>::<idbRefN>;} defines the
+\item[]{\tt data:  name1::idbRef1 , ..., nameN::idbRefN;} defines the
 types of the sub-fields of the poster by internal database fields.
 
 \item[]{\tt exec\_task:  taskName;} defines the name of the task that updates
@@ -232,19 +232,19 @@ the poster. Can be used only with {\tt update:  user;}.
 \item[]{\tt exec\_task taskName \{ ... \};} defines a new execution task. The
 sub-commands of an execution task declaration are the following.
 
-\item[]{\tt period:  <number>;} defines the period of the task in tics.
+\item[]{\tt period:  number;} defines the period of the task in tics.
 
-\item[]{\tt delay:  <number>;} defines the offset of the task with respect to
+\item[]{\tt delay:  number;} defines the offset of the task with respect to
 the beginning of the period.
 
-\item[]{\tt priority:  <number>;} defines the priority of the task.
+\item[]{\tt priority:  number;} defines the priority of the task.
 
-\item[]{\tt stack\_size:  <size>;} defines the size of the task stack.
+\item[]{\tt stack\_size:  size;} defines the size of the task stack.
 
-\item[]{\tt posters\_input:  <STRUCT\_NAME\_1> , ..., <STRUCT\_NAME\_N>;}
+\item[]{\tt posters\_input:  STRUCT\_NAME\_1 , ..., STRUCT\_NAME\_N;}
 specifies that the codels of the task need to read information on posters exporting
-data-structures of types {\tt <STRUCT\_NAME\_1>}, ..., {\tt
-  <STRUCT\_NAME\_N>}. {\GenoM} server part then defines functions to read
+data-structures of types {\tt STRUCT\_NAME\_1}, ..., {\tt
+  STRUCT\_NAME\_N}. {\GenoM} server part then defines functions to read
 the poster with the following prototypes:\\ {\small
 {\tt STATUS moduleNameSTRUCT\_NAME\_1PosterRead(POSTER\_ID posterId,
   STRUCT\_NAME\_1* x);}\\
@@ -265,7 +265,7 @@ initialization of the task when the module is launched.
 \item[]{\tt codel\_task\_main:  codelName;} defines the codel periodically
 called by the task. Applicable only for a periodic task.
 
-\item[]{\tt fail\_reports:  <reportName1> , ..., <reportNameN>;} 
+\item[]{\tt fail\_reports:  reportName1 , ..., reportNameN;} 
 possible error messages generated by the task. Error messages are
 transformed into unique integer values.
 \end{itemize}
