@@ -1,5 +1,6 @@
 $LAAS$
 
+ 58. Don't initialize pocolibs timers if there is no periodic task.
  57. Search for includes in local directories before any other
      directory so that wrong header files from a previous installation
      cannot be included by mistake.

@@ -390,7 +390,12 @@ main(int argc, char *argv[])
     }
 
     /* Initialise environnement comLib */
-    if (h2initGlob(100) == ERROR) {
+#if $periodic$
+    errFlag = h2initGlob(100);
+#else
+    errFlag = h2initGlob(0);
+#endif
+    if (errFlag == ERROR) {
 	/* informe la tache en avant plan */
 	write(waitPipe[1], "h2initGlob error\n", 17); 
 	exit(2);

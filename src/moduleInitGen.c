@@ -1,6 +1,6 @@
 /*	$LAAS$ */
 
-/* 
+/*
  * Copyright (c) 1996-2003 LAAS/CNRS
  * Matthieu Herrb - Thu Jul 22 1993
  * All rights reserved.
@@ -41,11 +41,11 @@ __RCSID("$LAAS$");
  *** Ge'ne'ration de l'initialisation du module
  ***/
 
-int moduleInitGen(FILE *out) 
+int moduleInitGen(FILE *out)
 {
     EXEC_TASK_LIST *lt;
     char *execTask;
-
+    int periodic;
 
     script_open(out);
 	subst_begin(out, PROTO_MODULE_INIT);
@@ -54,9 +54,17 @@ int moduleInitGen(FILE *out)
     print_sed_subst(out, "MODULE", module->NAME);
 
     /* type de donne'es interne */
-    print_sed_subst(out, "internalDataType", "struct %s", 
+    print_sed_subst(out, "internalDataType", "struct %s",
 		    module->internal_data->name);
-    
+
+    periodic = 0;
+    for (lt = taches; lt != NULL; lt = lt->next)
+      if (lt->exec_task->period > 0) {
+	periodic = 1;
+	break;
+      }
+    print_sed_subst(out, "periodic", periodic?"1":"0");
+
     /* Liste des taches d'execution */
     execTask = NULL;
     for (lt = taches; lt != NULL; lt = lt->next) {
@@ -65,10 +73,10 @@ int moduleInitGen(FILE *out)
 	       module->internal_data->name);
     }
     bufcat(&execTask, "\ntypedef struct {\n\tchar *name;\n");
-    bufcat(&execTask, 
+    bufcat(&execTask,
 	   "\tint priority;\n\tint size;\n\tvoid (*func)();\n} ");
     bufcat(&execTask, "%s_EXEC_TASK_STR;\n\n", module->NAME);
-    bufcat(&execTask, "%s_EXEC_TASK_STR %sExecTaskTab[] = {\n", 
+    bufcat(&execTask, "%s_EXEC_TASK_STR %sExecTaskTab[] = {\n",
 	   module->NAME, module->name);
     for (lt = taches; lt != NULL; lt = lt->next) {
 	if (lt->exec_task->stack_size == 0) {
@@ -76,23 +84,23 @@ int moduleInitGen(FILE *out)
 		    nomfic, lt->exec_task->name);
 	    lt->exec_task->stack_size = 5000;
 	}
-	bufcat(&execTask, "\t{ \"%s%s\", %d, %d, %s%s }", module->name, 
-	lt->exec_task->name, lt->exec_task->priority, 
-	lt->exec_task->stack_size, 
+	bufcat(&execTask, "\t{ \"%s%s\", %d, %d, %s%s }", module->name,
+	lt->exec_task->name, lt->exec_task->priority,
+	lt->exec_task->stack_size,
 	module->name, lt->exec_task->name);
 	if (lt->next != NULL) {
 	    bufcat(&execTask, ",\n");
 	}
     }
     bufcat(&execTask, " };\n");
-    
+
     print_sed_subst(out, "execTaskTabDescribe", execTask);
     free(execTask);
 
     /* Fin */
     subst_end(out);
     script_close(out, "server/%sModuleInit.c", module->name);
-    
+
     return(0);
 
 }
