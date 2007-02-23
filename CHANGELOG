@@ -1,5 +1,9 @@
 $LAAS$
 
+ 57. Search for includes in local directories before any other
+     directory so that wrong header files from a previous installation
+     cannot be included by mistake.
+
 genom 2.0 Release Candidate 2, February 7, 2007.
  56. Make Genom actually stop after errors int the parser.
  55. Add a chapter in the manual on Genom's syntax.

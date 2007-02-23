@@ -9,8 +9,8 @@ vpath %.cc  	$(srcdir)
 ###### GenoM flags
 include $(top_srcdir)/$(autoconfdir)/genom.mk
 
-CPPFLAGS += $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
 CPPFLAGS += -I. -I$(top_builddir) -I$(srcdir) -I$(top_srcdir)
+CPPFLAGS += $(ENDIANNESS) $(GENOM_DEFINES) $(GENOM_INCLUDES)
 CPPFLAGS += $(GENOM_CFLAGS) $(EXTRA_INCLUDES)
 
 ifeq ($(LANG_CXX),yes)
