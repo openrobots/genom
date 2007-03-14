@@ -13,8 +13,8 @@
 
 \context{\vfill}
 \title{\Huge tclServ}
-\author{Anthony Mallet and Sara Fleury}
-\date{july 2006}
+\author{Anthony Mallet}
+\date{march 2007}
 
 \newcommand{\tclex}[2]{\texttt{#1}\\$\rightarrow$ \texttt{#2}}
 
@@ -60,26 +60,42 @@
 
 \begin{part}{tclServ}{Architecture}
    \vfill
-   \docfig[width=0.9\linewidth,psfrag]{fig/tclServ.fig}
+%   \docfig[width=0.9\linewidth,psfrag]{fig/tclServ.fig}
+    \includegraphics[width=0.6\columnwidth,angle=-90]{./fig/tclServ.pdf}
+
    \vfill
 \end{part}
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Starting}
+\begin{tslide}{Starting with Unix}
    \vfill
-   {\bf Under Unix}
    \begin{bitemize}{color@bulle}
-      \item On the machines executing the modules :\\
-	 \texttt{tclserv \&}
+      \item On each machine executing GenoM modules:\\
+   \begin{cartouche}
+	 \texttt{tclserv}
+   \end{cartouche}
 
-      \item Every where:
-	 \texttt{eltclsh} (ASCII) or \texttt{elwish} (graphical with tk)\\
-	 \texttt{package require genom} (or option \texttt{-package}).
+      \item Every where wanted:
+	   \begin{bitemize}{color@bulle}
+	       \item    ASCII shell linked with \texttt{editLine}:
+\begin{cartouche}
+\texttt{eltclsh -package genom}
+\end{cartouche} 
+	       \item Or, shell linked with the graphical toolkit
+		     \texttt{tk}, and with \texttt{editLine}:
+\begin{cartouche}
+\texttt{elwish -package genom}
+\end{cartouche} 
 
+	   \end{bitemize}
    \end{bitemize}
    \vfill
-   {\bf Under VxWorks}
+\end{tslide}
+% -----------------------------------------------------------------------
+
+\begin{tslide}{Starting with VxWorks (not maintained)}
+   \vfill
    \begin{bitemize}{color@bulle}
       \item On {\em the card $0$ of the racks} where run the modules~:\\
 	 \texttt{ld < /usr/local/robots/tcl/ppc-vxworks/tcl.o}\\
@@ -91,6 +107,37 @@
 	 \texttt{package require genom} (or option \texttt{-package}).
 
    \end{bitemize}
+
+   \vfill
+\end{tslide}
+% -----------------------------------------------------------------------
+
+\begin{tslide}{To avoid multi-users interferences}
+   \vfill
+   {\bf To allow multiple \texttt{tclserv} running on a same machine.}
+
+	Can occure when several users want to make independant tests on
+	a same machine\\
+	(If the users share modules thanks to {\tt H2DEV\_DIR}
+	environment variable they can also share {\tt tclserv})
+
+   {\bf Redefinition of the socket port number used to comunicate between \texttt{tclserv} and \texttt{eltclsh}:}
+   \begin{bitemize}{color@bulle}
+      \item Using the environment variable \texttt{TCLSERV\_PORT} for
+	    both \texttt{tclserv} and \texttt{eltclsh}. \\
+Eg, with \texttt{tcshell}:\\
+   \begin{cartouche}
+   \texttt{setenv TCLSERV\_PORT 1234}
+   \end{cartouche}   
+	 
+      \item Or, for \texttt{tclserv}, using the  option {\tt -p
+	    <port-number>} (it overwrites the environment variable \texttt{TCLSERV\_PORT})\\
+   \begin{cartouche}
+   \texttt{tclserv -p 1234}
+   \end{cartouche}   
+
+   \end{bitemize}
+
    \vfill
 \end{tslide}
 
@@ -101,8 +148,7 @@
    \begin{cartouche}
    \texttt{connect {\em server}}
    \end{cartouche}   
-   Connect to the server \texttt{\em server}. One can connect with several servers (example~:
-   \texttt{diligent} et \texttt{cabby}).
+   Connect to the server \texttt{\em server} where \texttt{tclserv} is running. One can connect with several servers (example~: \texttt{jido-base} and \texttt{jido-arm}).
    \vfill
    \begin{cartouche}
    \texttt{disconnect {\em server}}
@@ -122,22 +168,23 @@
 \begin{tslide}{Connections to the modules}
    \vfill
    \begin{cartouche}
-   \texttt{lm {\em <module>} [on {\em <server>}] [rpath {\em<path>}] {\em <path>}}
+   \texttt{lm {\em <module>} [on {\em <server>}] [path {\em<path-on-tclsh-host-machine>}] [rpath {\em <path-on-tclserv-target-machine>}]}
    \end{cartouche}   
    Loads the communications libraries with the \texttt{\em module}
    in the directory \texttt{\em path} on client side --- and
    \texttt{\em rpath} tclServ side, by default the path are identical.
    \vfill
    \begin{cartouche}
-   \texttt{mboxInit [{\em server}]}
+   \texttt{[mboxInit [{\em server}]]}
    \end{cartouche}   
-    Starts the connections to the modules on server side, on the 
+    Optional but usefull to reconnect. Starts the connections to the modules on server side, on the 
    \texttt{\em server} machine (or by default the last connected server).
    \vfill
    \begin{cartouche}
-   \texttt{mboxEnd [{\em server}]}
+   \texttt{[mboxEnd [{\em server}]]}
    \end{cartouche}   
-   Ends the connections to the modules on the \texttt{\em server} (or by
+   Optional but usefull to disconnect before reconnecting. Ends the connections to the modules on the \texttt{\em
+   server} (or by 
    default the last connected server).
    \vfill
 \end{tslide}
@@ -148,23 +195,23 @@
    \vfill
    \parbox{0.45\linewidth}{\tt
       {\bf diligent->} h2 init\\
-      {\bf diligent->} xr4000 \&\\
-      {\bf diligent->} platine \&\\
-      {\bf diligent->} tclserv \&\\
+      {\bf diligent->} xr4000 -b\\
+      {\bf diligent->} platine -b\\
+      {\bf diligent->} tclserv -b\\
    }\hfill\parbox{0.45\linewidth}{\tt
       {\bf cabby->} h2 init\\
-      {\bf cabby->} camera \&\\
-      {\bf cabby->} tclserv \&\\
+      {\bf cabby->} camera -b\\
+      {\bf cabby->} tclserv\\
    }
    \vfill
    {\tt
       {\bf tcl->} connect diligent\\
-      {\bf tcl->} lm platine /usr/local/robots/nomadic/modules/platine\\
-      {\bf tcl->} lm xr4000 /usr/local/robots/nomadic/modules/xr4000\\
+      {\bf tcl->} lm platine path /usr/local/openrobots\\
+      {\bf tcl->} lm xr4000 path /home/me/openrobots\\
       {\bf tcl->} mboxInit diligent\\
 \\
       {\bf tcl->} connect cabby\\
-      {\bf tcl->} lm camera /usr/local/robots/nomadic/modules/camera\\
+      {\bf tcl->} lm camera path /usr/local/openrobots\\
       {\bf tcl->} mboxInit cabby\\
    }
    \vfill

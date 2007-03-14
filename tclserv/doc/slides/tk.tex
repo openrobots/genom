@@ -11,9 +11,9 @@
 \usepackage[latin1]{inputenc}
 
 \context{\vfill}
-\title{Introduction à \Huge Tk}
-\author{Anthony Mallet\\ basé sur le cours de E.J. Friedman-Hill}
-\date{6 décembre 2002}
+\title{Introduction Ã  \Huge Tk}
+\author{Anthony Mallet\\ basÃ© sur le cours de E.J. Friedman-Hill}
+\date{6 dÃ©cembre 2002}
 
 \newcommand{\tclex}[2]{\texttt{#1}\\$\rightarrow$ \texttt{#2}}
 
@@ -22,20 +22,20 @@
 
 % =======================================================================
 
-\begin{part}{Introduction}{Le « toolkit » Tk}
+\begin{part}{Introduction}{Le Â« toolkit Â» Tk}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item {\bf Le problème} : Construire une application avec une
-	 interface est complexe. D'autant plus si la portabilité est en
+      \item {\bf Le problÃ¨me} : Construire une application avec une
+	 interface est complexe. D'autant plus si la portabilitÃ© est en
 	 jeu (multi-plateforme).
 
       \item {\bf La mauvaise solution} : 
-	 C++, toolkits orientés objet, Java AWT, ...
-	 Peu de bénéfices : nécéssité de programmer a un niveau assez
+	 C++, toolkits orientÃ©s objet, Java AWT, ...
+	 Peu de bÃ©nÃ©fices : nÃ©cÃ©ssitÃ© de programmer a un niveau assez
 	 bas.
 
       \item {\bf La bonne solution} : 
-	 Élever le niveau de programmation. Créer des interfaces à l'aide
+	 Ã‰lever le niveau de programmation. CrÃ©er des interfaces Ã  l'aide
 	 de scripts Tcl.
    \end{bitemize}
    \vfill
@@ -59,27 +59,27 @@
 \hspace*{1cm}.list insert end \$i\\ \}\\
    }
    \vfill
-   \vbox to0pt{\vss\hfill\docfig[width=0.3\linewidth]{file-browser.jpg}}
+   \vbox to0pt{\vss\hfill\docfig[width=0.3\linewidth]{fig/file-browser.jpg}}
 \end{tslide}
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Éléments d'une interface Tk}
+\begin{tslide}{Ã‰lÃ©ments d'une interface Tk}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item Commandes Tcl supplémentaires : 
+      \item Commandes Tcl supplÃ©mentaires : 
 	 \begin{itemize}
-	    \item Créer des objets {\em à la} Motif (multi-platorme).
+	    \item CrÃ©er des objets {\em Ã  la} Motif (multi-platorme).
             \item Agencer les objets. 
-            \item Lier des évènements à des scripts Tcl. 
+            \item Lier des Ã©vÃ¨nements Ã  des scripts Tcl. 
             \item Manipuler la selection, le focus, le window manager,
 		  etc. 
 	 \end{itemize}
 
-      \item Bibliothèque de fonctions C :
+      \item BibliothÃ¨que de fonctions C :
 	 \begin{itemize}
-	    \item Créer de nouvelles classes. 
-	    \item Créer de nouveau gestionnaires de « géométrie ». 
+	    \item CrÃ©er de nouvelles classes. 
+	    \item CrÃ©er de nouveau gestionnaires de Â« gÃ©omÃ©trie Â». 
 	 \end{itemize}
    \end{bitemize}
    \vfill
@@ -91,13 +91,13 @@
    \vfill
    {\bf Widgets}
    \begin{bitemize}{color@bulle}
-      \item Windowed gadgets $\rightarrow$ gadgets fenêtrés
+      \item Windowed gadgets $\rightarrow$ gadgets fenÃªtrÃ©s
       \item gadget (n.)\\
 	 1. a small mechanical device or appliance.\\
 	 2. any object that is interesting for its ingenuity or novelty
 	    rather than for its practical use.\\
 
-	 [ perhaps from French « gachette » : lock catch, trigger,
+	 [ perhaps from French Â« gachette Â» : lock catch, trigger,
 	    diminutive of gache staple ].
    \end{bitemize}
    \vfill
@@ -131,13 +131,13 @@
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Création de widgets}
+\begin{tslide}{CrÃ©ation de widgets}
    \vfill
    \begin{bitemize}{color@bulle}
       \item Chaque widget a une classse : button, listbox, scrollbar,
 	    etc. 
-      \item Une commande de creation pour chaque classe, utilisée pour
-	    créer des instances.
+      \item Une commande de creation pour chaque classe, utilisÃ©e pour
+	    crÃ©er des instances.
 	    
 	    {\tt button .a.b -text Quit -command exit}\\
 	    {\tt scrollbar .x -orient horizontal}
@@ -149,7 +149,7 @@
 
 \begin{tslide}{Configuration}
    \vfill
-   Options de configuration défines par la classse. Exemple pour la
+   Options de configuration dÃ©fines par la classse. Exemple pour la
    classe Bouton:
 
    {\tt
@@ -164,16 +164,16 @@
 }
 
    \vfill
-   Si certaines options ne sont pas spécifiées explicitement, elles
+   Si certaines options ne sont pas spÃ©cifiÃ©es explicitement, elles
    viennent du fichier {\tt .Xdefaults} (Unix).
    \vfill
 \end{tslide}
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Commandes associées aux widgets}
+\begin{tslide}{Commandes associÃ©es aux widgets}
    \vfill
-   Une commande Tcl pour chaque widget, nommée d'après le nom du widget.
+   Une commande Tcl pour chaque widget, nommÃ©e d'aprÃ¨s le nom du widget.
 
    Permet de reconfigurer et de manipuler le widget~:
 
@@ -189,7 +189,7 @@
       .a.b configure -foreground\\
       $\rightarrow$ -foreground foreground Foreground blue blue}
 
-   La commande est supprimée quand le widget est détruit
+   La commande est supprimÃ©e quand le widget est dÃ©truit
    \vfill
 \end{tslide}
 
@@ -201,28 +201,28 @@
    \begin{bitemize}{color@bulle}
       \item {\tt place}
 
-	 Placement absolu du widget par rapport à son parent. Spécification
-	 des coordonnées.
+	 Placement absolu du widget par rapport Ã  son parent. SpÃ©cification
+	 des coordonnÃ©es.
 
       \item {\tt pack}
 	 
 	 Arrange les widgets en fonction de la dimension du parent et des
-	 autres widgets au même niveau.
+	 autres widgets au mÃªme niveau.
 
       \item {\tt grid}
 
-	 Arrange les widgets dans un tableau à deux dimensions.
+	 Arrange les widgets dans un tableau Ã  deux dimensions.
 	 
       \item {\tt frame}
       
-	 Pour créer des arrangements plus complexes.
+	 Pour crÃ©er des arrangements plus complexes.
    \end{bitemize}
    \vfill
 \end{tslide}
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Connection à tcl}
+\begin{tslide}{Connection Ã  tcl}
    \vfill
    \begin{bitemize}{color@bulle}
       \item Scripts Tcl pour faire communiquer les widgets avec
@@ -239,14 +239,14 @@
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Évènements}
+\begin{tslide}{Ã‰vÃ¨nements}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item Associer des scripts Tcl aux évènements utilisateur : 
+      \item Associer des scripts Tcl aux Ã©vÃ¨nements utilisateur : 
 
          {\tt bind .b <Control-h> \{puts "control-h"\}}
 
-      \item Nommage des évènements : 
+      \item Nommage des Ã©vÃ¨nements : 
 
 	 {\tt <Double-Control-ButtonPress-1> \\
 	       <KeyPress> \\
@@ -270,11 +270,11 @@
 
 	 {\tt selection get}
 
-      \item Envoyer des commandes à d'autres applications Tk (X11) :
+      \item Envoyer des commandes Ã  d'autres applications Tk (X11) :
 
 	 {\tt send tgdb "break tkEval.c:200" }
 
-      \item Informations sur les fenêtres :
+      \item Informations sur les fenÃªtres :
 
 	 {\tt winfo width .x\\
 	       winfo children .\\
