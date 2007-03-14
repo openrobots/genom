@@ -1,0 +1,169 @@
+%%
+%% Copyright (C) 2002 LAAS/CNRS 
+%%
+%% $Id$
+%%
+
+% cartouche environmnent: draw rectangle w/rounded corners around argument
+\RequirePackage{calc}
+
+\font\circfont=lcircle10
+\newdimen\circthick
+\newdimen\cartouter\newdimen\cartinner
+\newskip\normbskip\newskip\normpskip\newskip\normlskip
+\circthick=\fontdimen8\circfont
+%
+\def\ctl{{\circfont\char'013\hskip -6pt}}% 6pt from pl file: 1/2charwidth
+\def\ctr{{\hskip 6pt\circfont\char'010}}
+\def\cbl{{\circfont\char'012\hskip -6pt}}
+\def\cbr{{\hskip 6pt\circfont\char'011}}
+\def\carttop{\hbox to \cartouter{\hskip\lskip
+        \ctl\leaders\hrule height\circthick\hfil\ctr
+        \hskip\rskip}}
+\def\cartbot{\hbox to \cartouter{\hskip\lskip
+        \cbl\leaders\hrule height\circthick\hfil\cbr
+        \hskip\rskip}}
+%
+\newskip\lskip\newskip\rskip
+\newlength\normtopsep
+
+%\@listdepth=0
+
+\long\def\cartouche{
+\begingroup
+        % Marge gauche depend de l'indentation
+	\setlength{\lskip}{\leftmargin*\@listdepth}
+        \rskip=\marginparsep
+	\normtopsep=\topsep
+	\topsep=0pt
+        \leftskip=10pt\rightskip=10pt %we want these *outside*.
+        \cartinner=\hsize \advance\cartinner by-\lskip 
+                          \advance\cartinner by-\rskip
+                          \advance\cartinner by-7pt % Bon, beh on recale
+%                                                     la ligne verticale
+%                                                     droite ...
+%                                                     (pas joli ...)
+        \cartouter=\hsize
+	% longeur des lignes horizontales : 
+        \advance\cartouter by 21pt % allow for 3pt kerns on either
+%                                    side, and for 6pt waste from
+%                                    each corner char
+%                                marge totale: 18pt -> 28pt 
+        \normbskip=\baselineskip \normpskip=\parskip \normlskip=\lineskip
+        \vbox\bgroup
+                \baselineskip=0pt\parskip=0pt\lineskip=0pt
+                \carttop
+                \hbox\bgroup
+                        \hskip\lskip
+                        \vrule\kern13pt % marge gauche: 3pt -> 13pt
+                        \kern-\lskip % on supprime l'indentation suppl
+%                                      pour le texte (qui a sa propre indent.)
+                        \vbox\bgroup
+                                \hsize=\cartinner
+                                \kern3pt % marge en haut
+                                \begingroup
+                                        \baselineskip=\normbskip
+                                        \lineskip=\normlskip
+                                        \parskip=\normpskip
+                                        \vskip -\parskip
+\def\endcartouche{%
+                                \endgroup%
+                                \kern3pt
+                        \egroup%
+                        \kern\lskip % on rajoute l'indentation suppl.
+                        \kern3pt\vrule%
+                        \hskip\rskip%
+                \egroup%
+                \cartbot%
+        \egroup
+	\topsep=\normtopsep
+\endgroup
+}}
+ 
+
+
+
+%-----------------------------------------------------------------------
+% Seulement le haut de la cartouche
+\long\def\cartHaut{
+
+\begingroup
+        \lskip=\leftskip \rskip=\rightskip
+	\normtopsep=\topsep
+	\topsep=0pt
+        \leftskip=10pt\rightskip=10pt %we want these *outside*.
+        \cartinner=\hsize \advance\cartinner by-\lskip 
+                          \advance\cartinner by-\rskip
+        \cartouter=\hsize
+        \advance\cartouter by 28pt % allow for 3pt kerns on either
+%                                    side, and for 6pt waste from
+%                                    each corner char
+        \normbskip=\baselineskip \normpskip=\parskip \normlskip=\lineskip
+        \vbox\bgroup
+                \baselineskip=0pt\parskip=0pt\lineskip=0pt
+                \carttop
+                \hbox\bgroup
+                        \hskip\lskip
+                        \vrule\kern13pt
+                        \vbox\bgroup
+                                \hsize=\cartinner
+                                \kern3pt
+                                \begingroup
+                                        \baselineskip=\normbskip
+                                        \lineskip=\normlskip
+                                        \parskip=\normpskip
+                                        \vskip -\parskip
+\def\endcartHaut{%
+                                \endgroup%
+                                \kern3pt
+                        \egroup%
+                        \kern3pt\vrule%
+                        \hskip\rskip%
+                \egroup%
+        \egroup
+	\topsep=\normtopsep
+\endgroup
+}}
+ 
+
+
+% Seulement le bas de la cartouche
+\long\def\cartBas{
+
+\begingroup
+        \lskip=\leftskip \rskip=\rightskip
+	\normtopsep=\topsep
+	\topsep=0pt
+        \leftskip=10pt\rightskip=10pt %we want these *outside*.
+        \cartinner=\hsize \advance\cartinner by-\lskip 
+                          \advance\cartinner by-\rskip
+        \cartouter=\hsize
+        \advance\cartouter by 28pt % allow for 3pt kerns on either
+%                                    side, and for 6pt waste from
+%                                    each corner char
+        \normbskip=\baselineskip \normpskip=\parskip \normlskip=\lineskip
+        \vbox\bgroup
+                \baselineskip=0pt\parskip=0pt\lineskip=0pt
+                \hbox\bgroup
+                        \hskip\lskip
+                        \vrule\kern13pt
+                        \vbox\bgroup
+                                \hsize=\cartinner
+                                \kern3pt
+                                \begingroup
+                                        \baselineskip=\normbskip
+                                        \lineskip=\normlskip
+                                        \parskip=\normpskip
+                                        \vskip -\parskip
+\def\endcartBas{%
+                                \endgroup%
+                                \kern3pt
+                        \egroup%
+                        \kern3pt\vrule%
+                        \hskip\rskip%
+                \egroup%
+                \cartbot%
+        \egroup
+	\topsep=\normtopsep
+\endgroup
+}}

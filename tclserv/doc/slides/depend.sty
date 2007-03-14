@@ -1,0 +1,49 @@
+%%
+%% Anthony Mallet - Wed May 16 2001
+%% Copyright (C) 2001 LAAS/CNRS 
+%%
+%% $Id$
+%%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{depend}[2001/05/16]
+
+% test whether pdf or dvi output is requested
+\ifx\pdfoutput\@undefined\def\deps@ext{dvi}
+\else\ifnum\pdfoutput=1\def\deps@ext{pdf}\else\def\deps@ext{dvi}\fi\fi
+
+\def\@listfiles{}% defined
+
+\def\dep@target{\jobname.depend \jobname.\deps@ext}
+\def\dep@bbl{bbl}
+\newwrite\deps
+\immediate\openout\deps=\jobname.depend
+
+\gdef\@depslist{}%
+\gdef\adddepsrule#1#2{%
+   \immediate\write\deps\expandafter{#1: #2}%
+}
+
+% add .bbl to deps list even if it's not yes generated
+\def\bibliography#1{%
+   \if@filesw%
+      \immediate\write\@auxout{\string\bibdata{#1}}%
+   \fi%
+   \adddepsrule{\jobname.\deps@ext}{\jobname.bbl}%
+   \@for\@currbib:=#1\do{\adddepsrule{\jobname.bbl}{\@currbib.bib}}%
+   \@input@{\jobname.bbl}%
+}
+
+\def\@dodepslist{%
+   \@for\@currname:=\@filelist\do{%
+      \filename@parse\@currname%
+      \ifx\filename@ext\dep@bbl\else%
+	 \edef\tmpext{.\ifx\filename@ext\relax tex\else\filename@ext\fi}%
+	 \edef\tmpfile{\dep@target: \filename@area\filename@base\tmpext}%
+	 \immediate\write\deps\expandafter{\tmpfile}%
+      \fi%
+   }%
+   \immediate\closeout\deps%
+}
+
+\AtEndDocument{\@dodepslist}
