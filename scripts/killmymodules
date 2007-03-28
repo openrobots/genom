@@ -27,8 +27,15 @@ use warnings;
 
 $killmodule =  "killmodule";
 
+$h2owner = $ENV{'H2DEV_DIR'};
+if (defined($h2owner)) {
+  $pid_file_pattern = "$h2owner/.*.pid-*";
+} else {
+  $pid_file_pattern = "$ENV{'HOME'}/.*.pid-*";
+}
+
 # Get a list of files corresponding to running modules
-@list_files=`ls $ENV{'HOME'}/.*.pid-*`;
+@list_files=`ls $pid_file_pattern`;
 
 # walk the list
 foreach $file (@list_files) {
