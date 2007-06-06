@@ -122,7 +122,6 @@ int posterLibGen(FILE *out)
     /* Init poster de controle */
     fprintf(out, 
 	    "  if (%sCntrlPosterInit() == ERROR) {\n"
-	    "    h2perror(\"%sCntrlPosterInit\");\n"
 	    "    status = ERROR;\n  }\n", 
 	    module->name,
 	    module->name);
@@ -131,7 +130,6 @@ int posterLibGen(FILE *out)
     for (p = posters; p != NULL; p = p->next) {
 	fprintf(out, 
 		"  if (%s%sPosterInit() == ERROR) {\n"
-		"    h2perror(\"%s%sPosterInit\");\n"
 		"    status = ERROR;\n  }\n",
 		module->name, p->name,
 		module->name, p->name);
