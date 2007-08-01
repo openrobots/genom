@@ -35,8 +35,8 @@ $commentend$
 if { [lsearch [interp hidden] $module$$posterName$PosterRead] >= 0 } {
     interp expose {} $module$$posterName$PosterRead
 }
-if { [lsearch [interp hidden] $module$$posterName$FormatOutput] >= 0 } {
-    interp expose {} $module$$posterName$FormatOutput
+if { [lsearch [interp hidden] $module$$posterName$PosterFormatOutput] >= 0 } {
+    interp expose {} $module$$posterName$PosterFormatOutput
 }
 
 proc ::$module$$posterName$PosterRead { name args } {
