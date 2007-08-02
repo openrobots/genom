@@ -46,11 +46,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef VXWORKS
-#include <vxWorks.h>
-#else
-#include "portLib.h"
-#endif
+#include <portLib.h>
 
 #include "$module$PosterShowLib.h"
 #include "$module$Print.h"

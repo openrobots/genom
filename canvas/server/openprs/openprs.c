@@ -33,17 +33,9 @@
  *   Automatically generated: do not edit by hand.
  *----------------------------------------------------------------------*/
 
-#ifndef UNIX
-#include <vxWorks.h>
-#else
-#include <portLib.h>
-#endif
-
-#ifdef UNIX
 #include <stdlib.h>
-#else
-#include <taskLib.h>
-#endif
+
+#include <portLib.h>
 
 #include "$module$MsgLib.h"
 #undef FREE

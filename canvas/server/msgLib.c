@@ -31,12 +31,6 @@
 
 /* --- Message-based communication for module $module$ --------------- */
 
-#ifdef VXWORKS
-# include <vxWorks.h>
-#else
-# include <portLib.h>
-#endif
-
 #if defined(__RTAI__) && defined(__KERNEL__)
 # include <linux/kernel.h>
 #else
@@ -44,7 +38,9 @@
 # include <stddef.h>
 #endif
 
+#include <portLib.h>
 #include <errnoLib.h>
+
 #include "$module$MsgLib.h"
 #include "$module$Error.h"
  

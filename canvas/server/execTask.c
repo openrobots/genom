@@ -37,21 +37,14 @@
  * Execution task body
  */
 
-#include "$module$Header.h"
-
 #if defined(__RTAI__) && defined(__KERNEL__)
 # include <linux/time.h>
 # define gettimeofday(x,y)	do_gettimeofday(x)
 #else
-# ifdef VXWORKS
-#  define HAS_POSIX_CLOCK
-#  include <time.h>
-# else
 # include <sys/time.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-# endif /* not VXWORKS */
 #endif /* not RTAI && KERNEL */
 
 #include <taskLib.h>
@@ -61,7 +54,11 @@
 #include <h2evnLib.h>
 #include <h2timerLib.h>
 
-#include "genom/moduleEvents.h"
+#include <genom/modules.h>
+#include <genom/moduleEvents.h>
+
+#include "$module$Header.h"
+
 
 /* Print debugging information */
 #define GENOM_DEBUG_EXECTASK

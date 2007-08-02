@@ -82,15 +82,12 @@ scanGen(FILE *out)
     fprintf(out, "/*------------------  Fichier généré automatiquement ------------------*/\n");
     fprintf(out, "/*------------------  Ne pas éditer manuellement !!! ------------------*/\n\n");
 
-    fprintf(out, "#ifdef VXWORKS\n");
-    fprintf(out, "#include <vxWorks.h>\n");
-    fprintf(out, "#else\n");
-    fprintf(out, "#include <portLib.h>\n");
-    fprintf(out, "#endif\n");
     fprintf(out, "#include <stdio.h>\n");
     fprintf(out, "#include <stdlib.h>\n");
-    fprintf(out, "#include \"csLib.h\"\n");
-    fprintf(out, "#include \"posterLib.h\"\n");
+    fprintf(out, "\n");
+    fprintf(out, "#include <portLib.h>\n");
+    fprintf(out, "#include <csLib.h>\n");
+    fprintf(out, "#include <posterLib.h>\n");
     fprintf(out, "#include \"%sScan.h\"\n\n", module->name);
 
     /* Generation des fonctions scan */

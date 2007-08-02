@@ -35,12 +35,6 @@
 
 /* module $module$ initialization routines */
 
-#ifdef VXWORKS
-# include <vxWorks.h>
-#else
-# include <portLib.h>
-#endif
-
 #if defined(__RTAI__) && defined(__KERNEL__)
 # include <linux/init.h>
 # include <linux/module.h>
@@ -49,8 +43,6 @@
 
 #else
 # include <stdio.h>
-
-# ifndef VXWORKS
 #  include <sys/param.h>
 #  include <stdlib.h>
 #  include <fcntl.h>
@@ -59,12 +51,12 @@
 #  include <unistd.h>
 #  include <sys/utsname.h>
 
-#  include "shellLib.h"
-#  include "h2initGlob.h"
-
 #  define PID_FILE	".$module$.pid"
-# endif /* VXWORKS */
 #endif /* RTAI && KERNEL */
+
+#include <portLib.h>
+#include <shellLib.h>
+#include <h2initGlob.h>
 
 #include <taskLib.h>
 #include <errnoLib.h>
@@ -310,7 +302,7 @@ module_exit($module$_module_exit);
 #endif /* RTAI && KERNEL */
 
 
-#if !defined(VXWORKS) && !defined(__KERNEL__)
+#if !defined(__KERNEL__)
 /*
  * --- main for unix ----------------------------------------------------
  */
@@ -426,4 +418,4 @@ main(int argc, char *argv[])
     unlink(pidFilePath);
     exit(0);
 }
-#endif /* UNIX */
+#endif /* !__KERNEL__ */

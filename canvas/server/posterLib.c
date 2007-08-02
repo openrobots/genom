@@ -37,17 +37,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef VXWORKS
-#include <vxWorks.h>
-#else
-#include "portLib.h"
-#endif
+
+#include <portLib.h>
 
 #include "$module$PosterLib.h"
 #include "$module$Print.h"
 #include "$module$Endian.h"
 
-#include "genom/h2endian.h"
+#include <genom/h2endian.h>
 
 /* Id. du poster de controle */
 static POSTER_ID $module$CntrlPosterId=(POSTER_ID)NULL;

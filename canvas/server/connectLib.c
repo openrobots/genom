@@ -39,11 +39,8 @@
  * Attention: inutile si vous utilisez msgLib: c'est deja inclus dedans
  ***********************************************************************/
 
-#ifndef VXWORKS
-#include "portLib.h"
-#else
-#include <vxWorks.h>
-#endif
+
+#include <portLib.h>
 
 #include "$module$MsgLib.h"
  

@@ -40,12 +40,6 @@
 #ifndef $module$_HEADER_H
 #define $module$_HEADER_H
 
-#ifdef VXWORKS
-# include <vxWorks.h>
-#else
-# include <portLib.h>
-#endif
-
 #if defined(__RTAI__) && defined(__KERNEL__)
 # include <linux/kernel.h>
 # include <linux/sched.h>
@@ -53,6 +47,8 @@
 # include <stdio.h>
 # include <string.h>
 #endif
+
+#include <portLib.h>
 
 /* Inclusions concernant le module */
 #include "$module$PosterLib.h"

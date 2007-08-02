@@ -90,13 +90,10 @@ userExecCodelsGen(FILE *out)
 	    module->name, t->name, langFileExt(module->lang),
 	    module->name, t->name);
 
-    fprintf(out, "#ifdef VXWORKS\n");
-    fprintf(out, "# include <vxWorks.h>\n");
-    fprintf(out, "#else\n");
-    fprintf(out, "# include <portLib.h>\n");
-    fprintf(out, "#endif\n");
+    fprintf(out, "include <portLib.h>\n");
+    fprintf(out, "\n");
     fprintf(out, "#include \"server/%sHeader.h\"\n\n\n", module->name);
-    
+
     /* 
      * Codel d'initialisation 
      */

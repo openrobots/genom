@@ -33,21 +33,12 @@
  *   Automatically generated: do not edit by hand.
  *----------------------------------------------------------------------*/
 
-#ifndef UNIX
-#include <vxWorks.h>
-#else
-#include <portLib.h>
-#endif
-
-#ifdef UNIX
-#include <stdlib.h>
-#else
-#include <taskLib.h>
-#endif
-
-#include <stdio.h>
 #include <sys/types.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+
+#include <portLib.h>
 
 #undef FREE
 
@@ -62,8 +53,8 @@
 
 #include <pu-enum_f.h>
 #include <pu-genom_f.h>
-#include "$module$Type.h"
 
+#include "$module$Type.h"
 
 #include "$module$PosterLib.h"
 

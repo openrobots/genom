@@ -47,13 +47,10 @@ static char * genScopePosterFunc(int *nb);
   const char *file_header = 
 "/*------------------  Fichier généré automatiquement ------------------*/\n"
 "/*------------------  Ne pas éditer manuellement !!! ------------------*/\n\n"
-"#ifndef UNIX\n"
-"#include <vxWorks.h>\n"
-"#else\n"
-"#include <portLib.h>\n"
-"#endif\n"
 "#include <stdio.h>\n"
 "#include <stdlib.h>\n"
+"\n"
+"#include <portLib.h>\n"
 "#include \"%sScopeLib.h\"\n\n"
 "/*\n"
 " * Fonction est passe en parametre de h2scopeIhmTxtMain\n"
@@ -444,13 +441,10 @@ genScopeGetVal(FILE *out, DCL_NOM_LIST *list)
       /* Type specifique */
       else {
 	fprintf(out, 
-		"\n#ifdef VXWORKS\n"
-		"        if(!h2scopeSymTest(\"scope_%s\")) continue;\n"
-		"#endif\n"
 		"        if(scope_%s(indent, \"%s\", rack, cpu, sdi, \n"
 		"                      off+addoff, %d, %s, list)) continue;\n"
 		"        return FALSE;}\n",
-		type1, type1, var,
+		type1, var,
 		n->flags & ARRAY ? n->ndimensions : 0,
 		n->flags & ARRAY ? "dims" : "NULL");
       }

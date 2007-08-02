@@ -34,22 +34,18 @@
  ** Manual editing not recommended. Changes will be overridden.
  **/
 
-#ifndef VXWORKS
-#include "portLib.h"
-#include "errnoLib.h"
-#else
-#include <vxWorks.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <tcl.h>
 
-#include "genom/tclServ.h"
-#include "genom/tcl_cs.h"
+#include <portLib.h>
+#include <errnoLib.h>
+#include <h2errorLib.h>
 
-#include "h2errorLib.h"
+#include <genom/tclServ.h>
+#include <genom/tcl_cs.h>
+
 #include "$module$MsgLib.h"
 #include "$module$PosterLib.h"
 

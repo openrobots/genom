@@ -74,11 +74,8 @@ userCntrlCodelsGen(FILE *out)
 	  " **\n"
 	  " **/\n\n", module->name, langFileExt(module->lang), module->name);
   
-  fprintf(out, "#ifdef VXWORKS\n");
-  fprintf(out, "# include <vxWorks.h>\n");
-  fprintf(out, "#else\n");
-  fprintf(out, "# include <portLib.h>\n");
-  fprintf(out, "#endif\n");
+  fprintf(out, "#include <portLib.h>\n");
+  fprintf(out, "\n");
   fprintf(out, "#include \"server/%sHeader.h\"\n\n\n", module->name);
 
   /* 

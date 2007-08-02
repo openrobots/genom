@@ -32,15 +32,12 @@
 /*------------------  Fichier généré automatiquement ------------------*/
 /*------------------  Ne pas éditer manuellement !!! ------------------*/
 
-#ifdef VXWORKS
-#include <portLib.h>
-#else
-#include <vxWorks.h>
-#endif
 #include <stdio.h>
 #include <stdlib.h>
-#include "$module$ScopeLib.h"
 
+#include <portLib.h>
+
+#include "$module$ScopeLib.h"
 
 void $module$Scope(char *cpu);
 BOOL $module$ScopeAll (char *rack, char *cpu, H2_SCOPE_SIG_STR **scopelist,
@@ -52,22 +49,8 @@ BOOL $module$ScopeAll (char *rack, char *cpu, H2_SCOPE_SIG_STR **scopelist,
  * fonction $module$ScopeAll passee en parametre
  */
 
-#ifdef VXWORKS
-void $module$Scope (char *cpu)
-{
-  /*  if (cpu == NULL) {
-    fprintf(stderr, "usage: $module$Scope <default_cpu>\n");
-    return;
-  }*/
-
-  h2scopeIhmTxtMain(NULL, cpu, "$module$",
-	      (H2_SCOPE_MODULE_FUNC_PT)($module$ScopeAll));
-
-}
-
-#else /* UNIX */ 
-
-void main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
   if (argc < 2 || argc > 3) {
     fprintf(stderr, "usage: h2scope <rack> [<default_cpu>]\n");
@@ -88,8 +71,6 @@ void main(int argc, char **argv)
   exit(0);
 } /* main */
 
-
-#endif /* VXWORKS */
 
 
 

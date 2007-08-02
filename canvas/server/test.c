@@ -48,21 +48,15 @@
 /*----------------------------- INCLUSIONS ---------------------------------*/
 
 /* Inclusions generales */
-#ifdef VXWORKS
-#include <vxWorks.h>
-#else
-#include "portLib.h"
-#include "h2initGlob.h"
-#endif
-#include <taskLib.h>
 
-#ifdef VXWORKS
-#include "h2sysLibProto.h"
-#endif
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+#include <portLib.h>
+#include <h2initGlob.h>
+#include <taskLib.h>
 
 /* Inclusions pour acceder au module */
 #include "$module$MsgLib.h"
@@ -90,7 +84,6 @@ $requestFuncTabDeclare$
 
 /*--------------------------------------------------------------------------*/
 
-#ifndef VXWORKS
 int
 main(int argc, char **argv)
 {
@@ -105,9 +98,6 @@ main(int argc, char **argv)
   /*NOTREACHED*/
   return 0;
 } /* main */
-#endif /* UNIX */
-
-
 
 /**
  **   $module$Test - Fonction de test du module $module$

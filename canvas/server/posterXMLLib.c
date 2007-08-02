@@ -36,14 +36,10 @@
    du contenu des posters du module depuis un XML
 */
 
-#ifdef VXWORKS
-#include <vxWorks.h>
-#else
-#include "portLib.h"
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <portLib.h>
 
 #include "$module$PosterXMLLib.h"
 #include "$module$PrintXML.h"

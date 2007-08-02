@@ -36,22 +36,15 @@
  * Control task body
  */
 
-#ifdef VXWORKS
-# include <vxWorks.h>
-#else
-# include <portLib.h>
-#endif
-
 #if defined(__RTAI__) && defined(__KERNEL__)
 # define exit(x)	taskDelete(0)
 #else
 # include <stdlib.h>
 # include <unistd.h>
 # include <signal.h>
-# ifndef VXWORKS
-#  define PID_FILE
-# endif
 #endif
+
+#include <portLib.h>
 
 #include "$module$Header.h"
 
@@ -78,9 +71,7 @@
 /* Semaphores d'initialisation et de debug */
 extern SEM_ID sem$module$CntrlTaskInit;   
 
-#ifdef PID_FILE
 extern char pidFilePath[];
-#endif
 
 /*-------------------- VARIABLES GLOBALES ---------------------------------*/
 
@@ -91,9 +82,7 @@ static POSTER_ID $module$CntrlPosterId;            /* Poster de controle */
 static int $module$LastActivityNum=-1;
 static int $module$LastAbsolutActivityNum=-1;
 $execTaskNameTabDeclare$
-#ifndef VXWORKS
 static BOOL $module$SignalAbort;
-#endif
 
 #define TIMEOUT_CNTRL_TASK 2000 /* 10 sec (pas encore utilise) */
 
@@ -120,10 +109,8 @@ static void   $module$RqstAbortActivity (SERV_ID ServId, int rqstId);
 static void   $module$CntrlTaskSuspend  (BOOL giveFlag);
 static void   $module$ReplyAndSuspend   (SERV_ID servId, int rqstId, 
 					 BOOL giveFlag);      
-#ifndef VXWORKS
 static void   $module$SignalHandler(int);
 static void   $module$SignalEnd(void);
-#endif
 
 /*---------------------- FONCTION EXPORTEE ---------------------------------*/
 
@@ -161,11 +148,9 @@ $module$CntrlTask()
 
   moduleEventCntrl.moduleNum = $numModule$;
 
-#ifndef VXWORKS
   /* Record a signal handler */
   $module$SignalAbort = FALSE;
   signal(SIGTERM, $module$SignalHandler);
-#endif
   /* Boucler indefiniment */
   FOREVER
     {
@@ -177,11 +162,9 @@ $module$CntrlTask()
       commonStructTake ((void *) $module$CntrlStrId);
       commonStructTake ((void *) $module$DataStrId);
  
-#ifndef VXWORKS
       if ($module$SignalAbort) {
 	      $module$SignalEnd();
       }
-#endif
       /* Traiter les evenements internes */
       $module$CntrlIntEvnExec ($module$ServId);
 
@@ -926,10 +909,8 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 	  commonStructDelete ((void *) $module$CntrlStrId);
 	  posterDelete($module$CntrlPosterId);
 	  logMsg("$module$CntrlTask ended\n");
-#ifdef PID_FILE
 	  /* Remove PID file */
 	  unlink(pidFilePath);
-#endif
 	  exit(0);
 	}
 	break;
@@ -968,7 +949,6 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
     $module$CntrlTaskSuspend (TRUE); 
 }
 
-#ifndef VXWORKS
 /****************************************************************************
  * $module$SignalHandler - Handle signals in a module
  */
@@ -1018,14 +998,11 @@ $module$SignalEnd(void)
 	commonStructDelete ((void *) $module$CntrlStrId);
 	posterDelete($module$CntrlPosterId);
 	logMsg("$module$CntrlTask ended\n");
-#ifdef PID_FILE
 	  /* Remove PID file */
 	  unlink(pidFilePath);
-#endif
 	  exit(0);
 }
-#endif
 
-/* Requetes de types controle */
-/* Requetes de types execution */
+/* Requetes de type controle */
+/* Requetes de type execution */
 

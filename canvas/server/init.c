@@ -48,17 +48,13 @@
 /*----------------------------- INCLUSIONS ---------------------------------*/
 
 /* Inclusions generales */
-#ifdef VXWORKS
-#include <vxWorks.h>
-#include "h2sysLibProto.h"
-#else
-#include "portLib.h"
-#include "errnoLib.h"
-#include "h2initGlob.h"
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <portLib.h>
+#include <errnoLib.h>
+#include <h2initGlob.h>
 
 #define $MODULE$_PROMPT "usage: $module$SendInitRqst ($inputUsage$)\n"
 
@@ -78,7 +74,6 @@ static STATUS $module$InitEnd (CLIENT_ID clientId);
 
 /*---------------------------   MAIN  ------------------------------------*/
 
-#ifndef VXWORKS
 int
 main(int argc, char **argv)
 {
@@ -98,14 +93,6 @@ $inputA2Type$
 
   return 0;
 } /* main */
-#else
-void 
-$module$InitParamsShow(void)
-{
-  printf ($MODULE$_PROMPT);
-}
-#endif /* UNIX */
-
 
 /**
  **   $module$Init - Emission de la requete d'init
@@ -122,10 +109,8 @@ STATUS $module$SendInitRqst ($inputFlat$)
   int size=$inputSize$;
   $inputDeclare$
 
-#ifndef VXWORKS
   /* Defini la valeur d'un tic (en nombre de tic par seconde) */
   h2initGlob(20);
-#endif
 
   /* Initialisation de la tache $module$Init */
   if ($module$InitInitTask (&initCId,size) == ERROR)
