@@ -132,6 +132,8 @@ dnl --- Functions -------------------------------------------------------
 AC_CHECK_FUNCS(vasprintf)
 AC_CHECK_FUNCS(asprintf)
 
+AC_REPLACE_FUNCS([setenv strsep])
+
 dnl --- Create the Makefiles --------------------------------------------
 dnl
 CFLAGS="${C_DEBUG_FLAGS} ${C_WARNING_FLAGS} ${CFLAGS}"
