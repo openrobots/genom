@@ -128,6 +128,10 @@ if test "x$PERL" = "xno"; then
     AC_MSG_ERROR(Cannot find the perl executable)
 fi
 
+dnl --- Functions -------------------------------------------------------
+AC_CHECK_FUNCS(vasprintf)
+AC_CHECK_FUNCS(asprintf)
+
 dnl --- Create the Makefiles --------------------------------------------
 dnl
 CFLAGS="${C_DEBUG_FLAGS} ${C_WARNING_FLAGS} ${CFLAGS}"
