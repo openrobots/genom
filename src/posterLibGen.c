@@ -123,7 +123,6 @@ int posterLibGen(FILE *out)
     fprintf(out, 
 	    "  if (%sCntrlPosterInit() == ERROR) {\n"
 	    "    status = ERROR;\n  }\n", 
-	    module->name,
 	    module->name);
 
     /* Init pour chaque poster fonctionnel */
@@ -131,7 +130,6 @@ int posterLibGen(FILE *out)
 	fprintf(out, 
 		"  if (%s%sPosterInit() == ERROR) {\n"
 		"    status = ERROR;\n  }\n",
-		module->name, p->name,
 		module->name, p->name);
     } /* for */
 
