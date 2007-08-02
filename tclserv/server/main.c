@@ -41,8 +41,6 @@ __RCSID("$LAAS$");
 #include <string.h>
 #include <unistd.h>
 
-#include <rpc/types.h>
-
 #include "portLib.h"
 #include "h2initGlob.h"
 
