@@ -31,10 +31,7 @@
 #include "genom-config.h"
 __RCSID("$LAAS$");
 
-#include "portLib.h"
-#include "h2initGlob.h"
-
-#include <rpc/types.h>
+#include <sys/types.h>
 
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>
@@ -42,19 +39,18 @@ __RCSID("$LAAS$");
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+
+#include <rpc/types.h>
+
+#include "portLib.h"
+#include "h2initGlob.h"
+
+#include <taskLib.h>
 
 #include "tclServ.h"
 #include "tcl_cs.h"
 
-#ifdef VXWORKS
-#include <hostLib.h>
-#include <ioLib.h>
-#else
-#include <sys/types.h>
-#include <unistd.h>
-#endif
-
-#include <taskLib.h>
 
 static int xes_verbose = 0;
 #define TCLSERV_MAX_STRLEN	50
@@ -152,8 +148,6 @@ tclServReal(char *verbose)
    return OK;
 }
 
-#ifndef VXWORKS
-
 void 
 usage(char *name)
 {
@@ -223,19 +217,6 @@ main(int argc, char *argv[])
    } 
    return EXIT_SUCCESS;
 }
-
-#else
-
-STATUS
-tclServ(char *verbose)
-{
-   static STATUS tclServReal(char *);
-
-   return taskSpawn("tTclServ", TCLSERV_PRIORITY, 8, 50000,
-		    tclServReal, verbose);
-}
-
-#endif /* VXWORKS */
 
 /*
  * Wish you were here ---------------------------------------------------
