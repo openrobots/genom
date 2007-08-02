@@ -40,14 +40,13 @@ includedir=	@includedir@/genom
 datadir=	  @datadir@/tclserv
 
 INSTALL=  @INSTALL@
-VPATH=		$(srcdir)
+VPATH=		$(srcdir) $(top_srcdir)/compat
 
 include $(top_builddir)/config.mk
 
 CPPFLAGS+=	-I$(top_builddir) -I$(top_srcdir)/include -I$(srcdir) -I.
 CPPFLAGS+=	$(PORTLIB_CFLAGS)
 CPPFLAGS+=	-D$(ENDIANNESS)
-CPPFLAGS+=	-DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
 LDFLAGS+=	$(PORTLIB_LIBS)
 
 
@@ -69,7 +68,7 @@ SRCS = \
 	tcl_cs.c	\
 	tcl_enum.c
 
-OBJS = $(SRCS:.c=.lo)
+OBJS = $(SRCS:.c=.lo) @LIBOBJS@
 
 
 # -----------------------------------------------------------------------
