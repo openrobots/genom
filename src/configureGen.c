@@ -149,7 +149,7 @@ configureGen(FILE *out,
    ID_LIST *ln;
 
    char *pkg_conf_in, *pkg_conf_mk;
-   char *genomIncludes, *serverLibs, *codel_files;
+   char *genomIncludes, *serverLibs, *codelLibs, *codel_files;
    char *at_sign, *pkgname;
 #define VERSION_TO_STR_LENGTH 200
    char version_to_str[VERSION_TO_STR_LENGTH];
@@ -320,13 +320,18 @@ configureGen(FILE *out,
 
    genomIncludes = NULL;
    serverLibs = NULL;
+   codelLibs = NULL;
 
    /* Include all packages by default */
    for (ln = requires; ln != NULL; ln = ln->next)
        bufcatIfNotIn(&genomIncludes, " \\$(%s_CFLAGS)", ln->NAME);
-   if (genServer)
-     for (ln = codels_requires; ln != NULL; ln = ln->next)
+
+   for (ln = codels_requires; ln != NULL; ln = ln->next) {
+     bufcatIfNotIn(&codelLibs, " \\$(%s_LIBS)", ln->NAME);
+     if (genServer)
        bufcatIfNotIn(&genomIncludes, " \\$(%s_CFLAGS)", ln->NAME);
+   }
+
    for (ln = imports; ln != NULL; ln = ln->next)
    {
         bufcatIfNotIn(&genomIncludes, " \\$(%s_CFLAGS)", ln->NAME);
@@ -334,6 +339,7 @@ configureGen(FILE *out,
    }
    output(out, "genomPackages", pkg_conf_mk);
    output(out, "serverLibs", serverLibs);
+   output(out, "codelLibs", codelLibs);
 
    /* -I options */
    for (ln = externPath; ln != NULL; ln = ln->next)

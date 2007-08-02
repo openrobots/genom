@@ -101,6 +101,9 @@ $genomPackages$
 SERVERS_CLIENT_LIB=  $serverLibs$
 SERVERS_ENDIAN_LIB=  $(SERVERS_CLIENT_LIB)
 
+CODEL_LIB=$codelLibs$
+
+
 # --- Flags -------------------------------------------------------------
 
 OSAPI?=		@OSAPI@
