@@ -40,7 +40,7 @@ includedir=	@includedir@
 datadir=	@datadir@
 
 INSTALL= 	@INSTALL@
-VPATH=		$(srcdir)
+VPATH=		$(srcdir) $(top_srcdir)/compat
 
 include $(top_builddir)/config.mk
 
@@ -86,7 +86,7 @@ SRCS = \
 	configureGen.c		\
 	extern_processes.c
 
-OBJS = $(SRCS:.c=.lo)
+OBJS = $(SRCS:.c=.lo) @LIBOBJS@
 
 .PRECIOUS: $(SRCS_YACC:%.y=%.tab.h)
 
