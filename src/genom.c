@@ -31,6 +31,7 @@
 #include "genom-config.h"
 __RCSID("$LAAS$");
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -1932,6 +1933,25 @@ langFileExt(MODULE_LANG lang)
 void 
 bufcat(char **buf, char *fmt, ...)
 {
+#ifdef HAVE_VASPRINTF
+    va_list ap;
+    char *r = NULL;
+    int s;
+
+    va_start(ap, fmt);
+    s = vasprintf(&r, fmt, ap);
+    va_end(ap);
+    if (s == -1) {
+	fprintf(stderr, "vasprintf failed\n");
+	_exit(2);
+    }
+    if (*buf != NULL) {
+	s = asprintf(buf, "%s%s", *buf, r);
+	free(r);
+    } else {
+	*buf = r;
+    }
+#else
     va_list ap;
     static char buf1[1024];
     int taille;
@@ -1949,6 +1969,7 @@ bufcat(char **buf, char *fmt, ...)
     
     *buf = xrealloc(*buf, taille);
     strcat(*buf, buf1);
+#endif
 } /* bufcat */
 
 
@@ -1960,6 +1981,20 @@ bufcat(char **buf, char *fmt, ...)
 int
 bufcatIfNotIn(char **buf, char *fmt, ...)
 {
+#ifdef HAVE_VASPRINTF
+  va_list ap;
+  static char *buf1 = NULL;
+
+  va_start(ap, fmt);
+  vasprintf(&buf1, fmt, ap);
+  
+  if (*buf == NULL || strstr(*buf, buf1) == NULL) {
+    bufcat(buf, buf1);
+    free(buf1);
+    return 1;
+  }
+  return 0;
+#else
   va_list ap;
   static char buf1[1024];
 
@@ -1971,6 +2006,7 @@ bufcatIfNotIn(char **buf, char *fmt, ...)
     return 1;
   }
   return 0;
+#endif
 }
 
 /*----------------------------------------------------------------------*/
