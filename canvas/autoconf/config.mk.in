@@ -108,17 +108,13 @@ CODEL_LIB=$codelLibs$
 
 OSAPI?=		@OSAPI@
 
-ifeq ($(OSAPI),vxworks)
-OSDEF = VXWORKS
-else 
-OSDEF = UNIX
-endif
 
 ENDIANNESS=	@ENDIANNESS@
 
 GENOM_DEFINES=  $genomDefines$
 GENOM_INCLUDES= $genomIncludes$
-CPPFLAGS=	@CPPFLAGS@ -D$(OSDEF)
+# Keep this until all codel have removed their #ifndef UNIX... stuff.
+CPPFLAGS=	@CPPFLAGS@ -DUNIX
 CFLAGS=		@CFLAGS@
 LDFLAGS=	@LDFLAGS@
 
