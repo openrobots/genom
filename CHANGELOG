@@ -1,5 +1,8 @@
 $LAAS$
-
+ 
+ 61. Provides CODEL_LIBS in the Generated Makefile in codels, holding
+     all libraries requires by codels via 'codels_require' in the .gen
+ 60. Init requests are implicitely incompatible with all other requests.
  59. Removed VxWorks support.
  58. Don't initialize pocolibs timers if there is no periodic task.
  57. Search for includes in local directories before any other
