@@ -31,14 +31,10 @@
 #include "genom-config.h"
 __RCSID("$LAAS$");
 
-#ifdef VXWORKS
-# include <vxWorks.h>
-#else
-# include "portLib.h"
-# include "h2initGlob.h"
+#include "portLib.h"
+#include "h2initGlob.h"
 
-# include <rpc/types.h>
-#endif /* VXWORKS */
+#include <rpc/types.h>
 
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>
