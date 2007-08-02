@@ -33,28 +33,20 @@
 #include "genom-config.h"
 __RCSID("$LAAS$");
 
-#ifdef VXWORKS
-#  include <vxWorks.h>
-#  include <ioLib.h>
-#  include <sockLib.h>
-#  include "assocLib.h"
-#else
-#  include <portLib.h>
-#  include <errnoLib.h>
-#  include <fcntl.h>
-#  include <h2devLib.h>
-#endif
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#ifndef VXWORKS
 #include <time.h>		/* nanosleep */
-#endif
 #include <sys/socket.h>
 #include <netinet/in.h>
 
 #include <tcl.h>
+
+#include <portLib.h>
+#include <errnoLib.h>
+#include <h2devLib.h>
 
 #include <taskLib.h>
 #include "h2semLib.h"
@@ -206,11 +198,7 @@ tclServCsWakeUpTaskInstall(int action)
       csWakeUpTaskToBeDeleted = 1;
 
       /* wake up the daemon, that will exit */
-#ifdef VXWORKS
-      h2semGive(tabSemTask[assocPid(taskIdSelf())]);
-#else
       h2semGive(H2DEV_TASK_SEM_ID(taskGetUserData(taskIdSelf())));
-#endif
 
       csWakeUpTaskId = 0;
       return TCL_OK;
@@ -387,12 +375,8 @@ tclServCsWakeUpTask(int port, int timeout, int parentId)
    int noblock = FALSE;
    int sock;
    struct sockaddr_in tcl;
-#ifdef VXWORKS
-   H2SEM_ID semId = tabSemTask[assocPid(parentId)];
-#else
    H2SEM_ID semId = H2DEV_TASK_SEM_ID(taskGetUserData(parentId));
    struct timespec wait, waited;
-#endif
 
    /* port not redefined with option -p, then test env(TCLSERV_PORT) */
    if (port == TCLSERV_CMDPORT) {
@@ -415,12 +399,6 @@ tclServCsWakeUpTask(int port, int timeout, int parentId)
       return ERROR;
    }
 
-#ifdef VXWORKS
-   if (ioctl(sock, (int)FIONBIO, (int) &noblock) < 0) {
-      perror("ioctl");
-      return ERROR;
-   }
-#else
    if ((noblock = fcntl(sock, F_GETFL)) < 0) {
        perror("fcntl(F_GETFL)");
        return ERROR;
@@ -430,7 +408,6 @@ tclServCsWakeUpTask(int port, int timeout, int parentId)
        perror("fcntl(F_SETFL)");
        return ERROR;
    }
-#endif
 
    write(sock, "HELLO\n", 6);
    if (read(sock, buf, 5) != 5 || strncmp(buf, "HELLO", 5) != 0)
@@ -443,13 +420,9 @@ tclServCsWakeUpTask(int port, int timeout, int parentId)
       switch (h2semTake(semId, timeout)) {
 	 case TRUE:
 	    while (csWakeUpTaskSuspended) {
-#ifdef VXWORKS
-	       taskDelay(10);
-#else
 	       wait.tv_sec = 0;
 	       wait.tv_nsec = 5e7; /* 50ms */
 	       nanosleep(&wait, &waited);
-#endif
 	    }
 
 	    if (!csWakeUpTaskToBeDeleted) {
