@@ -1268,18 +1268,6 @@ resolveRequests(void)
 	r = lr->rqst;
 	r->num = n++;
 	if (r->rqst_num < 0) r->rqst_num = r->num;
-	/* Init requests are incompatible with all */
-	if (r->type == INIT) {
-	    if (r->interrupt_activity == NULL) {
-		r->interrupt_activity = requetes;
-	    } else if (r->interrupt_activity->flags != ALL) {
-		fprintf(stderr, "genom %s: warning: forcing "
-			"init request to be incompatible with ALL\n", nomfic);
-		free(r->interrupt_activity);
-		r->interrupt_activity = requetes;
-	    }
-	    continue;
-	}
 	if (r->interrupt_activity == NULL) {
 	    continue;
 	}
