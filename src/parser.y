@@ -495,7 +495,7 @@ av_requete: TYPE {keyword = 0;} ':' type_requete
 	  $$->value.interrupt_activity = $3; }
     | EXEC_TASK ':' identificateur
         { $$ = STR_ALLOC(RQST_AV_STR);
-	  $$->attribut = $1; 
+	  $$->attribut = $1;
 	  $$->value.exec_task_name = $3; }
     | FAIL_REPORTS ':' liste_echecs
 	{ $$ = STR_ALLOC(RQST_AV_STR);
@@ -678,7 +678,15 @@ quoted_string_list:
 /*----------------------------------------------------------------------*/
 
 declaration_de_tache: EXEC_TASK identificateur attributs_de_tache  
-	{ $3->name = $2; $$ = $3; }
+	{
+	  if (!strcasecmp($2, "test")) {
+	    fprintf(stderr,
+		    "genom: %s:%d: execution task cannot be named `test'\n",
+		    nomfic, num_ligne);
+	    parseError = 1;
+	  }
+	  $3->name = $2; $$ = $3;
+	}
 ;
 
 attributs_de_tache: '{' liste_av_tache '}' { $$ = $2; }
