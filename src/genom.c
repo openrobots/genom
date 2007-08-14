@@ -1,6 +1,6 @@
 /*	$LAAS$ */
 
-/* 
+/*
  * Copyright (c) 1993-2003 LAAS/CNRS                      Tue Jul 13 1993
  * All rights reserved.
  *
@@ -33,6 +33,7 @@ __RCSID("$LAAS$");
 
 #define _GNU_SOURCE
 #include <stdio.h>
+#include <err.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
@@ -51,7 +52,7 @@ __RCSID("$LAAS$");
 
 POSTERS_INPUT_LIST *posters_input=NULL;
 
-ID_LIST* 
+ID_LIST*
 push_back(ID_LIST* list, ID_LIST* item)
 {
     ID_LIST* last;
@@ -59,7 +60,7 @@ push_back(ID_LIST* list, ID_LIST* item)
     item->next = NULL;
     if (list == NULL)
         return item;
-        
+
     for (last = list; last->next != NULL; last = last->next);
     last->next = item;
     return list;
@@ -71,7 +72,7 @@ push_back(ID_LIST* list, ID_LIST* item)
 
 /*----------------------------------------------------------------------*/
 
-char* 
+char*
 strcpytolower(char const* value)
 {
     char* result = (char*)xalloc(strlen(value) + 1);
@@ -86,10 +87,10 @@ strcpytolower(char const* value)
     result[i] = '\0';
     return result;
 }
-	
+
 /*----------------------------------------------------------------------*/
 
-static char* 
+static char*
 strcpytoupper(char const* value)
 {
     char* result = (char*)xalloc(strlen(value) + 1);
@@ -104,12 +105,12 @@ strcpytoupper(char const* value)
     result[i] = '\0';
     return result;
 }
-	
+
 /**
  ** Conversion des noms de module, de taches, de posters et de requetes
- ** en majuscules 
+ ** en majuscules
  **/
-void 
+void
 upCaseNames(void)
 {
     int i;
@@ -160,7 +161,7 @@ upCaseNames(void)
 	r = lr->rqst;
         r->NAME = strcpytoupper(r->name);
     } /* for */
-    
+
     /* Noms des posters */
     for (p = posters; p != NULL; p = p->next)
         p->NAME = strcpytoupper(p->name);
@@ -172,142 +173,72 @@ upCaseNames(void)
 
 } /* upCaseNames */
 
-static char *
-skip_spaces(char* buffer)
-{
-    if (!buffer)
-        return NULL;
-
-    while (*buffer != '\0' && isspace((unsigned char)*buffer))
-        ++buffer;
-
-    if (! *buffer)
-        return NULL;
-
-    return buffer;
-}
-
-/* Get require statements 
- * It changes the content of buffer, so take care of using its return value */
-#define MAX_REQUIRE_COUNT 256
-static void 
-parse_require(char* buffer, int line, ID_LIST **rquires)
-{
-    /* We split the string into tokens, removing the 'require' statement */
-    size_t current = 0;
-    char* packages[MAX_REQUIRE_COUNT];
-    int i;
-    ID_LIST* il;
-
-    char* statement, *delim;
-    char* line_end = strchr(buffer, '\n');
-    char* end = strchr(buffer, ';');
-    if (! end || end > line_end)
-    {
-        printf("genom : line %i: expecting ';' at end of 'require' statement\n", line);
-        exit(1);
-    }
-
-    /* Copy the statement */
-    statement = xalloc(end - buffer + 1);
-    strncpy(statement, buffer, end - buffer);
-    statement[end-buffer] = 0;
-
-    delim = strchr(statement, ' ');
-    /* Split it into the tokens array */
-    while (delim)
-    {
-        *delim = 0;
-        packages[current] = skip_spaces(delim + 1);
-        if (! packages[current])
-            break;
-	
-	delim = packages[current];
-
-	/* handle double quote protection */
-	if (*delim == '"') {
-	  packages[current]++;
-	  *delim = '\0';
-	  do { delim = strchr(delim+1, '"'); } while(delim[-1] == '\\');
-	  *delim++ = '\0';
-	}
-
-        delim = strchr(delim, ',');
-        if (++current > MAX_REQUIRE_COUNT)
-        {
-            fprintf(stderr, "genom: 0:%i: too many arguments to 'require' (%i max)\n", line, MAX_REQUIRE_COUNT);
-            exit(1);
-        }
-    }
-
-    for (i = 0; i < current; ++i)
-    {
-        il = STR_ALLOC(ID_LIST);
-        il->name = strdup(packages[i]);
-        il->next = 0;
-
-        *rquires = push_back(*rquires, il);
-    }
-
-    free(statement);
-}
-
 void
 genom_get_requires(char* filename, char* cppOptions[])
 {
     /* Call cpp first, to use #ifdef's */
     char* processed_file = callCpp(filename, cppOptions, 1);
 
-    FILE* fd = fopen(processed_file, "r");
-    long size, line = 0;
-    char *buffer = 0, *current;
-    
-    if (! fd)
+    extern FILE *yyin;
+    extern YYSTYPE yylval;
+    extern int yylex(void);
+    extern int num_ligne;
+    extern char nomfic[];
+
+    int token, pkg;
+    ID_LIST* il;
+
+    yyin = fopen(processed_file, "r");
+    if (!yyin)
     {
         printf("genom: Unable to open %s for reading\n", filename);
         unlink(processed_file);
         exit(1);
     }
 
-    fseek(fd, 0, SEEK_END);
-    size = ftell(fd);
-    fseek(fd, 0, SEEK_SET);
-    buffer = xalloc(size);
-    if (fread(buffer, size, 1, fd) != 1)
-    {
-        printf("genom: Error reading %s\n", filename);
-        unlink(processed_file);
-        free(buffer);
-        exit(1);
-    }
-
     /* Go for the primitive parsing ... :p */
-    current = buffer;
-    while (current)
-    {
-        while (*current == ' ' || *current == '\t') 
-	    current++;
-        if (strncmp(current, "codels_requires:", 16) == 0) {
-	  parse_require(current, line, &codels_requires);
+    while ((token = yylex())) switch(token) {
+      case REQUIRE:
+      case CODELS_REQUIRE:
+	if (yylex() != ':') {
+	  warnx("%s:%d: syntax error, missing ':'", nomfic, num_ligne);
+	  break;
 	}
-        else if (strncmp(current, "requires:", 9) == 0)
-	  parse_require(current, line, &requires);
 
-        current = strchr(current, '\n');
-        if (current) ++current;
-        ++line;
+	while ((pkg = yylex()) != ';') switch(pkg) {
+	  case ',': break;
+
+	  case PACKAGENAME:
+	  case IDENTIFICATEUR:
+	  case QUOTED_STRING:
+	    il = STR_ALLOC(ID_LIST);
+	    il->name = strdup(yylval.idStr);
+	    il->next = 0;
+	    if (token == REQUIRE)
+	      requires = push_back(requires, il);
+	    else
+	      codels_requires = push_back(codels_requires, il);
+
+	    /* XXX don't we leak some memory allocated by yylex in yylval? */
+	    break;
+
+	  default:
+	    warnx("%s:%d: syntax error", nomfic, num_ligne);
+	    break;
+	}
+
+	break;
     }
-    
+
     unlink(processed_file);
-    free(buffer);
-    fclose(fd);
+    fclose(yyin);
 }
 
 /*----------------------------------------------------------------------*/
 
 /*
- * Affectation d'un membre a` la structure du module 
- * a` partir d'une paire (attribut valeur) 
+ * Affectation d'un membre a` la structure du module
+ * a` partir d'une paire (attribut valeur)
  */
 MODULE_STR *
 ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
@@ -397,7 +328,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
     switch (av->attribut) {
       case TYPE:
 	if (rqst->type) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'type:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -406,7 +337,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case INPUT:
 	if (rqst->input) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'input:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -415,7 +346,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case POSTERS_INPUT:
 	if (rqst->posters_input_types) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'posters_input_types:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -424,7 +355,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case OUTPUT:
 	if (rqst->output) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'output:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -433,7 +364,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case CODEL_CONTROL:
 	if (rqst->codel_control) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'codel_control:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -442,7 +373,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case CODEL_MAIN:
 	if (rqst->codel_main) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'codel_main:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -451,7 +382,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case CODEL_START:
 	if (rqst->codel_start) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'codel_start:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -460,7 +391,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case CODEL_END:
 	if (rqst->codel_end) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'codel_end:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -469,7 +400,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case CODEL_FAIL:
 	if (rqst->codel_fail) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'codel_fail:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -478,7 +409,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case CODEL_INTER:
 	if (rqst->codel_inter) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'codel_inter:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -487,7 +418,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case INTERRUPT_ACTIVITY:
 	if (rqst->interrupt_activity) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'interrupt_activity:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -497,7 +428,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case EXEC_TASK:
 	rqst->exec_task = NULL;
 	if (rqst->exec_task_name) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'exec_task_name:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -506,7 +437,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case FAIL_REPORTS:
 	if (rqst->fail_reports) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'fail_reports:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -515,7 +446,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
       case RESOURCES:
 	if (rqst->resource_list) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'resource_list:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -524,7 +455,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
     case RQST_NUM:
 	if (rqst->rqst_num) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'rqst_num:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -533,7 +464,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
     case RQST_DOC:
 	if (rqst->doc) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'doc:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -542,7 +473,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	break;
     case RQST_INPUT_INFO:
 	if (rqst->input_info) {
-	  fprintf(stderr, 
+	  fprintf(stderr,
 		  "genom %s: Error: twice field 'input_info:' in request %s",
 		  nomfic, rqst->name);
 	  exit(2);
@@ -637,14 +568,14 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
 	break;
       case CS_CLIENT_FROM:
 	task->cs_client_from = av->value.cs_client_from;
-	fprintf(stderr, 
-		"genom %s: warning: old fashion declaration \"cs_client_from: %s\"\n", 
+	fprintf(stderr,
+		"genom %s: warning: old fashion declaration \"cs_client_from: %s\"\n",
 		nomfic, av->value.cs_client_from->name);
 	break;
       case POSTER_CLIENT_FROM:
 	task->poster_client_from = av->value.poster_client_from;
-	fprintf(stderr, 
-		"genom %s: warning: old fashion declaration \"poster_client_from: %s\"\n", 
+	fprintf(stderr,
+		"genom %s: warning: old fashion declaration \"poster_client_from: %s\"\n",
 		nomfic, av->value.poster_client_from->name);
 	break;
       case RESOURCES:
@@ -672,7 +603,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
 /*----------------------------------------------------------------------*/
 
 /**
- ** Recherche de la de'finition d'un type par le nom d'un TYPEDEF 
+ ** Recherche de la de'finition d'un type par le nom d'un TYPEDEF
  **/
 TYPE_STR *
 trouve_type(TYPE_STR *t)
@@ -684,12 +615,12 @@ trouve_type(TYPE_STR *t)
     if (t == NULL) {
 	return(NULL);
     }
-    if (t->type != TYPEDEF) { 
+    if (t->type != TYPEDEF) {
 	return(t);
     }
-    
+
     tr = NULL;
-    
+
     /* recheche dans la liste des typedefs */
     for (ltypedef = typedefs; ltypedef != NULL; ltypedef = ltypedef->next) {
 	if (!strcmp(t->name, ltypedef->dcl_nom->name)) {
@@ -712,11 +643,11 @@ trouve_type(TYPE_STR *t)
     }
     return(tr);
 } /* trouve_type */
-    
+
 /*----------------------------------------------------------------------*/
 
 /**
- ** Recherche de la de'finition d'un type par le nom d'un TYPEDEF 
+ ** Recherche de la de'finition d'un type par le nom d'un TYPEDEF
  **/
 DCL_NOM_STR *
 trouve_typedef(TYPE_STR *t)
@@ -727,12 +658,12 @@ trouve_typedef(TYPE_STR *t)
     if (t == NULL) {
 	return(NULL);
     }
-    if (t->type != TYPEDEF) { 
+    if (t->type != TYPEDEF) {
 	return(NULL);
     }
-    
+
     tr = NULL;
-    
+
     /* recheche dans la liste des typedefs */
     for (ltypedef = typedefs; ltypedef != NULL; ltypedef = ltypedef->next) {
 	if (!strcmp(t->name, ltypedef->dcl_nom->name)) {
@@ -743,18 +674,18 @@ trouve_typedef(TYPE_STR *t)
     }
     return(tr);
 } /* trouve_typedef */
-    
+
 /*----------------------------------------------------------------------*/
 
 /**
- ** Indique si une requete est reentrante 
- ** (si elle est compatible avec elle-meme) 
+ ** Indique si une requete est reentrante
+ ** (si elle est compatible avec elle-meme)
  **/
-int 
+int
 reentrant(RQST_STR *r)
 {
     RQST_LIST *l;
-    
+
     for (l = r->interrupt_activity; l != NULL; l = l->next) {
 	if (l->rqst == r) {
 	    break;
@@ -770,7 +701,7 @@ reentrant(RQST_STR *r)
 /*----------------------------------------------------------------------*/
 
 /**
- ** Parcours les structures de donne'es pour instancier les types 
+ ** Parcours les structures de donne'es pour instancier les types
  **/
 void
 resolveTypes(void)
@@ -794,8 +725,8 @@ resolveTypes(void)
     t_sdi = module->internal_data;
     tr = trouve_type(t_sdi);
     if (tr == NULL) {
-	fprintf(stderr, 
-		"genom %s: Error: SDI type %s unknown\n", 
+	fprintf(stderr,
+		"genom %s: Error: SDI type %s unknown\n",
 		nomfic, module->internal_data->name);
 	exit(2);
     } else {
@@ -808,7 +739,7 @@ resolveTypes(void)
 	tr->flags |= TYPE_INTERNAL_DATA;
 	module->internal_data = tr;
     }
-	
+
     /* types des parametres des requetes */
     for (lr = requetes; lr != NULL; lr = lr->next) {
 	r = lr->rqst;
@@ -828,7 +759,7 @@ resolveTypes(void)
 		} else {
 		    r->input->dcl_nom->ndimensions = n->ndimensions;
 		    if (n->ndimensions != 0) {
-			r->input->dcl_nom->dimensions 
+			r->input->dcl_nom->dimensions
 			    = xalloc(sizeof(int)* n->ndimensions);
 		    } else {
 			r->input->dcl_nom->dimensions = NULL;
@@ -863,7 +794,7 @@ resolveTypes(void)
 		} else {
 		    r->output->dcl_nom->ndimensions = n->ndimensions;
 		    if (n->ndimensions != 0) {
-			r->output->dcl_nom->dimensions 
+			r->output->dcl_nom->dimensions
 			    = xalloc(sizeof(int)* n->ndimensions);
 		    } else {
 			r->output->dcl_nom->dimensions = NULL;
@@ -901,7 +832,7 @@ resolveTypes(void)
 	      tr = trouve_type(t_tmp);
 	      if (tr == NULL) {
 		fprintf(stderr,
-			"genom %s: Error: type of poster input of request %s: %s unknown\n", 
+			"genom %s: Error: type of poster input of request %s: %s unknown\n",
 			nomfic, r->name, t_tmp->name);
 		exit(2);
 	      }
@@ -916,7 +847,7 @@ resolveTypes(void)
 
 	      /* allocate a new poster description */
 	      p_in = STR_ALLOC(POSTERS_INPUT_LIST);
-	      
+
 	      p_in->type = tr;
 	      p_in->name = strdup(tr->name);
 
@@ -929,7 +860,7 @@ resolveTypes(void)
 		p_in->next = posters_input;
 		posters_input = p_in;
 	      }
-	      
+
 	    } /* for each type */
 
 	} /* posters input */
@@ -942,7 +873,7 @@ resolveTypes(void)
 	return;
     }
 
-    for (last = typedefs; last != NULL && last->next != NULL; 
+    for (last = typedefs; last != NULL && last->next != NULL;
 	 last = last->next);
 
     /* Types des posters */
@@ -956,7 +887,7 @@ resolveTypes(void)
 	t_poster->name = strdup(buf);
 	markUsed(t_poster);
 	t_poster->flags = TYPE_POSTER;
-      
+
 	/* Liste de donnees refrencees dans la SDI */
 	if (p->data != NULL) {
 
@@ -966,8 +897,8 @@ resolveTypes(void)
 
 		/* Trouve la variable correspondante dans SDI */
 		if ((n = trouve_sdi_ref(lm->str_ref)) == NULL) {
-		  fprintf(stderr, 
-			  "genom %s: Error: no element %s in SDI for poster %s\n", 
+		  fprintf(stderr,
+			  "genom %s: Error: no element %s in SDI for poster %s\n",
 			  nomfic, lm->str_ref->sdi_ref->name, p->name);
 		  exit(2);
 		}
@@ -980,7 +911,7 @@ resolveTypes(void)
 		     -> enregistrement du type est insufisant
 		        et recuperation directe de n erronee
 		        (sara Oct 96) */
-		    lm->str_ref->dcl_nom->type = n->type; 
+		    lm->str_ref->dcl_nom->type = n->type;
 		    lm->str_ref->dcl_nom->pointeur = n->pointeur;
 		    lm->str_ref->dcl_nom->dimensions = n->dimensions;
 		    lm->str_ref->dcl_nom->ndimensions = n->ndimensions;
@@ -992,13 +923,13 @@ resolveTypes(void)
 			exit(2);
 		    }
 		}
-		
+
 		/* Enregistrement, Ajout en queue de liste */
 		m->dcl_nom = lm->str_ref->dcl_nom;
 		m->next = NULL;
 		if (t_poster->members == NULL)
 		  t_poster->members = m;
-		else 
+		else
 		  lastData->next = m;
 		lastData = m;
 	    } /* for each data */
@@ -1015,7 +946,7 @@ resolveTypes(void)
 	    tr = trouve_type(t_tmp);
 	    if (tr == NULL) {
 	      fprintf(stderr,
-		      "genom %s: Error: type of poster %s: %s unknown\n", 
+		      "genom %s: Error: type of poster %s: %s unknown\n",
 		      nomfic, p->name, t_tmp->name);
 	      exit(2);
 	    } else {
@@ -1046,9 +977,9 @@ resolveTypes(void)
 	    lastType->str_ref = STR_ALLOC(STR_REF_STR);
 	    lastType->str_ref->sdi_ref = NULL;
 	    lastType->str_ref->dcl_nom = lt->dcl_nom;
-	    
+
 	  } /* for */
-	  
+
 	} /* p->data == NULL */
 
 	/* Ajout de la structure du poster dans la liste des typedef */
@@ -1059,7 +990,7 @@ resolveTypes(void)
 	m->dcl_nom = n;
 	last->next = m;
 	last = m;
-	
+
 	/* Ajout dans la liste des types */
 	ajout_type(t_poster);
 	/* Enregistrement dans la structure poster */
@@ -1067,7 +998,7 @@ resolveTypes(void)
 
     } /* for poster */
 
-    
+
     /* posters input des taches d'exec */
     for (le = taches; le != NULL; le = le->next) {
 
@@ -1086,7 +1017,7 @@ resolveTypes(void)
 	      tr = trouve_type(t_tmp);
 	      if (tr == NULL) {
 		fprintf(stderr,
-			"%s: Error: type of poster input of exec task %s: %s unknown\n", 
+			"%s: Error: type of poster input of exec task %s: %s unknown\n",
 			nomfic, le->exec_task->name, t_tmp->name);
 		exit(2);
 	      }
@@ -1101,7 +1032,7 @@ resolveTypes(void)
 
 	      /* allocate a new poster description */
 	      p_in = STR_ALLOC(POSTERS_INPUT_LIST);
-	      
+
 	      p_in->type = tr;
 	      p_in->name = strdup(tr->name);
 
@@ -1114,7 +1045,7 @@ resolveTypes(void)
 		p_in->next = posters_input;
 		posters_input = p_in;
 	      }
-	      
+
 	    } /* for each type */
 
 	} /* posters input */
@@ -1122,7 +1053,7 @@ resolveTypes(void)
     } /* for each exec task */
 
 
-    
+
     /* module internal data */
     if (module->internal_data) {
 	tr = module->internal_data;
@@ -1130,7 +1061,7 @@ resolveTypes(void)
 	for (last = tr->members; last != NULL && last->next != NULL;
 	     last = last->next);
 
-	/* creation des tableaux des structures d'E/S pour les fonctions 
+	/* creation des tableaux des structures d'E/S pour les fonctions
 	   reentrantes */
 	for (lr = requetes; lr != NULL; lr = lr->next) {
 	    r = lr->rqst;
@@ -1155,10 +1086,10 @@ resolveTypes(void)
 			    nomfic, r->name, r->name);
 
 		    /* Je suggere de REMPLACER la variable par le
-		       tableau de variable (car normalement la variable 
+		       tableau de variable (car normalement la variable
 		       ne doit plus etre utilisee)
 		       (Pb1: verifier qu'on a pas deja remplacer une fois
-		        Pb2: cas d'utilisation de la variable par des 
+		        Pb2: cas d'utilisation de la variable par des
 		            requetes reentrante ET non-reentrante):
 
 		    int nDim=r->input->dcl_nom->ndimensions;
@@ -1191,22 +1122,22 @@ resolveTypes(void)
 			    "for request %s\n",
 			    nomfic, r->name, r->name);
 		}
-		
+
 		/* Donnees d'entree et de sortie physiquement les memes */
 		if (r->input != NULL && r->output != NULL &&
 		    r->input->dcl_nom == r->output->dcl_nom) {
-		  fprintf(stderr, 
+		  fprintf(stderr,
 			  "genom %s: warning: input and output of "
 			  "request %s "
 			  "will no more refered to the "
-			  "same data %s in SDI !\n", 
+			  "same data %s in SDI !\n",
 			  nomfic, r->name, r->input->dcl_nom->name);
 		}
 	    }
 	} /* for each request */
-	
+
     } /* module internal data */
-    
+
     /* types non utilise's */
     for (t = types; t != NULL; t = t->next) {
 	if (t->type->used == 0 && ((t->type->flags & TYPE_IMPORT) == 0)) {
@@ -1221,13 +1152,13 @@ resolveTypes(void)
 /*----------------------------------------------------------------------*/
 
 /**
- ** Recherche d'une requete par nom 
+ ** Recherche d'une requete par nom
  **/
 RQST_STR *
 trouve_requete(char *name)
 {
     RQST_LIST *lr;
-    
+
     for (lr = requetes; lr != NULL; lr = lr->next) {
 	if (!strcmp(lr->name, name)) {
 	    return(lr->rqst);
@@ -1237,7 +1168,7 @@ trouve_requete(char *name)
 } /* trouve_requete */
 
 /**
- ** Recherche d'un posters_input par nom 
+ ** Recherche d'un posters_input par nom
  **/
 POSTERS_INPUT_LIST *
 trouve_poster_input(char *name)
@@ -1246,7 +1177,7 @@ trouve_poster_input(char *name)
 
     /* Noms des posters IN */
     for (p_in = posters_input; p_in != NULL; p_in = p_in->next) {
-      if (!strcmp(p_in->name, name)) 
+      if (!strcmp(p_in->name, name))
 	return (p_in);
     } /* for */
 
@@ -1255,9 +1186,9 @@ trouve_poster_input(char *name)
 /*----------------------------------------------------------------------*/
 
 /**
- ** Parcours des listes d'incompatibilite' pour instancier les requetes 
+ ** Parcours des listes d'incompatibilite' pour instancier les requetes
  **/
-void 
+void
 resolveRequests(void)
 {
     RQST_LIST *lr, *li;
@@ -1270,7 +1201,7 @@ resolveRequests(void)
 	if (r->rqst_num < 0) r->rqst_num = r->num;
 	/* Init requests are incompatible with all */
 	if (r->type == INIT) {
-	    if (r->interrupt_activity != NULL 
+	    if (r->interrupt_activity != NULL
 		&& r->interrupt_activity->flags != ALL) {
 		fprintf(stderr, "genom %s: warning: forcing "
 			"init request to be incompatible with ALL\n", nomfic);
@@ -1336,13 +1267,13 @@ trouve_abort_num(void)
 /*----------------------------------------------------------------------*/
 
 /**
- ** Recheche d'une exec_task par nom 
+ ** Recheche d'une exec_task par nom
  **/
 EXEC_TASK_STR *
 trouve_exec_task(char *name)
 {
     EXEC_TASK_LIST *lt;
-    
+
     for (lt = taches; lt != NULL; lt = lt->next) {
 	if (!strcmp(lt->exec_task->name, name)) {
 	    return(lt->exec_task);
@@ -1353,10 +1284,10 @@ trouve_exec_task(char *name)
 
 /*----------------------------------------------------------------------*/
 
-/** 
- ** Fermeture des listes de taches 
+/**
+ ** Fermeture des listes de taches
  **/
-void 
+void
 resolveTasks(void)
 {
     RQST_LIST *lr;
@@ -1398,12 +1329,12 @@ resolveTasks(void)
 	    }
 	}
     } /* for posters */
-    
+
 } /* resolveTasks */
 
 /*----------------------------------------------------------------------*/
 
-/** 
+/**
  ** Trouve la valeur d'un symbole (enum)
  **/
 int
@@ -1436,15 +1367,15 @@ trouve_value(char *symbole, int *pVal)
 
 /*----------------------------------------------------------------------*/
 
-/** 
- ** Ge'ne'ration d'un nouveau nom pour une structure ou une union anonyme 
+/**
+ ** Ge'ne'ration d'un nouveau nom pour une structure ou une union anonyme
  **/
 char *
 new_name(void)
 {
     char *p = xalloc(11*sizeof(char));
     static int unamed_compt = 0;
-    
+
     fprintf(stderr, "genom %s: %d: warning: type without name\n",
 	    nomfic, num_ligne);
     sprintf(p, "unamed%04d", unamed_compt++);
@@ -1454,25 +1385,25 @@ new_name(void)
 /*----------------------------------------------------------------------*/
 
 /**
- **  Ge'ne'ration de la de'claration d'un type 
+ **  Ge'ne'ration de la de'claration d'un type
  **/
-void 
+void
 dcl_nom_decl(DCL_NOM_STR *n, char **pType, char **pVar)
 {
     TYPE_STR *t = n->type;
     DCL_NOM_LIST *l;
     int i;
     int vrai;
-    
+
     /* recherche dans la liste des typedefs un nom pour le type */
     for (l = typedefs; l != NULL; l = l->next) {
-	if (l->dcl_nom != n && 
+	if (l->dcl_nom != n &&
 	    l->dcl_nom->type == t) {
 	    if (l->dcl_nom->pointeur == n->pointeur &&
 		l->dcl_nom->ndimensions == n->ndimensions) {
 		vrai = 1;
 		for (i = 0; i < n->ndimensions; i++) {
-		    vrai = vrai && 
+		    vrai = vrai &&
 			(n->dimensions[i] == l->dcl_nom->dimensions[i]);
 		}
 		if (vrai) {
@@ -1480,11 +1411,11 @@ dcl_nom_decl(DCL_NOM_STR *n, char **pType, char **pVar)
 		    *pType = strdup(l->dcl_nom->name);
 		    *pVar = strdup(n->name);
 		    return;
-		} 
-	    } else if (l->dcl_nom->pointeur == 0 
+		}
+	    } else if (l->dcl_nom->pointeur == 0
 		       && l->dcl_nom->ndimensions == 0) {
 		*pType = strdup(l->dcl_nom->name);
-		
+
 		*pVar = NULL;
 		for (i = 0; i < n->pointeur; i++) {
 		    bufcat(pVar, "*");
@@ -1497,12 +1428,12 @@ dcl_nom_decl(DCL_NOM_STR *n, char **pType, char **pVar)
 	    }
 	}
     } /* for */
-    
+
     /* pas trouve' de nom exact */
-		
+
     /* type */
     *pType = nom_type(t);
-    
+
     /* variable */
     *pVar = NULL;
     for (i = 0; i < n->pointeur; i++) {
@@ -1516,10 +1447,10 @@ dcl_nom_decl(DCL_NOM_STR *n, char **pType, char **pVar)
 
 /*----------------------------------------------------------------------*/
 
-/** 
- ** Calcul de la taille d'un objet 
+/**
+ ** Calcul de la taille d'un objet
  **/
-int 
+int
 taille_obj(DCL_NOM_STR *t)
 {
     TYPE_STR *t1;
@@ -1563,7 +1494,7 @@ taille_obj(DCL_NOM_STR *t)
 	    tot = 0;
 	    for (m = t->type->members; m != NULL; m = m->next) {
 		tot += taille_obj(m->dcl_nom);
-	    } 
+	    }
 	    return(tt*tot);
 	  case UNION:
 	    /* unions -> max de la taille des membres */
@@ -1634,18 +1565,18 @@ genSizeof(DCL_NOM_STR *n)
 /*----------------------------------------------------------------------*/
 
 /**
- ** retourne une chaine de caracteres representant le nom d'un type 
+ ** retourne une chaine de caracteres representant le nom d'un type
  **/
 char *
 nom_type(TYPE_STR *type)
 {
     char *res = NULL;
-    
+
     switch (type->type) {
     case INT:
 	if (type->flags & UNSIGNED_TYPE) {
 	    bufcat(&res, "unsigned ");
-	} 
+	}
 	if (type->flags & SHORT_INT) {
 	    bufcat(&res, "short ");
 	}
@@ -1690,19 +1621,19 @@ nom_type(TYPE_STR *type)
 
 /*----------------------------------------------------------------------*/
 /**
- ** retourne une chaine de caracteres representant 
+ ** retourne une chaine de caracteres representant
  ** le nom d'un type en un seul mot
  **/
 char *
 nom_type1(TYPE_STR *type)
 {
     char *res = NULL;
-    
+
     switch (type->type) {
     case INT:
 	if (type->flags & UNSIGNED_TYPE) {
 	    bufcat(&res, "unsigned_");
-	} 
+	}
 	if (type->flags & SHORT_INT) {
 	    bufcat(&res, "short_");
 	}
@@ -1751,7 +1682,7 @@ nom_type1(TYPE_STR *type)
 /*----------------------------------------------------------------------*/
 
 /**
- ** copie d'un type 
+ ** copie d'un type
  **/
 TYPE_STR *
 copy_type(TYPE_STR *t)
@@ -1764,7 +1695,7 @@ copy_type(TYPE_STR *t)
     r->used = t->used;
     r->linenum = t->linenum;
     r->filename = strdup(t->filename);
-    
+
     pl = &(r->members);
     for (l1 = t->members; l1 != NULL; l1 = l1->next) {
 	l2 = STR_ALLOC(DCL_NOM_LIST);
@@ -1778,13 +1709,13 @@ copy_type(TYPE_STR *t)
 /*----------------------------------------------------------------------*/
 
 /**
- ** ajout d'un type dans la liste ``types'' 
+ ** ajout d'un type dans la liste ``types''
  **/
 void
 ajout_type(TYPE_STR *t)
 {
     TYPE_LIST *l = STR_ALLOC(TYPE_LIST);
-    
+
     l->type = t;
     l->next = types;
     types = l;
@@ -1793,14 +1724,14 @@ ajout_type(TYPE_STR *t)
 /*----------------------------------------------------------------------*/
 
 /**
- ** Recherche de la de'finition complete 
- ** d'une structure ou union incomplete 
+ ** Recherche de la de'finition complete
+ ** d'une structure ou union incomplete
  **/
-int 
+int
 trouve_members(TYPE_STR *t)
 {
     TYPE_LIST *l;
-    
+
     for (l = types; l != NULL; l = l->next) {
 	if (l->type->type == t->type && !strcmp(l->type->name, t->name)) {
 	    /* trouve' */
@@ -1855,16 +1786,16 @@ trouve_sdi_ref(STR_REF_STR *ref)
 /*----------------------------------------------------------------------*/
 
 /**
- **  Construction de la liste des fichiers 
- ** contenant des definitions de type 
+ **  Construction de la liste des fichiers
+ ** contenant des definitions de type
  **/
-void 
+void
 construitIncludeList(void)
 {
     TYPE_LIST *l;
     TYPE_STR *t;
     ID_LIST *il;
-    
+
     for (l = types; l != NULL; l = l->next) {
 	t = l->type;
 	/* Ne traite que les types fournis par l'utilisateur */
@@ -1877,7 +1808,7 @@ construitIncludeList(void)
 		  "type %s\n", nomfic, t->linenum, t->name);
 	}
 	else if (strcmp(t->filename, nomfic) == 0) {
-	    fprintf(stderr, "genom %s:%d: warning: unknown type %s\n", 
+	    fprintf(stderr, "genom %s:%d: warning: unknown type %s\n",
 		    nomfic, t->linenum, t->name);
 	    t->flags |= TYPE_GENOM;
 	    continue;
@@ -1891,15 +1822,15 @@ construitIncludeList(void)
 	if (il == NULL) {
 	    /* pas trouve' */
 	    il = STR_ALLOC(ID_LIST);
-	    if (t->filename != NULL) 
+	    if (t->filename != NULL)
 	      il->name = strdup(t->filename);
-	    else 
+	    else
 	      il->name = NULL;
 	    il->next = includeFiles;
 	    includeFiles = il;
 	}
     } /* for */
-    
+
 } /* construitIncludeList */
 
 
@@ -1919,7 +1850,7 @@ langFileExt(MODULE_LANG lang)
       return "cc";
   }
 
-  /* sane fallback - we shouldn't ever end up here */ 
+  /* sane fallback - we shouldn't ever end up here */
   return "c";
 }
 
@@ -1927,9 +1858,9 @@ langFileExt(MODULE_LANG lang)
 /*----------------------------------------------------------------------*/
 
 /**
- ** Construction incrementale de chaine 
+ ** Construction incrementale de chaine
  **/
-void 
+void
 bufcat(char **buf, char *fmt, ...)
 {
 #ifdef HAVE_VASPRINTF
@@ -1965,7 +1896,7 @@ bufcat(char **buf, char *fmt, ...)
     va_start(ap, fmt);
     vsprintf(buf1, fmt, ap);
     taille += strlen(buf1);
-    
+
     *buf = xrealloc(*buf, taille);
     strcat(*buf, buf1);
 #endif
@@ -1986,7 +1917,7 @@ bufcatIfNotIn(char **buf, char *fmt, ...)
 
   va_start(ap, fmt);
   vasprintf(&buf1, fmt, ap);
-  
+
   if (*buf == NULL || strstr(*buf, buf1) == NULL) {
     bufcat(buf, buf1);
     free(buf1);
@@ -1999,7 +1930,7 @@ bufcatIfNotIn(char **buf, char *fmt, ...)
 
   va_start(ap, fmt);
   vsprintf(buf1, fmt, ap);
-  
+
   if (*buf == NULL || strstr(*buf, buf1) == NULL) {
     bufcat(buf, buf1);
     return 1;
@@ -2009,13 +1940,13 @@ bufcatIfNotIn(char **buf, char *fmt, ...)
 }
 
 /*----------------------------------------------------------------------*/
-    
+
 /**
  ** Ge'ne'ration des commandes pour construire les substitutions
  **/
 
-void 
-print_sed_subst(FILE *f, const char *from, const char *fmt, ...) 
+void
+print_sed_subst(FILE *f, const char *from, const char *fmt, ...)
 {
     va_list ap;
     static char sedquotes[] = "^!@#$%&*()-+[]{}|";
@@ -2024,7 +1955,7 @@ print_sed_subst(FILE *f, const char *from, const char *fmt, ...)
     static char f3[] = "g;\n";
     int size;
     char *c, *format;
-    
+
     /* examine from and fmt strings in order to find an appropriate quote
      * for sed substitutions */
     for(c = sedquotes; *c; c++) {
@@ -2077,7 +2008,7 @@ void
 markUsed(TYPE_STR *t)
 {
     DCL_NOM_LIST *lm;
-    
+
     if (t == NULL) {
 	return;
     }
@@ -2097,7 +2028,7 @@ void *
 xalloc(size_t n)
 {
     void *ptr;
-    
+
     ptr = malloc(n);
     if (ptr == NULL) {
 	fprintf(stderr, "genom: error: out of memory\n");
@@ -2129,7 +2060,7 @@ xrealloc(void *p, size_t n)
  **/
 void
 script_open(FILE *out)
-{	
+{
     fprintf(out, "open (OUT,\">/tmp/gen$$\") "
 	    "|| die \"Can't open output\";\n");
 }
@@ -2137,16 +2068,16 @@ script_open(FILE *out)
 /*----------------------------------------------------------------------*/
 
 /**
- ** Genere la fermeture d'un fichier et le 'move-if-change' final  
+ ** Genere la fermeture d'un fichier et le 'move-if-change' final
  **/
 void
 script_close(FILE *out, const char *newName,...)
 {
     va_list ap;
     char buf[1024];
-    
+
     va_start(ap, newName);
-    
+
     vsprintf(buf, newName, ap);
     fprintf(out, "close OUT;\n");
     fprintf(out, "move_if_change(\"/tmp/gen$$\", \"%s\");\n", buf);
@@ -2159,9 +2090,9 @@ script_close_exec(FILE *out, const char *newName,...)
 {
     va_list ap;
     char buf[1024];
-    
+
     va_start(ap, newName);
-    
+
     vsprintf(buf, newName, ap);
     fprintf(out, "close OUT;\n");
     fprintf(out, "move_if_change(\"/tmp/gen$$\", \"%s\");\n", buf);
@@ -2172,7 +2103,7 @@ script_close_exec(FILE *out, const char *newName,...)
 
 /*----------------------------------------------------------------------*/
 
-/** 
+/**
  ** Genere l'execution d'un script
  **
  ** (permet de recupperer un "die" )
@@ -2189,17 +2120,17 @@ script_do(FILE *out, const char *dir, const char *doFileName)
   fprintf(out, "#-----------------------------------"
 	  "-----------------------------------\n\n");
 }
-   
+
 /*----------------------------------------------------------------------*/
 
-/** 
- ** Genere le debut d'une substitution 
+/**
+ ** Genere le debut d'une substitution
  **/
 void
 subst_begin(FILE *out, const char *protoName)
 {
-    
-    fprintf(out, "open (IN,\"%s/%s\") \n\t|| die \"Can't open skeleton %s/%s\";\n", 
+
+    fprintf(out, "open (IN,\"%s/%s\") \n\t|| die \"Can't open skeleton %s/%s\";\n",
 	    protoDir, protoName, protoDir, protoName);
     fprintf(out,
 	    "$commentMode = 0;\n"
@@ -2209,7 +2140,7 @@ subst_begin(FILE *out, const char *protoName)
 	    "   s/^.*\\$commentend\\$// and $commentMode = 0;\n"
        );
 }
-    
+
 /*----------------------------------------------------------------------*/
 
 /**
@@ -2229,8 +2160,8 @@ subst_end(FILE *out)
 /**
  ** Genere le debut d'une insertion litterale
  **/
-   
-void 
+
+void
 cat_begin(FILE *out)
 {
     fprintf(out, "print OUT <<'FIN_DE_CAT';\n");
@@ -2239,7 +2170,7 @@ cat_begin(FILE *out)
 /*----------------------------------------------------------------------*/
 
 /**
- ** Genere la fin d'une intertion litterale 
+ ** Genere la fin d'une intertion litterale
  **/
 void
 cat_end(FILE *out)

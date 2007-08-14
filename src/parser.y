@@ -345,6 +345,7 @@ list_packages:
              | QUOTED_STRING { $$ = 0; }
              | list_packages ',' PACKAGENAME
              | list_packages ',' IDENTIFICATEUR
+             | list_packages ',' QUOTED_STRING
              ;
 
 declaration_de_module: MODULE identificateur attributs_de_module  
@@ -1667,6 +1668,7 @@ main(int argc, char **argv)
 	       extention) != 0) {
 	strcat(nomfic, extention);
     }
+    genfile = strdup(nomfic);
 
     /* pre-parse the .gen file to get requires and codels_requires */
     genom_get_requires(nomfic, cppOptions);
@@ -1700,7 +1702,6 @@ main(int argc, char **argv)
     } /* for */
     cppOptions[nCppOptions] = NULL;
     nomTemp = callCpp(nomfic, cppOptions, 0);
-    genfile = strdup(nomfic);
 
     /*
      * Parse description file
