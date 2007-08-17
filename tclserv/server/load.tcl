@@ -35,6 +35,7 @@ namespace eval modules {
     variable aliases
 
     namespace export lm
+    namespace export unlm
 
     proc lm { name args } {
 	global tclserv_moduledir
@@ -98,6 +99,21 @@ namespace eval modules {
 
 	server::log "client code in [set ::${name}::datadir]"
 	return [set ::${name}::datadir]
+    }
+
+    proc unlm { name } {
+	variable loaded
+	variable aliases
+
+	catch {
+	    if { [set loaded($name)] == 1 } {
+		${name}::disconnect
+	    }
+	}
+	catch {
+	    unset loaded($name)
+	    unset aliases($name)
+	}
     }
 
     proc connect { } {

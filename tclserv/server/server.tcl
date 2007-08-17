@@ -106,6 +106,20 @@ namespace eval server {
 		}
 	    }
 
+	    "^UNLM " {
+		log "$cmd"
+		if { ![regexp "^UNLM\[ \t\]*(.*)" $cmd match args] } {
+		    answer $channel "ERROR 1 syntax error: $match"
+		    return
+		}
+		set r [catch { set rval [eval unlm $args] } m]
+		if { $r != 0 } {
+		    answer $channel "ERROR $r $m"
+		} else {
+		    answer $channel "OK $rval"
+		}
+	    }
+
 	    "^RQST " {
 		if { ![regexp "^RQST\[ \t\]*(\[^ \t\]*)\[ \t]*(.*)" \
 		       $cmd match rqst rest] } {

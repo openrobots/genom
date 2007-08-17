@@ -104,5 +104,35 @@ proc lm { name args } {
     return "$alias loaded on $server from $localpath"
 }
 
+proc unlm { name args } {
+
+    # scan args
+    set server [::server::defaultServer]
+    set autombox 1
+    while {[llength $args] > 0} {
+	set arg [shift args]
+	if { "$arg" == "on" } {
+	    set server [shift args]
+        } elseif { "$arg" == "-no-auto-connect" } {
+	    set autombox 0
+	} else {
+	    error {unlm <module> [on <server>] [-no-auto-connect]}
+	}
+    }
+
+    # disconnect on remote side
+    if {![::server::chat $server "UNLM $name" "^OK" r]} {
+	error "cannot unload $name on ${server}: $r"
+    }
+
+    # remove and recreate mbox on that server
+    if { $autombox } {
+	catch "::cs::mboxEnd $server"
+	::cs::mboxInit $server
+    }
+
+    return "$name disconnected on $server"
+}
+
 package provide genom
 #eof
