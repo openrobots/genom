@@ -1,5 +1,12 @@
 $LAAS$
  
+ 65. Add a "unlm" request in tcl clients that disconnects from a module
+     and prevents from reconnecting to it.
+ 64. Clean up dandling request data of a tcl client that disconnect from
+     a tcl server.
+ 63. Suppress "no startup script ~/.tclservrc" message in "connect"
+     instruction of tcl package.
+ 62. Trigger an error if an execution task is named 'test'.
  61. Provides CODEL_LIBS in the Generated Makefile in codels, holding
      all libraries requires by codels via 'codels_require' in the .gen
  60. Init requests are implicitely incompatible with all other requests.
