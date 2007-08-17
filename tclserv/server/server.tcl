@@ -107,14 +107,16 @@ namespace eval server {
 	    }
 
 	    "^RQST " {
-		log "$cmd"
 		if { ![regexp "^RQST\[ \t\]*(\[^ \t\]*)\[ \t]*(.*)" \
 		       $cmd match rqst rest] } {
 		    answer $channel "ERROR 1 syntax error: $match"
+		    log "$cmd: syntax error"
 		    return
 		}
+		log "$cmd"
 		set r [::cs::rqstSend $channel $rqst $rest]
 		answer $channel $r
+		log "$cmd returned $r"
 	    }
 
 	    "^ACK " {
@@ -192,7 +194,7 @@ namespace eval server {
 	variable channels
 
 	regsub -all "\n" $message "\\n" tmp
-	log "replied $tmp"
+	log "replied to $name \"$tmp\""
 	if { "$name" == "-" } {
 	    slave eval ::cs::replyRcv $message
 	} else {
@@ -211,8 +213,13 @@ namespace eval server {
     proc endClient { name } {
 	variable channels
 
+	set freed [cs::clean $name]
 	close $name
-	log "closed $name"
+	if {[llength $freed]} {
+	    log "closed $name, freed requests $freed"
+	} else {
+	    log "closed $name"
+	}
 	unset channels($name)
 	return
     }
