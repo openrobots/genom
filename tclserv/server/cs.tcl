@@ -135,7 +135,7 @@ namespace eval cs {
 	foreach id $args {
 	    set rqstInfo [ set mbox($id) ]
 
-	    if { [lindex $rqstInfo 3 ] != "TERM" } {
+	    if { [lindex $rqstInfo 3 ] != "TERM" && [lindex $rqstInfo 3 ] != "ERROR" } {
 		set rqstName [ lindex $rqstInfo 0 ]
 		set rqstClnt [ lindex $rqstInfo 1 ]
 		set rqstId   [ lindex $rqstInfo 2 ]
@@ -239,6 +239,25 @@ namespace eval cs {
 	set actnum [set ::cs::genom($action)]
 	return "[rqstSend $client ${module}::Abort $actnum] ${module}::Abort"
     }
+
+    # Clean every pending request that belong to a client ------------
+
+    proc clean { client } {
+	variable mbox
+	set freed ""
+
+	foreach id [array names mbox] {
+	    set rqstInfo [ set mbox($id) ]
+
+	    if {[lindex $rqstInfo 1] == $client} {
+		unset mbox($id)
+		lappend freed $id
+	    }
+	}
+
+	return $freed
+    }
+
 }
 
 # Set the default mbox event script
