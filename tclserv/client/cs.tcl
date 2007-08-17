@@ -285,6 +285,10 @@ namespace eval cs {
 	    if { "[lindex $reply 0]" == "DIE" } { exit }
 	    set mbox([list $server [lindex $reply 0]]) [lrange $reply 1 end]
 	}
+	if { [eof $sock] } {
+	    puts "disconnecting from $server"
+	    disconnect $server
+	}
     }
 
     proc replyofPriv { rqstId } {

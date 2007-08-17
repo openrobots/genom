@@ -1,5 +1,7 @@
 $LAAS$
  
+ 66. Disconnect from tcl servers that die (this prevent eating 100% cpu
+     trying to read a closed socket).
  65. Add a "unlm" request in tcl clients that disconnects from a module
      and prevents from reconnecting to it.
  64. Clean up dandling request data of a tcl client that disconnect from
