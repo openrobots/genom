@@ -135,8 +135,6 @@ namespace eval server {
 			set result [catch {
 			    uplevel \#0 source ~/.tclservrc
 			} message]
-		    } else {
-			puts "no script ~/.tclservrc"
 		    }
 		}
 	    }
@@ -152,8 +150,6 @@ namespace eval server {
 		uplevel \#0 source ~/.tclservrc
 	    } message]
 	    unset ::server
-	} else {
-	    puts "no script ~/.tclservrc"
 	}
 
 
