@@ -63,20 +63,23 @@ namespace eval cs {
 	getopt argList block raw doc
 
 	if { $doc } {
-	    wrappedputs $docString
-	    wrappedputs $usage
+	    wrappedputs $docString 80
+	    wrappedputs $usage 80
 	    return
 	}
 
-	# Prepare to replace incomplete cmd line in history
-	set histrep 0
-	if { [llength $argList] < $argNumber } { set histrep 1 }
-
 	# Scan input
+	set origArgs $argList
 	set argList [mapscan $inputInfo $argList]
-	if { $histrep } {
+
+	# Add new command in history
+	if { $origArgs != $argList } {
 	    if { [llength [info commands ::el::history]] > 0 } {
-		::el::history add "${module}::$name $argList"
+		set opts ""
+		if { !$block } { lappend opts "-ack" }
+		if { $raw } { lappend opts "-raw" }
+		if { $doc } { lappend opts "-doc" }
+		::el::history add "${module}::$name $opts $argList"
 	    }
 	}
 
@@ -188,7 +191,7 @@ namespace eval cs {
 	    puts "Blocking param is meaningless in that context"
 	}
 	if { $doc } {
-	    wrappedputs $docString
+	    wrappedputs $docString 80
 	    return
 	}
 
