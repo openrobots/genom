@@ -134,6 +134,7 @@ void $module$$execTaskName$ (void)
 #if ($csServersFlag$) /* client task */
   int extEvn;
 #endif
+  int periodOverShot=0;
 
   MODULE_EVENT_STR moduleEvent;
 #ifdef HAS_POSIX_CLOCK
@@ -142,8 +143,9 @@ void $module$$execTaskName$ (void)
   struct timeval tv;
 #endif /* HAS_POSIX_CLOCK */
 
-  unsigned long msec0=0, msec1, msec2;
+  unsigned long mseBeginPrev=0, msecBegin, msecEnd, meanDuration, nbIter=1;
   int firstChrono=TRUE;
+  int computeMeanFlag = FALSE; /* try to compute meanDuration only if main exec loop and not abnormal overshot */
 
   /* Initialization of task */
   errnoSet(0);
@@ -180,19 +182,40 @@ void $module$$execTaskName$ (void)
 
 #ifdef HAS_POSIX_CLOCK
     clock_gettime(CLOCK_REALTIME, &tp);
-    msec1 = (tp.tv_nsec / 1000000) + (tp.tv_sec * 1000);
+    msecBegin = (tp.tv_nsec / 1000000) + (tp.tv_sec * 1000);
 #else
     gettimeofday(&tv, NULL);
-    msec1 = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
+    msecBegin = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
 #endif /* HAS_POSIX_CLOCK */
+    EXEC_TASK_TIME_BEGIN_LOOP($execTaskNum$) = msecBegin;
 
-    if(firstChrono) {firstChrono=FALSE; msec0=msec1;}
+    if(firstChrono) {firstChrono=FALSE; mseBeginPrev=msecBegin;}
 
+    computeMeanFlag = 1;
 #if ($periodFlag$) /* periodic task */
-    if ((EXEC_TASK_ON_PERIOD($execTaskNum$) = msec1 - msec0) 
-	> EXEC_TASK_MAX_PERIOD($execTaskNum$))
-      EXEC_TASK_MAX_PERIOD($execTaskNum$) = msec1 - msec0;
-    msec0 = msec1;
+    if ((EXEC_TASK_ON_PERIOD($execTaskNum$) = msecBegin - mseBeginPrev) 
+	> EXEC_TASK_MAX_PERIOD($execTaskNum$)) {
+      EXEC_TASK_MAX_PERIOD($execTaskNum$) = msecBegin - mseBeginPrev;
+      computeMeanFlag = 0;
+    }
+    mseBeginPrev = msecBegin;
+
+    /* Previous computation overshot */
+    if (EXEC_TASK_DURATION_LOOP($execTaskNum$) > (1000.0*EXEC_TASK_PERIOD($execTaskNum$))) {
+      periodOverShot = (int) ((EXEC_TASK_DURATION_LOOP($execTaskNum$)
+			       /(1000.0*EXEC_TASK_PERIOD($execTaskNum$))));
+      
+      if (GENOM_PRINT_TIME_FLAG) 
+	printf("$module$$execTaskName$ overshot of %d periods (d=%ldms mean=%ldms p=%ldms max=%ldms th=%dms)\n",
+	       periodOverShot,
+	       EXEC_TASK_DURATION_LOOP($execTaskNum$),
+	       meanDuration,
+	       EXEC_TASK_ON_PERIOD($execTaskNum$),
+	       EXEC_TASK_MAX_PERIOD($execTaskNum$),
+	       (int)(1000*EXEC_TASK_PERIOD($execTaskNum$)));
+    }
+    else
+      periodOverShot = 0;
 #endif
 
     wakeUpCntrlTask = FALSE;
@@ -238,6 +261,10 @@ void $module$$execTaskName$ (void)
 #endif
 
 
+    /* If last period overshot, does not execute activities this time */
+    /* XXXXXX NOT YET: AFTER COGNIRON, SEEMS TO HAVE SIDES EFFECTS
+       if (!periodOverShot) { */
+    
     /* permanent activity */
 #if ($cFuncExecFlag$) 
     moduleEvent.eventType = STATE_START_EVENT;
@@ -287,10 +314,11 @@ void $module$$execTaskName$ (void)
 	  /* This is for us */
 	case START:
 	  EXEC_TASK_MAX_PERIOD($execTaskNum$) = 0;
-	case EXEC:
 	case END:
 	case FAIL:
 	case INTER:
+	  computeMeanFlag = 0;
+	case EXEC:
 	  moduleEvent.eventType = STATE_START_EVENT;
 	  moduleEvent.activityNum = i;
 	  moduleEvent.activityState = ACTIVITY_EVN(i);
@@ -323,6 +351,8 @@ void $module$$execTaskName$ (void)
     if (nb != nbActi)
       logMsg("$module$$execTaskName$: invalid number of activities %d (expected %d) !\n", nb, nbActi);
 
+/*XXXXXXXX     }  *//* period overshot test */
+
     CURRENT_ACTIVITY_NUM($execTaskNum$) = -2;
     /* update "auto" posters */
     $listPosterUpdateFunc$
@@ -333,17 +363,38 @@ void $module$$execTaskName$ (void)
 
 #ifdef HAS_POSIX_CLOCK
     clock_gettime(CLOCK_REALTIME, &tp);
-    msec2 = (tp.tv_nsec / 1000000) + (tp.tv_sec * 1000);
+    msecEnd = (tp.tv_nsec / 1000000) + (tp.tv_sec * 1000);
 #else
     gettimeofday(&tv, NULL);
-    msec2 = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
+    msecEnd = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
 #endif /* HAS_POSIX_CLOCK */
 
 #if (!$periodFlag$)
-    EXEC_TASK_ON_PERIOD($execTaskNum$) = msec2 - msec1;
-    if (EXEC_TASK_ON_PERIOD($execTaskNum$) > EXEC_TASK_MAX_PERIOD($execTaskNum$))
+    EXEC_TASK_ON_PERIOD($execTaskNum$) = msecEnd - msecBegin;
+    if (EXEC_TASK_ON_PERIOD($execTaskNum$) > EXEC_TASK_MAX_PERIOD($execTaskNum$)) {
       EXEC_TASK_MAX_PERIOD($execTaskNum$) = EXEC_TASK_ON_PERIOD($execTaskNum$);
+      computeMeanFlag = 0;
+    }
 #endif
+
+    EXEC_TASK_TIME_END_LOOP($execTaskNum$) = msecEnd;
+    EXEC_TASK_DURATION_LOOP($execTaskNum$) = msecEnd-msecBegin;
+    if (computeMeanFlag) {
+      meanDuration = (int)
+	(((double)((nbIter-1)*meanDuration + EXEC_TASK_DURATION_LOOP($execTaskNum$))
+	  /((double)nbIter)));
+      nbIter++;
+    }
+
+    /* display about time */
+    if (GENOM_PRINT_TIME_FLAG) {
+      printf("$module$$execTaskName$: d %4ld mean %4ld p %4ld max %4ld th %4d\n",
+	     EXEC_TASK_DURATION_LOOP($execTaskNum$),
+	     meanDuration,
+	     EXEC_TASK_ON_PERIOD($execTaskNum$),
+	     EXEC_TASK_MAX_PERIOD($execTaskNum$),
+	     (int)(EXEC_TASK_PERIOD($execTaskNum$)*1000.0)); 
+    }
 
     /* The result changed: inform the control task */
     if (prevExecTaskBilan != EXEC_TASK_BILAN($execTaskNum$)) {

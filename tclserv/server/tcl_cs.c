@@ -63,6 +63,10 @@ __RCSID("$LAAS$");
 #   define GENOM_END_MODULE -99
 /* Numéro d'abort pour débloquer les tâches d'exec suspendues */
 #   define GENOM_RESUME_EXEC_TASK -88
+/* Numéro d'abort pour afficher les temps d'exec */
+#   define GENOM_SHOW_TIME -77
+/* Numéro d'abort pour rendre le module verbose */
+#   define GENOM_VERBOSE -66
 
 #endif /* wanna_get_lots_of_horrid_dependencies */
 
@@ -106,6 +110,10 @@ tclServCsStart(Tcl_Interp *interp)
 
    sprintf(buf, "%d", GENOM_END_MODULE);
    Tcl_SetVar2(interp, "::cs::genom", "abort", buf, TCL_GLOBAL_ONLY);
+   sprintf(buf, "%d", GENOM_SHOW_TIME);
+   Tcl_SetVar2(interp, "::cs::genom", "showtime", buf, TCL_GLOBAL_ONLY);
+   sprintf(buf, "%d", GENOM_VERBOSE);
+   Tcl_SetVar2(interp, "::cs::genom", "verbose", buf, TCL_GLOBAL_ONLY);
    sprintf(buf, "%d", GENOM_RESUME_EXEC_TASK);
    Tcl_SetVar2(interp, "::cs::genom", "resume", buf, TCL_GLOBAL_ONLY);
 

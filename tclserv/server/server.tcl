@@ -1,7 +1,7 @@
 #	$LAAS$
 
 #
-# Copyright (c) 1999-2003 LAAS/CNRS                   --  Sat Apr  3 1999
+# Copyright (c) 1999-2007 LAAS/CNRS                   --  Sat Apr  3 1999
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -167,6 +167,29 @@ namespace eval server {
 		set r [ ::cs::killModule $channel $module $action]
 		answer $channel $r
 	    }
+
+	    "^SHOWTIME " {
+		log "$cmd"
+		if { ![regexp "^SHOWTIME\[ \t\]*(\[^ \t]*)\[ \t]*(\[^ \t]*)" \
+			   $cmd match module action] } {
+		    answer $channel "ERROR 1 syntax error: $match"
+		    return
+		}
+		set r [ ::cs::showtimeModule $channel $module $action]
+		answer $channel $r
+	    }
+
+	    "^VERBOSE " {
+		log "$cmd"
+		if { ![regexp "^VERBOSE\[ \t\]*(\[^ \t]*)\[ \t]*(\[^ \t]*)" \
+			   $cmd match module action] } {
+		    answer $channel "ERROR 1 syntax error: $match"
+		    return
+		}
+		set r [ ::cs::verboseModule $channel $module $action]
+		answer $channel $r
+	    }
+
 
 	    default {
 		log "$cmd"

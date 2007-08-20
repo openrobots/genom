@@ -863,6 +863,20 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 	}
 	break;
     
+      case GENOM_PRINT_TIME_RQST:
+	if (GENOM_PRINT_TIME_FLAG)
+	  GENOM_PRINT_TIME_FLAG = 0;
+	else
+	  GENOM_PRINT_TIME_FLAG = 1;
+	break;
+
+      case GENOM_VERBOSE_RQST:
+	if (GENOM_VERBOSE_LEVEL)
+	  GENOM_VERBOSE_LEVEL = 0;
+	else
+	  GENOM_VERBOSE_LEVEL = 1;
+	break;
+
 	/* Activity -99: stop the module */
       case GENOM_END_MODULE:
 

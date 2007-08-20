@@ -73,6 +73,10 @@ typedef enum GENOM_STATUS {
 #define GENOM_END_MODULE -99
 /* Numéro d'abort pour débloquer les tâches d'exec suspendues */
 #define GENOM_RESUME_EXEC_TASK -88
+/* time */
+#define GENOM_PRINT_TIME_RQST -77
+/* verbose */
+#define GENOM_VERBOSE_RQST -66
 
 /* Description d'une tache d'execution */
 typedef struct {
@@ -81,6 +85,10 @@ typedef struct {
   double period;           /* (CONST.) Periode requise (sec) */
   unsigned long maxPeriod; /* Periode max (msec) */
   unsigned long onPeriod;  /* Periode courante (msec) */
+  unsigned long timeBeginLoop; /* starting time of the exec task loop */
+  unsigned long timeEndLoop;   /* end time of the exec task loop */
+  unsigned long durationLoop;  /* duration of last loop */
+  unsigned long unused;        /* duration of last loop */
   int bilan;               /* bilan de la tache et de l'activite permanente */
   int currentActivity;     /* Activite courante */
   int wakeUp;              /* Eveil de la tache d'exec requis */
@@ -114,6 +122,8 @@ typedef struct {
   int bilan;               /* bilan de la tache de controle */
   int nbActivities;        /* Nombre total d'activites en cours */
   BOOL stopModule;         /* Flag pour arrêter le module */
+  int verbose;             /* 0: quiet, other, verbose level */
+  BOOL printTime;          /* Flag print times */
   int initRqst;            /* Numéro de la requête d'init ou -1 */
   int nbExecTasks;         /* Nombre de taches d'execution */
   void *sdif;              /* sdi_f adresse */
@@ -130,6 +140,9 @@ typedef struct {
 #define M_EXEC_TASK_PERIOD(p,i)     ((p)->execTaskTab[(i)].period)
 #define M_EXEC_TASK_MAX_PERIOD(p,i) ((p)->execTaskTab[(i)].maxPeriod)
 #define M_EXEC_TASK_ON_PERIOD(p,i)  ((p)->execTaskTab[(i)].onPeriod)
+#define M_EXEC_TASK_TIME_BEGIN_LOOP(p,i)  ((p)->execTaskTab[(i)].timeBeginLoop)
+#define M_EXEC_TASK_TIME_END_LOOP(p,i)  ((p)->execTaskTab[(i)].timeEndLoop)
+#define M_EXEC_TASK_DURATION_LOOP(p,i)  ((p)->execTaskTab[(i)].durationLoop)
 #define M_EXEC_TASK_BILAN(p,i)      ((p)->execTaskTab[(i)].bilan)
 #define M_EXEC_TASK_NB_ACTI(p,i)    ((p)->execTaskTab[(i)].nbActivities)
 #define M_EXEC_TASK_POSTER_ID(p,i)  ((p)->execTaskTab[(i)].posterId)
@@ -158,6 +171,8 @@ typedef struct {
 #define M_CNTRL_TASK_BILAN(p)       ((p)->cntrlTask.bilan)
 #define M_NB_ACTIVITIES(p)          ((p)->cntrlTask.nbActivities)
 #define M_STOP_MODULE_FLAG(p)       ((p)->cntrlTask.stopModule)
+#define M_GENOM_VERBOSE_LEVEL(p)    ((p)->cntrlTask.verbose)
+#define M_GENOM_PRINT_TIME_FLAG(p)  ((p)->cntrlTask.printTime)
 #define M_INIT_RQST(p)              ((p)->cntrlTask.initRqst)
 #define M_CNTRL_NB_EXEC_TASKS(p)    ((p)->cntrlTask.nbExecTasks)
 #define M_CNTRL_SDI_F(p)            ((p)->cntrlTask.sdif)

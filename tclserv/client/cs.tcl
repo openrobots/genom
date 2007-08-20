@@ -43,6 +43,8 @@ namespace eval cs {
     namespace export mboxEnd
     namespace export abort
     namespace export kill
+    namespace export showtime
+    namespace export verbose
 
     if [catch {package present el::base}] {
 	package require pm::tools
@@ -388,6 +390,64 @@ namespace eval cs {
 	}
 
 	::server::chat $server "KILL $module $action" ".*" reply
+	if { "[lindex $reply 0]" != "OK" } {
+	    return -code error "[lrange $reply 2 end]"
+	}
+
+	# Get abort rqst id
+	set abtRqstId "$server [lindex $reply 1]"
+	set ::cs::mbox($abtRqstId) "[lindex $reply 2] SENT"
+
+	# wait for TERM
+	set retCode "ok"
+	set answer [replyofPriv $abtRqstId]
+	if { "[lindex $answer 0]" != "OK" } {
+	    set retCode "error"
+	}
+	return -code $retCode $answer
+    }
+
+    # Showtime a module -----------------------------------------------------
+
+    proc showtime { module args } {
+	set server [serverof $module]
+
+	if { [llength $args] == 0 } {
+	    set action "showtime"
+	} else {
+	    set action [shift args]
+	}
+
+	::server::chat $server "SHOWTIME $module $action" ".*" reply
+	if { "[lindex $reply 0]" != "OK" } {
+	    return -code error "[lrange $reply 2 end]"
+	}
+
+	# Get abort rqst id
+	set abtRqstId "$server [lindex $reply 1]"
+	set ::cs::mbox($abtRqstId) "[lindex $reply 2] SENT"
+
+	# wait for TERM
+	set retCode "ok"
+	set answer [replyofPriv $abtRqstId]
+	if { "[lindex $answer 0]" != "OK" } {
+	    set retCode "error"
+	}
+	return -code $retCode $answer
+    }
+
+    # Verbose a module -----------------------------------------------------
+
+    proc verbose { module args } {
+	set server [serverof $module]
+
+	if { [llength $args] == 0 } {
+	    set action "verbose"
+	} else {
+	    set action [shift args]
+	}
+
+	::server::chat $server "VERBOSE $module $action" ".*" reply
 	if { "[lindex $reply 0]" != "OK" } {
 	    return -code error "[lrange $reply 2 end]"
 	}

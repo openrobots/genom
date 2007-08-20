@@ -1,7 +1,7 @@
 #	$LAAS$
 
 #
-# Copyright (c) 1999-2003 LAAS/CNRS                   --  Fri Apr  2 1999
+# Copyright (c) 1999-2007 LAAS/CNRS                   --  Fri Apr  2 1999
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -240,6 +240,40 @@ namespace eval cs {
 	return "[rqstSend $client ${module}::Abort $actnum] ${module}::Abort"
     }
 
+    proc showtimeModule { client module action } {
+	variable mbox
+
+	if { [lsearch -exact [array names ::cs::genom] $action] == -1 } {
+	    return "ERROR 1 Bad action: $action"
+	}
+
+	set list [array names ::modules::loaded]
+	if { [lsearch -exact $list $module] == -1 } {
+	    return "ERROR 1 No such module: $module"
+	}
+
+	# XXX should be $actnum instead of hardcoded -77
+	set actnum [set ::cs::genom($action)]
+	return "[rqstSend $client ${module}::Abort -77] ${module}::Abort"
+    }
+
+    proc verboseModule { client module action } {
+	variable mbox
+
+	if { [lsearch -exact [array names ::cs::genom] $action] == -1 } {
+	    return "ERROR 1 Bad action: $action"
+	}
+
+	set list [array names ::modules::loaded]
+	if { [lsearch -exact $list $module] == -1 } {
+	    return "ERROR 1 No such module: $module"
+	}
+
+	# XXX should be $actnum instead of hardcoded -66
+	set actnum [set ::cs::genom($action)]
+	return "[rqstSend $client ${module}::Abort -66] ${module}::Abort"
+    }
+
     # Clean every pending request that belong to a client ------------
 
     proc clean { client } {
@@ -257,7 +291,6 @@ namespace eval cs {
 
 	return $freed
     }
-
 }
 
 # Set the default mbox event script

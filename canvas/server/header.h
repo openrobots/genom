@@ -109,6 +109,9 @@ $listUserFuncProto$
 #define EXEC_TASK_PERIOD(i)     M_EXEC_TASK_PERIOD(SDI_C,i)
 #define EXEC_TASK_MAX_PERIOD(i) M_EXEC_TASK_MAX_PERIOD(SDI_C,i)
 #define EXEC_TASK_ON_PERIOD(i)  M_EXEC_TASK_ON_PERIOD(SDI_C,i)
+#define EXEC_TASK_TIME_BEGIN_LOOP(i) M_EXEC_TASK_TIME_BEGIN_LOOP(SDI_C,i)
+#define EXEC_TASK_TIME_END_LOOP(i) M_EXEC_TASK_TIME_END_LOOP(SDI_C,i)
+#define EXEC_TASK_DURATION_LOOP(i) M_EXEC_TASK_DURATION_LOOP(SDI_C,i)
 #define EXEC_TASK_BILAN(i)      M_EXEC_TASK_BILAN(SDI_C,i)
 #define EXEC_TASK_NB_ACTI(i)    M_EXEC_TASK_NB_ACTI(SDI_C,i)
 #define EXEC_TASK_DONTLOCK_SDI(i) M_EXEC_TASK_DONTLOCK_SDI(SDI_C,i)
@@ -141,6 +144,29 @@ $listUserFuncProto$
 #define INIT_RQST              M_INIT_RQST(SDI_C)
 #define CNTRL_NB_EXEC_TASKS    M_CNTRL_NB_EXEC_TASKS(SDI_C)
 #define CNTRL_SDI_F            M_CNTRL_SDI_F(SDI_C)
+
+#define GENOM_VERBOSE_LEVEL    M_GENOM_VERBOSE_LEVEL(SDI_C)
+#define GENOM_PRINT_TIME_FLAG  M_GENOM_PRINT_TIME_FLAG(SDI_C)
+
+#define GENOM_VERBOSE(fmt, args...) {\
+    if(GENOM_VERBOSE_LEVEL>=1){fprintf(stderr,"$module$: "fmt"\n", ##args);}\
+}
+
+#define GENOM_PRINT(fmt, args...) {\
+fprintf(stderr, \
+        "$module$ %s(): "fmt "\n"\
+        "$module$ %s(): file %s, line %d\n", \
+         __func__,  ##args, \
+         __func__,  __FILE__, __LINE__);\
+}
+
+#define GENOM_PRINT_REPORT(report) {\
+fprintf(stderr, \
+        "$module$ %s(): " #report "\n" \
+        "$module$ %s(): file %s, line %d\n", \
+         __func__,  \
+         __func__,  __FILE__, __LINE__);			\
+}
 
 #define GENOM_UNLOCK_SDI       M_GENOM_UNLOCK_SDI(SDI_C)
 #define GENOM_LOCK_SDI         M_GENOM_LOCK_SDI(SDI_C)

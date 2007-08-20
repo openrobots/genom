@@ -110,7 +110,7 @@ FILE *sortie;
 int enumValue = 0;
 
 static int import_flag = 0;
-static int accept_obsolete = 0;
+static int accept_obsolete = 1;
 static void yyerror(char *s);
 
 #ifndef GENOM_VERSION
