@@ -1867,7 +1867,7 @@ main(int argc, char **argv)
     fatalError |= (printGen(sortie) != 0);
     fatalError |= (printXMLGen(sortie) != 0);
     fatalError |= (scanGen(sortie) != 0);
-    fatalError |= (scopeGen(sortie) != 0);
+/*     fatalError |= (scopeGen(sortie) != 0); */
 
     /* even with no server, endianLin needs posterLib.h 
        and tclLib and openprs seem to need posterLib.c (?) */
