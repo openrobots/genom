@@ -374,7 +374,7 @@ main(int argc, char *argv[])
 	    /* Attend le lancement du module par une lecture sur le pipe */
 	    if (read(waitPipe[0], buf, sizeof(buf)) <= 0) {
 		fprintf(stderr, 
-			"moduleInit: error waiting for module start\n");
+			"$module$ moduleInit: error waiting for module start\n");
 	    } 
 	    exit(0);
 	}
@@ -389,26 +389,26 @@ main(int argc, char *argv[])
 #endif
     if (errFlag == ERROR) {
 	/* informe la tache en avant plan */
-	write(waitPipe[1], "h2initGlob error\n", 17); 
+	write(waitPipe[1], "$module$: h2initGlob error\n", 17); 
 	exit(2);
     }
     /* Demarrage des taches du module */
     if ($module$TaskInit() == ERROR) {
-	printf("\nError moduleInit: ");
+	printf("$module$: Error moduleInit: ");
 	h2printErrno(errnoGet());
 	/* informe la tache en avant plan */
-	write(waitPipe[1], "moduleTaskInit error\n", 21); 
+	write(waitPipe[1], "$module$: moduleTaskInit error\n", 21); 
 	exit(1);
     }
     if (shellOpt) {
 	/* Lance un shell */
 	shellMainLoop(stdin, stdout, stderr, prompt);
     } else if (essaiOpt) {
-	fprintf(stderr, "pas encore implementé\n");
+	fprintf(stderr, "$module$: not implemented\n");
     } 
     /* informe la tache en avant plan */
     if (backgroundOpt) {
-	write(waitPipe[1], "OK\n", 3);
+	write(waitPipe[1], "$module$: OK\n", 3);
 	/* close(waitPipe[1]); */
     }
     /* Wait forever */
