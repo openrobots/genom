@@ -56,6 +56,17 @@ proc lmap { list map } {
     return $mapped
 }
 
+# print line wrapped to specified width
+proc wrappedputs { line width } {
+    while { [string length $line] > $width } {
+	set b [tcl_wordBreakBefore $line $width]
+	if { $b < 0 } { set b $width }
+
+	puts [string range $line 0 [expr $b-1]]
+	set line [string range $line $b end]
+    }
+    puts $line
+}
 
 # ask user interactively for input
 proc aska { type prompt defaultValue args } {
@@ -72,11 +83,11 @@ proc aska { type prompt defaultValue args } {
 	    puts -nonewline "$prompt \[$defaultValue\]> "
 	    flush stdout
 	    set code [catch {
-		set input [gets stdin]
+		set n [gets stdin input]
 	    } message ]
 
 	    if {$code} { error $message }
-
+	    if {$n < 0} { error "user abort" }
 	} else {
 	    set input $args
 	}
@@ -212,7 +223,7 @@ proc mapscan { format cmdLine } {
 		} m]
 	    }
 	    if { $r == 3 } { return -code return $m }
-	    if { $r != 0 && ! $nov } { return -code error $m }
+	    if { $r != 0 } { return -code error $m }
 	    if { $r == 0 } { lappend result $m; break }
 	    puts $m
 	}
