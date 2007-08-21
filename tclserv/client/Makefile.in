@@ -62,9 +62,9 @@ pkgfile= pkgIndex.tcl
 # -----------------------------------------------------------------------
 
 .PHONY: all
-all: $(pkgfile)
+all: $(pkgfile).@PACKAGE_VERSION@
 
-$(pkgfile): $(pkgfile).in
+$(pkgfile).@PACKAGE_VERSION@: $(pkgfile).in
 	$(SED) \
 		-e 's,@canvasdir\@,$(CANVASDIR),g'			\
 		-e 's,@genomversion\@,@PACKAGE_VERSION@,g'	\
@@ -82,14 +82,15 @@ install:: $(pkgfile)
 			$(INSTALL_DATA) $(srcdir)/$$f ${DESTDIR}$(CANVASDIR)/tcl/$$f; ) \
 	done
 	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/genom
-	$(INSTALL_DATA) $(pkgfile) ${DESTDIR}$(datadir)/genom/$(pkgfile)
+	$(INSTALL_DATA) $(pkgfile).@PACKAGE_VERSION@ \
+		${DESTDIR}$(datadir)/genom/$(pkgfile)
 
 
 # --- clean -------------------------------------------------------------
 
 .PHONY: clean
 clean:
-	rm -f pkgIndex.tcl
+	rm -f $(pkgfile).@PACKAGE_VERSION@
 
 distclean: clean
 	rm -f Makefile
