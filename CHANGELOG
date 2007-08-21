@@ -1,5 +1,9 @@
 $LAAS$
  
+ 68. Abort request allows to switch on/off verbose mode (parameter -66) 
+     and to display time performances of the codels (-77). Corresponding 
+     procedures 'verbose' and 'showtime' have been added in tclserv.
+ 67. Does not generate stethoscope files any more
  66. Disconnect from tcl servers that die (this prevent eating 100% cpu
      trying to read a closed socket).
  65. Add a "unlm" request in tcl clients that disconnects from a module
