@@ -38,6 +38,7 @@ namespace eval cs {
     variable servers
 
     # public procedures
+    namespace export serverof
     namespace export replyof
     namespace export mboxInit
     namespace export mboxEnd
@@ -407,18 +408,12 @@ namespace eval cs {
 	return -code $retCode $answer
     }
 
-    # Showtime a module -----------------------------------------------------
+    # Showtime of a module -----------------------------------------------------
 
-    proc showtime { module args } {
+    proc showtime { module } {
 	set server [serverof $module]
 
-	if { [llength $args] == 0 } {
-	    set action "showtime"
-	} else {
-	    set action [shift args]
-	}
-
-	::server::chat $server "SHOWTIME $module $action" ".*" reply
+	::server::chat $server "SHOWTIME $module" ".*" reply
 	if { "[lindex $reply 0]" != "OK" } {
 	    return -code error "[lrange $reply 2 end]"
 	}
@@ -438,16 +433,10 @@ namespace eval cs {
 
     # Verbose a module -----------------------------------------------------
 
-    proc verbose { module args } {
+    proc verbose { module } {
 	set server [serverof $module]
 
-	if { [llength $args] == 0 } {
-	    set action "verbose"
-	} else {
-	    set action [shift args]
-	}
-
-	::server::chat $server "VERBOSE $module $action" ".*" reply
+	::server::chat $server "VERBOSE $module" ".*" reply
 	if { "[lindex $reply 0]" != "OK" } {
 	    return -code error "[lrange $reply 2 end]"
 	}

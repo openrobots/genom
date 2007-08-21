@@ -170,23 +170,23 @@ namespace eval server {
 
 	    "^SHOWTIME " {
 		log "$cmd"
-		if { ![regexp "^SHOWTIME\[ \t\]*(\[^ \t]*)\[ \t]*(\[^ \t]*)" \
-			   $cmd match module action] } {
+		if { ![regexp "^SHOWTIME\[ \t\]*(\[^ \t]*)" \
+			   $cmd match module] } {
 		    answer $channel "ERROR 1 syntax error: $match"
 		    return
 		}
-		set r [ ::cs::showtimeModule $channel $module $action]
+		set r [ ::cs::showtimeModule $channel $module]
 		answer $channel $r
 	    }
 
 	    "^VERBOSE " {
 		log "$cmd"
-		if { ![regexp "^VERBOSE\[ \t\]*(\[^ \t]*)\[ \t]*(\[^ \t]*)" \
-			   $cmd match module action] } {
+		if { ![regexp "^VERBOSE\[ \t\]*(\[^ \t]*)" \
+			   $cmd match module] } {
 		    answer $channel "ERROR 1 syntax error: $match"
 		    return
 		}
-		set r [ ::cs::verboseModule $channel $module $action]
+		set r [ ::cs::verboseModule $channel $module]
 		answer $channel $r
 	    }
 
