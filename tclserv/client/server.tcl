@@ -43,8 +43,14 @@ namespace eval server {
     namespace export disconnect
     namespace export die
 
-    proc connect { server } {
+    proc connect { args } {
 	variable connections
+
+	if { [llength $args] == 0 } {
+	    set server localhost
+	} else {
+	    set server $args
+	}
 
 	if {[lsearch -exact [array names connections] $server] >= 0} {
 	    error "already connected to $server"
@@ -52,9 +58,10 @@ namespace eval server {
 
 	# try to open a socket with the server
 	if { [info exist ::env(TCLSERV_PORT)] } {
-	    puts "using port $::env(TCLSERV_PORT)"
+	    puts "connecting to $server:$::env(TCLSERV_PORT)"
 	    set sockCmd [ socket $server $::env(TCLSERV_PORT) ]
 	} else {
+	    puts "connecting to $server:9472"
 	    set sockCmd [ socket $server 9472 ]
 	}
 	fconfigure $sockCmd -buffering line
