@@ -864,10 +864,16 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 	break;
     
       case GENOM_PRINT_TIME_RQST:
-	if (GENOM_PRINT_TIME_FLAG)
+	if (GENOM_PRINT_TIME_FLAG) {
 	  GENOM_PRINT_TIME_FLAG = 0;
-	else
+	  /* reset time max for next display */
+	  for (i=0; i<$MODULE$_NB_EXEC_TASK; i++) {
+	    EXEC_TASK_MAX_PERIOD(i) = 0;
+	  }
+	}
+	else {
 	  GENOM_PRINT_TIME_FLAG = 1;
+	}
 	break;
 
       case GENOM_VERBOSE_RQST:
