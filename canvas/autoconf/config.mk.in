@@ -42,6 +42,7 @@ exec_prefix=	@exec_prefix@
 bindir=		@bindir@
 libdir=		@libdir@
 includedir=	@includedir@/$pkgname$
+datarootdir=	@datarootdir@
 datadir=	@datadir@/modules
 
 # --- Programs ----------------------------------------------------------
