@@ -39,9 +39,9 @@ module and of addressing data in the posters.
 \section{The interactive test program {\tt Test}}
 \label{sec|essay}
 
-The interactive  test program  is a client  of  a module. One can  launch
-several instances of it, provided they are  given different {\em numbers}
-(see chapter~\ref{cha|session}).
+The interactive test program {\tt <module>Test} is a client of a
+module. One can launch several instances of it, provided they are given
+different {\em numbers} ({\tt <module>Test 5}, {\tt <module>Test 2}, etc.).
 
 This program proposes a menu, which associates  a number to each command:
 You just have to  enter the number corresponding  to the command you want
@@ -56,8 +56,14 @@ request has some input parameters, they must be entered interactively.
 The bracketed value is a default value: simply pressing {\tt return} will
 select  it.  To  interrupt the interactive  input,  type  ``{\tt .}''  (a
 single   dot):   defaults  values  will   be  affected   to the remaining
-parameters. Default values are initialized to $0$.  Then they contain the
-last entered value.
+parameters. Initially default values are set to $0$.  Then they keep the
+previous entered value.
+
+Note: if you have defined another request (or a poster) that outputs the
+same IDS data as this input parameter, then the {\tt <module>Test}
+suggests to initialize automatically this input parameter using the other
+request (or poster). That means that the input parameter will be
+initialized with the current module value.
 
 Once    you  have  entered  the   input   data, you    must  confirm  the
 execution. Type ``{\tt a}'' to abort.  For an execution request, you must
@@ -99,27 +105,59 @@ poster.
 \section{The interactive tcl shell {\tt tclserv}}
 \label{sec|tcl}
 
+{\tt tclserv} allows to control a set of modules (requests and posters)
+from a {\tt tcl} shell. Thus, you can take advantage of a full and
+interactive programming language (tcl) to manipulate requests and data.
+Moreover, you can control modules running on distinct CPUs.
+
+
+{\tt tclserv} is a server which  connects to  a  list of modules on  one
+side, and accepts  tcl clients on  the other side. {\tt tclserv} must run
+on the machine that runs the modules. If the modules run on several machines
+then you must run one {\tt tclserv} on each machine. 
+
+The {\tt tcl} client can run on any machine. It is a standard {\tt
+tcl} shell, loading the {\tt tcl} package ``{\tt genom}''. However, we
+provide such a shell 
+
+
+Here is a typical sequence to control modules with tcl:
+
+\begin{enumerate}
+\item generate the modules with the  option {\tt -t}. 
+\item compile and install them
+\item start the modules
+\item start a server {\tt tclserv} on the same machine
+\item on any machine, start a tcl shell with the package genom: {\tt
+      eltclsh -package genom}
+\item from ths shell, connect to the machine running {\tt tclserv}:\\
+	{\tt connect <tclserv-host>}
+\item load the functions to communicate with the modules:\\
+	{\tt lm <module1>}
+\item send the requests to the modules:\\
+	{\tt module1::Move 1.0}
+\end{enumerate}
+
+
 {\tt tclserv} is  a server which  connects to  a  list of modules on  one
 side, and accepts  tcl clients on  the other side.  Clients can then send
 requests to  a   set   of   modules,  using the    {\tt  tcl}   scripting
 language. This  can  be done  either interactively,  or  by the  mean  of
 scripts.
 
-To be able to use  this functionality, you must  generate the module with
-the  option {\tt -t}.  A separate document   is (will be?) available, and
-describe the usage of this server.
 
 
 % =======================================================================
 \section{{\tt OpenPRS} and {\tt transGen}}
 \label{sec|propice}
 
-You must generate the module with the option {\tt -x}.
+You must generate the module with the option {\tt -o}.
 A separate document is (not yet) available.
 
 
 % =======================================================================
 \section{Accessing modules' posters from modules}
+\label{sec|posters}
 
 Two different cases must be considered.
 \begin{itemize}
