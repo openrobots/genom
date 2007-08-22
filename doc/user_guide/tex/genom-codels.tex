@@ -215,7 +215,7 @@ Here is what it could look like with our example and the Makefile in the
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 [...]
-CPPFLAGS += -I$(DEMO) -I$(DEMO)/auto -I$(DIRUNIX)  -I$(DIRGENOM)
+CPPFLAGS += -I$(DEMO) -I$(DEMO)/server -I$(DIRUNIX)  -I$(DIRGENOM)
 CPPFLAGS += -I/usr/include
 [...]
 LIBS = /usr/lib/libm.a
@@ -254,7 +254,7 @@ have to complete the templates.
 {\em Note}  that if you use the  {\tt -i} option  and those files already
 exist, {\tt genom} asks for confirmation before  overwriting any file. It
 is not possible to  fuse locally modified  templates with fresh new ones.
-However, the   templates are always generated  in  the  {\tt auto/users/}
+However, the   templates are always generated  in  the  {\tt .genom/codels/}
 directory, so  that  you can fuse   parts together by  yourself. The {\tt
 genom-mode} can help you to do this: see chapter~\ref{cha|edit}.
 
@@ -296,26 +296,37 @@ exclusion lock protects the structure against concurrent accesses.
 
 \subsection{The fIDS}
 
-The macro {\tt SDI\_F}  defined in the {\tt auto/<module>Header.h} header
+The macro {\tt SDI\_F}  defined in the {\tt server/<module>Header.h} header
 represent a pointer to the fIDS of the module.
 
-{\em Warning:} the   {\tt input}  and {\tt   output} parameters  of   the
+{\em Warning:} 
+ You should not read parameters
+of  a  request  directly  from the  fIDS,  but only from the codel
+function parameters.
+
+Indeed, the   {\tt input}  and {\tt   output} parameters  of   the
 requests  can  be those  of simultaneous activities  (if  the  request is
 compatible with  itself).  In that case, these  parameters {\em  are not}
 pointers to members of  the fIDS structure declared in  the module.  Each
 activity  must have  its own  set  of  parameters, and \GenoM\  generates
 arrays for that case. The member you have defined in the {\em fIDS} still
-exists, but is not used. Thus, you should always avoid reading parameters
-of  a  request  directly  from the  fIDS,  except    if that request   is
-incompatible with itself.
-
+exists, but is not used.
 
 \subsection{The cIDS}
 
 The cIDS contains various parameters of the module (period, poster names,
 clients ids, \ldots) and its current  state (activities, \ldots). You can
 read  the members  of this  structure thanks   to macros  defined in {\tt
-auto/<module>Header.h}.
+server/<module>Header.h}.
+
+This cIDS is also exported in the control poster of the module.
+
+Warning: the control poster belongs to the control task of the module.
+It updates this poster every time it wakes up, ie, when it receives
+a request or when an activity is over. However, the activity state
+transitions, executed by the execution tasks, are usualy much more
+frequent. Thus, the control poster is not updated in real time.
+
 
 Here is a non-exhaustive list, for a module {\tt  pilo} client of another
 module {\tt loco} and with an execution task {\tt Motion} which updates a
@@ -383,53 +394,14 @@ The numerical value is computed as follow:
 \begin{itemize}
 \item the 16 highest significative bits encode the id of the task or
 the  library which  defines the report.   This  number is  the  id of the
-module  $N$, $N+1$   for  the requests  library, $N+2$  for   the posters
-library, $N+3$ for the first execution task, \ldots.
+module  $N$.
 
 \item the 16 lowest significative bits encode the id of the report
 inside the module, and is computed by \GenoM.
 \end{itemize}
 
-Error codes are stored in the file {\tt auto/<module>Error.h}.
+Error codes are stored in the file {\tt server/<module>Error.h}.
 
-
-\subsection{Installing the reports}
-
-{\bf Warning: this procedure might be deprecated}.
-
-By default, clients  will  display the  numerical value of  the  reports.
-However, it is  possible to install  reports in a global database. Client
-can then display  reports as human  readable strings. To  do so, you must
-use  the command  {\tt    h2addErrno}  located in   the   directory  {\tt
-/usr/local/hilare2/src/errorLib}:
-
-\begin{center}\begin{cartouche}\small\begin{verbatim}
-pif[demo]  cd /usr/local/robots/posix/src/errorLib
-pif[errorLib] h2addErrno /usr/local/hilare2/src/modules/demo/auto/demoError.h
-pif[errorLib] gnumake
-\end{verbatim}\end{cartouche}\end{center}
-
-
-\subsection{Displaying the reports}
-
-{\bf Warning: this procedure might be deprecated}.
-
-To  display a  report  in clear text,  use  function of  the library {\tt
-h2errorLib} (installed in {\tt /usr/local/hilare2/src/errorLib/}).
-
-\begin{center}\begin{tabularx}{\linewidth}{|lX|}
-\hline
-\tt void h2printErrno(int report); & display the string associated to the
-report \\
-\hline
-\tt char const *h2getMsgErrno(int numErr); & return the string associated
-to the report \\
-\hline
-\tt void h2perror(char *string);  & display the string {\tt string}
-followed by the  the string associated to  the  last report ({\tt  errno}
-variable)\\
-\hline
-\end{tabularx}\end{center}
 
 
 % =======================================================================
