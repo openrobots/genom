@@ -539,9 +539,15 @@ ref_membre_struct: indicateur_de_type
 	}
 	sdi_ref elt_declarable
         {
-	  fprintf(stderr, "%s:%d: warning deprecated syntax."
+	  if (!accept_obsolete) {
+	    fprintf(stderr, "%s:%d: ERROR deprecated syntax."
+		    "Use `<variable>::<ids_ref>'\n"
+		    "Or use option -O to accept deprecated syntax\n",
+		    nomfic, num_ligne);
+	    YYERROR;
+	  }
+	  fprintf(stderr, "%s:%d: WARNING deprecated syntax."
 		  "Use `<variable>::<ids_ref>'\n", nomfic, num_ligne);
-	  if (!accept_obsolete) YYERROR;
 	  $$ = STR_ALLOC(STR_REF_STR);
 	  $4->type = $1;
 	  $$->dcl_nom = $4;
@@ -901,16 +907,14 @@ declaration_de_typedef:
 		/* l->dcl_nom->ndimensions--;
 		l->dcl_nom->max_str_len = l->dcl_nom->dimensions[l->dcl_nom->ndimensions]; */
 		printf ("type STRING: %s\n", l->dcl_nom->name);
-		fprintf(stderr, "%s:%d: warning: forme de déclaration de "
-			"typedef pour %s non encore autorisée.\n", 
+		fprintf(stderr, "%s:%d: WARNING: typedef of %s not managed by GenoM.\n", 
 			nomfic, num_ligne, l->dcl_nom->name); 
 	      }
 	      if(IS_ARRAY(l->dcl_nom)) {
 		l->dcl_nom->flags |= ARRAY;
 		printf ("type ARRAY: %s\n", 
 			l->dcl_nom->name);
-		fprintf(stderr, "%s:%d: warning: forme de déclaration de "
-			"typedef pour %s non encore autorisée.\n", 
+		fprintf(stderr, "%s:%d: WARNING: typedef of %s not managed by GenoM.\n", 
 			nomfic, num_ligne, l->dcl_nom->name);
 	      }
 	  }
@@ -989,7 +993,7 @@ named_type:
        else
 	  $$->name = new_name();
 
-       fprintf(stderr, "%s:%d: unamed poster member is deprecated\n"
+       fprintf(stderr, "%s:%d: WARNING unamed poster member is deprecated\n"
 	   "\t use type: <variable_name>::<type_name>; instead\n",
 	   nomfic, num_ligne);
        if (!accept_obsolete) YYERROR;
@@ -1701,7 +1705,7 @@ main(int argc, char **argv)
     for (i = 0; i<nCppOptions; i++) {
 	if (cppOptions[i][0] == '-' && cppOptions[i][1] == 'I') {
 	    if (cppOptions[i][2] != '/' && chDir[0] != '\0') {
-		/* chemin relatif et on a changé de répertoire */
+	      /* relative path changed */
 		sprintf(nomout, "-I%s%s", chDir, &cppOptions[i][2]);
 		free(cppOptions[i]);
 		cppOptions[i] = strdup(nomout);
