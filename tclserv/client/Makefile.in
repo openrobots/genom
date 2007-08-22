@@ -74,7 +74,7 @@ $(pkgfile).@PACKAGE_VERSION@: $(pkgfile).in
 # --- install -----------------------------------------------------------
 
 .PHONY: install
-install:: $(pkgfile)
+install:: $(pkgfile).@PACKAGE_VERSION@
 	$(MKINSTALLDIRS) ${DESTDIR}$(CANVASDIR)/tcl
 	@for f in $(tlist); do						\
 		$(CMP) $(srcdir)/$$f ${DESTDIR}$(CANVASDIR)/tcl/$$f || (\
