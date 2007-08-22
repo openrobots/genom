@@ -109,6 +109,7 @@ regen: standalone-regen
 	    ./config.status --recheck; \
 	fi
 	@./config.status
+	make depend
 
 # --- pkgconfig ---------------------------------------------------------
 ALL_PKGCONFIG := $pkgname$.pc $(addsuffix .pc,@EXTRA_PKGCONFIG@)
