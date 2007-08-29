@@ -24,9 +24,9 @@ string_strip_end(char* string)
     return string;
 }
 
-/** Splits the string at \c delim 
+/** Splits the string at \c delim
  * If lookahead is non-null, we consider that 'lookahead' characters of delim
- * are part of the next field 
+ * are part of the next field
  *
  * @param max_fields \c fields cannot handle more than \c max_fields
  * @return the count of options found, or -1 if there were too much
@@ -99,7 +99,7 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 
 	close(outpipe[1]);
 
-	if (waitpid(pid, &status, 0) == -1 || !WIFEXITED(status) || WEXITSTATUS(status)) 
+	if (waitpid(pid, &status, 0) == -1 || !WIFEXITED(status) || WEXITSTATUS(status))
 	{
 	    fprintf(stderr, "error running pkg-config\n");
 	    exit(1);
@@ -114,8 +114,8 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 	/* Split cflags at \s+- and add the fields in cpp_options */
 	if (!cflags)
 	    return 0;
-	/* XXX pkgconfig < 0.15 leaves a space in front of cflags 
-	 * this causes problems here. This is why pkg-config >= 0.15 
+	/* XXX pkgconfig < 0.15 leaves a space in front of cflags
+	 * this causes problems here. This is why pkg-config >= 0.15
 	 * is required */
 
 	option_count = split(cflags, " -", 1, cpp_options + first_option, MAX_CPP_OPT - first_option);
@@ -126,18 +126,18 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 	}
 	free(cflags);
 	cflags = 0;
-	
+
 	if (verbose)
 	{
 	    int i;
-	    if (option_count > 0) 
+	    if (option_count > 0)
 		    for (i = 0; i < option_count; ++i) {
-			    fprintf(stderr, 
-				"pkg-config: found '%s' for package %s\n", 
+			    fprintf(stderr,
+				"pkg-config: found '%s' for package %s\n",
 				cpp_options[first_option + i], package);
 		    }
 	    else
-		fprintf(stderr, 
+		fprintf(stderr,
 		    "pkg-config: no cflags needed for package %s\n", package);
 	}
 	return option_count;
@@ -145,7 +145,7 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 }
 
 /**
- ** Appel du preprocesseur C 
+ ** Appel du preprocesseur C
  **/
 
 #ifndef STDINCPP
@@ -158,7 +158,7 @@ callCpp(char *nomFic, char *cppOptions[], int ignore_error)
     char *tmpName;
     char *cppArg[MAX_CPP_OPT + 3], *cpp;
     int in, out, i, j, status;
-    
+
     /* open input and output files */
     in = open(nomFic, O_RDONLY, 0);
     if (in < 0) {
@@ -175,7 +175,7 @@ callCpp(char *nomFic, char *cppOptions[], int ignore_error)
        perror("");
        exit(2);
     }
-   
+
     /* build the argv array: split cpp into argvs and copy options */
     cpp = strdup(STDINCPP);
     if (!cpp) {
@@ -198,7 +198,7 @@ callCpp(char *nomFic, char *cppOptions[], int ignore_error)
 	  cpp += strspn(cpp, " \t");
        }
     }
-    
+
     for(j=0; cppOptions[j] != NULL;) {
        if (i > MAX_CPP_OPT) {
 	  fputs("too many options to cpp\n", stderr);
@@ -230,9 +230,17 @@ callCpp(char *nomFic, char *cppOptions[], int ignore_error)
 		    strerror(errno));
 	    exit(2);
 	}
-        
-        if (ignore_error)
-            close(fileno(stderr));
+
+        if (ignore_error) {
+	  /* Open /dev/null to redirect stderr. Simply closing stderr
+	   * make gcc-4.1.2 segfault on FC6... */
+	  int null = open("/dev/null", O_RDWR);
+	  if (null >= 0)
+            dup2(null, fileno(stderr));
+	  else
+	    fprintf(stderr, "genom: cannot suppress error diagnostics: %s\n",
+		    strerror(errno));
+	}
 
 	if (verbose)
 	{
