@@ -41,20 +41,20 @@
 
 \subsection{External tools}
 
-/GenoM/ needs the following tools.
+GenoM needs the following tools.
 They are generally available on most systems. If not, download
-them from the indicatedXXX web sites. 
+them from their web sites. 
 
 \begin{itemize}
 \item {\tt autoconf} version 2.59 or later
 \item {\tt automake} version 1.8 or later
-\item {\tt GNU make} version 3.79 or later
+\item {\tt GNU make} version 3.79 or later  ({\tt <http://www.gnu.org/software/make/make.html>})
 \item {\tt pkgconfig} version 0.15 or later (usually part of Gnome development packages).
 \item {\tt groff} 1.10 or later (usually part of system packages).
-\item {\tt Tcl/Tk} 8.0 or later development files (for eltclsh)
+\item {\tt Tcl/Tk} 8.0 or later development files (for eltclsh) ({\tt <http://tcl.tk/>})
 \end{itemize}
 
-To edit /GenoM/ modules it is also recommended to use {\tt xemacs} to take
+To edit GenoM modules it is also recommended to use {\tt xemacs} to take
 advantage of {\tt genom-mode}.
 
 \section{What to download ?}
@@ -62,9 +62,9 @@ advantage of {\tt genom-mode}.
 
 \subsection{OpenRobots tools and libraries}
 
-/GenoM/ is part of a suite of open-sources tools. 
+GenoM is part of a suite of open-sources tools. 
 
-In order to install and use /GenoM/ you will have to download and install
+In order to install and use GenoM you will have to download and install
 the following libraries and tools from  {\tt
 http://softs.laas.fr/openrobots/} :
 
@@ -73,12 +73,12 @@ http://softs.laas.fr/openrobots/} :
 \item {\tt pocolibs}: system communication and real-time primitives
 \item {\tt libedit} (editline): generic line editing and history
 functions (for eltclsh)
-\item {\tt eltclsh}: interactive TCL shell (optional but very practical)
-\item {\tt /GenoM/}: the generator of modules
+\item {\tt eltclsh}: interactive TCL shell linked with editline (optional but very practical)
+\item {\tt GenoM}: the generator of modules
 \end{itemize}
 
 Later on you can also be interested in the following opensource softwares
-that are part of the OpenRobots suite and work nicely with /GenoM/:
+that are part of the OpenRobots suite and work nicely with GenoM:
 
 \begin{itemize}
 \item {\tt GDHE}: a tool to design 3D interface
@@ -89,18 +89,17 @@ that are part of the OpenRobots suite and work nicely with /GenoM/:
 
 {\tt Mkdep} is a tool to manage dependencies for make(1) automatically on
 Unix-like systems.  The original feature of this version is to be able to
-handle incremental updates of the dependencies.  The current release
-version is 2.4 released on August 29, 2005.
+handle incremental updates of the dependencies.
 
 It is recommended to install it.
 
 \subsubsection{pocolibs}
 
 {\tt Pocolib} is a system communication and real-time primitive layers used by
-/GenoM/ modules. 
+GenoM modules. 
 
 These libraries run on systems with POSIX.1 threads and basic real-time
-extensions. It has been tested successfully on Solaris (7and above),
+extensions. It has been tested successfully on Solaris (7 and above),
 Linux (with glibc2), and NetBSD (2.0 and later). 
 
 There is also some code to support RTAI and LXRT 3.0, but it is currently
@@ -110,7 +109,7 @@ untested and unsupported (this may change again in the future)
 
 The {\tt editline} library provides generic line editing and history
 functions, similar to those found in tcsh(1). This package contains a
-Makefile for compiling the -current version of NetBSD's library which
+Makefile for compiling the current version of NetBSD's library which
 provides the same consistent installation and compilation environments as
 for the other tools found in this repository. 
 
@@ -119,27 +118,63 @@ Editline is used by eltclsh.
 \subsubsection{eltclsh}
 
 
+% -----------------------------------------------------------------------
+\section{Configuration}
+\label{sec|configuration|configuration}
 
+
+You will need to specify a root path (for instance the environment
+variable {\tt OPENROBOTS}) where the binaries, the libraries, the
+include files, and so on will be installed. Typically you can set this
+environment variable to {\tt /usr/local/openrobots}.
+
+Then modify (or set if not previously defined) the following 
+environment variables :
+
+{\tt PATH} :  add {\tt \$OPENROBOTS/bin}
+
+{\tt PKG\_CONFIG\_PATH} :  add  {\tt \$OPENROBOTS/lib/pkgconfig}
+
+{\tt LD\_LIBRARY\_PATH} :  add  {\tt \$OPENROBOTS/lib:\$OPENROBOTS/lib/openprs}
+
+
+
+% -----------------------------------------------------------------------
 \section{Installation}
 \label{sec|configuration|installation}
 
-To install all these softwares, you will have to follow always the same
-usual configuration/compilation/installation sequence. Here is the
-example pocolibs. 
+Most of the time, it is a simple sequence of untar, autogen, configure,
+build, and install. Configure options may vary, and some packages don't
+require the autogen step. It is recommended that you build in a separate
+directory. 
 
-In this example, the environment variable {\tt PREFIX} allows to specify
-the root path where the binaries, the libraries, the include files, and
-so on will be installed. Typically you can set this variable to {\tt
-/usr/local/openrobots}.
+The {\tt --prefix} option (default: /usr/local) defines the base directory
+of the installation. We recommend a dedicated path (eg,
+OPENROBOTS=/usr/local/openrobots).
+
+If you want to install binaries for different type of machine
+on the same files tree you can also use {\tt --exec-prefix}
+option. It allows to specify where to install the binaries like for
+instance: {\tt --exec-prefix=\$OPENROBOTS/\$MACHTYPE-\$OSTYPE} (eg,
+{\tt --exec-prefix=\$OPENROBOTS/i386-linux}, for a PC running linux).
+In such a case, be careful to adapt the environment variables {\tt
+PATH, LD\_LIBRARY\_PATH and PKG\_CONFIG\_PATH} defined above to this
+{\tt \$exec\_prefix} path.
+%$
+However, the default value (equal to {\tt --prefix}) is usualy great. 
+
+
+Here is an
+example with {\tt pocolibs}. 
 
 \begin{cartouche}
 \begin{verbatim}
 tar xfvz pocolibs-XYZ.tar.gz
 cd pocolibs-XYZ
-./autogen.sh
+[./autogen.sh]
 mkdir build
 cd build
-../configure --prefix=$PREFIX
+../configure --prefix=\$OPENROBOTS  %$
 make
 make install
 \end{verbatim}
@@ -148,11 +183,10 @@ make install
 The command {\tt ./autogen.sh} is not always necessary. If there is
 already a script {\tt configure} you can try it directly.
 
-The {\tt configure} command has many options. You can see them with the
-option {\tt --help}. For /eltclsh/ and /GenoM/
+On some systems, {\tt --with-tcl=DIR} and {\tt --with-tk=DIR} will be
+required to specify where to find {\tt tclConfig.sh} (resp. {\tt tkConfig.h}). 
 
-% -----------------------------------------------------------------------
-\section{Configuration}
-\label{sec|configuration|configuration}
+The {\tt configure} command has many options. You can see them with the
+option {\tt --help}. 
 
 

@@ -43,6 +43,9 @@ your module.  Besides the syntactic  coloring and automatic  indentation,
 this   mode defines several   commands   that create  \GenoM\  structures
 (requests, posters, \ldots). It also includes on-line help.
 
+Note that for now {\tt genom-mode} works only with {\tt xemacs} and not anymore
+with emacs...
+
 Commands can be accessed by three means:
 \begin{itemize}
 \item The (X)Emacs menu bar ({\tt GenoM Mode Commands})
@@ -52,17 +55,17 @@ Commands can be accessed by three means:
 {\small
 \begin{tabular}{|l|p{10cm}|}
 \hline
-\tt C-c C-m & create a new {\bf m}odule  ({\em first command to invoke})\\
-\tt C-c C-i & {\bf i}mport a structure \\
-\tt C-c C-r & create a {\bf r}equest \\
-\tt C-c C-p & create a {\bf p}oster \\
-\tt C-c C-e & create an {\bf e}xecution task\\
+\tt C-c C-m & create a new \underline{\bf m}odule  ({\em first command to invoke})\\
+\tt C-c C-i & \underline{\bf i}mport structures from another module\\
+\tt C-c C-r & create a \underline{\bf r}equest \\
+\tt C-c C-p & create a \underline{\bf p}oster \\
+\tt C-c C-e & create an \underline{\bf e}xecution task\\
 \hline
-\tt C-c C-b & indent whole buffer \\
-\tt C-c C-v & check that every field is filled \\
-\tt C-c C-d & remove optional fields that are empty ({\bf d}elete) \\
+\tt C-c C-b & indent whole \underline{\bf b}uffer \\
+\tt C-c C-v & \underline{\bf v}erify that every field is filled \\
+\tt C-c C-d & remove optional fields that are empty (\underline{\bf d}elete) \\
 \hline
-\tt C-c C-h \ldots & on-line {\bf h}elp\\
+\tt C-c C-h \ldots & on-line \underline{\bf h}elp\\
 \hline
 \end{tabular}}
 \end{itemize}
@@ -84,13 +87,13 @@ followed by one of the following letter:
 \begin{tabular}{|l|p{10cm}|}
 \hline
 \tt h & lists the available commands of {\tt genom-mode}  \\
-\tt m & describes {\bf m}odules \\
-\tt r & describes {\bf r}equests \\
-\tt p & describes {\bf p}osters \\
-\tt e & describes {\bf e}xecution tasks \\
-\tt i & describes structures {\bf i}mportation \\
-\tt g & describes the module {\bf g}eneration  \\
-\tt c & describes the {\bf c}odels  \\
+\tt m & describes \underline{\bf m}odules \\
+\tt r & describes \underline{\bf r}equests \\
+\tt p & describes \underline{\bf p}osters \\
+\tt e & describes \underline{\bf e}xecution tasks \\
+\tt i & describes structures \underline{\bf i}mportation \\
+\tt g & describes the module \underline{\bf g}eneration  \\
+\tt c & describes the \underline{\bf c}odels  \\
 \tt C-h & help on help (this list) \\
 \hline
 \end{tabular}}
@@ -109,10 +112,12 @@ of the structure
 Last,  active   zones (updated  with   the sequence  {\tt C-button2}) are
 defined for each request and each codel  of the requests. When clicking
 (button 2) on these zones, the file containing the corresponding codel(s)
-is visited  and the point is positioned  onto the function. If the function
-does not exist,  an empty template can  be inserted if  you want so  (the
-module must be generated for this to work).
+is visited  and the point is positioned  onto the function. 
 
+Note that if this function has not been written yet (new codel or even
+request), then {\tt genom-mode} prompts you to insert the empty template
+of the codel (or all the codels of the request if you click on the request  
+head-line). For this to work, the the module must be first regenerated once.
 
 % =======================================================================
 \section{Writing a module}
@@ -147,50 +152,64 @@ A module declaration looks like this:
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 module <<module-name>> {
-    number:          <<module-number>>;
-    internal_data:   <<SDI-type>>;
-    version:         <<version-string>>;
-    email:           <<address>>;
-    requires:        <<list of dependencies>>;
-    lang:            <<c or c++>>;
+    number:            <<module-number>>;
+    internal_data:     <<SDI-type>>;
+    version:           <"version-string">;
+    email:             <"address">;
+    requires:          <package-dependency> , ...;
+    codels_requires:   <package-dependency> , ...;
+    lang:              <c or c++>;
 };
 \end{verbatim}\end{cartouche}\end{center}
 
+
 This part   is  mandatory  and    lets   you  choose a  name   for   your
-module.  Fill-in the field  {\tt $<<$module-name$>>$} and choose a number
-for {\tt  $<<$module-number$>>$}. This number must  be a multiple of $10$
-greater that  $1000$. It should be unique  and no other module should use
-the same one.
+module.  Fill-in the field  {\tt $<<$module-name$>>$}.
 
-The next  field you have  to fill-in  is {\tt  $<<$SDI-type$>>$}, and you
-must choose the name of  a valid {\tt C} type  (this probably should be a
-typedef  for  a   structure type).   This  will  be  the  module internal
-database. {\tt   genom-mode} provides you with  a  default value for this
-field.
-
-Other fields are optionnal :
+The parameters are the following:
 
 \begin{itemize}
+\item {\tt number:} is the identification number of the module. 
+      It must be greater that $1000$ (small numbers are reserved for
+      system) and smaller than $2^15=32768$. It should be unique and no other
+      module should use the same one. It is used to generate unique error
+      report numbers.
 
-\item \texttt{version} is a string enclosed in
-double-quotes that defines the external version of your module. This
-is used by the GNU build tools in various places. You should
-incremement it before releasing a new version of a module.
+\item {\tt internal\_data:} is the name of  a valid {\tt C} type.  This
+      will be the module internal database (IDS). {\tt genom-mode}
+      provides you with a default value for this field.
+
+\item \texttt{version} is a string enclosed in double-quotes that defines
+      the external version number of your module. This is used by the GNU
+      build tools in various places. You should incremement it before
+      releasing a new version of a module. 
+
+\item {\tt iface\_version:} is similar but it is the {\tt libtool}
+	version of the module, not the required package. The strategy 
+	relatively to the module versioning is still not well defined and
+	for now this field is rarely used.
 
 \item \texttt{email} is the contact address for the module. This will
       be copied in some files generates by the GNU build tools. Make
       sure you use an address that will be valid in the future if you
       plan to release and distribute your module.
 
-\item \texttt{requires} describes the dependencies of the module. It's
-      a comma-separated list of identifiers. Each dependency will be
-      fetched by \emph{pkg-config} during the build phase of the
-      module.
+\item {\tt requires:} allows mainly to list the other /GenoM/ modules
+      that are imply within this {\tt .gen} file (referenced
+      structures). More generally, it allows to declare the list of
+      packages (in the sens of {\tt pkg-config}) require to generate this
+      {\tt .gen} file. 
+
+\item {\tt codels\_requires:} it allows to declare the list of packages
+	(in the sens of {\tt pkg-config})
+	require to compile and link the codels (and only the codels).
 
 \item \texttt{lang} sets the programming language used by the
       codels. It defaults to ``C''. ``C++'' can be used to set the
       language of the codels to C++.
+
 \end{itemize}
+
 
 % -----------------------------------------------------------------------
 \subsection{{\tt C} structures and fIDS declaration}
@@ -198,8 +217,9 @@ incremement it before releasing a new version of a module.
 Note:  the  {\em functional internal  data  structure} (fIDS, or  SDIf in
 French) is  a {\tt C} structure that  contains all the requests input and
 output data,  as well as the  posters definition.  When writing a module,
-this structure   can  be defined  progressively  by   adding the requests
-parameters each time a new request is added.
+this structure  will  be defined  progressively  by   adding the requests
+parameters each time a new request is added: do not try to write it 
+{\em a priori}.
 
 \subsubsection{Requests parameters, replies and posters}
 
@@ -209,10 +229,10 @@ plain {\tt C}.  Since these headers are parts  of the  module definition,
 they should be located in the main directory  of your module, in the same
 place as the {\tt .gen} file.
 
-These structures  will  be  used by other   modules.   Thus, it  is  {\em
-strongly} advised you prefix  their  names with,  e.g., the name  of your
-module (see        the  example      {\tt    demoStruct.h}   in       the
-section~\ref{sec|session|example}).
+These structures will be used by other modules or programs.  Thus, it is
+{\em strongly} advised you prefix their names with the name of your
+module to avoid conflict and determine its origin (see the example {\tt
+demoStruct.h} in the section~\ref{sec|session|example}).
 
 Lastly, it is also advised you protect your headers of multiple inclusion
 with the standard strategy:
@@ -268,15 +288,31 @@ typedef struct PILO_MOVE {
 
 It is  possible to   import,  from  other  modules, external    structure
 definitions. The corresponding headers are included with the {\tt
-\#include} directive but, in that case, it has to be put in an {\tt
+\#include} directive but, in that case, it must be protected in an {\tt
 import from}    directive.  This tells \GenoM\     from which module  the
 structures come, and  avoid duplication of  the functions that deal  with
 these structures.
+
+It is strongly recommended that you do not hard-code the path to the
+external headers. 
+
+The field {\tt requires:} within the module declaration structure, will
+allow \GenoM\ to automatically find out the corresponding header and
+library files using {\tt pkg-config}.
+
+It is also possibly to specify path by hand using \GenoM\ options {\tt
+-I<path>}, {\tt -J<VAR>=<path>} or {\tt -P<package>} (see
+chapter~\vref{cha|generation}).
 
 In the example  below, the module  {\tt pilo} uses  structures defined in
 the module {\tt loco}:
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
+module pilo {
+     ...
+     requires:    loco;
+};
+
 import from loco {
 #include "locoStruct.h"
 };
@@ -288,17 +324,13 @@ typedef struct PILO {
 } PILO;
 \end{verbatim}\end{cartouche}\end{center}
 
-It is  recommended  that you do not  hard-code  the path  to  the external
-headers. Instead, use the option {\tt -I} upon the module generation.
-
-
 \subsubsection{What should (and should not) the fIDS contain?}
 
 Requests parameters, requests replies  and almost every poster  will pass
 through the fIDS: thus, they must be declared in this structure. The fIDS
 is also a way to   exchange data between tasks    (or threads) inside   a
 module. Conversely, data exchanged between codels of  the {\em same} task
-only do not need to be declared here.
+only do not need to be declared here (but only within the codels file).
 
 
 % -----------------------------------------------------------------------
@@ -316,13 +348,13 @@ They are defined with the keyword {\tt control} in the field {\tt type}:
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 request <<request-name>> {
-     doc:                "doc";
-     type:               control;
-     input:              <name>::<sdi-ref>;
-     input_info:         <default-val>::"<name>", ...;
-     output:             <name>::<sdi-ref>;
-     codel_control:      <codel>;
-     fail_reports:       <report-name>, ...;
+     doc:                    <"doc">;
+     type:                   control;
+     input:                  <name>::<sdi-ref>;
+     input_info:             <default-val>::<"name">, ...;
+     output:                 <name>::<sdi-ref>;
+     codel_control:          <codel-name>;
+     error_reports:          <report-name>, ...;
      interrupts_activities:  <exec-rqst-name>, ...;
 };
 \end{verbatim}\end{cartouche}\end{center}
@@ -339,11 +371,11 @@ of the fIDS (e.g. {\tt input: position::state.position}).
 comment for {\em  each}   member  of  the  {\tt  input}  structure.  This
 information is used for interactive  requests invocation.
 
-\item {\tt codel\_control} is a codel ({\tt C} function) which is
+\item {\tt codel\_request\_control} is a codel ({\tt C} function) which is
 executed by the control task and which controls the validity of the input
 parameter.
 
-\item {\tt fail\_reports} is a list of possible reports returned by the
+\item {\tt error\_reports} is a list of possible reports returned by the
 control codel (the special report "OK" is always implicitly defined).
 
 \item {\tt interrupts\_activities} is a list of requests of {\em this module}
@@ -362,19 +394,19 @@ will be executed and they define a few more fields:
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 request <<request-name>> {
-     doc:                   "doc";
+     doc:                   <"doc">;
      type:                  exec;
      exec_task:             <<exec-task-name>>;
      input:                 <name>::<sdi-ref>;
-     input_info:            <default-val>::"<name>", ...;
+     input_info:            <default-val>::<"name">, ...;
      output:                <name>::<sdi-ref>;
-     codel_control:         <codel>;
-     codel_start:           <codel>;
-     codel_main:            <codel>;
-     codel_end:             <codel>;
-     codel_inter:           <codel>;
-     codel_fail:            <codel>;
-     fail_reports:          <report-name>, ... ;
+     codel_control:         <codel-name>;
+     codel_start:           <codel-name>;
+     codel_main:            <codel-name>;
+     codel_end:             <codel-name>;
+     codel_inter:           <codel-name>;
+     codel_fail:            <codel-name>;
+     error_reports:         <report-name>, ... ;
      interrupts_activities: <exec-rqst-name>, ... ;
 };
 \end{verbatim}\end{cartouche}\end{center}
@@ -383,36 +415,44 @@ request <<request-name>> {
 \item {\tt exec\_task} is the name of the execution task in charge of the
 codels execution.
 
-\item {\tt codel\_start}, {\tt codel\_main}, {\tt
-codel\_end},     {\tt    codel\_inter}    and \\     {\tt
-codel\_fail} are  the  codels of  this  service.  All  fields are
-optional,  but at least one  of  {\tt  codel\_start},  {\tt codel\_main} or  {\tt
-codel\_end}  must  be   defined.    Codels   are  further described     in
-chapter~\ref{cha|codels}.
+\item {\tt posters\_input:} structure types of the posters that the
+execution codels of this request will read (see \S~\vref{sec|posters}).
+
+\item {\tt codel\_activity\_start}, {\tt codel\_activity\_main}, {\tt
+codel\_activity\_end}, {\tt codel\_activity\_inter} and \\ {\tt
+codel\_activity\_fail} are the codels of this service.  All fields are
+optional, but at least one of {\tt codel\_activity\_start}, {\tt
+codel\_activity\_main} or {\tt codel\_activity\_end} must be defined.
+Be careful that all activities can be interrupted: do not forget to
+fill-in {\tt codel\_activity\_inter} if something must be done in such a
+case.
+Note that {\tt codel\_activity\_fail} is rarely used.
+Codels are further described in chapter~\ref{cha|codels}.
+
 
 \item All other fields serve the same purpose  as in control  requests.
 See previous paragraph for a description.
 
+\end{itemize}
+
 
 \subsubsection{Initialization request}
 
-A special execution request is   the {\em initialization request}. It  is
-identified by the keyword {\tt  init} in the  field {\tt type} (all other
+A special execution request is the {\em initialization request}. It is
+identified by the keyword {\tt init} in the field {\tt type} (all other
 fields are the same as for execution requests).  This special request can
-be used to perform some initialization upon module  startup. There can be
-at  most one such request   and the module will   not accept to serve any
-other   {\em    execution}  request until   the   {\tt   init}   has been
-invoked.  Control requests will still  be served, and  can be used to set
-several parameters used by the {\tt init} request.
+be used to perform some initialization upon module startup. There can be
+at most one such request and the module will not accept to serve any
+other {\em execution} request until the {\tt init} has been invoked.
+Control requests will still be served, and can be used to set several
+parameters used by the {\tt init} request.
 
 In  order to allow the  invocation  of the init  request  from a standard
 shell (for instance as soon as the  module is spawned), \GenoM\ builds an
 executable called {\tt <module>Init} (where {\tt <module>} is the name of
-the module) in {\tt  auto/\$\{TARGET\}}. This executable takes exactly as
+the module). This executable takes exactly as
 many parameters as in the structure  declared in the  input field, in the
 same order as they appear in the structure.
-
-\end{itemize}
 
 \subsection{Posters definition}
 
@@ -446,8 +486,8 @@ the task which owns the poster can change its content.
 
 The data  structure  of the  poster is  a concatenation  of  the  list of
 declared data.  The corresponding  {\tt C} type  is defined by \GenoM\ in
-the     file   {\tt  auto/<module>Poster.h} and     its    name  is  {\tt
-<MODULE>\_<POSTER>\_STR} (all uppercase) where {\tt <MODULE>} is the name
+the     file   {\tt  server/<module>Poster.h} and     its    name  is  {\tt
+<MODULE>\_<POSTER>\_POSTER\_STR} (all uppercase) where {\tt <MODULE>} is the name
 of the module and {\tt <POSTER>} the name of the poster.
 
 For  instance,   the {\tt  Mobile}  poster  of    the {\tt  demo}  module
@@ -473,8 +513,8 @@ For this kind of posters, two new fields are defined:
 \begin{center}\begin{cartouche}\small\begin{verbatim}
 poster <<poster-name>> {
      update:               user;
-     type:                 <<type-name>>;
-     exec_task:            <<exec-task-name>>;
+     type:                 <<name>>::<<type-name>>, ...;
+     exec_task:            <<exec-task-name>>; 
      codel_poster_create:  <codel>;
 };
 \end{verbatim}\end{cartouche}\end{center}
@@ -499,34 +539,35 @@ exec_task <<exec-task-name>> {
      codel_task_start:   <codel>;
      codel_task_end:     <codel>;
      codel_task_main:    <codel>;
-     fail_reports:       <report-name>, ... ;
+     posters_input:      <poster-type>, ...;
+     error_reports:      <report-name>, ... ;
 };
 \end{verbatim}\end{cartouche}\end{center}
 
 \begin{itemize}
 \item {\tt period} (optional) defines a periodical task. The period is
 given as an integer number in {\tt ticks} (at the moment, a tick is $5ms$
-under VxWorks and $10ms$ under Unix). {\em Take care:} the period must be
+under VxWorks and $10ms$ under Unix). {\em Remark:} previously the period was to be 
 {\em a divisor or a multiple} of $20$. (e.g. 1, 2, 4, 5, 10, 20, 40, 60,
-\ldots).
+\ldots. This constraint has been raised.
 
 \item {\tt delay} (optional integer in {\em ticks}). All periodical
 tasks with the same period  will wake up at the  same time. The delay can
-be used to delay the waking up of a particular task  by the amount of ticks
-specified. {\tt delay} can be {\tt none} for  a-periodical tasks.
+be used to delay the waking up of a particular task  by the amount of ticks 
+specified. {\tt delay} can be {\tt none} for  a-periodical tasks. Pertinent only on real-time OS.
 
 \item {\tt priority} is used by the scheduler of the operating system. It
 is an integer  between $0$ (highest) and  $255$ (lowest). Priorities must
 be used to make  sure that tasks  with strong real-time constraints  will
 match their requirements.  A common strategy is to use a priority roughly
-``proportional to the inverse'' of the period.
+``proportional to the inverse'' of the period. Pertinent only on real-time OS.
 
 \item {\tt stack\_size} is the size (in bytes) of the stack for this
 task. The size you  need  depends essentially on   the size of the  local
 variables you  use.  A   stack which  is {\em   too small} will   produce
 unpredictable results, so be sure  to largely {\bf overestimate} what you
 need.   A  good choice is  usually   $20.000$  bytes. Note that under
-Unix, stack size are not used at this time (the stack is grown dynamically).
+Unix, stack size are not used at this time (the stack is grown dynamically).  Pertinent only on real-time OS.
 
 \item {\tt codel\_task\_start} is the initialization codel. It is called only
 once, just before the module is ready to answer requests.  It can be used
@@ -540,7 +581,10 @@ is called once, just before the module exits.
 the execution tasks wakes  up. Thus, for  a  periodical task, it is  also
 periodical.
 
-\item {\tt fail\_reports} is a list of reports that can be reported by the
+\item {\tt posters\_input:} structure types of the posters that the
+execution codels of this task will read (see \S~\vref{sec|posters}).
+
+\item {\tt error\_reports} is a list of reports that can be reported by the
 permanent activity {\tt codel\_task\_main}. Since  this activity does not belong to
 a request, its  reports are  stored in  the  {\em control poster} of  the
 module.
