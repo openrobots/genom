@@ -37,6 +37,7 @@ top_builddir=	.
 prefix=		@prefix@
 exec_prefix=	@exec_prefix@
 libdir=		@libdir@
+datarootdir=	@datarootdir@
 
 INSTALL=	@INSTALL@
 

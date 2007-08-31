@@ -29,13 +29,14 @@
 #
 
 
-top_srcdir=	 @top_srcdir@
-srcdir=		   @srcdir@
-top_builddir= @top_builddir@
+top_srcdir=	@top_srcdir@
+srcdir=		@srcdir@
+top_builddir=	@top_builddir@
 
-prefix=		   @prefix@
-exec_prefix= @exec_prefix@
-datadir=	   @datadir@/genom
+prefix=		@prefix@
+exec_prefix=	@exec_prefix@
+dataroootdir=	@datarootdir@
+datadir=	@datadir@/genom
 
 INSTALL=  @INSTALL@
 VPATH=		$(srcdir)
