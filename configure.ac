@@ -5,7 +5,7 @@ dnl	process this file with autoconf to produce a configure script.
 dnl
 AC_REVISION($LAAS$)
 
-AC_INIT([genom],[1.99.902],[openrobots@laas.fr])
+AC_INIT([genom],[2.0],[openrobots@laas.fr])
 AC_PREREQ(2.59)
 
 AC_CONFIG_HEADER(genom-config.h)
