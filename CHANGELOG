@@ -1,5 +1,6 @@
 $LAAS$
- 
+
+Genom 2.0, August 31, 2007. 
  69. 'make regen' also 'make depend' to detect new dependencies.
  68. Abort request allows to switch on/off verbose mode (parameter -66) 
      and to display time performances of the codels (-77). Corresponding 
