@@ -91,7 +91,6 @@ $genServer$	$module$PosterReadLib.c	\
 
 client_includes = \
 	server/$module$Type.h \
-	server/$module$ScopeLib.h \
 	server/$module$Scan.h \
 	server/$module$PrintXML.h \
 	server/$module$Print.h \
