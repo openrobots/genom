@@ -95,47 +95,50 @@ $listUserFuncProto$
 
 
 /**
- ** Macros d'acces a la SDI_C
+ ** Macros to acces the SDI_C
  **
- ** ATTENTION: il faut que le pointeur sdiCIdAcces soit a jour
- ** 
- ** -> Risques d'effets de bord 
- **    (choix douteux du aux trop fameuses raisons historiques)
+ ** To be used with the following parameters:
+ **
+ ** p: SDI_C   t: <MODULE>_<TASK>_NUM    a: CURRENT_ACTIVITY_NUM(t)
+ **
+ ** t can be also replaced by the macro: CURRENT_EXEC_TASK
+ **
  **/
 
-/* Les taches d'execution */
-#define EXEC_TASK_ID(i)         M_EXEC_TASK_ID(SDI_C,i)
-#define EXEC_TASK_STATUS(i)     M_EXEC_TASK_STATUS(SDI_C,i)
-#define EXEC_TASK_PERIOD(i)     M_EXEC_TASK_PERIOD(SDI_C,i)
-#define EXEC_TASK_MAX_PERIOD(i) M_EXEC_TASK_MAX_PERIOD(SDI_C,i)
-#define EXEC_TASK_ON_PERIOD(i)  M_EXEC_TASK_ON_PERIOD(SDI_C,i)
-#define EXEC_TASK_TIME_BEGIN_LOOP(i) M_EXEC_TASK_TIME_BEGIN_LOOP(SDI_C,i)
-#define EXEC_TASK_TIME_END_LOOP(i) M_EXEC_TASK_TIME_END_LOOP(SDI_C,i)
-#define EXEC_TASK_DURATION_LOOP(i) M_EXEC_TASK_DURATION_LOOP(SDI_C,i)
-#define EXEC_TASK_BILAN(i)      M_EXEC_TASK_BILAN(SDI_C,i)
-#define EXEC_TASK_NB_ACTI(i)    M_EXEC_TASK_NB_ACTI(SDI_C,i)
-#define EXEC_TASK_DONTLOCK_SDI(i) M_EXEC_TASK_DONTLOCK_SDI(SDI_C,i)
-#define EXEC_TASK_POSTER_ID(i)  M_EXEC_TASK_POSTER_ID(SDI_C,i)
-#define CURRENT_ACTIVITY_NUM(i) M_CURRENT_ACTIVITY_NUM(SDI_C,i)
-#define EXEC_TASK_WAKE_UP_FLAG(i) M_EXEC_TASK_WAKE_UP_FLAG(SDI_C,i)
+/* The execution task  */
+#define EXEC_TASK_ID(t)         M_EXEC_TASK_ID(SDI_C,t)
+#define EXEC_TASK_STATUS(t)     M_EXEC_TASK_STATUS(SDI_C,t)
+#define EXEC_TASK_PERIOD(t)     M_EXEC_TASK_PERIOD(SDI_C,t)
+#define EXEC_TASK_MAX_PERIOD(t) M_EXEC_TASK_MAX_PERIOD(SDI_C,t)
+#define EXEC_TASK_ON_PERIOD(t)  M_EXEC_TASK_ON_PERIOD(SDI_C,t)
+#define EXEC_TASK_TIME_BEGIN_LOOP(t) M_EXEC_TASK_TIME_BEGIN_LOOP(SDI_C,t)
+#define EXEC_TASK_TIME_END_LOOP(t) M_EXEC_TASK_TIME_END_LOOP(SDI_C,t)
+#define EXEC_TASK_DURATION_LOOP(t) M_EXEC_TASK_DURATION_LOOP(SDI_C,t)
+#define EXEC_TASK_BILAN(t)      M_EXEC_TASK_BILAN(SDI_C,t)
+#define EXEC_TASK_NB_ACTI(t)    M_EXEC_TASK_NB_ACTI(SDI_C,t)
+#define EXEC_TASK_DONTLOCK_SDI(t) M_EXEC_TASK_DONTLOCK_SDI(SDI_C,t)
+#define EXEC_TASK_POSTER_ID(t)  M_EXEC_TASK_POSTER_ID(SDI_C,t)
+#define CURRENT_ACTIVITY_NUM(t) M_CURRENT_ACTIVITY_NUM(SDI_C,t)
+#define EXEC_TASK_WAKE_UP_FLAG(t) M_EXEC_TASK_WAKE_UP_FLAG(SDI_C,t)
+#define CURRENT_EXEC_TASK         M_CURRENT_EXEC_TASK(SDI_C)
 
-/* Les activites */
-#define ACTIVITY_OUTPUT_ID(i)   M_ACTIVITY_OUTPUT_ID(SDI_C,i)
-#define ACTIVITY_OUTPUT_SIZE(i) M_ACTIVITY_OUTPUT_SIZE(SDI_C,i)
-#define ACTIVITY_INPUT_ID(i)    M_ACTIVITY_INPUT_ID(SDI_C,i)
-#define ACTIVITY_INPUT_SIZE(i)  M_ACTIVITY_INPUT_SIZE(SDI_C,i)
-#define ACTIVITY_RQST_ID(i)     M_ACTIVITY_RQST_ID(SDI_C,i)
-#define ACTIVITY_RQST_TYPE(i)   M_ACTIVITY_RQST_TYPE(SDI_C,i)
-#define ACTIVITY_ID(i)          M_ACTIVITY_ID(SDI_C,i)
-#define ACTIVITY_TASK_NUM(i)    M_ACTIVITY_TASK_NUM(SDI_C,i)
-#define ACTIVITY_STATUS(i)      M_ACTIVITY_STATUS(SDI_C,i)
-#define ACTIVITY_EVN(i)         M_ACTIVITY_EVN(SDI_C,i)
-#define ACTIVITY_BILAN(i)       M_ACTIVITY_BILAN(SDI_C,i)
-#define ACTIVITY_REENTRANCE(i)  M_ACTIVITY_REENTRANCE(SDI_C,i)
-#define ACTIVITY_NB_INCOMP(i)   M_ACTIVITY_NB_INCOMP(SDI_C,i)
-#define ACTIVITY_TAB_INCOMP(i)  M_ACTIVITY_TAB_INCOMP(SDI_C,i)
+/* The activities */
+#define ACTIVITY_OUTPUT_ID(a)   M_ACTIVITY_OUTPUT_ID(SDI_C,a)
+#define ACTIVITY_OUTPUT_SIZE(a) M_ACTIVITY_OUTPUT_SIZE(SDI_C,a)
+#define ACTIVITY_INPUT_ID(a)    M_ACTIVITY_INPUT_ID(SDI_C,a)
+#define ACTIVITY_INPUT_SIZE(a)  M_ACTIVITY_INPUT_SIZE(SDI_C,a)
+#define ACTIVITY_RQST_ID(a)     M_ACTIVITY_RQST_ID(SDI_C,a)
+#define ACTIVITY_RQST_TYPE(a)   M_ACTIVITY_RQST_TYPE(SDI_C,a)
+#define ACTIVITY_ID(a)          M_ACTIVITY_ID(SDI_C,a)
+#define ACTIVITY_TASK_NUM(a)    M_ACTIVITY_TASK_NUM(SDI_C,a)
+#define ACTIVITY_STATUS(a)      M_ACTIVITY_STATUS(SDI_C,a)
+#define ACTIVITY_EVN(a)         M_ACTIVITY_EVN(SDI_C,a)
+#define ACTIVITY_BILAN(a)       M_ACTIVITY_BILAN(SDI_C,a)
+#define ACTIVITY_REENTRANCE(a)  M_ACTIVITY_REENTRANCE(SDI_C,a)
+#define ACTIVITY_NB_INCOMP(a)   M_ACTIVITY_NB_INCOMP(SDI_C,a)
+#define ACTIVITY_TAB_INCOMP(a)  M_ACTIVITY_TAB_INCOMP(SDI_C,a)
  
-/* La tache de controle */
+/* The control task */
 #define CNTRL_TASK_ID          M_CNTRL_TASK_ID(SDI_C)
 #define CNTRL_TASK_STATUS      M_CNTRL_TASK_STATUS(SDI_C)
 #define CNTRL_TASK_BILAN       M_CNTRL_TASK_BILAN(SDI_C)
@@ -171,14 +174,13 @@ fprintf(stderr, \
 #define GENOM_UNLOCK_SDI       M_GENOM_UNLOCK_SDI(SDI_C)
 #define GENOM_LOCK_SDI         M_GENOM_LOCK_SDI(SDI_C)
 
-/* Macros de commandes (depuis le serveur uniquement !) */
+/* Macros */
 
-/* Eveille d'une tache d'execution 
- * Peut etre utilise par toutes les taches */
-#define WAKE_UP_EXEC_TASK(i)       (EXEC_TASK_WAKE_UP_FLAG(i) = TRUE)
-/* Abort d'une activite
- * Appele par le tache de controle uniquement */
-#define CNTRL_ABORT_ACTIVITY(p,i)    (ACTIVITY_EVN(i) = INTER)
+/* Wakeup an exec task */
+#define WAKE_UP_EXEC_TASK(t)       (EXEC_TASK_WAKE_UP_FLAG(t) = TRUE)
+/* Abort an activity
+ * ONLY FOR CONTROL TASK */
+#define CNTRL_ABORT_ACTIVITY(p,a)    (ACTIVITY_EVN(a) = INTER)
  
 
 /*-------------------- Fin de chargement du fichier -----------------------*/

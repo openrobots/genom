@@ -131,39 +131,46 @@ typedef struct {
 
 
 /**
- ** Macros d'acces a une SDI_C
+ ** Macros to acces the SDI_C
+ **
+ ** To be used with the following parameters:
+ **
+ ** p: SDI_C   t: <MODULE>_<TASK>_NUM    a: CURRENT_ACTIVITY_NUM(t)
+ ** 
+ ** t can be also replaced by the macro: CURRENT_EXEC_TASK
  **/
 
 /* Les taches d'execution */
-#define M_EXEC_TASK_ID(p,i)         ((p)->execTaskTab[(i)].taskId)
-#define M_EXEC_TASK_STATUS(p,i)     ((p)->execTaskTab[(i)].status)
-#define M_EXEC_TASK_PERIOD(p,i)     ((p)->execTaskTab[(i)].period)
-#define M_EXEC_TASK_MAX_PERIOD(p,i) ((p)->execTaskTab[(i)].maxPeriod)
-#define M_EXEC_TASK_ON_PERIOD(p,i)  ((p)->execTaskTab[(i)].onPeriod)
-#define M_EXEC_TASK_TIME_BEGIN_LOOP(p,i)  ((p)->execTaskTab[(i)].timeBeginLoop)
-#define M_EXEC_TASK_TIME_END_LOOP(p,i)  ((p)->execTaskTab[(i)].timeEndLoop)
-#define M_EXEC_TASK_DURATION_LOOP(p,i)  ((p)->execTaskTab[(i)].durationLoop)
-#define M_EXEC_TASK_BILAN(p,i)      ((p)->execTaskTab[(i)].bilan)
-#define M_EXEC_TASK_NB_ACTI(p,i)    ((p)->execTaskTab[(i)].nbActivities)
-#define M_EXEC_TASK_POSTER_ID(p,i)  ((p)->execTaskTab[(i)].posterId)
-#define M_CURRENT_ACTIVITY_NUM(p,i) ((p)->execTaskTab[(i)].currentActivity)
-#define M_EXEC_TASK_WAKE_UP_FLAG(p,i) ((p)->execTaskTab[(i)].wakeUp)
+#define M_EXEC_TASK_ID(p,t)         ((p)->execTaskTab[(t)].taskId)
+#define M_EXEC_TASK_STATUS(p,t)     ((p)->execTaskTab[(t)].status)
+#define M_EXEC_TASK_PERIOD(p,t)     ((p)->execTaskTab[(t)].period)
+#define M_EXEC_TASK_MAX_PERIOD(p,t) ((p)->execTaskTab[(t)].maxPeriod)
+#define M_EXEC_TASK_ON_PERIOD(p,t)  ((p)->execTaskTab[(t)].onPeriod)
+#define M_EXEC_TASK_TIME_BEGIN_LOOP(p,t)((p)->execTaskTab[(t)].timeBeginLoop)
+#define M_EXEC_TASK_TIME_END_LOOP(p,t)  ((p)->execTaskTab[(t)].timeEndLoop)
+#define M_EXEC_TASK_DURATION_LOOP(p,t)  ((p)->execTaskTab[(t)].durationLoop)
+#define M_EXEC_TASK_BILAN(p,t)      ((p)->execTaskTab[(t)].bilan)
+#define M_EXEC_TASK_NB_ACTI(p,t)    ((p)->execTaskTab[(t)].nbActivities)
+#define M_EXEC_TASK_POSTER_ID(p,t)  ((p)->execTaskTab[(t)].posterId)
+#define M_CURRENT_ACTIVITY_NUM(p,t) ((p)->execTaskTab[(t)].currentActivity)
+#define M_EXEC_TASK_WAKE_UP_FLAG(p,t) ((p)->execTaskTab[(t)].wakeUp)
+#define M_CURRENT_EXEC_TASK(p)     ({int t; for(t=0;t<M_CNTRL_NB_EXEC_TASKS(p);t++){if(M_EXEC_TASK_ID(p,t)==taskIdSelf()){break;}}t==M_CNTRL_NB_EXEC_TASKS(p)?printf("ERROR: NO CURRENT EXEC TASK IN THIS CONTEXT\n"):t;})
 
 /* Les activites */
-#define M_ACTIVITY_OUTPUT_ID(p,i)   ((p)->activityTab[(i)].outputRef)
-#define M_ACTIVITY_OUTPUT_SIZE(p,i) ((p)->activityTab[(i)].outputSize)
-#define M_ACTIVITY_INPUT_ID(p,i)    ((p)->activityTab[(i)].inputRef)
-#define M_ACTIVITY_INPUT_SIZE(p,i)  ((p)->activityTab[(i)].inputSize)
-#define M_ACTIVITY_RQST_ID(p,i)     ((p)->activityTab[(i)].rqstId)
-#define M_ACTIVITY_RQST_TYPE(p,i)   ((p)->activityTab[(i)].rqstNum)
-#define M_ACTIVITY_ID(p,i)          ((p)->activityTab[(i)].activityId)
-#define M_ACTIVITY_TASK_NUM(p,i)    ((p)->activityTab[(i)].execTaskNum)
-#define M_ACTIVITY_STATUS(p,i)      ((p)->activityTab[(i)].status)
-#define M_ACTIVITY_EVN(p,i)         ((p)->activityTab[(i)].event)
-#define M_ACTIVITY_BILAN(p,i)       ((p)->activityTab[(i)].bilan)
-#define M_ACTIVITY_REENTRANCE(p,i)  ((p)->activityTab[(i)].reentranceFlag)
-#define M_ACTIVITY_NB_INCOMP(p,i)   ((p)->activityTab[(i)].nbIncompatibles)
-#define M_ACTIVITY_TAB_INCOMP(p,i)  ((p)->activityTab[(i)].incompatibleActivities)
+#define M_ACTIVITY_OUTPUT_ID(p,a)   ((p)->activityTab[(a)].outputRef)
+#define M_ACTIVITY_OUTPUT_SIZE(p,a) ((p)->activityTab[(a)].outputSize)
+#define M_ACTIVITY_INPUT_ID(p,a)    ((p)->activityTab[(a)].inputRef)
+#define M_ACTIVITY_INPUT_SIZE(p,a)  ((p)->activityTab[(a)].inputSize)
+#define M_ACTIVITY_RQST_ID(p,a)     ((p)->activityTab[(a)].rqstId)
+#define M_ACTIVITY_RQST_TYPE(p,a)   ((p)->activityTab[(a)].rqstNum)
+#define M_ACTIVITY_ID(p,a)          ((p)->activityTab[(a)].activityId)
+#define M_ACTIVITY_TASK_NUM(p,a)    ((p)->activityTab[(a)].execTaskNum)
+#define M_ACTIVITY_STATUS(p,a)      ((p)->activityTab[(a)].status)
+#define M_ACTIVITY_EVN(p,a)         ((p)->activityTab[(a)].event)
+#define M_ACTIVITY_BILAN(p,a)       ((p)->activityTab[(a)].bilan)
+#define M_ACTIVITY_REENTRANCE(p,a)  ((p)->activityTab[(a)].reentranceFlag)
+#define M_ACTIVITY_NB_INCOMP(p,a)   ((p)->activityTab[(a)].nbIncompatibles)
+#define M_ACTIVITY_TAB_INCOMP(p,a)  ((p)->activityTab[(a)].incompatibleActivities)
  
 /* La tache de controle */
 #define M_CNTRL_TASK_ID(p)          ((p)->cntrlTask.taskId)
