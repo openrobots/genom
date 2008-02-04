@@ -90,7 +90,7 @@ userExecCodelsGen(FILE *out)
 	    module->name, t->name, langFileExt(module->lang),
 	    module->name, t->name);
 
-    fprintf(out, "include <portLib.h>\n");
+    fprintf(out, "#include <portLib.h>\n");
     fprintf(out, "\n");
     fprintf(out, "#include \"server/%sHeader.h\"\n\n\n", module->name);
 
