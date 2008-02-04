@@ -539,6 +539,7 @@ exec_task <<exec-task-name>> {
      codel_task_start:   <codel>;
      codel_task_end:     <codel>;
      codel_task_main:    <codel>;
+     codel_task_main2:   <codel>;
      posters_input:      <poster-type>, ...;
      error_reports:      <report-name>, ... ;
 };
@@ -578,7 +579,11 @@ can be used if the initialization requires user inputs).
 is called once, just before the module exits.
 
 \item {\tt codel\_task\_main} is a {\em permanent} codel. It is executed each time
-the execution tasks wakes  up. Thus, for  a  periodical task, it is  also
+the execution tasks wakes  up ({\em before} all the other activites). Thus, for  a  periodical task, it is  also
+periodical.
+
+\item {\tt codel\_task\_main} is a {\em permanent} codel. It is executed each time
+the execution tasks wakes  up ({\em after} all the other activites). Thus, for  a  periodical task, it is  also
 periodical.
 
 \item {\tt posters\_input:} structure types of the posters that the

@@ -103,9 +103,12 @@ char const * h2GetEvnStateString(int num);
 
 /*---------------- User function prototypes -------------------*/
 
-/* Permanent activity function */
+/* Permanent activity functions */
 #if ($cFuncExecFlag$)
 STATUS $cFuncExecName$ (int *bilan);
+#endif
+#if ($cFuncExecFlag2$)
+STATUS $cFuncExecName2$ (int *bilan);
 #endif
 
 /* Initialisation function */
@@ -265,7 +268,7 @@ void $module$$execTaskName$ (void)
     /* XXXXXX NOT YET: AFTER COGNIRON, SEEMS TO HAVE SIDES EFFECTS
        if (!periodOverShot) { */
     
-    /* permanent activity */
+    /* permanent activity 1 */
 #if ($cFuncExecFlag$) 
     moduleEvent.eventType = STATE_START_EVENT;
     moduleEvent.activityNum = -1;
@@ -353,7 +356,27 @@ void $module$$execTaskName$ (void)
 
 /*XXXXXXXX     }  *//* period overshot test */
 
+    /* permanent activity 2 */
+#if ($cFuncExecFlag2$) 
+    moduleEvent.eventType = STATE_START_EVENT;
+    moduleEvent.activityNum = -1;
+    moduleEvent.activityState = EXEC;
+    sendModuleEvent(&moduleEvent);    
+
+    CURRENT_ACTIVITY_NUM($execTaskNum$) = -1;
+    EXEC_TASK_BILAN($execTaskNum$) = OK;
+    if ($cFuncExecName2$ (&EXEC_TASK_BILAN($execTaskNum$)) != OK) {
+      logMsg("$module$$execTaskName$: permanent activity 2 error\n");
+      $module$$execTaskName$Suspend (TRUE);
+    }
+
+    moduleEvent.eventType = STATE_END_EVENT;
+    sendModuleEvent(&moduleEvent);   
+#endif
+
+    /* no more activity */
     CURRENT_ACTIVITY_NUM($execTaskNum$) = -2;
+
     /* update "auto" posters */
     $listPosterUpdateFunc$
     

@@ -331,7 +331,7 @@ This does fairly subdued highlighting.")
       (codel-fields (concat
 	       "codel_control\\|"
 	       "codel_start\\|codel_end\\|codel_inter\\|"
-	       "codel_fail\\|codel_main\\|codel_task_main\\|"
+	       "codel_fail\\|codel_main\\|codel_task_main\\|codel_task_main2\\|"
 	       "codel_task_start\\|codel_task_end\\|codel_poster_create\\|"
                "c_control_func\\|"
                "c_exec_func_start\\|c_exec_func_end\\|c_exec_func_inter\\|"
@@ -1035,6 +1035,8 @@ exec_task " (genom-upcase-initial exec-name) " {
 				(concat codel-name "End;") "<codel>;") "
      codel_task_main:     " (if codel-name 
 				(concat codel-name "Perm;") "<codel>;") "
+     codel_task_main2:     " (if codel-name 
+				(concat codel-name "Perm2;") "<codel>;") "
      fail_reports:         <report-name>" genom-etc ";
 };
 " ))))))
@@ -1771,8 +1773,11 @@ How to instantiate the fields ?
   * codel_task_main:  
             Name of the corresponding codel.
             This codel is called each time the execution task is waked up (at
-            each period for a periodic task). It can be assimilated to a 
-            permanent activity.
+            each period for a periodic task) before the other activies. 
+            It can be assimilated to a permanent activity.
+  * codel_task_main2:  
+            Name of the corresponding codel.
+            Similar to codel_task_main but it is called AFTER the other activities.
   * fail_reports: 
             The list of all the reports that can be set by the permanent 
             activity (ie, by the codel codel_task_main).

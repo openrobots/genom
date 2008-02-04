@@ -167,6 +167,7 @@ typedef struct exec_task_str {
     ID_STR *codel_task_start;
     ID_STR *codel_task_end;
     ID_STR *codel_task_main;
+    ID_STR *codel_task_main2;
     TYPE_LIST *posters_input_types;
     ID_LIST *cs_client_from;
     ID_LIST *poster_client_from;
@@ -185,6 +186,7 @@ typedef struct {
 	ID_STR *codel_task_start;
 	ID_STR *codel_task_end;
         ID_STR *codel_task_main;
+        ID_STR *codel_task_main2;
         TYPE_LIST *posters_input_types;
 	ID_STR *poster_name;
 	STR_REF_LIST *poster_data;

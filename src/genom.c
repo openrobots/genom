@@ -557,6 +557,15 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
 	}
 	task->codel_task_main = av->value.codel_task_main;
 	break;
+      case CODEL_TASK_MAIN2:
+	if (task->codel_task_main2) {
+	  fprintf(stderr,
+		  "genom %s: Error: twice field 'codel_task_main2' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
+	task->codel_task_main2 = av->value.codel_task_main2;
+	break;
       case POSTERS_INPUT:
 	if (task->posters_input_types) {
 	  fprintf(stderr,

@@ -1,5 +1,8 @@
 $LAAS$
 
+ 70. Possibility of 2 permanent codels in ExecTask: codel_task_main is 
+     called before the others activities, and codel_task_main2 after.
+
 Genom 2.0, August 31, 2007. 
  69. 'make regen' also 'make depend' to detect new dependencies.
  68. Abort request allows to switch on/off verbose mode (parameter -66) 

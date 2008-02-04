@@ -141,6 +141,7 @@ WC      {W}*\:
 "codel_task_start"/{WC}  {yylval.ival = CODEL_TASK_START; return(CODEL_TASK_START); }
 "codel_task_end"/{WC}   {yylval.ival = CODEL_TASK_END; return(CODEL_TASK_END); }
 "codel_task_main"/{WC}  {yylval.ival = CODEL_TASK_MAIN; return(CODEL_TASK_MAIN); }
+"codel_task_main2"/{WC}  {yylval.ival = CODEL_TASK_MAIN2; return(CODEL_TASK_MAIN2); }
 
 "cs_client_from"/{WC}  {yylval.ival = CS_CLIENT_FROM; return(CS_CLIENT_FROM); }
 "poster_client_from"/{WC} {yylval.ival = POSTER_CLIENT_FROM; 

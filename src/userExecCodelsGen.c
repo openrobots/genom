@@ -128,12 +128,12 @@ userExecCodelsGen(FILE *out)
     }
 
     /* 
-     * Codel activite permanente 
+     * Codels activite permanente 
      */
     if (t->codel_task_main != NULL) {
       fprintf(out, 
 	      "/*------------------------------------------------------------------------\n *\n"
-	      " * %s  --  codel of permanent activity\n *\n"
+	      " * %s  --  1st codel of permanent activity (called BEFORE other activities)\n *\n"
 	      " * Description: \n * \n"
 	      " * Reports:      OK\n", t->codel_task_main);
       for (lf=t->fail_reports; lf != NULL; lf=lf->next) {
@@ -149,6 +149,27 @@ userExecCodelsGen(FILE *out)
 	      "  /* ... add your code here ... */\n"
 	      "  return OK;\n"
 	      "}\n", t->codel_task_main);
+    }
+      
+    if (t->codel_task_main2 != NULL) {
+      fprintf(out, 
+	      "/*------------------------------------------------------------------------\n *\n"
+	      " * %s  --  2nd codel of permanent activity (called AFTER other activities)\n *\n"
+	      " * Description: \n * \n"
+	      " * Reports:      OK\n", t->codel_task_main2);
+      for (lf=t->fail_reports; lf != NULL; lf=lf->next) {
+	fprintf(out, " *              S_%s_%s\n",  
+		module->name, lf->name);
+      }
+	      
+      fprintf(out,
+	      " * \n * Returns:    OK or ERROR\n */\n\n");
+      fprintf(out, 
+	      "STATUS\n%s(int *report)\n"
+	      "{\n"
+	      "  /* ... add your code here ... */\n"
+	      "  return OK;\n"
+	      "}\n", t->codel_task_main2);
     }
       
     /* 

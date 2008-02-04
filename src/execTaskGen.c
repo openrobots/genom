@@ -120,6 +120,15 @@ execTaskGen(FILE *out)
 	    print_sed_subst(out, "cFuncExecName", "dummy");
 	}
 	
+	/* codel_task_main 2 */
+	if (t->codel_task_main2 != NULL) {
+	    print_sed_subst(out, "cFuncExecFlag2", "1");
+	    print_sed_subst(out, "cFuncExecName2", t->codel_task_main2);
+	} else {
+	    print_sed_subst(out, "cFuncExecFlag2", "0");
+	    print_sed_subst(out, "cFuncExecName2", "dummy");
+	}
+	
 	/* 
 	 * Creation des posters 
 	 */

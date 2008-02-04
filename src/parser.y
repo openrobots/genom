@@ -194,7 +194,7 @@ int parseError = 0;
 %token <ival> CODEL_CONTROL CODEL_MAIN
 %token <ival> CODEL_START CODEL_END CODEL_FAIL CODEL_INTER
 %token <ival> PERIOD PRIORITY STACK_SIZE
-%token <ival> CODEL_TASK_MAIN CODEL_TASK_START CODEL_TASK_END
+%token <ival> CODEL_TASK_MAIN CODEL_TASK_MAIN2 CODEL_TASK_START CODEL_TASK_END
 %token <ival> FAIL_REPORTS RESOURCES T_DELAY
 %token <ival> CONTROL EXEC ALL G_NONE INIT
 %token <ival> POSTER DATA UPDATE ADDRESS 
@@ -737,6 +737,10 @@ av_tache: PERIOD ':' valeur_periode
 	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
 	  $$->attribut = $1;
 	  $$->value.codel_task_main = $3; }
+    | CODEL_TASK_MAIN2 ':' identificateur
+	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
+	  $$->attribut = $1;
+	  $$->value.codel_task_main2 = $3; }
     | POSTERS_INPUT ':' liste_indicateur_de_type
 	{ $$ = STR_ALLOC(EXEC_TASK_AV_STR);
 	  $$->attribut = $1; 
