@@ -33,7 +33,6 @@ __RCSID("$LAAS$");
 
 #define _GNU_SOURCE
 #include <stdio.h>
-#include <err.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
@@ -201,7 +200,8 @@ genom_get_requires(char* filename, char* cppOptions[])
       case REQUIRE:
       case CODELS_REQUIRE:
 	if (yylex() != ':') {
-	  warnx("%s:%d: syntax error, missing ':'", nomfic, num_ligne);
+	  fprintf(stderr, "%s:%d: syntax error, missing ':'", 
+	      nomfic, num_ligne);
 	  break;
 	}
 
@@ -223,7 +223,7 @@ genom_get_requires(char* filename, char* cppOptions[])
 	    break;
 
 	  default:
-	    warnx("%s:%d: syntax error", nomfic, num_ligne);
+	    fprintf(stderr, "%s:%d: syntax error", nomfic, num_ligne);
 	    break;
 	}
 
