@@ -45,17 +45,17 @@ namespace eval server {
 
 	switch -regexp $cmd {
 
-	    "HELLO" {
+	    "^HELLO$" {
 		log "HELLO request"
 		answer $channel "HELLO $channel"
 	    }
 
-	    "BYE" {
+	    "^BYE$" {
 		log "BYE request"
 		endClient $channel
 	    }
 
-	    "DIE" {
+	    "^DIE$" {
 		log "DIE request"
 		foreach i [array names channels] {
 		    answer $i "DIE"
@@ -63,7 +63,7 @@ namespace eval server {
 		die
 	    }
 
-	    "CSREPLY" {
+	    "^CSREPLY" {
 ##		log "csLib wakeup"
 		eval [ ::cs::mboxEvent ]
 		answer $channel "OK"
