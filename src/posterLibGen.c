@@ -504,6 +504,7 @@ int posterLibGen(FILE *out)
       fprintf(out, 
 	      "STATUS %s%sPosterXML(FILE *f)\n{\n"
 	      "  BOOL err=FALSE;\n"
+	      "  H2TIME posterDate;\n"
 	      "  %s x;\n\n"
 	      "  xmlBalise(\"%s\",BEGIN_BALISE_NEWLINE,f,1);\n"
 	      "  xmlBalise(\"error\",BEGIN_BALISE,f,2);\n"
@@ -516,6 +517,14 @@ int posterLibGen(FILE *out)
 	      "  fprintfBuf(f, \"</error>\\n\");\n"
 	      "  if (!err) {\n"
 	      "    printXML_%s(f, \"data\", &x, 2, 0, NULL, NULL);\n"
+	      "    posterIoctl(%s%sPosterID(), FIO_GETDATE, &posterDate);\n"
+              "    xmlBalise(\"date\",BEGIN_BALISE,f,2);\n"
+	      "    fprintf(f, \"%%04d/%%02d/%%02d %%02d:%%02d:%%02d.%%03d\",\n"
+	      "             posterDate.year + 1900, posterDate.month,\n"
+	      "             posterDate.date + 1, posterDate.hour,\n"
+	      "             posterDate.minute, posterDate.sec,\n"
+	      "             posterDate.msec);\n"
+	      "    fprintf(f, \"</date>\\n\");\n"
 	      "  }\n"
 	      "  xmlBalise(\"%s\",TERMINATE_BALISE,f,1);\n"
 	      "  return OK;\n}\n\n",
@@ -525,6 +534,7 @@ int posterLibGen(FILE *out)
 	      module->name, p->name, /* PosterRead */
 	      module->name, p->name, /* h2perror */
 	      nom_type1(p->type),  /* printXML */
+	      module->name, p->name, /* posterIoctl */
 	      p->name);        /* end balise */
       
       /* Les fonctions pour les e'le'ments de la structure */

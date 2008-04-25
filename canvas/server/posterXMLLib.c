@@ -40,7 +40,9 @@
 #include <stdlib.h>
 
 #include <portLib.h>
+#include <h2timeLib.h>
 
+#include "$module$PosterLib.h"
 #include "$module$PosterXMLLib.h"
 #include "$module$PrintXML.h"
 
