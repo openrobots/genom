@@ -170,7 +170,7 @@ request GetSpeed {
 /* Control request:  interrupt the mobile */
 request Stop {
    type:                control;              /* request's type */
-   interrupts_activities:   MoveDistance;         /* request to interrupt */
+   interrupt_activity:   Goto;         /* request to interrupt */
 };
 \end{verbatim}
 \end{cartouche}
@@ -196,7 +196,7 @@ request Goto {
    codel_main:            demoGotoMain;      /* main codel */
    codel_end:             demoGotoEnd;       /* termination codel */
    codel_inter:           demoGotoInter;     /* interruption codel */
-   interrupts_activities: Goto;              /* incompatible requests */
+   interrupt_activity: Goto;              /* incompatible requests */
    exec_task:             MotionTask;        /* task (thread) executing
                                               * the codel */
 };
@@ -208,7 +208,7 @@ request Monitor {
    output:                position::state.position; /* outputs: actual pos. */
    codel_main:            demoMonitorExec;      /* main codel */
    fail_reports:          TOO_FAR_AWAY;         /* possible error messages */
-   interrupts_activities: none;                 /* no incompatible requests */
+   interrupt_activity: none;                 /* no incompatible requests */
    exec_task:             MotionTask;           /* task (thread) */
 };
 
@@ -320,7 +320,7 @@ the {\tt demo} example:
 \begin{center}
 \begin{cartouche}\small
 \begin{verbatim}
-blues% genom  -t demo
+blues% genom  -i demo
 genom demo.gen: info: array MonitorInput added in SDI for request Monitor
 genom demo.gen: info: array MonitorOutput added in SDI for request Monitor
 perl -w ./demo.pl
