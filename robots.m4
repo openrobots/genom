@@ -1,7 +1,7 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2002-2003 LAAS/CNRS                   --  Fri Mar 15 2002
+# Copyright (c) 2002-2003,2008 LAAS/CNRS
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -26,6 +26,8 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#                                                         Fri Mar 15 2002
 #
 
 dnl --- Compute CFLAGS --------------------------------------------------
@@ -344,19 +346,28 @@ dnl --- Look for tcl ----------------------------------------------------
 dnl
 AC_DEFUN([ROBOT_LIB_TCL],
 [
+   case $host_cpu-$host_os in
+      x86_64-linux*)
+	libsuffix=64
+	;;
+      *)
+	libsuffix=
+	;;
+   esac
+
    AC_ARG_WITH(tcl,
       AC_HELP_STRING([--with-tcl=DIR], [directory containing tclConfig.sh. 'no' to disable.]),
       [tcl_prefix=$withval],
       [for ac_dir in \
-         ${exec_prefix}/lib      \
-         /usr/local/lib/tcl8.4   \
-         /usr/local/lib/tcl8.3   \
-         /usr/local/lib          \
-         /usr/pkg/lib            \
-         /usr/lib                \
-         /usr/lib/tcl8.4         \
-         /usr/lib/tcl-8.4         \
-         /usr/lib/tcl8.3         \
+         ${exec_prefix}/lib      	\
+         /usr/local/lib/tcl8.4   	\
+         /usr/local/lib/tcl8.3   	\
+         /usr/local/lib          	\
+         /usr/pkg/lib            	\
+         /usr/lib${libsuffix} 		\
+         /usr/lib${libsuffix}/tcl8.4	\
+         /usr/lib${libsuffix}/tcl-8.4	\
+         /usr/lib${libsuffix}/tcl8.3	\
         ; \
        do
          if test -r "$ac_dir/tclConfig.sh"; then
@@ -418,7 +429,7 @@ AC_DEFUN([ROBOT_LIB_TCL],
       $TCL_EXEC_PREFIX/lib                    \
       $TCL_PREFIX/lib                         \
       /usr/local/lib                          \
-      /usr/lib                                \
+      /usr/lib${libsuffix}                    \
       /Library/Frameworks/Tcl.framework       \
       $extra_lib                              \
       ; \
