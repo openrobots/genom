@@ -1,12 +1,15 @@
-$LAAS$
+$LAAS: CHANGELOG 2008/09/15 17:46:09 mallet $
 
- 70. Possibility of 2 permanent codels in ExecTask: codel_task_main is 
+ 73. Always invoke libtool with --tag so that any compiler name can be used.
+ 72. Fix tcl detection on x86_64 hosts.
+ 71. Fix a bug in the communication between tclserv and the tcl clients.
+ 70. Possibility of 2 permanent codels in ExecTask: codel_task_main is
      called before the others activities, and codel_task_main2 after.
 
-Genom 2.0, August 31, 2007. 
+Genom 2.0, August 31, 2007.
  69. 'make regen' also 'make depend' to detect new dependencies.
- 68. Abort request allows to switch on/off verbose mode (parameter -66) 
-     and to display time performances of the codels (-77). Corresponding 
+ 68. Abort request allows to switch on/off verbose mode (parameter -66)
+     and to display time performances of the codels (-77). Corresponding
      procedures 'verbose' and 'showtime' have been added in tclserv.
  67. Does not generate stethoscope files any more
  66. Disconnect from tcl servers that die (this prevent eating 100% cpu
@@ -40,14 +43,14 @@ genom 2.0 Release Candidate 2, February 7, 2007.
  50. Obsolete syntax now generate an error by default. The new -O option
      can be used to force genom to accept it, at the users' risk.
  49. Check for the need for the -pthread option to get functionnal POSIX
-     threads. 
- 48. The TCP port used by tclserv can now also be given with 
+     threads.
+ 48. The TCP port used by tclserv can now also be given with
      option -p<port>.
  47. Message 'csLib wakeup' was too much verbose with -c option.
- 46. Name of a variable cannot be identical to the name of the C type 
+ 46. Name of a variable cannot be identical to the name of the C type
      (it was the case for user posters with only a type)
  45. In Emacs genom-mode, Select codel files according to lang.
- 44. Fix dependencies in generated server Makefile. 
+ 44. Fix dependencies in generated server Makefile.
 
 genom 2.0 Release Candidate 1, December 19, 2006.
  43. Use g++ as the linker of modules declared with lang: "c++".
@@ -62,7 +65,7 @@ genom 2.0 Release Candidate 1, December 19, 2006.
  37. Added automatic mboxInit call after a successful lm in tclserv
      client code. Can be disabled with a new option `-no-auto-connect' of
      lm command.
- 36. New names for some fields in the .gen file (c_func -> codel). See 
+ 36. New names for some fields in the .gen file (c_func -> codel). See
      documentation for details.
  35. If the H2DEV_DIR environment variable is set, we save the PID
      files in here. This envvar is used by pocolibs to set its device file
@@ -78,7 +81,7 @@ genom 2.0 Release Candidate 1, December 19, 2006.
  26. Some more translations of module canvas files to english.
  25. Renamed xxxEssay into xxxTest.
  24. Fix 'extern "C"' declaration for msgLibProto.h.
- 23. Cleanup some duplicated comments in generated files. 
+ 23. Cleanup some duplicated comments in generated files.
  22. Explicit '--help' and '-h' options for genom.
 
 [xxx lots of missing things there]
@@ -96,7 +99,7 @@ genom 2.0 Release Candidate 1, December 19, 2006.
  15. Added the possibility to define the name of a member of a poster
      defined by a 'type', with the syntax <name>::<type>. Sharing the
      same name between the type and the structure member doesn't work
-     with g++ 3.3.4. 
+     with g++ 3.3.4.
 
 genom 1.1 released July 22, 2004
 
@@ -106,7 +109,7 @@ genom 1.1 released July 22, 2004
  13. Generate files in '.genom' directory, and move them to user
      directories afterwards. This way it will be possible to implement
      incremental patching for files that are both generated and modified
-     by users. 
+     by users.
  12. Modules files are now intalled in $(bindir)/$(module) and
      $(libdir)/$(module).
  11. Changed -i option so that it generates only user files. Handy for
