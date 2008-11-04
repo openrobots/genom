@@ -1,7 +1,7 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2003-2004 LAAS/CNRS                   --  Mon Aug 18 2003
+# Copyright (c) 2003-2004,2008 LAAS/CNRS                   --  Mon Aug 18 2003
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -97,9 +97,6 @@ flist+=\
 	server/requestCntrl.c		\
 	server/requestExec.c		\
 	server/scan.h			\
-	server/scopeLib.h		\
-	server/scopeMain.c		\
-	server/scope_script		\
 	server/type.h
 
 # TCL templates

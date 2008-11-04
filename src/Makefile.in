@@ -1,7 +1,7 @@
 #	$LAAS$
 
 #
-# Copyright (c) 2003 LAAS/CNRS
+# Copyright (c) 2003,2008 LAAS/CNRS
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -77,7 +77,6 @@ SRCS = \
 	printXMLGen.c		\
 	endianGen.c		\
 	scanGen.c		\
-	scopeGen.c		\
 	initGen.c		\
 	tclGen.c		\
 	tclClientGen.c		\

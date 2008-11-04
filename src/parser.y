@@ -1,7 +1,7 @@
 /*	$LAAS$ */
 
 /* 
- * Copyright (c) 1993-2006 LAAS/CNRS
+ * Copyright (c) 1993-2006,2008 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -64,7 +64,6 @@ __RCSID("$LAAS$");
 #include "printXMLGen.h"
 #include "endianGen.h"
 #include "scanGen.h"
-#include "scopeGen.h"
 #include "posterLibGen.h"
 #include "headerGen.h"
 #include "cntrlTaskGen.h"
@@ -1875,7 +1874,6 @@ main(int argc, char **argv)
     fatalError |= (printGen(sortie) != 0);
     fatalError |= (printXMLGen(sortie) != 0);
     fatalError |= (scanGen(sortie) != 0);
-/*     fatalError |= (scopeGen(sortie) != 0); */
 
     /* even with no server, endianLin needs posterLib.h 
        and tclLib and openprs seem to need posterLib.c (?) */
