@@ -194,7 +194,7 @@ endif
 
 $(OBJDIR)/$(CLIENT_LIB): $(client_obj)
 	$(LTLD) -o $@ $(LDFLAGS) $(client_obj) $(SERVERS_CLIENT_LIB) \
-		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LIBTOOL_VERSION_INFO)
+		$(LIBTOOL_LINKOPT) $(LIBTOOL_VERSION_INFO) $(GENOM_LIBS)
 
 $(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj) $(tclrequires_obj)
 	$(LTLD) $(CFLAGS) $(tclclient_obj)  $(tclrequires_obj) $(SERVERS_ENDIAN_LIB) -o $@	\
