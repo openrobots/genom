@@ -111,11 +111,12 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 	while ( (read_chars = read(outpipe[0], buffer, 1023)) > 0)
 	{
 	    buffer[read_chars] = 0;
+	    string_strip_end(buffer); /* remove whitespace at the end */
 	    bufcat(&cflags, buffer);
 	}
 
 	/* Split cflags at \s+- and add the fields in cpp_options */
-	if (!cflags)
+	if (!cflags || cflags[0] == '\0')
 	    return 0;
 	/* XXX pkgconfig < 0.15 leaves a space in front of cflags
 	 * this causes problems here. This is why pkg-config >= 0.15
