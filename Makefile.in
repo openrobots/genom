@@ -110,12 +110,9 @@ distclean:
 # --- build distribution ------------------------------------------------
 
 dist:
-	mkdir -p $(dist_name)
-	(cd $(top_srcdir); tar cf - .) | (cd $(dist_name); tar xpf -)
-	find $(dist_name) -name "CVS" -o -name "*~" -o -name ".#*" \
-		-o -name "autom4te.cache"| xargs rm -rf
-	tar cf - $(dist_name) | gzip -c -9 > $(dist_name).tar.gz
-	rm -rf $(dist_name)
+	(cd $(top_srcdir); \
+	 git archive --format=tar --prefix=$(dist_name)/ $(dist_name) | \
+	 gzip -c - ) > $(dist_name).tar.gz
 
 
 # --- autoconf/autoheader -----------------------------------------------
