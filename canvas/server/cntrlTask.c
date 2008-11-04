@@ -710,6 +710,7 @@ static void $module$SendFinalReply (SERV_ID servId,
       bilan = S_$module$_stdGenoM_ACTIVITY_INTERRUPTED;
       ACTIVITY_BILAN(activity) = bilan;      
     }
+    break;
 
     /* Echec */
   case ZOMBIE:
