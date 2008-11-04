@@ -63,12 +63,15 @@ split(char* string, char* delim, int lookahead, char** fields, int max_fields)
 int
 get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 {
+    const char *pkgconfig = getenv("PKG_CONFIG");
     int outpipe[2];
     pid_t pid;
 
+    if (pkgconfig == NULL) pkgconfig = "pkg-config";
+
     if (pipe(outpipe) == -1)
     {
-	fprintf(stderr, "error running pkg-config: ");
+        fprintf(stderr, "error running %s: ", pkgconfig);
 	perror("");
 	exit(2);
     }
@@ -80,9 +83,9 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 	close(fileno(stdout));
 	dup2(outpipe[1], fileno(stdout));
 
-	if (execlp("pkg-config", "pkg-config", "--cflags", package, (char*)NULL) == -1)
+	if (execlp(pkgconfig, pkgconfig, "--cflags", package, (char*)NULL) == -1)
 	{
-	    fprintf(stderr, "error running pkg-config: ");
+	    fprintf(stderr, "error running %s: ", pkgconfig);
 	    perror("");
 	    exit(1);
 	}
@@ -101,7 +104,7 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 
 	if (waitpid(pid, &status, 0) == -1 || !WIFEXITED(status) || WEXITSTATUS(status))
 	{
-	    fprintf(stderr, "error running pkg-config\n");
+            fprintf(stderr, "error running %s\n", pkgconfig);
 	    exit(1);
 	}
 
@@ -132,13 +135,13 @@ get_pkgconfig_cflags(char *package, char** cpp_options, int first_option)
 	    int i;
 	    if (option_count > 0)
 		    for (i = 0; i < option_count; ++i) {
-			    fprintf(stderr,
-				"pkg-config: found '%s' for package %s\n",
-				cpp_options[first_option + i], package);
+			    fprintf(stderr, "%s: found '%s' for package %s\n",
+				    pkgconfig, cpp_options[first_option + i],
+				    package);
 		    }
 	    else
-		fprintf(stderr,
-		    "pkg-config: no cflags needed for package %s\n", package);
+		fprintf(stderr, "%s: no cflags needed for package %s\n",
+			pkgconfig, package);
 	}
 	return option_count;
     }
