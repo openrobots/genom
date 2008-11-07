@@ -1,5 +1,7 @@
-$LAAS: CHANGELOG 2008/11/04 15:52:30 mallet $
-
+Genom 2.1, November 7, 2008.
+ 78. Handle the case when a pkg-config required package doesn't define
+     any cflags.
+ 77. Remove aeguill package requirement in tex documentation source.
  76. Ensure that generated configure scripts don't overwrite user-defined
      CFLAGS. 
  75. Fixed handling of empty CFLAGS in packages required via pkg-config.
