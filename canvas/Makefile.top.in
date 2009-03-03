@@ -49,6 +49,8 @@ srcdir=		@srcdir@
 
 INSTALL=	@INSTALL@
 
+dist_name=	@PACKAGE_TARNAME@-@PACKAGE_VERSION@
+
 include $(top_builddir)/config.mk
 
 SUBDIRS= \
@@ -73,6 +75,13 @@ distclean:
 	-$(MAKE) $@-$(OSAPI)
 	rm -f Makefile libtool config.log config.status $pkgname$.pc $pkgname$-oprs.pc local.mk config.mk
 
+.PHONY:	dist
+dist:
+	[ -d $(top_srcdir)/.git ] || \
+	(echo "make dist only works with git" ; exit 2 )
+	(cd ${top_srcdir}; \
+	 git archive --format=tar --prefix=$(dist_name)/ $(dist_name) | \
+	 gzip -c - ) > $(dist_name).tar.gz
 
 # GenoM flags
 include $(top_srcdir)/$(autoconfdir)/genom.mk
