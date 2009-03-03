@@ -5,7 +5,7 @@ dnl	process this file with autoconf to produce a configure script.
 dnl
 AC_REVISION($LAAS$)
 
-AC_INIT($module$, $version$, $email$)
+AC_INIT($module$-genom, $version$, $email$)
 AC_CONFIG_AUX_DIR(autoconf)
 
 ABI_VERSION_INFO=$iface_version$
