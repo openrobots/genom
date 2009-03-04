@@ -1,4 +1,3 @@
-/*	$LAAS$ */
 
 /* --- FILE GENERATED WITH GENOM, DO NOT EDIT BY HAND ------------------ */
 
@@ -31,7 +30,6 @@
  * DAMAGE.
  */
 #include "genom-config.h"
-__RCSID("$LAAS$");
 
 #include <fcntl.h>
 #include <stdio.h>

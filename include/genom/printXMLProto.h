@@ -1,4 +1,3 @@
-/*	$LAAS$ */
 
 /* 
  * Copyright (c) 2003 LAAS/CNRS                       --  Fri Sep  5 2003

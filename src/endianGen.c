@@ -1,4 +1,3 @@
-/*	$LAAS$ */
 
 /* 
  * Copyright (c) 2003 LAAS/CNRS
@@ -29,7 +28,6 @@
  * DAMAGE.
  */
 #include "genom-config.h"
-__RCSID("$LAAS$");
 
 #include <stdio.h>
 #include <string.h>

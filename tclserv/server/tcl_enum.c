@@ -1,4 +1,3 @@
-/*	$LAAS$ */
 
 /* 
  * Copyright (c) 1999-2003 LAAS/CNRS                    - Fri Mar 26 1999
@@ -29,7 +28,6 @@
  * DAMAGE.
  */
 #include "genom-config.h"
-__RCSID("$LAAS$");
 
 #ifdef VXWORKS
 # include <vxWorks.h>

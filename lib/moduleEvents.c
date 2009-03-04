@@ -1,4 +1,3 @@
-/*	$LAAS$ */
 
 /* 
  * Copyright (c) 1995-2003 LAAS/CNRS
@@ -30,7 +29,6 @@
  * DAMAGE.
  */
 #include "genom-config.h"
-__RCSID("$LAAS$");
 
 /***
  *** Generation d'evenements date's a` la micro-seconde pres

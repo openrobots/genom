@@ -1,4 +1,3 @@
-# $LAAS$ 
 
 ###### Default target
 codels-mk-all: $(OBJDIR) $(OBJDIR)/$(MODULE_BIN)

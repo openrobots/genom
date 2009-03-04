@@ -1,9 +1,7 @@
-dnl	$LAAS$
 dnl
 dnl configure.ac --
 dnl	process this file with autoconf to produce a configure script.
 dnl
-AC_REVISION($LAAS$)
 
 AC_INIT($module$-genom, $version$, $email$)
 AC_CONFIG_AUX_DIR(autoconf)

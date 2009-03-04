@@ -1,4 +1,3 @@
-#	$LAAS$
 
 #
 # Copyright (c) 1999-2007 LAAS/CNRS                   --  Sat Apr  3 1999

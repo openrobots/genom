@@ -1,4 +1,3 @@
-/*	$LAAS$ */
 
 /* --- FILE GENERATED WITH GENOM, DO NOT EDIT BY HAND ------------------ */
 

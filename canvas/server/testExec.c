@@ -1,4 +1,3 @@
-/*	$LAAS$ */
 
 $commentend$
 /* 

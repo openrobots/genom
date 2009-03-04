@@ -1,4 +1,3 @@
-%	$LAAS$
 
 % Copyright (c) 2000-2003 Anthony Mallet              --  Thu Oct 19 2000
 % All rights reserved.

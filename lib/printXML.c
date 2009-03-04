@@ -1,4 +1,3 @@
-/*	$LAAS$ */
 
 /* 
  * Copyright (c) 2003 LAAS/CNRS                       --  Fri Sep  5 2003
@@ -30,7 +29,6 @@
  * DAMAGE.
  */
 #include "genom-config.h"
-__RCSID("$LAAS$");
 
 /***
  *** Print des types de base utilise's par les modules generator
