@@ -18,15 +18,6 @@ AC_SUBST(LIBSONLY)
 
 AC_DEFINE_UNQUOTED([GENOM_VERSION], "AC_PACKAGE_VERSION", [Genom's version])
 
-AH_VERBATIM(__RCSID,[
-#ifndef __RCSID
-#ifdef __GNUC__
-#define __RCSID(id) static const char rcsid[] __attribute__((__unused__)) = id
-#else
-#define __RCSID(id) static const char rcsid[] = id
-#endif /* __GNUC__ */
-#endif
-])
 
 dnl --- Programs names --------------------------------------------------
 dnl
