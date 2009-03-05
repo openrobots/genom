@@ -6,5 +6,5 @@ test -z "$srcdir" && srcdir=.
 ORIGDIR=`pwd`
 cd $srcdir
 
-aclocal -I . || exit 1
+aclocal -I m4 || exit 1
 exec autoconf
