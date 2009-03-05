@@ -41,7 +41,6 @@
 #define PROTO_LTMAIN		"autoconf/ltmain.sh" 
 
 #define PROTO_ROBOTS_M4		"autoconf/robots.m4" 
-#define PROTO_LIBTOOL_M4	"autoconf/libtool.m4" 
 
 #define PROTO_CONFIG_MK		"autoconf/config.mk.in"
 #define PROTO_CONFIG_POSIX_MK	"autoconf/config.posix.mk"

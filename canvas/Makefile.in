@@ -52,7 +52,6 @@ flist=\
 	autoconf/config.guess		\
 	autoconf/ltmain.sh		\
 	autoconf/robots.m4		\
-	autoconf/libtool.m4		\
 	autoconf/genom.mk		\
 	autoconf/config.posix.mk	\
 	autoconf/config.rtai.mk		\
