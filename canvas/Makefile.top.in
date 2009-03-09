@@ -48,7 +48,7 @@ srcdir=		@srcdir@
 
 INSTALL=	@INSTALL@
 
-dist_name=	@PACKAGE_TARNAME@-@PACKAGE_VERSION@
+dist_name=	@PACKAGE_NAME@-@PACKAGE_VERSION@
 
 include $(top_builddir)/config.mk
 
