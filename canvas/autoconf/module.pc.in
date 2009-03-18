@@ -1,7 +1,7 @@
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
-includedir=@includedir@/$pkgname$
+includedir=@includedir@
 genomfile=$genomFile$
 genomflags=$genomFlags$
 cppflags=$cppOptions$
@@ -11,4 +11,4 @@ Description: $module$ Genom module
 Version: @PACKAGE_VERSION@
 Requires: genom >= $genomVersion$ $require$
 Libs: -L${libdir} -l$module$Client
-Cflags: -I${includedir}
+Cflags: -I${includedir} -I${includedir}/$pkgname$
