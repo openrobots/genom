@@ -177,16 +177,9 @@ configureGen(FILE *out,
    };
       
    for(p = configProtosExec; *p; p++) {
-      script_open(out);
-      subst_begin(out, *p);
-      print_sed_subst(out, "module", module->name);
-      print_sed_subst(out, "genTcl", genTcl ? "yes":"no");
-      print_sed_subst(out, "genOpenprs", genOpenprs ? "yes":"no");
-      print_sed_subst(out, "genServer", genServer ? "yes":"no");
-      print_sed_subst(out, "genomBin", genomBin);
-      subst_end(out);
-      script_close_exec(out, *p);
+	   copy_script(out, *p);
    }
+
    for(p = configProtos; *p; p++) {
       script_open(out);
       subst_begin(out, *p);

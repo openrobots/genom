@@ -2131,6 +2131,19 @@ script_do(FILE *out, const char *dir, const char *doFileName)
 /*----------------------------------------------------------------------*/
 
 /**
+ ** simple copy of a file
+ **/
+void
+copy_script(FILE *out, const char *protoName)
+{
+	fprintf(out, "\ncopy(\"%s/%s\", \"%s\") || "
+	    "die \"Copy failed: $!\";\n\n", 
+	    protoDir, protoName, protoName);
+}
+
+/*----------------------------------------------------------------------*/
+
+/**
  ** Genere le debut d'une substitution
  **/
 void

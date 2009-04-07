@@ -335,6 +335,7 @@ extern void cat_begin ( FILE *out );
 extern void cat_end ( FILE *out );
 extern void construitIncludeList ( void );
 extern TYPE_STR * copy_type ( TYPE_STR *t );
+extern void copy_script(FILE *, const char *);
 extern void dcl_nom_decl ( DCL_NOM_STR *n, char **pType, char **pVar );
 extern char * genSizeof ( DCL_NOM_STR *n );
 extern void markUsed ( TYPE_STR *t );
