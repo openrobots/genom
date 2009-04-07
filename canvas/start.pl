@@ -32,26 +32,25 @@
 #----------------------------------------------------------------------
 
 use strict;
+use File::Copy;
+use File::Compare;
 
 # add newline on print
 # (we don't want to explicitely add '\n' on each print in the generated Perl code)
 $\ = "\n";
 
 
-# move_if_change
 sub move_if_change {
-    local ($a, $b) = @_;
-    if ( -f $b ) {
-        if (system("cmp -s $a $b") == 0) {
-            unlink $a;
-        } else {
-            #print "$b changed";
-            system("mv $a $b");
-        }
+  local ($a, $b) = @_;
+  if ( -f $b ) {
+    if (compare($a, $b) == 0) {
+      unlink $a;
     } else {
-        #print "$b created";
-        system("mv $a $b");
+      move($a, $b);
     }
+  } else {
+    move($a, $b);
+  }
 }
 
 sub mirror_dir {
