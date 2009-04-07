@@ -2113,7 +2113,7 @@ script_close_exec(FILE *out, const char *newName,...)
 /**
  ** Genere l'execution d'un script
  **
- ** (permet de recupperer un "die" )
+ ** (permet de recuperer un "die" )
  **/
 void
 script_do(FILE *out, const char *dir, const char *doFileName)
@@ -2171,7 +2171,7 @@ subst_end(FILE *out)
 void
 cat_begin(FILE *out)
 {
-    fprintf(out, "print OUT <<'FIN_DE_CAT';\n");
+    fprintf(out, "print OUT <<'__END_OF_FILE__';\n");
 }
 
 /*----------------------------------------------------------------------*/
@@ -2182,6 +2182,6 @@ cat_begin(FILE *out)
 void
 cat_end(FILE *out)
 {
-    fprintf(out, "FIN_DE_CAT\n");
+    fprintf(out, "__END_OF_FILE__\n");
 }
 
