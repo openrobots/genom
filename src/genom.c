@@ -2137,8 +2137,10 @@ void
 copy_script(FILE *out, const char *protoName)
 {
 	fprintf(out, "\ncopy(\"%s/%s\", \"%s\") || "
-	    "die \"Copy failed: $!\";\n\n", 
+	    "die \"Copy failed: $!\";\n", 
 	    protoDir, protoName, protoName);
+	fprintf(out, "\nchmod(0755, \"%s\") || die \"chmod failed: $!\";\n\n",
+	    protoName);
 }
 
 /*----------------------------------------------------------------------*/
