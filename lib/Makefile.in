@@ -42,7 +42,7 @@ VPATH=		$(srcdir)
 
 include $(top_builddir)/config.mk
 
-CPPFLAGS+=	-I$(top_builddir) -I$(top_srcdir)/include -I$(srcdir) -I.
+CPPFLAGS:= -I$(top_builddir) -I$(top_srcdir)/include -I$(srcdir) -I. $(CPPFLAGS)
 CPPFLAGS+= $(PORTLIB_CFLAGS) -D$(ENDIANNESS)
 
 SHLIB_CURRENT=	2

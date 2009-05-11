@@ -1,6 +1,6 @@
 
 #
-# Copyright (c) 2003 LAAS/CNRS                        --  Fri Aug 29 2003
+# Copyright (c) 2003,2009 LAAS/CNRS                        --  Fri Aug 29 2003
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -44,7 +44,7 @@ VPATH=		$(srcdir) $(top_srcdir)/compat
 
 include $(top_builddir)/config.mk
 
-CPPFLAGS+=	-I$(top_builddir) -I$(top_srcdir)/include -I$(srcdir) -I.
+CPPFLAGS:=	-I$(top_builddir) -I$(top_srcdir)/include -I$(srcdir) -I. $(CPPFLAGS)
 CPPFLAGS+=	$(PORTLIB_CFLAGS)
 CPPFLAGS+=	-D$(ENDIANNESS)
 LDFLAGS+=	$(PORTLIB_LIBS)
