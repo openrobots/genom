@@ -6,6 +6,10 @@ dnl
 AC_INIT($module$-genom, $version$, $email$)
 AC_CONFIG_AUX_DIR(autoconf)
 
+m4_include([libtool.m4])
+m4_include([robots.m4])
+m4_sinclude([../acinclude.user.m4])
+
 ABI_VERSION_INFO=$iface_version$
 AC_SUBST(ABI_VERSION_INFO)
 

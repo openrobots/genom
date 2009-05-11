@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 2003 LAAS/CNRS                       --  Thu Aug 21 2003
+ * Copyright (c) 2003,2009 LAAS/CNRS                       --  Thu Aug 21 2003
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -41,6 +41,8 @@
 #define PROTO_LTMAIN		"autoconf/ltmain.sh" 
 
 #define PROTO_ROBOTS_M4		"autoconf/robots.m4" 
+#define PROTO_LIBTOOL_M4	"autoconf/libtool.m4"
+#define PROTO_PKG_M4		"autoconf/pkg.m4"
 
 #define PROTO_CONFIG_MK		"autoconf/config.mk.in"
 #define PROTO_CONFIG_POSIX_MK	"autoconf/config.posix.mk"

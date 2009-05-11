@@ -1,6 +1,6 @@
 
 #
-# Copyright (c) 2003-2004,2008 LAAS/CNRS                   --  Mon Aug 18 2003
+# Copyright (c) 2003-2004,2008-2009 LAAS/CNRS                   --  Mon Aug 18 2003
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -52,6 +52,8 @@ flist=\
 	autoconf/config.guess		\
 	autoconf/ltmain.sh		\
 	autoconf/robots.m4		\
+	autoconf/libtool.m4		\
+	autoconf/pkg.m4			\
 	autoconf/genom.mk		\
 	autoconf/config.posix.mk	\
 	autoconf/config.rtai.mk		\
