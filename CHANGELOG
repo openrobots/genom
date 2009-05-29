@@ -1,3 +1,11 @@
+Genom 2.3, May 12, 2009.
+ 81. Include libtool.m4 files so that genom can regenerate configure script
+     with consistent versions of all the required files.
+
+Genom 2.2, March 9, 2009.
+ 80. Generate a 'dist' target for modules under git control.
+ 79. Add -genom to the generated package name automatically.
+
 Genom 2.1, November 7, 2008.
  78. Handle the case when a pkg-config required package doesn't define
      any cflags.
