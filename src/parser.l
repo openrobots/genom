@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2003,2009 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -127,6 +127,7 @@ WC      {W}*\:
 "doc"/{WC}             {yylval.ival = RQST_DOC; return(RQST_DOC); }
 "input_info"/{WC}    {yylval.ival = RQST_INPUT_INFO; return(RQST_INPUT_INFO); }
 
+"clock_rate"/{WC}      {yylval.ival = CLKRATE; return(CLKRATE); }
 "period"/{WC}          {yylval.ival = PERIOD; return(PERIOD); }
 "delay"/{WC}           {yylval.ival = T_DELAY; return(T_DELAY); }
 "priority"/{WC}        {yylval.ival = PRIORITY; return(PRIORITY); }

@@ -1,3 +1,6 @@
+ 82. Add a new 'clock_rate' module attribute that can modify the default 100
+     ticks/s.
+
 Genom 2.3, May 12, 2009.
  81. Include libtool.m4 files so that genom can regenerate configure script
      with consistent versions of all the required files.

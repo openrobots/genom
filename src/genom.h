@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1993-2006 LAAS/CNRS
+ * Copyright (c) 1993-2006,2009 LAAS/CNRS
  * Matthieu Herrb - Tue Jul 13 1993
  * All rights reserved.
  *
@@ -278,6 +278,7 @@ typedef struct {
     ID_STR *version;
     LIBTOOL_VERSION *iface_version;
     MODULE_LANG lang;
+    int clkrate;
 } MODULE_STR;
 
 
@@ -292,6 +293,7 @@ typedef struct {
         ID_STR *version;
         LIBTOOL_VERSION *iface_version; /* interface versionning */
         MODULE_LANG lang;
+        int clkrate;
     } value;
 } MODULE_AV_STR;
 

@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 1993-2003 LAAS/CNRS                      Tue Jul 13 1993
+ * Copyright (c) 1993-2003,2009 LAAS/CNRS                      Tue Jul 13 1993
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -310,6 +310,15 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
 	}
         module->lang = av->value.lang;
         break;
+      case CLKRATE:
+	if (module->clkrate) {
+	  fprintf(stderr,
+		  "genom %s: Error: duplicate field 'clkrate' in module %s\n",
+		  nomfic, module->name);
+	  exit(2);
+	}
+	module->clkrate = av->value.clkrate;
+	break;
     }
     return(module);
 } /* ajout_av_module */
