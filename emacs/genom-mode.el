@@ -327,7 +327,7 @@ This does fairly subdued highlighting.")
 	       "resources\\|activity\\|exec_task\\|"
 	       "update\\|address\\|number\\|internal_data\\|version\\|"
 	       "email\\|uses_cxx\\|lang\\|requires\\|codels_requires\\|data\\|"
-	       "period\\|delay\\|priority\\|stack_size"))
+	       "clock_rate\\|period\\|delay\\|priority\\|stack_size"))
       (codel-fields (concat
 	       "codel_control\\|"
 	       "codel_start\\|codel_end\\|codel_inter\\|"
