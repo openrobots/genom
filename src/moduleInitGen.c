@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 1996-2003 LAAS/CNRS
+ * Copyright (c) 1996-2003,2009 LAAS/CNRS
  * Matthieu Herrb - Thu Jul 22 1993
  * All rights reserved.
  *
@@ -43,6 +43,7 @@ int moduleInitGen(FILE *out)
 {
     EXEC_TASK_LIST *lt;
     char *execTask;
+    char clkrate[16];
     int periodic;
 
     script_open(out);
@@ -62,6 +63,9 @@ int moduleInitGen(FILE *out)
 	break;
       }
     print_sed_subst(out, "periodic", periodic?"1":"0");
+
+    snprintf(clkrate, sizeof(clkrate), "%d", module->clkrate);
+    print_sed_subst(out, "clkrate", clkrate);
 
     /* Liste des taches d'execution */
     execTask = NULL;

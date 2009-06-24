@@ -382,7 +382,10 @@ main(int argc, char *argv[])
 
     /* Initialise environnement comLib */
 #if $periodic$
-    errFlag = h2initGlob(100);
+    if (($clkrate$) > 0)
+      errFlag = h2initGlob($clkrate$);
+    else
+      errFlag = h2initGlob(100);
 #else
     errFlag = h2initGlob(0);
 #endif

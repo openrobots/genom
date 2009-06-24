@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1993-2006,2008 LAAS/CNRS
+ * Copyright (c) 1993-2006,2008-2009 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -190,7 +190,7 @@ int parseError = 0;
 %token <ival> POSTERS_INPUT
 %token <ival> CODEL_CONTROL CODEL_MAIN
 %token <ival> CODEL_START CODEL_END CODEL_FAIL CODEL_INTER
-%token <ival> PERIOD PRIORITY STACK_SIZE
+%token <ival> CLKRATE PERIOD PRIORITY STACK_SIZE
 %token <ival> CODEL_TASK_MAIN CODEL_TASK_MAIN2 CODEL_TASK_START CODEL_TASK_END
 %token <ival> FAIL_REPORTS RESOURCES T_DELAY
 %token <ival> CONTROL EXEC ALL G_NONE INIT
@@ -412,7 +412,12 @@ av_module: INTERNAL_DATA ':' indicateur_de_type
 		    nomfic, num_ligne, $3);
 	  }
 	}
+    | CLKRATE ':' expression_constante
+	{ $$ = STR_ALLOC(MODULE_AV_STR);
+	  $$->attribut = $1;
+	  $$->value.clkrate = $3; }
     ;
+
 
 /*----------------------------------------------------------------------*/
 
