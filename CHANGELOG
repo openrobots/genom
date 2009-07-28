@@ -1,3 +1,4 @@
+Genom 2.4, July 28, 2009.
  82. Add a new 'clock_rate' module attribute that can modify the default 100
      ticks/s.
 
