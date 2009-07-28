@@ -1,5 +1,5 @@
 %
-% Copyright (c) 2001-2005 LAAS/CNRS                   --  Thu Oct 18 2001
+% Copyright (c) 2001-2005,2009 LAAS/CNRS                   --  Thu Oct 18 2001
 % All rights reserved.                                     Anthony Mallet
 %
 % This document is a translation of the French documentation of GenoM,
@@ -458,15 +458,17 @@ blues% cd obj
 
 \subsection{Configuration}
 
-All the openrobots software and tools are generally installed in a specific
-directory (for instance \texttt{/usr/local/openrobots}. This is the
-main information that needs to be specifed to the \texttt{configure}
-script. 
+All the  openrobots software  and tools are  generally  installed in a specific
+directory           (for       instance    \texttt{\$\{HOME\}/openrobots     or
+\texttt{/usr/local/openrobots}}. This is the  main information that needs to be
+specifed to the \texttt{configure} script. Don't forget to run
+\texttt{configure} from the build directory.
 
 \begin{center}
 \begin{cartouche}\small
 \begin{verbatim}
-../configure --prefix=/usr/local/openrobots
+blues% cd obj
+blues% ../configure --prefix=${HOME}/openrobots
 checking build system type... i686-pc-linux-gnu
 checking host system type... i686-pc-linux-gnu
 checking for gcc... gcc
@@ -489,15 +491,14 @@ config.status: creating local.mk
 
 \subsection{Compilation itself}
 
-To compile the module, just run \texttt{make}. The GNU make utility is
-required, but this is the standard make on Linux systems. On different
-Unixes, it may be installed under a different name, usually
+To compile the module, just run \texttt{make} from the build directory. The GNU
+make utility is required, but this is the standard make on Linux systems. On
+different Unixes, it may be installed under a different name, usually
 \texttt{gmake} or \texttt{gnumake}.
 
 \begin{center}
 \begin{cartouche}\small
 \begin{verbatim}
-blues% make
 blues% make
 make all-posix
 make[1]: Entering directory `/home/matthieu/openrobots/modules/demo/obj'

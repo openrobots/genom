@@ -1,5 +1,5 @@
 %
-% Copyright (c) 2001 LAAS/CNRS                        --  Tue Oct 30 2001
+% Copyright (c) 2001,2009 LAAS/CNRS                        --  Tue Oct 30 2001
 % All rights reserved.                                     Anthony Mallet
 %
 % This document is a translation of the French documentation of GenoM,
@@ -355,7 +355,7 @@ request <<request-name>> {
      output:                 <name>::<sdi-ref>;
      codel_control:          <codel-name>;
      error_reports:          <report-name>, ...;
-     interrupts_activities:  <exec-rqst-name>, ...;
+     interrupt_activity:     <exec-rqst-name>, ...;
 };
 \end{verbatim}\end{cartouche}\end{center}
 
@@ -378,7 +378,7 @@ parameter.
 \item {\tt error\_reports} is a list of possible reports returned by the
 control codel (the special report "OK" is always implicitly defined).
 
-\item {\tt interrupts\_activities} is a list of requests of {\em this module}
+\item {\tt interrupt\_activity} is a list of requests of {\em this module}
 that   are    declared   incompatible  with     this request.  Activities
 corresponding to the listed requests will  be interrupted upon invocation
 of this service.  Two special keywords {\tt  all} and {\tt none} let  you
@@ -407,7 +407,7 @@ request <<request-name>> {
      codel_inter:           <codel-name>;
      codel_fail:            <codel-name>;
      error_reports:         <report-name>, ... ;
-     interrupts_activities: <exec-rqst-name>, ... ;
+     interrupt_activity:    <exec-rqst-name>, ... ;
 };
 \end{verbatim}\end{cartouche}\end{center}
 

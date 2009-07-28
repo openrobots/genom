@@ -1,5 +1,5 @@
 %
-% Copyright (c) 2001-2005 LAAS/CNRS                   --  Sat Nov  3 2001
+% Copyright (c) 2001-2005,2009 LAAS/CNRS                   --  Sat Nov  3 2001
 % All rights reserved.                                     Anthony Mallet
 %
 % This document is a translation of the French documentation of GenoM,
@@ -179,7 +179,7 @@ request Hypot {
    output:                norm::norm;          /* norm (result) */
    codel_main:            demoHypotExec;       /* execution codel */
    exec_task:             MotionTask;          /* execution task */
-   interrupts_activities: Hypot;               /* incompatibilities */
+   interrupt_activity:    Hypot;               /* incompatibilities */
 };
 \end{verbatim}\end{cartouche}\end{center}
 
@@ -720,7 +720,7 @@ structure and a pointer to the report (always  defined). Codels return an
 {\tt ACTIVITY\_EVENT}, as exposed in the previous section.
 
 Here is the {\tt demoGotoPosition}  execution codel ({\tt codel\_main})
-of the {\tt MoveDistance} request of the module {\tt demo}. This codel,
+of the {\tt Goto} request of the module {\tt demo}. This codel,
 invoked periodically, controls the speed of the mobile (according to the
 one specified with the {\tt SetSpeed} request), and stops when the
 requested position is reached. We suppose we have two low level functions
