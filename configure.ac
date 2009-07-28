@@ -3,7 +3,7 @@ dnl configure.in --
 dnl	process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([genom],[2.3],[openrobots@laas.fr])
+AC_INIT([genom],[2.4],[openrobots@laas.fr])
 AC_PREREQ(2.59)
 
 AC_CONFIG_HEADER(genom-config.h)
