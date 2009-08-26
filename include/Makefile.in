@@ -54,8 +54,7 @@ flist = \
 				genom/printScan.h \
 				genom/printStateProto.h \
 				genom/printXMLProto.h \
-				genom/scanProto.h \
-				genom/genomModulesLibProto.h
+				genom/scanProto.h
 
 # -----------------------------------------------------------------------
 

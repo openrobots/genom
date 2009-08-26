@@ -183,8 +183,15 @@ typedef struct {
 #define M_INIT_RQST(p)              ((p)->cntrlTask.initRqst)
 #define M_CNTRL_NB_EXEC_TASKS(p)    ((p)->cntrlTask.nbExecTasks)
 #define M_CNTRL_SDI_F(p)            ((p)->cntrlTask.sdif)
- 
-#include "genom/genomModulesLibProto.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif 
+extern STATUS genomGiveSDIs ( void *sdic );
+extern STATUS genomTakeSDIs ( void *sdic );
+#ifdef __cplusplus
+};
+#endif
 
 #define M_GENOM_UNLOCK_SDI(p)       (genomGiveSDIs(p))
 #define M_GENOM_LOCK_SDI(p)         (genomTakeSDIs(p))
