@@ -440,6 +440,10 @@ void $module$$execTaskName$ (void)
       logMsg("$module$$execTaskName$: commonStructGive error\n");
       $module$$execTaskName$Suspend (FALSE);
     }
+
+    /* relinquish CPU to give a chance to other tasks to run in heavily
+     * contended situations (small period) */
+    taskDelay(0);
   }     /* FOREVER */
 
 }
