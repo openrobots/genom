@@ -1,6 +1,6 @@
 
 #
-# Copyright (c) 1999-2007 LAAS/CNRS                   --  Sat Apr  3 1999
+# Copyright (c) 1999-2007,2009 LAAS/CNRS                   --  Sat Apr  3 1999
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -63,7 +63,7 @@ namespace eval server {
 	    }
 
 	    "^CSREPLY" {
-##		log "csLib wakeup"
+		log "csLib wakeup"
 		eval [ ::cs::mboxEvent ]
 		answer $channel "OK"
 	    }
