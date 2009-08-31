@@ -66,10 +66,16 @@ namespace eval cs {
     # Delete csLib mbox -------------------------------------------------
 
     proc exit { } {
+	variable mbox
 	variable csLibInit
 
 	if { $csLibInit == 0 } {
 	    error "no mailbox to delete"
+	}
+
+	# If there are pending requests, don't remove the mbox!
+	if { [llength [array names mbox]] } {
+	    error "pending requests [array names mbox]"
 	}
 
 	::cs::mboxEnd
