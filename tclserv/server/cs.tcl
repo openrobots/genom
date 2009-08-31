@@ -281,6 +281,16 @@ namespace eval cs {
 	return "[rqstSend $client ${module}::Abort $actnum] ${module}::Abort"
     }
 
+    # --- pending ----------------------------------------------------------
+
+    # Return the list of pending request ids
+    #
+    proc pending { } {
+	variable mbox
+	return [array names mbox]
+    }
+
+
     # --- clean ------------------------------------------------------------
 
     # Cleanup state from disconnected client. All pending requests from that

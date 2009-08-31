@@ -1,6 +1,6 @@
 
 #
-# Copyright (c) 1999-2003 LAAS/CNRS                   --  Thu Apr 15 1999
+# Copyright (c) 1999-2003,2009 LAAS/CNRS                   --  Thu Apr 15 1999
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -131,6 +131,11 @@ namespace eval modules {
 
     proc disconnect { } {
 	variable loaded
+
+	set p [cs::pending]
+	if {[llength $p]} {
+	    error "pending requests $p"
+	}
 
 	foreach module [ array names loaded ] {
 
