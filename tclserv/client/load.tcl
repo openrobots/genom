@@ -1,6 +1,6 @@
 
 #
-# Copyright (c) 1999-2003 LAAS/CNRS
+# Copyright (c) 1999-2003,2009 LAAS/CNRS
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -94,10 +94,17 @@ proc lm { name args } {
     set ::cs::modules($alias) $name
     set ::cs::servers($alias) $server
 
-    # remove and recreate mbox on that server
+    # recreate mbox on that server, trying to reuse the existing one to
+    # minimize problems.
     if { $autombox } {
-	catch "::cs::mboxEnd $server"
-	::cs::mboxInit $server
+	if {[catch {::cs::mboxInit $server} m]} {
+	    if {[catch {::cs::mboxEnd $server}]} {
+		error "cannot create mailbox on $server: $m"
+	    }
+	    if {[catch {::cs::mboxInit $server} m]} {
+		error "cannot create mailbox on $server: $m"
+	    }
+	}
     }
 
     return "$alias loaded on $server from $localpath"
