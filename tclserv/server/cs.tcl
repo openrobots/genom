@@ -1,6 +1,6 @@
 
 #
-# Copyright (c) 1999-2007 LAAS/CNRS                   --  Fri Apr  2 1999
+# Copyright (c) 1999-2007,2009 LAAS/CNRS                   --  Fri Apr  2 1999
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -154,7 +154,15 @@ namespace eval cs {
 		    } elseif { "[lindex $r 0]" == "TERM" } {
 			catch { unset activity($id) }
 		    }
-		    ::server::replyTo $rqstClnt $msg
+
+		    if { [string compare $rqstClnt {-}] } {
+			::server::replyTo $rqstClnt $msg
+		    } else {
+			catch {
+			    freeTclRqstId $id
+			    server::log "freed $id on behalf of defunct client"
+			}
+		    }
 		}
 	    }
 	}
@@ -273,22 +281,36 @@ namespace eval cs {
 	return "[rqstSend $client ${module}::Abort $actnum] ${module}::Abort"
     }
 
-    # Clean every pending request that belong to a client ------------
+    # --- clean ------------------------------------------------------------
 
+    # Cleanup state from disconnected client. All pending requests from that
+    # client are left in the state, since the request id should not be
+    # reused. If replies for those requests arrive later they should not be
+    # mistakenly assigned to a wrong client/reused request id. Also reassign
+    # an empty client channel to those requests so that we know they are
+    # leaked for now and can be freed whenever a final reply arrives later.
+    # This also prevent us from sending a wrong reply to a reused channel
+    # (since we can't control the channel names).
+    #
     proc clean { client } {
 	variable mbox
-	set freed ""
+	set leaked [list]
 
 	foreach id [array names mbox] {
 	    set rqstInfo [ set mbox($id) ]
 
 	    if {[lindex $rqstInfo 1] == $client} {
-		unset mbox($id)
-		lappend freed $id
+		if { [lindex $rqstInfo 3 ] != "TERM" &&
+		     [lindex $rqstInfo 3 ] != "ERROR" } {
+		    lset mbox($id) 1 {-}
+		} else {
+		    freeTclRqstId $id
+		}
+		lappend leaked $id
 	    }
 	}
 
-	return $freed
+	return $leaked
     }
 }
 

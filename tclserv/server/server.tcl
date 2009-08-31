@@ -249,10 +249,10 @@ namespace eval server {
     proc endClient { name } {
 	variable channels
 
-	set freed [cs::clean $name]
+	set leaked [cs::clean $name]
 	close $name
-	if {[llength $freed]} {
-	    log "closed $name, freed requests $freed"
+	if {[llength $leaked]} {
+	    log "closed $name, leaked requests $leaked"
 	} else {
 	    log "closed $name"
 	}
