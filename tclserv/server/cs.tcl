@@ -80,9 +80,6 @@ namespace eval cs {
 
     proc rqstSend { client cmd args } {
 	variable mbox
-	
-	set s [::cs::mboxEvent]
-	::cs::mboxEvent ""
 
 	set r [ catch { uplevel \#0 ${cmd}Send [join $args] } m ]
 	if { $r != 0 } { return "ERROR $r $m" }
@@ -92,10 +89,6 @@ namespace eval cs {
 
 	set id [::cs::newTclRqstId]
 	set mbox($id) "$cmd $client [lindex $m 1] SENT"
-
-	::cs::mboxEvent $s
-	# we might have missed events
-	eval $s
 
 	return "OK $id"
     }
@@ -160,6 +153,7 @@ namespace eval cs {
 		    } else {
 			catch {
 			    freeTclRqstId $id
+			    server::log "$msg"
 			    server::log "freed $id on behalf of defunct client"
 			}
 		    }
