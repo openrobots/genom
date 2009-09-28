@@ -841,7 +841,7 @@ resolveTypes(void)
 
 	      /* already done */
 	      if (trouve_poster_input(ltt->type->name))
-		break;
+		continue;
 
 	      /* Look for this data type */
 	      t_tmp = ltt->type;
@@ -1026,7 +1026,7 @@ resolveTypes(void)
 
 	      /* already done */
 	      if (trouve_poster_input(ltt->type->name))
-		break;
+		continue;
 
 	      /* Look for this data type */
 	      t_tmp = ltt->type;
