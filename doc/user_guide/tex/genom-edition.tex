@@ -354,7 +354,7 @@ request <<request-name>> {
      input_info:             <default-val>::<"name">, ...;
      output:                 <name>::<sdi-ref>;
      codel_control:          <codel-name>;
-     error_reports:          <report-name>, ...;
+     fail_reports:           <report-name>, ... ;
      interrupt_activity:     <exec-rqst-name>, ...;
 };
 \end{verbatim}\end{cartouche}\end{center}
@@ -371,11 +371,11 @@ of the fIDS (e.g. {\tt input: position::state.position}).
 comment for {\em  each}   member  of  the  {\tt  input}  structure.  This
 information is used for interactive  requests invocation.
 
-\item {\tt codel\_request\_control} is a codel ({\tt C} function) which is
+\item {\tt codel\_control} is a codel ({\tt C} function) which is
 executed by the control task and which controls the validity of the input
 parameter.
 
-\item {\tt error\_reports} is a list of possible reports returned by the
+\item {\tt fail\_reports} is a list of possible reports returned by the
 control codel (the special report "OK" is always implicitly defined).
 
 \item {\tt interrupt\_activity} is a list of requests of {\em this module}
@@ -406,7 +406,7 @@ request <<request-name>> {
      codel_end:             <codel-name>;
      codel_inter:           <codel-name>;
      codel_fail:            <codel-name>;
-     error_reports:         <report-name>, ... ;
+     fail_reports:          <report-name>, ... ;
      interrupt_activity:    <exec-rqst-name>, ... ;
 };
 \end{verbatim}\end{cartouche}\end{center}
@@ -419,7 +419,7 @@ codels execution.
 execution codels of this request will read (see \S~\vref{sec|posters}).
 
 \item {\tt codel\_activity\_start}, {\tt codel\_activity\_main}, {\tt
-codel\_activity\_end}, {\tt codel\_activity\_inter} and \\ {\tt
+codel\_activity\_end},\\ {\tt codel\_activity\_inter} and  {\tt
 codel\_activity\_fail} are the codels of this service.  All fields are
 optional, but at least one of {\tt codel\_activity\_start}, {\tt
 codel\_activity\_main} or {\tt codel\_activity\_end} must be defined.
