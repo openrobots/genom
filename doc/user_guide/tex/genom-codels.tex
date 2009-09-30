@@ -125,7 +125,7 @@ demoSetSpeedCntrl(DEMO_SPEED *speed, int *report)
 {
    /* Refuse *speed if the value is erroneous */
    if (*speed != DEMO_SLOW && *speed != DEMO_FAST) {
-        *report = S_demo_INVALID_PARAMETER;
+        *report = S_demo_INVALID_SPEED;
         return ERROR;
    }
    /* Parameter is valid: it will be entered into the fIDS */
