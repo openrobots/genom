@@ -1,41 +1,23 @@
-\documentclass[a4paper,landscape]{foils}
+\documentclass{beamer}
 
-\usepackage[pdftex,
-        pdfauthor={Sara Fleury},
-        pdfsubject={GenoM},
-        pdftitle={GenoM},
-        pdfkeywords={GenoM}]{hyperref}
-\usepackage{mhfoils}
+\usepackage{bera}
+\usepackage{hyperref}
 \usepackage{genom}
+\usepackage{listings}
 \usepackage{tabularx}
 \usepackage{amssymb}
 
-\setlength\topmargin{-2cm} 
-\setlength\textheight{17cm} 
+\usetheme{Rochester}
 
 \graphicspath{{./figures/}}
 
 \newcommand{\figw}[2]{
-        \centerline{
-	         \includegraphics[width=#2]{#1}
-%%		\psfig{figure=#1,width=#2,clip=}
-	}
-}
+        \centerline{ \includegraphics[width=#2]{#1}}}
 \newcommand{\figc}[3]{
         \centerline{
-\parbox{#2}{
-	         \includegraphics[width=#2]{#1}\\
-%%		\psfig{figure=#1,width=#2,clip=}
+          \parbox{#2}{\includegraphics[width=#2]{#1}\\
         \centerline{
-		{\em\footnotesize #3}
-		}
-           }
-	}
-}
-
-\MyLogo{{\color{darkyellow}http://softs.laas.fr/openrobots}}
-%%\figw{./figures/openlaas.png}{1cm}}
-
+	  {\em\footnotesize #3}}}}}
 
 \newcommand{\bi}{\begin{itemize}\itemsep 0mm}
 \newcommand{\ei}{\end{itemize}}
@@ -44,96 +26,100 @@
 \newcommand{\bd}{\begin{description}\itemsep 0mm}
 \newcommand{\ed}{\end{description}}
 
+\lstset{frame=single}
 %-------------------------------------------------
 \title{The Generator of Modules \\ \GenoM{}}
  
-\author{Sara Fleury}
+\author{Sara Fleury - Matthieu Herrb}
  
-\date{July 2006\\[4cm]
+\date{October 2009\\
 \figw{./figures/openlaas.png}{4cm}}
+\institute{CNRS-LAAS}
+\date{October 2009}
 
+
+\AtBeginSection[]{
+\begin{frame}<beamer>
+\frametitle{Agenda}
+\tableofcontents[currentsection]
+\end{frame}
+}
 %-------------------------------------------------
 
 
 \begin{document}
 
-\maketitle
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Agenda}
+  \tableofcontents
+\end{frame}
 
 
 %----------------------------------------------------------------------
-\begin{tran}{Plan}
-
-\begin{enumerate}
-\itemsep 1mm
-\item \bf General presentation %\rm  (p.2)
-\item \bf How to write a module %\rm   (p.10)
-\item \bf How to generate a module %\rm  (p.22)
-\item \bf How to run a module %\rm  (p.32)
-\item \bf How to integrate algorithms (codels) %\rm  (p.40)
-\item \bf Codels and activities %\rm  (p.44)
-\item \bf How to use a module %\rm  (p.55)
-\item \bf Conclusions %\rm  (p.67)
-\end{enumerate}
-
-\end{tran}
-
+\section{General presentation}
+\label{gene}
 %----------------------------------------------------------------------
-\begin{tran}{\GenoM{} : Generator of Modules\label{gene}}
+\begin{frame}
+\frametitle{\GenoM{} : Generator of Modules}
 
 \begin{center}
-\begin{tabularx}{\linewidth}{p{6cm}Xp{6cm}}
- \figc{adam-detour-web-small.jpg}{3.5cm}{adam} &
- \figc{junior-detour-web-small.jpg}{2.5cm}{junior} &
- \figc{lama-detour-web-small.jpg}{3.5cm}{lama} \\
+\begin{tabularx}{\linewidth}{p{3cm}Xp{3cm}}
+ \figc{adam-detour-web-small.jpg}{1.75cm}{adam} &
+ \figc{junior-detour-web-small.jpg}{1.25cm}{junior} &
+ \figc{lama-detour-web-small.jpg}{1.75cm}{lama} \\
 
- \figc{h2-detour-web-small.jpg}{4cm}{h2} &
- \figc{h2bis-detour-web-small.jpg}{3.2cm}{h2bis} &
- \figc{lapa-detour-web-small.jpg}{3cm}{lapa} \\
+ \figc{h2-detour-web-small.jpg}{2cm}{h2} &
+ \figc{h2bis-detour-web-small.jpg}{1.6cm}{h2bis} &
+ \figc{lapa-detour-web-small.jpg}{1.5cm}{lapa} \\
 
- \figc{karma-detour-web-small.jpg}{6cm}{karma} &
- \figc{diligent-detour-web-small.jpg}{1.7cm}{diligent} &
- \figc{scouts-detour-web-small.jpg}{2.1cm}{scout} \\
+ \figc{karma-detour-web-small.jpg}{3cm}{karma} &
+ \figc{diligent-detour-web-small.jpg}{0.8cm}{diligent} &
+ \figc{scouts-detour-web-small.jpg}{1.2cm}{scout} \\
 \end{tabularx}
 \end{center}
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{\GenoM{} : Generator of Modules\label{gene}}
+\begin{frame}
+\frametitle{\GenoM{} : Generator of Modules}
 
 \begin{center}
-\begin{tabularx}{\linewidth}{p{6cm}Xp{6cm}}
- \figc{dala-detour-web-small.jpg}{3.1cm}{dala} &
- \figc{rackham-detour-web-small.jpg}{1.3cm}{rackham} &
- \figc{jidowanki-detour-web-small.jpg}{3.2cm}{jido} \\
-{\centerline{\huge soon ?}}  & &\\
-\figc{lhassa-detour-web-small.jpg}{4cm}{lhassa}
-& \figc{hrp2.pdf}{2cm}{hrp2} & \figc{PatrolDX.jpg}{2cm}{Pioneer / Player} 
+\begin{tabularx}{\linewidth}{p{3cm}Xp{3cm}}
+ \figc{dala-detour-web-small.jpg}{1.6cm}{dala} &
+ \figc{rackham-detour-web-small.jpg}{0.7cm}{rackham} &
+ \figc{jidowanki-detour-web-small.jpg}{1.6cm}{jido} \\
+\figc{lhassa-detour-web-small.jpg}{2cm}{lhassa}
+& \figc{hrp2.pdf}{1cm}{hrp2} & \figc{PatrolDX.jpg}{1cm}{Pioneer / Player} 
 \end{tabularx}
 \end{center}
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{\GenoM{} : Generator of Modules\label{gene}}
+\begin{frame}
+\frametitle{\GenoM{} : Generator of Modules}
 
 Tool to integrate processing functions into independant servers or \textbf{modules}
 
-\vspace{0.3cm}
+\figw{./figures/module-simple}{5.5cm}
 
-\figw{./figures/module-simple}{11cm}
+\textbf{Activity:} function in processing
 
-\textbf{Activity :} function in processing
+\textbf{Reports:} ``incorrect-parameters'', ``solution-not-found'', 
+``not-enough-memory'', ``unforeseen-case''
 
-\textbf{Reports :} «incorrect-parameters», «solution-not-found», 
-«not-enough-memory», «unforeseen-case»
-
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Why encapsulate functions ?}
-
+\begin{frame}
+\frametitle{Why encapsulate functions ?}
 
 \centerline{ \textbf{Software integration on embedded systems} }
 
+\vspace{1em}
  \textbf{Requirements :} 
 
 	\begin{itemize}
@@ -142,7 +128,7 @@ Tool to integrate processing functions into independant servers or \textbf{modul
 		\begin{itemize}
 
 		\item processing start/stop
-		\item dynamic parameterization
+		\item dynamic parametrization
 		\item error recovery
 		\end{itemize}
 
@@ -154,10 +140,11 @@ Tool to integrate processing functions into independant servers or \textbf{modul
 	\end{itemize}
 
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Why encapsulate functions (cont.)}
+\begin{frame}
+\frametitle{Why encapsulate functions (cont.)}
 
  \textbf{Requirements (cont.) } 
 
@@ -175,31 +162,31 @@ Tool to integrate processing functions into independant servers or \textbf{modul
 
 	\end{itemize}
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Why encapsulate functions (cont.)}
+\begin{frame}
+\frametitle{Why encapsulate functions (cont.)}
  \textbf{Pros:}
 \begin{description}
 \item $\rightarrow$ makes integration simpler (semi-automatic)
 
-\item $\rightarrow$ makes maintainance simpler (\textbf{sustainability}
+\item $\rightarrow$ makes maintenance simpler (\textbf{sustainability}
 and \textbf{perenity})
 \end{description}
 
 \textbf{Cons:}
 \begin{description}
-\item $\rightarrow$ Need to learn GenoM !
+\item $\rightarrow$ Need to learn Genom !
 \end{description}
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
+\begin{frame}
+\frametitle{Module creation principle}
 
-\begin{tran}{Module creation principle}
-
-\bd 
-\item [4 steps:]~
+\textbf{4 steps:}
       \begin{enumerate}
       \item Describe the module (\texttt{.gen} file):
 	    \begin{itemize}
@@ -211,18 +198,19 @@ and \textbf{perenity})
       \item Compile everything
       \end{enumerate}
 
-\item [One gets: ]~
+\vspace{1em}
+\textbf{Result:}
       \begin{itemize}
       \item one executable program: the module itself,
       \item libraries to communicate with the module,
       \item an interactive test program.
       \end{itemize}
-\ed
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{What can a module do ?}
+\begin{frame}
+\frametitle{What can a module do ?}
 
 \begin{itemize}
 \item ``simple'' computations
@@ -232,119 +220,115 @@ and \textbf{perenity})
 \item use data produced by other modules
 \end{itemize}
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Sample modules : Lama  \includegraphics[width=1.8cm]{lama-detour-web-small.jpg}
+\begin{frame}
+\frametitle{Sample modules : Lama \hfill\includegraphics[width=0.9cm]{lama-detour-web-small.jpg}
 }
 
-\vspace{0.5cm}
 
-\figw{./figures/lama-components-112002}{21cm}
+\figw{./figures/lama-components-112002}{\textwidth}
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Sample modules : Karma  \includegraphics[width=3.5cm]{karma-detour-web-small.jpg}
+\begin{frame}
+\frametitle{Sample modules : Karma  \hfill\includegraphics[width=1.7cm]{karma-detour-web-small.jpg}
 }
 
-\vspace{0.5cm}
-
-\figw{karma-components.pdf}{21cm} 
-\end{tran}
+\figw{karma-components.pdf}{\textwidth} 
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Sample modules : Rackham  \includegraphics[width=0.5cm]{rackham-detour-web-small.jpg}
+\begin{frame}
+\frametitle{Sample modules : Rackham  \hfill\includegraphics[width=0.25cm]{rackham-detour-web-small.jpg}
 }
 
-%\vspace{1cm}
 
-\figw{rackham-components.png}{16cm} 
+\figw{rackham-components.png}{8.5cm} 
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{How to communicate with a module?}
+\begin{frame}
+\frametitle{How to communicate with a module?}
 
-\textbf{Requests} (\texttt{msgLib}) \\
+\textbf{Requests} (\texttt{msgLib})
 
-\figw{./figures/moduleRqst2}{17cm}
+\vspace{1em}
+\figw{./figures/moduleRqst2}{11cm}
 
 \begin{center} \textbf{$\rightarrow$ control flow} \end{center}
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{How to communicate with a module?}
+\begin{frame}
+\frametitle{How to communicate with a module?}
 
 \textbf{Posters} (\texttt{posterLib})
 
-
-\figw{./figures/modulePoster}{17cm}
+\vspace{1em}
+\figw{./figures/modulePoster}{\textwidth}
 
 \begin{center}  \textbf{$\rightarrow$ data flow}  \end{center}
 
 \texttt{pocolibs} (\url{http://softs.laas.fr/openrobots})
 
-\end{tran}
+\end{frame}
 
 
 %----------------------------------------------------------------------
-\begin{tran}{Behavior of a module: control request}
+\begin{frame}
+\frametitle{Behavior of a module: control request}
 
 %%
 %% METTRE LES FLECHES EN PARLANT
 %%
-\vspace{1cm}
 
-\figw{./figures/module-fonctionmt}{10cm}
+\figw{./figures/module-fonctionmt}{6cm}
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Behavior of a module: execution request}
+\begin{frame}
+\frametitle{Behavior of a module: execution request}
 
 %%
 %% METTRE LES FLECHES EN PARLANT
 %%
-\vspace{1cm}
 
-\figw{./figures/module-fonctionmt2}{10cm}
+\figw{./figures/module-fonctionmt2}{6cm}
 
-\end{tran}
+\end{frame}
 
 
 %----------------------------------------------------------------------
-\begin{tran}{Development cycle of a module}
+\begin{frame}
+\frametitle{Development cycle of a module}
 
-\vspace{1cm}
 
-\figw{figures/cycle}{20cm}
+\figw{figures/cycle}{\textwidth}
 
-7 steps (incling 4 ``transparent''):
-\vspace{-0.5cm}
+7 steps (including 4 ``transparent''):
+{\small
 \begin{center}
 \begin{tabularx}{\linewidth}{ll|X}
 \bf 1. & \textbf{describe the module:} edit the \texttt{.gen} file, & \\
- 2. \& 3. & generate + build the module (\texttt{make}), & iterate as
-many times \\ 
-\bf 4. & \textbf{write the algorithms} (codels), &  as needed. \\
- 5. \& 6. & compile codels +  & \\
+ 2. \& 3. & generate + build the module (\texttt{make}), & iterate \\ 
+\bf 4. & \textbf{write the algorithms} (codels), &  while \\
+ 5. \& 6. & compile codels +  & needed \\
 	& link edition with the module (\texttt{make}), & \\
 \bf 7. & \textbf{test the module.} & 
 \end{tabularx}
-\end{center}
+\end{center}}
 
 
-\end{tran}
-
-
+\end{frame}
 %----------------------------------------------------------------------
-%----------------------------------------------------------------------
-\begin{tran}{\LARGE 2nd part : \\[7mm]Editing a module}\label{edition}
+\begin{frame}
+\frametitle{Summary of 1st part}
 
-\begin{center}
-{\em Summary of 1st part}
-\end{center}
 
 \begin{tabbing}
 \textbf{Module : } \=
@@ -359,44 +343,50 @@ many times \\
 
 \textbf{Activity:}  executing process of a request
 
-\end{tran}
+\end{frame}
+%----------------------------------------------------------------------
+\section{How to write a module}
+\label{edition}
 %----------------------------------------------------------------------
 
-\begin{tran}{Directories setup}
+\begin{frame}[fragile]
+\frametitle{Directories setup}
+
+General configuration:
 
 \begin{itemize}
-\item General configuration :
-
-Openrobots tools installed in \verb|$prefix| (\texttt{/usr/local/openrobots}) 
+\item Openrobots tools installed in \verb|$prefix| (\texttt{/usr/local/openrobots}) 
 %$
 
-Environment variables:
+\item Environment variables:
 \begin{itemize}
 \item PATH \verb|$prefix/bin| %$
 \item PKG\_CONFIG\_PATH \verb|$prefix/lib/pkgconfig| %$
 \end{itemize}
-
-\item  module directory for \texttt{demo}  :
-
-\begin{tabular}{|l|ll|}
-\hline
-\texttt{demo/}  & description of the module  & \texttt{demo.gen} \\
-		& description of structures  & \texttt{demoStruct.h} \\
-\hline
-\texttt{demo/server/}  & the server (generated by \GenoM{}) &\\
-\hline
-\texttt{demo/autoconf/} & the GNU autotools scripts &\\
-\hline
-\texttt{demo/codels/}  &  the algorithms (codels) & \tt demoXxxCodels.c\\
-\hline
-\end{tabular}
-
 \end{itemize}
 
-\end{tran}
+\vspace{1em}
+Directory layout for \texttt{demo}:\\
+{\small
+\begin{tabular}{|l|ll|}
+\hline
+\texttt{demo/}  & module description  & \texttt{demo.gen} \\
+		& data structures   & \texttt{demoStruct.h} \\
+\hline
+\texttt{demo/server/}  & server & (generated by \GenoM{}) \\
+\hline
+\texttt{demo/autoconf/} & autotools scripts &\\
+\hline
+\texttt{demo/codels/}  &  algorithms (codels) & \tt demoXxxCodels.c\\
+\hline
+\end{tabular}}
+
+
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Components of a module description}
+\begin{frame}
+\frametitle{Components of a module description}
 
 The \texttt{demo.gen} file describes:
 
@@ -408,28 +398,36 @@ The \texttt{demo.gen} file describes:
 \item execution tasks
 \end{itemize}
 
-\end{tran}
+\end{frame}
 
 
 %----------------------------------------------------------------------
-\begin{tran}{Edition of the module \texttt{demo.gen} : emacs \texttt{genom} mode}
+\begin{frame}[containsverbatim]
+\frametitle{Edition of the module: emacs \texttt{genom} mode}
 
-Configuration file \texttt{.emacs}
+Configuration file \texttt{.emacs.d/init.el}
 \vspace*{.5cm}
 {\footnotesize
-\begin{cartouche}
-\begin{verbatim}
-(setq load-path (cons "/usr/local/openrobots/genom/emacs"  load-path))
-(setq auto-mode-alist (cons '("\\.gen$" . genom-mode) auto-mode-alist))
+\begin{lstlisting}
+(setq load-path 
+  (cons "/usr/local/openrobots/genom/emacs"  load-path))
+(setq auto-mode-alist 
+  (cons '("\\.gen$" . genom-mode) auto-mode-alist))
 (autoload 'genom-mode "genom-mode" "Genom-mode" t)
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting} 
 }
 %$
 
+\end{frame}
+
+%----------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Emacs Genom mode}
+
 Commands (or menu) :
 
-{\small
+\vspace{1em}
 \begin{tabularx}{\linewidth}{|l|X|}
 \hline
 \tt C-c C-m & \textbf{m}odule creation ({\em 1st command to call})\\
@@ -444,17 +442,19 @@ Commands (or menu) :
 \hline
 \tt C-c C-h \ldots & \textbf{h}elp on line\\
 \hline
-\end{tabularx}}
+\end{tabularx}
 
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{A first module example}
+\begin{frame}
+\frametitle{A first module example}
 
 How to control the motion of a mobile moving along one axis ?
 
-\figw{figures/mobile}{12cm}
+\vspace{1em}
+\figw{figures/mobile}{6cm}
 
 
 \begin{itemize}
@@ -471,17 +471,17 @@ $\Rightarrow$ {\bf execution request}: \texttt{Goto}
 		\item \texttt{GetSpeed} with output : current speed reference
 		\end{itemize}
 \end{itemize}
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Edition of \texttt{demo.gen}: module declaration}
+\begin{frame}[containsverbatim]
+\frametitle{Edition of \texttt{demo.gen}: module declaration}
 
 %\vspace*{-0.3cm}
 \textbf{\texttt{C-c C-m demo}}
 %\vspace*{-0.2cm}
 {\tiny
-\begin{cartouche}
-\begin{verbatim}
+\begin{lstlisting}
 /*-------------------------------------------------------
  *               --  Module  DEMO  --
  *
@@ -507,19 +507,16 @@ module demo {
 typedef struct DEMOCAL_STR {
 
 } DEMOCAL_STR;
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Edition of \texttt{demo.gen} : creation of a control request}
-\vspace*{1cm}
+\begin{frame}[containsverbatim]
+\frametitle{\texttt{demo.gen} : creation of a control request}
 
 {\footnotesize
-\begin{cartouche}
-\begin{verbatim}
-
+\begin{lstlisting}
 /*--------------------------------------------------
  *             Requests 
  *--------------------------------------------------*/
@@ -534,18 +531,16 @@ request SetSpeed {
     fail_msg:             <msg-name> , ...;
     incompatible_with:    <exec-rqst-name> , ...;
 };
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Edition of \texttt{demo.gen} : creation of an execution request}
-\vspace*{1cm}
+\begin{frame}[containsverbatim]
+\frametitle{\texttt{demo.gen} : creation of an execution request}
 
-{\small
-\begin{cartouche}
-\begin{verbatim}
+{\footnotesize
+\begin{lstlisting}
 request Goto {  
     doc:                  "<some doc>";
     type:                 exec;
@@ -562,33 +557,33 @@ request Goto {
     fail_msg:             <msg-name> , ...; 
     incompatible_with:    Goto, <exec-rqst-name>, ...; 
 };
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Edition of \texttt{demo.gen}: creation of a poster}
+\begin{frame}[containsverbatim]
+\frametitle{\texttt{demo.gen}: creation of a poster}
 \vspace*{1cm}
 
-\begin{cartouche}
-\begin{verbatim}
+{\footnotesize
+\begin{lstlisting}
 poster Status {
     update:              auto;
     data:                <<name>>::<<sdi-ref>> , ...;
     exec_task:           <<exec-task-name>>; 
 };
-\end{verbatim}
-\end{cartouche}
-\end{tran}
+\end{lstlisting}
+}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Edition of \texttt{demo.gen} : creation of an execution task}
+\begin{frame}[containsverbatim]
+\frametitle{\texttt{demo.gen} : creation of an execution task}
 \vspace*{1cm}
 
 {\small
-\begin{cartouche}
-\begin{verbatim}
+\begin{lstlisting}
 exec_task MotionTask {
     period:              <number>;
     delay:               <number>;
@@ -599,18 +594,17 @@ exec_task MotionTask {
     c_end_func:          demoMotionTaskEnd;
     fail_msg:            <msg-name> , ...;
 };
-\end{verbatim}
-\end{cartouche}}
+\end{lstlisting}}
 
-\end{tran}
+\end{frame}
 
 
 %----------------------------------------------------------------------
-\begin{tran}{Description of the module \texttt{demo.gen}}
+\begin{frame}[containsverbatim]
+\frametitle{Description of the module \texttt{demo.gen}}
 
-{\footnotesize
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 /* ---- Module declaration ---- */
 module demo {
      number:                9000;
@@ -632,51 +626,44 @@ typedef struct DEMO_STR {
      double         posRef;        /* Position reference */
      double         monitor;       /* Positions monitors */
 }DEMO_STR;
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Description of the module \texttt{demo.gen} (cont.)}
+\begin{frame}[containsverbatim]
+\frametitle{Description of the module \texttt{demo.gen} (cont.)}
 
-%\vspace{1cm}
 
-{\small
-%\vspace{-1cm}
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 /* ---- declaration of the services: the requests ---- */
 
 /* Control requests */
 request SetSpeed {
-    doc:                    "To change speed";
-    type:                   control;
-    input:                  speed::speedRef;
-    input_info:             DEMO_DEFAULT_SPEED::"DEMO_SLOW or DEMO_FAST";
-    c_control_func:         controlSpeed;
-    fail_msg:               INVALID_SPEED;
+    doc:                 "To change speed";
+    type:                control;
+    input:               speed::speedRef;
+    input_info:          DEMO_DEFAULT_SPEED::"DEMO_SLOW or DEMO_FAST";
+    c_control_func:      controlSpeed;
+    fail_msg:            INVALID_SPEED;
 };
 
 request GetSpeed {
-    doc:                    "To get current speed value";
-    type:                   control;
-    output:                 speed::speedRef;
+    doc:                 "To get current speed value";
+    type:                control;
+    output:              speed::speedRef;
 };
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Description of the module \texttt{demo.gen} (cont. 2)}
+\begin{frame}[containsverbatim]
+\frametitle{Description of the module \texttt{demo.gen} (cont. 2)}
 
-%\vspace{1cm}
-
-{\small
-%\vspace{-1cm}
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 /* Execution requests */
 request Goto {
     doc:                    "Goto the given position";
@@ -692,17 +679,16 @@ request Goto {
     incompatible_with:      Goto;
     exec_task:              MotionTask;
 };
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
 
-\end{tran}
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{Description of the module \texttt{demo}: structures and constants}
+\begin{frame}[containsverbatim]
+\frametitle{\texttt{demo}: structures and constants}
 
-{\footnotesize
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 #ifndef DEMO_STRUCT_H
 #define DEMO_STRUCT_H
 
@@ -714,50 +700,38 @@ typedef struct DEMO_STATE_STR {
 typedef enum DEMO_SPEED {
   DEMO_SLOW, 
   DEMO_FAST
-}DEMO_SPEED;
-\end{verbatim}
-\end{cartouche}
+} DEMO_SPEED;
+#endif
+\end{lstlisting}
 }
-\vspace{0.3cm}
+\vspace{1em}
 
-{\footnotesize
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 #ifndef DEMO_CONST_H
 #define DEMO_CONST_H
-
 #define DEMO_MACHINE_LENGTH    20.0       /* m */
 #define DEMO_DEFAULT_SPEED     DEMO_FAST  /* DEMO_SLOW */
-
 #endif
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-%----------------------------------------------------------------------
-\begin{tran}{\Large 3rd part: \\[7mm]Generation and compilation}
+\begin{frame}
+\frametitle{Summary of 2nd part}
 
-\begin{center}
-{\em Summary of 2nd part}
-\end{center}
 
 3 files to describe a module:
-\vspace*{-.8cm}
 	\begin{itemize}
-	\itemsep -.5cm
 	\item description file \texttt{demo.gen}
 	\item structures \texttt{demoStruct.h}
 	\item constants \texttt{demoConst.h}
 	\end{itemize}
-\vspace*{-.6cm}
 
 5 parts in the  \textbf{.gen} file:
-\vspace*{-.8cm}
 	\begin{itemize}
-	\itemsep -.5cm
 	\item module (name + identifier)
 	\item database (data structures)
 	\item requests
@@ -765,17 +739,19 @@ typedef enum DEMO_SPEED {
 	\item execution tasks
 	\end{itemize}
 
-\end{tran}
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{First generation of the module : \texttt{genom demo.gen}}
+\section{How to generate a module}
+%----------------------------------------------------------------------
+\begin{frame}[containsverbatim]
+\frametitle{First generation of the module : \texttt{genom demo.gen}}
 
 %\vspace{0.1cm}
 
 %Commande : \texttt{genom -i demo.gen}
 
 {\tiny
-\begin{cartouche}
-\begin{verbatim}
+\begin{lstlisting}
 blues% genom demo.gen
 genom demo.gen: info: array MonitorInput added in SDI for request Monitor
 genom demo.gen: info: array MonitorOutput added in SDI for request Monitor
@@ -803,35 +779,33 @@ If you already have a build of this module, do not forget to
 reconfigure (for instance by running ./config.status --recheck)
 
 Done.
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
-\end{tran}
-
-\begin{tran}{GenoM outputs}
+\end{frame}
+%----------------------------------------------------------------------
+\begin{frame}[containsverbatim]
+\frametitle{GenoM outputs}
 
 Production of several files and directories :
 %\vspace{-1cm}
 \begin{itemize}
-\itemsep -0.2cm
 \item \texttt{Makefile.in}, \texttt{configure}...
 \item \texttt{server/}, \texttt{autoconf} and \texttt{codels/}
 \end{itemize}
 
 {\footnotesize
-\begin{cartouche}
-\begin{verbatim}
+\begin{lstlisting}
 autogen*            configure.ac.user   local.mk.in 
 Makefile.in         demo.gen            server/
 acinclude.user.m4   codels/             demoConst.h         
 autoconf/           configure*          demoStruct.h        
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
 
-\end{tran}
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{GenoM outputs: the server}
+\begin{frame}
+\frametitle{GenoM outputs: the server}
 
 
 In \texttt{demo/server/} files used by genom and clients of the module, related to:
@@ -845,9 +819,10 @@ In \texttt{demo/server/} files used by genom and clients of the module, related 
 \item Test program :
 	\texttt{demoTest.c}
 \end{itemize}
-\end{tran}
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{GenoM outputs: codels}
+\begin{frame}
+\frametitle{GenoM outputs: codels}
 
 In \texttt{demo/codels/}
 files that will contain the algorithms.
@@ -863,26 +838,24 @@ files that will contain the algorithms.
 \texttt{Makefile.in} \texttt{autoconf/} \texttt{configure}
 \end{itemize}
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Configurating the module}
+\begin{frame}[containsverbatim]
+\frametitle{Configuring the module}
 
 Create a build directory:
 
-{\tiny
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 blues% mkdir build
 blues% cd build
-\end{verbatim}
-\end{cartouche}}
+\end{lstlisting}}
 
 Call configure, telling where to install the module:
 
-{\tiny
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 blues% ../configure --prefix=/usr/local/openrobots
 checking build system type... i686-pc-linux-gnu
 checking host system type... i686-pc-linux-gnu
@@ -893,11 +866,11 @@ config.status: creating codels/Makefile
 config.status: creating server/Makefile
 config.status: creating demo.pc
 config.status: creating local.mk
-\end{verbatim}
-\end{cartouche}}
-\end{tran}
+\end{lstlisting}}
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{Building the module}
+\begin{frame}[containsverbatim]
+\frametitle{Building the module}
 
 Call: \texttt{make}
 
@@ -907,143 +880,169 @@ Call: \texttt{make}
 \end{itemize}
 
 {\tiny
-\begin{cartouche}
-\begin{verbatim}
+\begin{lstlisting}
 blues% make
 make all-posix
 make[1]: Entering directory `/usr/local/openrobots/modules/demo/build'
 make[2]: Entering directory `/usr/local/openrobots/modules/demo/build/server'
 mkdir -p posix-build
-/usr/local/openrobots/i386-linux/bin/mkdep -c"gcc" -oposix-build/dependencies -dposix-build -t.lo -DUNIX    -I. -I../.. -I../../server -I/usr/local/openrobots/i386-linux/include   ../../server/demoCntrlTask.c ../../server/demoModuleInit
+/usr/local/openrobots/i386-linux/bin/mkdep -c"gcc" -oposix-build/dependencies -dposix-build 
+-t.lo -DUNIX    -I. -I../.. -I../../server -I/usr/local/openrobots/i386-linux/include   
+../../server/demoCntrlTask.c ../../server/demoModuleInit
 ...
-s/i386-linux/lib
 creating posix-build/demo
 make[2]: Leaving directory `/usr/local/openrobots/modules/demo/build/codels'
 make[1]: Leaving directory `/usr/local/openrobots/modules/demo/build'
-\end{verbatim}
-\end{cartouche}}
 
-\end{tran}
+\end{lstlisting}}
+
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Installation}
+\begin{frame}[containsverbatim]
+\frametitle{Installation}
 The module needs to be installed to be useful.
 
+\vspace{1em}
 {\small
-\begin{cartouche}
-\begin{verbatim}
+\begin{lstlisting}
 blues% make install
-\end{verbatim}
-\end{cartouche}}
+\end{lstlisting}}
 
+\vspace{1em}
 It is installed as specify with the \texttt{--prefix} option of \texttt{configure}.
 
 According to the destination you have chosen, you may need \texttt{root} priviledges.
-\end{tran}
+\end{frame}
 %----------------------------------------------------------------------
-%----------------------------------------------------------------------
-\begin{tran}{\Large 4th part: \\[7mm]Execution}
+\begin{frame}
+\frametitle{Summary of 3rd part}
 
-\begin{center}
-{\em Summary of 3rd part}
-\end{center}
 
 \begin{enumerate}
 \item Edit the module : {\bf demo.gen}
 
-\item Only the first time: generate {\bf genom} and configure {\bf configure}
+\item Only the first time: generate {\bf genom} \\
+  and configure {\bf configure}
 
-\item Compile and generate : {\bf gnumake}
+\item Compile and generate : {\bf make}
 
-\item Install : {\bf gnumake install}
+\item Install : {\bf make install}
 
 \end{enumerate}
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{UNIX session : execution}
+\section{How to run a module}
+%----------------------------------------------------------------------
+\begin{frame}[containsverbatim]
+\frametitle{UNIX session : execution}
 
 
 1. Start the communication server :
 
-\begin{cartouche}
-\begin{verbatim}
-%blues h2 init
-\end{verbatim}
-\end{cartouche}
+\begin{lstlisting}
+blues% h2 init
+\end{lstlisting}
 
 2. Start the module :
 
-\begin{cartouche}
-\begin{verbatim}
-%blues demo -b
-\end{verbatim}
-\end{cartouche}
+\begin{lstlisting}
+blues% demo -b
+\end{lstlisting}
 
 \texttt{-b} option allows to wait until the module has effectively
 started.
 
 3. Start the client(s) :
 
-\begin{cartouche}
-\begin{verbatim}
-%blues demoTest 1
-\end{verbatim}
-\end{cartouche}
+\begin{lstlisting}
+blues% demoTest 1
+\end{lstlisting}
 
-\end{tran}
+\end{frame}
 
 
 %----------------------------------------------------------------------
-\begin{tran}{The test program \texttt{demoTest} }
+\begin{frame}[containsverbatim]
+\frametitle{The test program \texttt{demoTest} }
 
-%%\figw{./figures/essay1}{11cm}
+{\scriptsize
+\begin{lstlisting}
+blues% demoTest 1 
+pocolibs execution environment version 2.5
+Copyright (c) 1999-2008 CNRS-LAAS
+client init ...ok.   Poster init ...ok.
+---------------------------------------------------------------------
+  0: SetSpeed              2: Stop                4: GotoPosition (E)
+  1: GetSpeed              3: MoveDistance (E)    5: Monitor (nE)
 
-\end{tran}
+55: posters  66: abort  77: replies(0)  88: state  99: QUIT  -99: END
+---------------------------------------------------------------------
+demo1 (88)> 
+\end{lstlisting}
+}
+
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{The test program \texttt{demoTest} (cont) }
+\begin{frame}[containsverbatim]
+\frametitle{The test program \texttt{demoTest} (cont) }
 
-\vspace{2cm}
+{\scriptsize
+\begin{lstlisting}
+demo1 (88)> 3
 
-%%\figw{./figures/essay2}{8cm}
+Get current distRef using poster Mobileref (y/n) ? (n) 
 
-\end{tran}
+-- Enter double distRef:  (0.000000) 1.0
+Wait final reply (y/n/a) ? : y
+
+Activity 0 started
+start engine
+stop engine
+Final reply: OK
+
+---------------------------------------------------------------------
+  0: SetSpeed              2: Stop                4: GotoPosition (E)
+  1: GetSpeed              3: MoveDistance (E)    5: Monitor (nE)
+
+55: posters  66: abort  77: replies(0)  88: state  99: QUIT  -99: END
+---------------------------------------------------------------------
+demo1 (3)> 
+\end{lstlisting}}
+
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{UNIX  session : end}
+\begin{frame}[containsverbatim]
+\frametitle{UNIX  session : end}
 
-1. Kill the module :
+\begin{enumerate}
+\item Kill the module :
 
-\begin{cartouche}
-\begin{verbatim} 
-%blues killmodule demo
-\end{verbatim}
-\end{cartouche}
+\begin{lstlisting}
+blues% killmodule demo
+\end{lstlisting}
 
 or with the command \texttt{-99} in the \texttt{demoTest} menu.
 
-
 {\bf (then one can restart the module)}
 
-2. session ending :
 
-\begin{cartouche}
-\begin{verbatim} 
-%blues h2 end
-\end{verbatim}
-\end{cartouche}
+\item end the session:
 
-\end{tran}
+\begin{lstlisting}
+blues% h2 end
+\end{lstlisting}
+
+\end{enumerate}
+\end{frame}
 
 %----------------------------------------------------------------------
-%----------------------------------------------------------------------
-\begin{tran}{\Large 5th part : \\[7mm]The codels}
-
-\begin{center}
-{\em Summary of 4th part}
-\end{center}
+\begin{frame}
+\frametitle{Summary of 4th part}
 
 \begin{enumerate}
 \item Edit the module : {\bf demo.gen}
@@ -1058,10 +1057,13 @@ or with the command \texttt{-99} in the \texttt{demoTest} menu.
 
 \end{enumerate}
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Codels}
+\section{How to integrate algorithms}
+%----------------------------------------------------------------------
+\begin{frame}
+\frametitle{Codels}
 
 \bi
 
@@ -1079,20 +1081,19 @@ c\_exec\_func}, \ldots)
 
 \end{itemize}
 \end{itemize}
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Control codels}
+\begin{frame}[containsverbatim]
+\frametitle{Control codels}
 
-{\footnotesize
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 STATUS demoSetSpeedCntrl(DEMO_SPEED *speed, int *report)
 {
    /* Refuse *speed if the value is erroneous */
    if (*speed != DEMO_SLOW && *speed != DEMO_FAST) {
-        *report = S_demo_INVALID_PARAMETER;
-        return ERROR;
+        *report = S_demo_INVALID_PARAMETER; return ERROR;
    }
    /* Parameter is valid: it will be recorded into the fIDS */
    return OK;
@@ -1102,28 +1103,26 @@ STATUS demoGotoCntrl(double *posRef, int *report)
 {
    /* Refuse *posRef if the value is erroneous */
    if (fabs(*posRef) > DEMO_MCHINE_LENGTH/2.0) {
-        *report = S_demo_INVALID_PARAMETER;
-        return ERROR;
+        *report = S_demo_INVALID_PARAMETER; return ERROR;
    }
    /* Parameter is valid: it will be recorded into the fIDS 
       and Goto request will start */
    return OK;
 }
-\end{verbatim}
-\end{cartouche}}
+\end{lstlisting}}
 
-\end{tran}
+\end{frame}
 
 
 %----------------------------------------------------------------------
-\begin{tran}{Execution codels}
+\begin{frame}[containsverbatim]
+\frametitle{Execution codels}
 
-{\footnotesize
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 ACTIVITY_EVENT demoGotoStart(double *posRef, int *report)
 {
-   printf("Start engin\n");
+   printf("Start engine\n");
    return EXEC;
 }
 
@@ -1141,45 +1140,37 @@ ACTIVITY_EVENT demoGotoExec(double *posRef, int *report)
 	    return EXEC;
    }
 }
-\end{verbatim}
-\end{cartouche}}
-
-\end{tran}
-
+\end{lstlisting}}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Execution codels (cont)}
+\begin{frame}[containsverbatim]
+\frametitle{Execution codels (cont)}
 
-{\footnotesize
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 ACTIVITY_EVENT demoGotoEnd(double *posRef, int *report)
 {
    SDI_f->state.position = *posRef;
    printf("Stop engin\n");
    return ETHER;
 }
-\end{verbatim}
-\end{cartouche}}
-\end{tran}
-
-
+\end{lstlisting}}
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{Particular codels}
+\begin{frame}[containsverbatim]
+\frametitle{Specific codels}
 
 \bi
 \item Initialisation codel {\tt c\_init\_func} 
-
 \item Terminaison codel  {\tt c\_end\_func} 
-
 \item Permanent activity codel  : {\tt c\_func}
 \ei
 
 $\rightarrow$ one per execution task  \\
 
-{\footnotesize
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 #include "demoConst.h"
 
 STATUS demoComputeInit(int *report)
@@ -1190,18 +1181,12 @@ STATUS demoComputeInit(int *report)
   SDI_F->speedRef = DEMO_SLOW
   return OK;
 }
-\end{verbatim}
-\end{cartouche}}
-
-\end{tran}
+\end{lstlisting}}
+\end{frame}
 
 %----------------------------------------------------------------------
-%----------------------------------------------------------------------
-\begin{tran}{\Large 6th part : \\[7mm]Codels and activities}
-
-\begin{center}
-{\em Summary of 5th part}
-\end{center}
+\begin{frame}
+\frametitle{Summary of 5th part}
 
 \begin{enumerate}
 \item Edit the module : {\bf demo.gen}
@@ -1218,13 +1203,16 @@ STATUS demoComputeInit(int *report)
 
 \end{enumerate}
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Activities and codels}
+\section{Codels and activities}
+%----------------------------------------------------------------------
+\begin{frame}
+\frametitle{Activities and codels}
 
 \bi
-\item generaly
+\item generally:
 1 activity $\rightarrow$ a sequence of codels :
 
 {\tt start}\\
@@ -1242,18 +1230,15 @@ STATUS demoComputeInit(int *report)
 \item On Interruption $\Rightarrow$ execution of the codel {\tt inter}
 \ei 
 
-
-\end{tran}
-
-
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{Execution requests and codels}
+\begin{frame}[containsverbatim]
+\frametitle{Execution requests and codels}
 
 One example :
 
-{\small
-\begin{cartouche}
-\begin{verbatim}
+{\footnotesize
+\begin{lstlisting}
 /* Translation on a given distance */
 request Goto {
    type:                exec;               
@@ -1267,19 +1252,16 @@ request Goto {
    incompatible_with:   Goto;       
    exec_task:           MotionTask;         
 };
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
-
-\end{tran}
-
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{Activities decomposition in codels}
-\vspace{.5cm}
+\begin{frame}[containsverbatim]
+\frametitle{Activities decomposition in codels}
 
-\fig{figures/grapheExec}{6cm}
+\figw{figures/grapheExec}{5cm}
 
-\vspace{.1cm}
+\vspace{1em}
 {\footnotesize
 \begin{tabularx}{\linewidth}{|l|l|X|}
 \hline
@@ -1297,79 +1279,73 @@ request Goto {
 \tt ZOMBIE   &	& \em activity suspended  \\
 \hline
 \end{tabularx}}
-\vspace{.1cm}
 
-\end{tran}
+\end{frame}
 
 
 %----------------------------------------------------------------------
-\begin{tran}{Periodical task}
+\begin{frame}[containsverbatim]
+\frametitle{Periodical task}
 
 $\rightarrow$ Periodical task \\
 
-\begin{cartouche}
-\begin{verbatim}
+{\footnotesize
+\begin{lstlisting}
 exec_task Compute {
     period:                10;     /* 100ms */
     priority:              20;     /* a hight priority */
     stack_size:            10000;
 };
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}}
 
 \bi
-\item usely 1 tic = 10ms on non-real-time unix
-\item priority: [0..255] (0: higher priority): used only on real-time OS
-\item stack\_sike: used only on real-time OS
+\item usely 1 tic = 10ms on Unix/Linux
+\item priority: [0..255] (0: higher priority): \\
+  used only on real-time OS
+\item stack\_size: used only on real-time OS
 \ei
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{The posters : automatics or manual}
+\begin{frame}[containsverbatim]
+\frametitle{The posters : automatics or manual}
 
-Exporte results
+Exporting results
 
 \bi
+\item Automatical update every time its execution task wakes~up
 
-\item Automatical update every time its execution task wakes up
-
-{\small
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 poster Status {
     update:              auto;
     data:                state::state;
     exec_task:           MotionTask;
 };
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
 
 \item Manual update only when necessary
 
-{\small
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 poster Status {
     update:              user;
     type:                SPEED_REF;
     exec_task:           MotionTask;
 };
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
 \ei 
-
-\end{tran}
-
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{Posters :  manual update}
+\begin{frame}[containsverbatim]
+\frametitle{Posters :  manual update}
 Update from a codel : \\
 
 {\footnotesize
-\begin{cartouche}
-\begin{verbatim}
+\begin{lstlisting}
 ACTIVITY_EVENT demoGotoStart(double *posRef, int *report)
 {
    printf("Start engin\n");
@@ -1381,20 +1357,13 @@ ACTIVITY_EVENT demoGotoStart(double *posRef, int *report)
   }
    return EXEC;
 }
-
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
 
-\end{tran}
-
+\end{frame}
 %----------------------------------------------------------------------
-%----------------------------------------------------------------------
-\begin{tran}{\Large 7th part : \\[7mm]Modules utilization}
-
-\begin{center}
-{\em Summary of 6th part}
-\end{center}
+\begin{frame}
+\frametitle{Summary of 6th part}
 
 \begin{enumerate}
 \item Edit the module : {\bf demo.gen}
@@ -1411,15 +1380,17 @@ ACTIVITY_EVENT demoGotoStart(double *posRef, int *report)
 
 \end{enumerate}
 
-\end{tran}
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{Using module structures from another module}
+\section{How to use a module}
+%----------------------------------------------------------------------
+\begin{frame}[containsverbatim]
+\frametitle{Using module structures from another module}
 
 Import structures : 
 
-{\small
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 module pilo {
      number:          9000;
      version:         "0.1";
@@ -1436,35 +1407,32 @@ typedef struct PILO_STR {
      PILO_GOTO_STR goto;
      DEMO_POS_REF  posRef;
 } PILO_STR;
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
 
-Based on \texttt{package config}.
-
-\end{tran}
+Based on \texttt{pkgconfig}.
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Read a poster from another module}
+\begin{frame}[containsverbatim]
+\frametitle{Read a poster from another module}
 
-{\tiny
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 request Track {
    type:   exec;
    ...
    posters_input:    LOCO_SPEED_REF;
    ...
 };
-\end{verbatim}
-\end{cartouche}
+
+\end{lstlisting}
 }
 
 Library : {\tt demoPosterReadLib}
 
 {\tiny
-\begin{cartouche}
-\begin{verbatim}
+\begin{lstlisting}
   POSTER_ID trackPosterId=-1;
   DEMO_REF ref;
 
@@ -1479,39 +1447,40 @@ Library : {\tt demoPosterReadLib}
     return ETHER;
   }
 ...
-\end{verbatim}
-\end{cartouche}
+
+\end{lstlisting}
 }
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Control of a module with tclServ : principle}
+\begin{frame}[containsverbatim]
+\frametitle{Control of a module with tclserv: principle}
 
 
 \begin{itemize}
 \item {\tt tclServ} allows to control a set of modules from a unique interface
 
-\item Full interactive programming language  (tcl)
+\item Full interactive programming language (Tcl)
 
-\item ASCII data transfert (non sensitive to data representation like little endian / big endian / alignment).
+\item ASCII data transfers (non sensitive to data representation like little endian / big endian / alignment).
 
-\item Graphical libraries {\tt tk}
+\item Graphical libraries {\tt Tk}
 \end{itemize}
 
-{\tt  http://softs.laas.fr/openrobots/eltclsh}
+\url{http://softs.laas.fr/openrobots/wiki/eltclsh}
 
-
-\end{tran}
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{Module control with tclServ : using}
+\begin{frame}
+\frametitle{Module control with tclserv: use}
 
 \begin{enumerate}
 \item Generate the module with option {\tt -t}
 
 \item Start the server {\tt tclserv}.
 
-\item Start one (or several) tcl-shells :
+\item Start one (or several) tcl-shells :\\
 {\tt eltclsh -package genom}
 
 {\em Remark : make an alias !}
@@ -1520,10 +1489,10 @@ Library : {\tt demoPosterReadLib}
 
 \end{enumerate}
 
-\end{tran}
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{Module control with tclServ : options and commands}
-\vspace{1cm}
+\begin{frame}
+\frametitle{Module control with tclserv : options and commands}
 {\center
 {\small
 \begin{tabularx}{\linewidth}{|l|X|}
@@ -1545,16 +1514,14 @@ Generaly used with option {\tt -raw}. \\
 \hline
 \end{tabularx}}
 }
-
-
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Module control with tclServ : examples}
+\begin{frame}[containsverbatim]
+\frametitle{Module control with tclserv : examples}
 
 {\footnotesize
-\begin{cartouche}
-\begin{verbatim}
+\begin{lstlisting}
 tcl-> connect cabby
 no startup script for cabby: Rack inconnu
 sourcing ~/.tclservrc
@@ -1570,69 +1537,67 @@ Working mode [CAMERA_LIVE] :
 Preprocessings mode [CAMERA_ENABLE_PREPROCESSINGS] : 
 status = OK
 tcl[cabby]-> 
-\end{verbatim}
-\end{cartouche}
+
+\end{lstlisting}
 }
+\end{frame}
+%----------------------------------------------------------------------
+\begin{frame}[containsverbatim]
+\frametitle{Module control with tclserv : examples (cont.)}
 
 {\small
-\begin{cartouche}
-\begin{verbatim}
+\begin{lstlisting}
     set demFused [dem::FuseDem -ack]
     set classifDone [lclassif::Classif -ack]
-    replyof \$demFused
-\end{verbatim}
-\end{cartouche}
-}
+    replyof $demFused
 
-\end{tran}
+\end{lstlisting} %$
+}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Module control with tclServ : rackTab, tk, \ldots}
+\begin{frame}
+\frametitle{Module control with tclserv:  tk, \ldots}
 
 \begin{itemize}
-\itemsep -0.3cm
 \item Initialization file : {\tt .tclservrc}
-
-\item Utilisation with {\tt rackTab} : option {\tt eltclsh -package rackTab} \\
 
 \item Graphics tools with {\tt tk} : 
 
 Two modular and extensibles graphical interfaces :
 \begin{itemize}
-\itemsep -0.2cm
 \item 2D version: {\tt /usr/local/robots/grh2/}
-\item 3D version: {\tt  http://softs.laas.fr/openrobots/gdhe.php}
+\item 3D version: \url{http://softs.laas.fr/openrobots/wiki/gdhe}
 \end{itemize}
 
 All our robots have their 3D model (lama, h2, h2bis with son bras, diligent,
 scouts). 
 
 \end{itemize}
-
-\end{tran}
+\end{frame}
 %----------------------------------------------------------------------
-\begin{tran}{Display with GDHE \ldots}
+\begin{frame}
+\frametitle{Display with GDHE \ldots}
 
-{\tt  http://softs.laas.fr/openrobots/tools/gdhe.php}
+\url{http://softs.laas.fr/openrobots/wiki/gdhe}
 
-\fig{./figures/gdhe-robots.png}{10cm}
+\figw{./figures/gdhe-robots.png}{10cm}
 
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Module control with OpenPRS : principle}
+\begin{frame}
+\frametitle{Module control with OpenPRS : principle}
 
-{\tt  http://softs.laas.fr/openrobots/tools/openprs.php}
+\url{http://softs.laas.fr/openrobots/wiki/openprs}
 
 \begin{itemize}
 \item Supervision
 \item Generate the module with option {\tt -o}
 \end{itemize}
 
-OPs producted for each request :
-
-\vspace{.3cm}
+OPs producted for each request:
 {\center
 {\small
 \begin{tabularx}{\linewidth}{|l|X|}
@@ -1654,10 +1619,11 @@ The answer is a string in the data base :
 \\
 {\tt (FR DEMO DEMO\_MOTION \$RQST-ID \$REPORT \$DATA)}.
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Module control with OpenPRS : {\tt transGen}}
+\begin{frame}[containsverbatim]
+\frametitle{Module control with OpenPRS: {\tt transgen}}
 
 \begin{itemize}
 \item Automatic production of OpenPRS relocatable.
@@ -1669,8 +1635,7 @@ The answer is a string in the data base :
 
 
 {\small
-\begin{cartouche}
-\begin{verbatim}
+\begin{lstlisting}
 /* --- Declaration of a supervisor --- */
 supervisor manip {
   module: xr4000;
@@ -1678,49 +1643,41 @@ supervisor manip {
   module: m2d;
   module: segloc;
 }
-\end{verbatim}
-\end{cartouche}
+\end{lstlisting}
 }
+\end{itemize}
+\end{frame}
 
+%----------------------------------------------------------------------
+\begin{frame}[containsverbatim]
+\frametitle{Module control with OpenPRS: {\tt transgen} (continued)}
+
+\begin{itemize}
+\item Call : {\tt tranGen manip.tg}
+\item Compile in {\tt server/}.
+\item Start OpenPRS : 
 \end{itemize}
 
-\end{tran}
-
-%----------------------------------------------------------------------
-\begin{tran}{Module control with OpenPRS : {\tt transGen} (continued)}
-
-\begin{description}
-\item ~
-\begin{description}
-\item - Call : {\tt tranGen manip.tg}
-\item - Compile in {\tt server/}.
-\item - Satrt OpenPRS : 
-\end{description}
-
 {\footnotesize
-\begin{cartouche}
-\begin{verbatim}
-idefix[manip] server/i386-linux/manip-xOpenPRS -n manip-cabby 
--x server/data/manip-data.inc -x data/my-data.inc &
-\end{verbatim}
-\end{cartouche}
+\begin{lstlisting}
+blues% server/i386-linux/manip-xOpenPRS -n manip-cabby \
+ -x server/data/manip-data.inc -x data/my-data.inc &
+\end{lstlisting}
 }
 
-\end{description}
-
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{Module control with OpenPRS : Example of procedure ({\tt OP})}
+\begin{frame}[containsverbatim]
+\frametitle{Module control with OpenPRS: Example of procedure}
 
-An OP taht starts
-automatically the continuous 
+An OP that automatically starts
+the continuous 
 localization request  ({\tt SEGLOC-LOCLOOP-ASYNC}) when the
 robot losts itself  :
 
-{\tiny
-\begin{cartouche}
-\begin{verbatim}
+{\scriptsize
+\begin{lstlisting}
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; |Localize|
 ;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1738,15 +1695,17 @@ robot losts itself  :
            )
           )
 )
-\end{verbatim}
-\end{cartouche}
+
+\end{lstlisting}
 }
 %$
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
+\section{Conclusions}
 %----------------------------------------------------------------------
-\begin{tran}{\Large Conclusion}
+\begin{frame}
+\frametitle{Summary}
 
 \begin{enumerate}
 \item Edit the module : {\bf demo.gen}
@@ -1759,101 +1718,32 @@ robot losts itself  :
 
 \item Execute : {\bf h2 init, demo -b, demoTest 1, ... h2 end}
 
-\item Control with : {\bf tclserv} and {\bf tcl/tk} {\tt (eltclsh, elwish,
-gdhe)}\\
-	or {\bf OpenPRS}
+\item Control with : {\bf tclserv} and {\bf Tcl/Tk} {\tt (eltclsh, elwish,
+gdhe)}	or {\bf OpenPRS}
 
 \end{enumerate}
 
-\end{tran}
+\end{frame}
 
 %----------------------------------------------------------------------
-\begin{tran}{On line documents}
+\begin{frame}
+\frametitle{Online documents}
 
-Official page (not up-to-date !):
-{\tt http://softs.laas.fr/openrobots}
+\begin{itemize}
+\item Official page:
+\url{http://softs.laas.fr/openrobots/wiki/genom}
 
-Very usefull page by Roland Philippsen:
-{\tt http://www.laas.fr/~rolo/openrobots-start.html}
+\item Robotpkg:
+\url{http://www.laas.fr/~mallet/robotpkg}
 
-Mailling-list: {\tt openrobots.laas.fr}
+\item Mailling-list: \url{openrobots@laas.fr}
 
-(Intranet) Wiki: 
-{\tt http:/intranet.laas.fr/robots/wiki}
-
-\end{tran}
+\item (Intranet) Wiki: 
+\url{http:/intranet.laas.fr/robots/wiki}
+\end{itemize}
+\end{frame}
 
 \end{document}
-
-
-\comment{
-client init ...ok.   Poster init ...ok.
-------------------------------------------------------------------------
-  0: GetConstPoly          1: SetConstPoly          2: ComputePoly (E)
- 
- 55: posters   66: abort  77: replies (0)  88: state  99: QUIT  -99: END
-------------------------------------------------------------------------
-demo1 (88)> 0
- 
-(To abort type "a") 
- 
-** Final reply: OK
-constPoly:
-  a = 1.000000
-  b = 2.000000
-  c = 3.000000
- 
-------------------------------------------------------------------------
-  0: GetConstPoly          1: SetConstPoly          2: ComputePoly (E)
- 
- 55: posters   66: abort  77: replies (0)  88: state  99: QUIT  -99: END
-------------------------------------------------------------------------
-demo1 (0)> 2
- 
-** Enter double xPoly: (0.000000) 2
-Wait final reply (y/n/a) ? : y
- 
-** Final reply: OK
-resPoly = 11.000000
- 
-------------------------------------------------------------------------
-  0: GetConstPoly          1: SetConstPoly          2: ComputePoly (E)
- 
- 55: posters   66: abort  77: replies (0)  88: state  99: QUIT  -99: END
-------------------------------------------------------------------------
-demo1 (2)> 1
- 
-Get current constPoly using request GetConstPoly (y/n) ? (n) 
- 
-** Enter DEMO_CAL_CONST_POLY constPoly:
-  a (0.000000) 
-  b (0.000000) 1
-  c (0.000000) 2
-(To abort type "a") 
- 
-** Final reply: OK
- 
-------------------------------------------------------------------------
-  0: GetConstPoly          1: SetConstPoly          2: ComputePoly (E)
- 
- 55: posters   66: abort  77: replies (0)  88: state  99: QUIT  -99: END
-------------------------------------------------------------------------
-demo1 (1)> 2
- 
-** Enter double xPoly: (2.000000) 
-Wait final reply (y/n/a) ? : y
- 
-** Final reply: OK
-resPoly = 4.000000
- 
-------------------------------------------------------------------------
-  0: GetConstPoly          1: SetConstPoly          2: ComputePoly (E)
- 
- 55: posters   66: abort  77: replies (0)  88: state  99: QUIT  -99: END
-------------------------------------------------------------------------
-demo1 (2)> 
-}
-
 
 % LocalWords:  pdfsubject pdftitle pdfkeywords matthieu doc Fleury Herrb Codels
 % LocalWords:  adam jpg bis lapa lama jidowanki rackham dala neobotix cont gen
