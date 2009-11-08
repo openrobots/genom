@@ -1,8 +1,6 @@
 %%
 %% Anthony Mallet - Fri Dec  6 2002
-%% Copyright (C) 2002-2007 LAAS/CNRS 
-%%
-%% $Id$
+%% Copyright (C) 2002-2009 LAAS/CNRS 
 %%
 \documentclass[a4paper,landscape,smooth]{show}
 \usepackage{depend,aeguill,cartouche}
@@ -14,7 +12,7 @@
 \context{\vfill}
 \title{\Huge tclServ}
 \author{Anthony Mallet, Sara Fleury}
-\date{march 2007}
+\date{November 2009}
 
 \newcommand{\tclex}[2]{\texttt{#1}\\$\rightarrow$ \texttt{#2}}
 
@@ -30,7 +28,7 @@
    \vfill
    {\bf Motivations}
    \begin{bitemize}{color@bulle}
-      \item Developed complex systems in a {\bf modular} and
+      \item Developing complex systems in a {\bf modular} and
 	    {\bf incremental} way.
       \item {\bf Dynamic configuration}.
    \end{bitemize}
@@ -49,9 +47,9 @@
    \vfill
    \begin{bitemize}{color@bulle}
       \item Fast module tests. Equivalent to
-	    "test" tasks.
+	    "test" programs.
       \item Simple scripts to coordonnate several modules.
-      \item Control interfaces (Tk).
+      \item Graphical user interfaces (Tk).
    \end{bitemize}
    \vfill
 \end{tslide}
@@ -60,15 +58,13 @@
 
 \begin{part}{tclServ}{Architecture}
    \vfill
-%   \docfig[width=0.9\linewidth,psfrag]{fig/tclServ.fig}
-    \includegraphics[width=0.6\columnwidth,angle=-90]{./fig/tclServ.pdf}
-
+    \includegraphics[width=.9\columnwidth]{./fig/tclServ.pdf}
    \vfill
 \end{part}
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Starting with Unix}
+\begin{tslide}{Quick start}
    \vfill
    \begin{bitemize}{color@bulle}
       \item On each machine executing GenoM modules:\\
@@ -76,38 +72,20 @@
 	 \texttt{tclserv}
    \end{cartouche}
 
-      \item Every where wanted:
+      \item On the ``master'' machine:
 	   \begin{bitemize}{color@bulle}
-	       \item    ASCII shell linked with \texttt{editLine}:
+	       \item    Tcl shell linked with \texttt{editLine}:
 \begin{cartouche}
 \texttt{eltclsh -package genom}
 \end{cartouche} 
 	       \item Or, shell linked with the graphical toolkit
-		     \texttt{tk}, and with \texttt{editLine}:
+		     \texttt{Tk} and with \texttt{editLine}:
 \begin{cartouche}
 \texttt{elwish -package genom}
 \end{cartouche} 
 
 	   \end{bitemize}
    \end{bitemize}
-   \vfill
-\end{tslide}
-% -----------------------------------------------------------------------
-
-\begin{tslide}{Starting with VxWorks (not maintained)}
-   \vfill
-   \begin{bitemize}{color@bulle}
-      \item On {\em the card $0$ of the racks} where run the modules~:\\
-	 \texttt{ld < /usr/local/robots/tcl/ppc-vxworks/tcl.o}\\
-	 \texttt{ld < /usr/local/robots/tclServ/server/ppc-vxworks/tclServ.o}\\
-	 \texttt{tclserv}
-
-      \item Every-where (unix) :
-	 \texttt{eltclsh} or \texttt{elwish}\\
-	 \texttt{package require genom} (or option \texttt{-package}).
-
-   \end{bitemize}
-
    \vfill
 \end{tslide}
 % -----------------------------------------------------------------------
@@ -148,7 +126,7 @@ Eg, with \texttt{tcshell}:\\
    \begin{cartouche}
    \texttt{connect {\em server}}
    \end{cartouche}   
-   Connect to the server \texttt{\em server} where \texttt{tclserv} is running. One can connect with several servers (example~: \texttt{jido-base} and \texttt{jido-arm}).
+   Connects to the server \texttt{\em server} where \texttt{tclserv} is running. One can connect with several servers (example~: \texttt{jido-base} and \texttt{jido-arm}).
    \vfill
    \begin{cartouche}
    \texttt{disconnect {\em server}}
@@ -158,7 +136,7 @@ Eg, with \texttt{tcshell}:\\
    \begin{cartouche}
    \texttt{die}
    \end{cartouche}   
-   Ends all the servers (processes \texttt{tclserv}) connected, and
+   Ends all the servers (\texttt{tclserv} processes) connected, and
    ends all the clients of all the servers.
    \vfill
 \end{tslide}
@@ -168,30 +146,48 @@ Eg, with \texttt{tcshell}:\\
 \begin{tslide}{Connections to the modules}
    \vfill
    \begin{cartouche}
-   \texttt{lm {\em <module>} [on {\em <server>}] [path {\em<path-on-tclsh-host-machine>}] [rpath {\em <path-on-tclserv-target-machine>}]}
+   \texttt{lm {\em <module>} [on {\em <server>}] 
+     [path {\em<path-on-tclsh-host-machine>}]\newline
+     [rpath {\em <path-on-tclserv-target-machine>}]}
    \end{cartouche}   
    Loads the communications libraries with the \texttt{\em module}
-   in the directory \texttt{\em path} on client side --- and
-   \texttt{\em rpath} tclServ side, by default the path are identical.
+   in the directory \texttt{\em path} on client side \\
+   and \texttt{\em rpath} on tclserv side, by default the path are identical.
    \vfill
    \begin{cartouche}
-   \texttt{[mboxInit [{\em server}]]}
+   \texttt{mboxInit [{\em server}]}
    \end{cartouche}   
-    Optional but usefull to reconnect. Starts the connections to the modules on server side, on the 
+    Optional but useful to reconnect. 
+    Starts the connections to the modules on server side, on the 
    \texttt{\em server} machine (or by default the last connected server).
    \vfill
    \begin{cartouche}
-   \texttt{[mboxEnd [{\em server}]]}
+   \texttt{mboxEnd [{\em server}]}
    \end{cartouche}   
-   Optional but usefull to disconnect before reconnecting. Ends the connections to the modules on the \texttt{\em
+   Optional but useful to disconnect before reconnecting. 
+   Ends the connections to the modules on the \texttt{\em
    server} (or by 
    default the last connected server).
    \vfill
 \end{tslide}
 
 % -----------------------------------------------------------------------
-
 \begin{tslide}{Example}
+\vfill
+{\bf blues\% } h2 init\\
+{\bf blues\% } demo -b\\
+{\bf blues\% } tclserv\\
+{\bf blues\% } eltclsh -package genom\\
+{\bf eltclsh~>} connect localhost\\
+{\bf eltclsh~>} lm demo\\
+{\bf eltclsh~>} demo::MoveDistance 0.5\\
+{\bf eltclsh~>} kill demo\\
+{\bf eltclsh~>} die\\
+{\bf blues\%} h2 end\\
+\vfill
+\end{tslide}
+% ----------------------------------------------------------------------
+\begin{tslide}{Example with 2 hosts}
    \vfill
    \parbox{0.45\linewidth}{\tt
       {\bf diligent->} h2 init\\
@@ -219,7 +215,7 @@ Eg, with \texttt{tcshell}:\\
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Send requests}
+\begin{tslide}{Sending requests}
    \vfill
    \begin{cartouche}
       \tt {\em module}::{\em request} [-doc|-ack|-raw] {\em arg1} {\em arg2} ...
@@ -228,8 +224,8 @@ Eg, with \texttt{tcshell}:\\
    arguments {\tt\em arg1} ... {\tt\em argn}. Returns a report and the
    result formated or not (option {\tt -raw}).
 
-   With the option {\tt\em -doc}~: list the parameters waited by the
-   request, and their type type.
+   With the option {\tt\em -doc}~: list the parameters expected by the
+   request and their type.
 
    With the option {\tt\em -ack}~: does not block to wait the end of
    the request, and returns immediatly an idendifier to read the result
@@ -267,7 +263,7 @@ Eg, with \texttt{tcshell}:\\
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Activites control}
+\begin{tslide}{Controlling activites}
    \vfill
    \begin{cartouche}
       \tt abort {\em rqstId}
@@ -278,14 +274,14 @@ Eg, with \texttt{tcshell}:\\
    \begin{cartouche}
       \tt kill {\em module}
    \end{cartouche}
-   Kills the module, and returns a report. It is possible to start again the
+   Kills the module, and returns a report. It is possible to re-start the
    module (by hand) and to connect again with {\tt mboxEnd; mboxInit}.
    \vfill
    \begin{cartouche}
       \tt cs::term {\em rqstId} {\em block}
    \end{cartouche}
-   Sends back $0$ or $1$ if the request {\tt\em rqstId} is end. Non
-   blocking if {\tt\em block} equal 0, blocking either .
+   Sends back $0$ or $1$ if the request {\tt\em rqstId} is done. \\
+   Non blocking if {\tt\em block} equal 0, blocking otherwise.
    \vfill
 \end{tslide}
 
@@ -316,7 +312,7 @@ Eg, with \texttt{tcshell}:\\
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Reading of the posters}
+\begin{tslide}{Reading posters}
    \vfill
    \begin{cartouche}
       \tt {\em <module>}::{\em <poster>}{\em <struct>}PosterRead [-raw]
@@ -329,7 +325,7 @@ Eg, with \texttt{tcshell}:\\
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Automatismes}
+\begin{tslide}{Automating things}
    \vfill
    {\bf eltclsh {\em file}}
    \begin{bitemize}{color@bulle}
@@ -338,7 +334,7 @@ Eg, with \texttt{tcshell}:\\
    \vfill
    {\bf \#!}
    \begin{bitemize}{color@bulle}
-      \item \#!/usr/bin/env rtclsh
+      \item \#!/usr/bin/env eltclsh
       \item chmod a+x
    \end{bitemize}
    \vfill
