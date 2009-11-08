@@ -1,13 +1,10 @@
 %%%
-%%% Copyright (C) 2001 Matthieu Herrb
-%%%
-%%% Sat Mar  3 2001
+%%% Copyright (C) 2001-2009 CNRS-LAAS
 %%%
 \documentclass[a4paper,landscape,smooth]{show}
-\usepackage{depend,aeguill}
+\usepackage{depend}
 \usepackage[dpi=100,resample]{docfig}
 \usepackage[T1]{fontenc}
-%\usepackage[frenchb]{babel}
 \usepackage[latin1]{inputenc}
 \usepackage{pp4/pause}
 
@@ -15,7 +12,7 @@
 \title{{\Huge T}ool {\Huge C}ommand {\Huge L}anguage}
 \author{Matthieu Herrb, Anthony Mallet\\
  based on E.J. Friedman-Hill}
-\date{july 2006}
+\date{november 2009}
 
 \newcommand{\tclex}[2]{\texttt{#1}\\$\rightarrow$ \texttt{#2}}
 
@@ -30,11 +27,10 @@
    {\bf Motivations~:} big programs always need at least 2 programing languages
 
    \begin{bitemize}{color@bulle}
-      \item a compiled language, efficient for the algorithms (cobol,
-	    C, C++, JAVA),
+      \item a compiled language, efficient for the algorithms (C, C++, JAVA),
 
-      \item an interpreted language, used as glue to « pilot »
-	    and personalized the application {\bf $\rightarrow$ TCL}.
+      \item an interpreted language, used as glue to ``pilot''
+	    and personalize the application {\bf $\rightarrow$ TCL}.
    \end{bitemize}
 
    \vfill
@@ -44,7 +40,7 @@
 	    by Dr. John Ousterhout (1988),
       \item Now maintained by ActiveState,
 
-      \item open-source free licence: TCL can be freely modified and
+      \item open-source licence: TCL can be freely modified and
 integrated, even in commercial applications.
 
    \end{bitemize}
@@ -60,10 +56,10 @@ integrated, even in commercial applications.
 \begin{tslide}{Tcl and LAAS softwares}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item \textbf{TclServ :} interface to control GenoM modules.
-      \item \textbf{GDHE :} 3D visualisation (OpenGL) of robotics experiments.
-      \item \textbf{Grh2 :} 2D graphical environment.
-      \item \textbf{Calife :} command language.
+      \item \textbf{TclServ:} interface to control GenoM modules.
+      \item \textbf{GDHE:} 3D visualisation (OpenGL) of robotics experiments.
+      \item \textbf{Grh2:} 2D graphical environment.
+      \item \textbf{Jafar:} Perception algorithms integration.
    \end{bitemize}
    \vfill
 \end{tslide}
@@ -102,15 +98,15 @@ integrated, even in commercial applications.
 	    \tclex{set a 47}{47}
 	 \end{quote}
 
-      \item Substitutions :
+      \item Substitutions:
         \begin{quote}
 	   \tclex{set b \$a}{47}\\
 	   \tclex{set b [expr \$a + 10]}{57}
         \end{quote}
 
-      \item Protection :
+      \item Protection:
         \begin{quote}
-	  \tclex{set b \"{}a equal \$a\"}{a equal 47}\\
+	  \tclex{set b "{}a equal \$a"}{a equal 47}\\
 	  \tclex{set b \{[expr \$a + 10]\}}{[expr \$a + 10]}
         \end{quote}
       \end{bitemize}
@@ -121,7 +117,7 @@ integrated, even in commercial applications.
 
 \begin{tslide}{Tcl Language}
    \vfill
-   {\bf Numerous integrated functions :}
+   {\bf Numerous built-in functions:}
    \begin{bitemize}{color@bulle}
 
       \item variables, associative arrays, lists,
@@ -134,7 +130,7 @@ if "$x < 3" {
 }
 	    \end{verbatim} %$
 	 \end{quote}
-      \item access to files, proces, sockets (network).
+      \item access to files, processes, sockets (network).
       \item procedures,
 	 \begin{quote}
 	    \begin{verbatim}
@@ -155,7 +151,7 @@ proc fac x {
 
 \begin{tslide}{Data representation}
    \vfill
-   Only one data type : a string ended with
+   Only one data type: a string ended with
    \verb|\0|.
    \begin{bitemize}{color@bulle}
       \item on line conversion if necessary,
@@ -169,8 +165,7 @@ proc fac x {
 	 \end{quote}
    \end{bitemize}
 
-   From Tcl 8.3 : another type of data: binary data on 8 bits
-   (example : images). 
+   Since Tcl 8.3: another type of data: binary data (example: images). 
    \vfill
 \end{tslide}
 
@@ -195,14 +190,14 @@ result of the execution.
 
       \item \texttt{"blue bird"} \\
          The double-quotes group several words in one.
-         Dollars and square brackets within are interpreted normally.
+         Dollars and square brackets inside are interpreted normally.
 
       \item \texttt{\{blue bird\}} \\
 	 Braces group several words in one. No interpretation of special
 	 caracters. 
 
       \item \verb|\| \\
-	 introduced special characters  (\verb|\n|) and annhilates the
+	 introduces special characters  (\verb|\n|) and annhilates the
 interpretation of the dollar.
 
    \end{bitemize}
@@ -218,7 +213,7 @@ interpretation of the dollar.
 
 \begin{tslide}{Grouping and substitution}
    \vfill
-   The TCL syntaxics analyser works in 3 steps:
+   The TCL syntaxic analyser works in 3 recursive steps:
    \begin{enumerate}
       \item \textbf{arguments grouping} based on the spaces between
 	 the words and the groupings with the quotes and braces.
@@ -229,18 +224,18 @@ interpretation of the dollar.
 	 commands results between brackets.
 
       \item \textbf{commands execution} using the first word of each
-command as index in the array of the known procedures (preintegrated or
-added by the uiser in C or TCL).
+command as index in the array of the known procedures (builtin or
+added by the user in C or TCL).
    \end{enumerate}
    \vfill
 \end{tslide}
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Tcl Expressions : \texttt{expr}}
+\begin{tslide}{Tcl Expressions: \texttt{expr}}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item C mode (int and doubles)
+      \item C like (int and doubles)
       \item commands and variables substitution \emph{within}
 	    the expressions
       \item Evaluated by \texttt{expr}, \texttt{if}, \texttt{while},
@@ -279,10 +274,10 @@ added by the uiser in C or TCL).
    \end{quote}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item 2 commands at 1$^{st}$ level : \texttt{set} and \texttt{while}
-      \item 2 arguments for \texttt{while} : condition and body
-      \item becarefull at the space between \texttt{\}} and \texttt{\{}
-      \item automatical evaluation with \texttt{while} of the condition
+      \item 2 commands at 1st level: \texttt{set} and \texttt{while}
+      \item 2 arguments for \texttt{while}: condition and body
+      \item be careful at the space between \texttt{\}} and \texttt{\{}
+      \item automatic evaluation with \texttt{while} of the condition
 	 $\rightarrow$ no \texttt{expr} in this case.
    \end{bitemize}
    \vfill
@@ -292,7 +287,7 @@ added by the uiser in C or TCL).
 
 \begin{tslide}{Tcl arrays}
    \vfill
-   Tcl arrays are \emph{associative} : the indices are strings.
+   Tcl arrays are \emph{associative}: the indices are strings.
    \begin{quote}
       \tclex{set x(fred) 44}{44}\\
       \tclex{set x(2) [expr \$x(fred) + 6]}{50}\\
@@ -300,7 +295,7 @@ added by the uiser in C or TCL).
    \end{quote}
 
    \vfill
-   One can simulate arrays with several dimensions :
+   One can simulate arrays with several dimensions:
    \begin{quote}
       \tclex{set a(1,1) 10}{10}\\
       \tclex{set a(1,2) 11}{11}\\
@@ -320,10 +315,10 @@ added by the uiser in C or TCL).
    \end{quote}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item \verb|<|, \verb|>|, \verb|<=|, \verb|>=|, \verb|==| et \verb|!=|
-	 work with strings:
-      \item Becarefull with strings that look like numbers.
-      \item One can used the function \texttt{string compare}.
+      \item \verb|<|, \verb|>|, \verb|<=|, \verb|>=|, \verb|==| and \verb|!=|
+	 work with strings but:
+      \item Be careful with strings that look like numbers.
+      \item One can use the function \texttt{string compare}.
    \end{bitemize}
    \vfill
 \end{tslide}
@@ -333,27 +328,27 @@ added by the uiser in C or TCL).
 \begin{tslide}{Lists}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item Zero or several  elements separated by spaces :
+      \item Zero or several  elements separated by spaces:
 	 \begin{quote}
 	    \begin{verbatim}
 	       red green blue
 	    \end{verbatim}
 	 \end{quote}
 
-      \item Brackets and backslashs to group :
+      \item Brackets and backslashs to group:
 	 \begin{quote}
 	    \begin{verbatim}
 	       one\ word two three
 	    \end{verbatim}
 	 \end{quote}
 
-      \item Commands on lists : \texttt{concat lindex llength lsearch
+      \item Commands on lists: \texttt{concat lindex llength lsearch
 	 foreach linsert lrange lsort lappend list lreplace}
 
-      \item The indices start at 0. \texttt{end} represents the last element.
+      \item The indexes start at 0. \texttt{end} represents the last element.
    \end{bitemize}
    \vfill
-   \textbf{Examples :}
+   \textbf{Examples:}
    \begin{quote}
       \tclex{lindex "a b \{c d e\} f" 2}{c d e}\\
       \tclex{lsort \{red green blue\}}{blue green red}
@@ -395,9 +390,9 @@ added by the uiser in C or TCL).
 \begin{tslide}{Strings manipulation}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item Commands to manipulate strings :
+      \item Commands to manipulate strings:
 	 \texttt{regexp format split string regsub scan join}
-      \item sub-commands of \texttt{string} :
+      \item sub-commands of \texttt{string}:
 	 \texttt{compare first last index length match range toupper tolower
 	 trim trimleft trimright}
       \item all indexes start at 0, \texttt{end} is the last character.
@@ -409,7 +404,7 @@ added by the uiser in C or TCL).
 
 \begin{tslide}{"globbing" Globalisation}
    \vfill
-   Expansion of special characters in file names like in shell :
+   Expansion of special characters in file names like in shell:
    \begin{bitemize}{color@bulle}
       \item \verb|*| any sequence of characters
       \item \verb|?| any character
@@ -418,7 +413,7 @@ added by the uiser in C or TCL).
 	 \verb|?|, \verb|[|, etc. 
    \end{bitemize}
    \vfill
-   The command \texttt{glob} expanses a patern according to local files.
+   The command \texttt{glob} expands a pattern according to local files.
    \begin{quote}
    \begin{verbatim}
 foreach f [glob *.exe] {
@@ -428,7 +423,7 @@ foreach f [glob *.exe] {
    \end{quote}
    \vfill
    \begin{center}
-      {\bf Do not mixed-up with regular expressions}
+      {\bf Do not mix-up with regular expressions}
    \end{center}
    \vfill
 \end{tslide}
@@ -437,7 +432,7 @@ foreach f [glob *.exe] {
 
 \begin{tslide}{Regular expressions}
    \vfill
-   Powerfull paterns description language. Similar to \texttt{sed}.\\
+   Powerful pattern description language. Similar to \texttt{sed}.\\
 
    \vfill
    \begin{tabular}{ll}
@@ -450,22 +445,22 @@ foreach f [glob *.exe] {
       \verb|*| & 0 or more from the previous expression \\
       \verb|+| & 1 or more from the previous expression \\
       \verb|?| & 0 or 1 occurence of the previous expression \\
-      \verb:|: & indiques an alternative between 2 expressions \\
+      \verb:|: & indicates an alternative between 2 expressions \\
    \end{tabular}
    \vfill
 \end{tslide}
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Regulars expressions : examples}
+\begin{tslide}{Regulars expressions: examples}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item \verb|[A-Za-z0-9_]+| : valid Tcl identifiers
-      \item \verb:T(cl|k): : Tcl or Tk
-      \item the \texttt{regexp} command : \\
+      \item \verb|[A-Za-z0-9_]+|: valid Tcl identifiers
+      \item \verb:T(cl|k):: Tcl or Tk
+      \item the \texttt{regexp} command: \\
 	\tclex{regexp T(cl|k) "I speak about Tk" w t}{1}\\
 	\texttt{w} equal ``Tk'' and \texttt{t} equal ``k''. 
-      \item the command \texttt{regsub} : \\
+      \item the command \texttt{regsub}: \\
 	\tclex{regsub -nocase perl "I love Perl" Tcl mantra}{1}\\
 	\texttt{mantra} equal ``I love Tcl''
    \end{bitemize}
@@ -477,11 +472,11 @@ foreach f [glob *.exe] {
 \begin{tslide}{Commands \texttt{format} and \texttt{scan}}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item \texttt{format} allows to format strings like in C :\\
-	 \tclex{format "I know \%d Tcl commands" 97}{I know 97
-	 Tcl commands}\\
+      \item \texttt{format} allows to format strings like in C:\\
+	 \tclex{format "I know \%d Tcl commands" [llength [info commands]]}
+         {I know 105 Tcl commands}\\
       \item same functionnalities as \texttt{printf()} in C.
-      \item \texttt{scan} works as \texttt{scanf()} : \\
+      \item \texttt{scan} works as \texttt{scanf()}: \\
       \tclex{set x "SSN\#: 1630799140049"}{SSN\#: 1630799140049}\\
       \tclex{scan \$x "SSN\#: \%d" ssn}{1}\\
       \tclex{puts "Social security number: \$ssn"}{Social security number: 1630799140049}\\
@@ -496,7 +491,7 @@ foreach f [glob *.exe] {
    \begin{bitemize}{color@bulle}
       \item Similar to C
       \item In reality, Tcl commands as others, that take scripts in argument
-      \item \textbf{Example :} returns in \texttt{b} the list stocked
+      \item \textbf{Example:} revert in \texttt{b} the list stored
 	 in \texttt{a}\\ 
 	 \begin{verbatim}
 	    set b ""
@@ -506,7 +501,7 @@ foreach f [glob *.exe] {
 	       incr i -1
 	    }
 	 \end{verbatim}
-      \item Commands : \texttt{if for switch break foreach while continue
+      \item Commands: \texttt{if for switch break foreach while continue
 	 eval source} 
    \end{bitemize}
    \vfill
@@ -514,7 +509,7 @@ foreach f [glob *.exe] {
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Control structures : examples}
+\begin{tslide}{Control structures: examples}
    \vfill
    \begin{bitemize}{color@bulle}
       \item \texttt{if} \emph{script script}
@@ -539,9 +534,9 @@ foreach f [glob *.exe] {
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{control Structures : traps}
+\begin{tslide}{control Structures: traps}
    \vfill
-   Brackets are optionnal, but danger :
+   Brackets are optionnal, but beware:
    \begin{quote}
       \begin{verbatim}
 	 set x 3
@@ -565,7 +560,7 @@ foreach f [glob *.exe] {
 
 \begin{tslide}{Procedures}
    \vfill
-   \texttt{proc} defines a procedure : 
+   \texttt{proc} defines a procedure: 
 
    \tclex{proc sub1 x \{expr \$x-1\}}{sub1}\\
    \tclex{sub1 3}{2}\\
@@ -589,7 +584,7 @@ foreach f [glob *.exe] {
 scope
 	 \item each procedure introduces a new name space
       \end{itemize}
-   \item \texttt{global} allows to access to a global variable. 
+   \item \texttt{global} allows to access a global variable. 
    \item \texttt{::variable} is equivalent to \texttt{global variable}. 
    \end{bitemize}
    \begin{quote}
@@ -613,19 +608,19 @@ scope
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Variables scope : upvar}
+\begin{tslide}{Variables scope: upvar}
    \vfill
    \begin{bitemize}{color@bulle}
       \item \texttt{global} is an ordinary command. It can be used with
 strange effects:
 	 \begin{verbatim}
-	    proc affect {name valeur} {
+	    proc let {name value} {
 	       global $name
-	       set $name $valeur
+	       set $name $value
 	    }
 	 \end{verbatim} %$
 
-      \item \texttt{upvar} generalises this principle :
+      \item \texttt{upvar} generalizes this principle:
 	 \begin{verbatim}
 	    proc incr {name} {
 	       upvar 1 $name var
@@ -633,7 +628,7 @@ strange effects:
 	    }
 	 \end{verbatim}
 
-      \item levels naming :
+      \item levels naming:
 	 \begin{itemize}
 	    \item \verb|#0| global, \verb|#1| first level call, \verb|#2|
 	       second, etc.
@@ -646,7 +641,7 @@ strange effects:
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Procedures : lists of arguments of variable length}
+\begin{tslide}{Procedures: lists of arguments of variable length}
    \vfill
    \begin{quote}
       \begin{verbatim}
@@ -666,15 +661,15 @@ strange effects:
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Tcl naming spaces}
+\begin{tslide}{Tcl name spaces}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item For big softwares, it is necessary to  structure the
-	    code $\rightarrow$ naming spaces (\emph{namespaces}). 
-      \item Notation : \texttt{Module::variable}
+      \item For large software, it is necessary to  structure the
+	    code $\rightarrow$ \emph{name spaces}. 
+      \item Notation: \texttt{Module::variable}
       \item Hierarchical system
       \item Allows to encapsulate data. 
-      \item Command \texttt{namespace} :
+      \item Command \texttt{namespace}:
 	 \begin{itemize}
 	    \item \texttt{namespace eval} \emph{namespace} \emph{arg...}\\
 	    Evaluates \emph{arg} in the indicated space. Creates the
@@ -689,7 +684,7 @@ strange effects:
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Naming spaces : example}
+\begin{tslide}{Name spaces: example}
    \vfill
    \begin{quote}
       \begin{verbatim}
@@ -726,7 +721,7 @@ strange effects:
 	    set n [expr \{\$n + i*i\}]\\
 	 \}}{syntax error in expression "\$n + i*i"}
       \item the global variable \texttt{errorInfo} contains the trace of
-	 the stack of calls : \\
+	 the stack of calls: \\
       \tclex{set errorInfo}{syntax error in expression "\$n + i*i"\\
 	 while executing\\
 	 "expr \{\$n + i*i\}"\\
@@ -740,7 +735,7 @@ strange effects:
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Errors treatment}
+\begin{tslide}{Error handling}
    \vfill
    \begin{bitemize}{color@bulle}
       \item Errors interception with \texttt{catch}
@@ -773,10 +768,10 @@ strange effects:
 \begin{tslide}{Access to files}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item File access commands : \texttt{open gets seek flush
+      \item File access commands: \texttt{open gets seek flush
 	 glob close read tell cd fconfigure fblocked fileevent puts
 	 source eof pwd filename}
-      \item Commands use key words to design the open files.
+      \item Commands use file descriptors variables to design the open files.
      \begin{quote}
 	 \tclex{set f [open "myfile.txt" "w"]}{file4}\\
 	 \tclex{puts \$f "Writing in the file"}{}\\
@@ -796,17 +791,17 @@ strange effects:
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Inputs/outputs and processes}
+\begin{tslide}{Input/output and processes}
    \vfill
    \begin{bitemize}{color@bulle}
    \item \texttt{exec} creates a new process, can use
-      \texttt{\&} like for the shell :
+      \texttt{\&} like for the shell:
       \begin{quote}
 	 \texttt{exec emacs \&}\\
 	 \texttt{eval exec "ls [glob *.c]"}
       \end{quote}
 
-   \item \texttt{open} allows to create  tubes :
+   \item \texttt{open} allows to create pipes:
       \begin{quote}
 	 \begin{verbatim}
 	    set f [open "|grep foo bar.tcl" "r"]
@@ -824,21 +819,21 @@ strange effects:
 \begin{tslide}{Execution  context informations}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item arguments on the command  line : \texttt{argc} contains their
-	 nombre, \texttt{argv} is the list of the arguments, \texttt{argv0}
+      \item arguments on the command  line: \texttt{argc} contains their
+	 count, \texttt{argv} is the list of the arguments, \texttt{argv0}
          is the name of the interpreter
-      \item Tcl/Tk version : \texttt{tcl\_version}, \texttt{tk\_version}
-      \item informations on the machine : the array \texttt{tk\_platform}
-	 with th indices \texttt{osVersion}, \texttt{machine},
+      \item Tcl/Tk version: \texttt{tcl\_version}, \texttt{tk\_version}
+      \item informations on the machine: the array \texttt{tk\_platform}
+	 with indexes \texttt{osVersion}, \texttt{machine},
 	 \texttt{platform}, \texttt{os}.
 
-      \item the command \texttt{info} :
+      \item the command \texttt{info}:
 	 \begin{itemize}
-	    \item on the variables : \texttt{info vars},
+	    \item on variables: \texttt{info vars},
 	    \texttt{info globals}, \texttt{info locals},
 	    \texttt{info exists}
 
-	    \item on the procedures : \texttt{info procs}, \texttt{info args},
+	    \item on procedures: \texttt{info procs}, \texttt{info args},
 	    \texttt{info body}, \texttt{info commands}
          \end{itemize}
    \end{bitemize}
@@ -847,7 +842,7 @@ strange effects:
 
 % -----------------------------------------------------------------------
 
-\begin{tslide}{Code loading in the interpreter}
+\begin{tslide}{Loading code in the interpreter}
    \vfill
    \begin{bitemize}{color@bulle}
       \item \texttt{source} reads a Tcl source file and interprets it
@@ -863,13 +858,13 @@ strange effects:
 \begin{part}{Extend Tcl}{The philosophy}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item Why writting Tcl scripts rather C :
+      \item Why write Tcl scripts rather than C?
          \begin{itemize}
 	    \item faster development
 	    \item more flexible
          \end{itemize}
 
-      \item Why writting C ?
+      \item Why write C ?
 	 \begin{itemize}
 	    \item Access to low level data (devices)
 	    \item Execution efficiency
@@ -892,13 +887,13 @@ strange effects:
    \vfill
    With help of modules
    \begin{bitemize}{color@bulle}
-      \item Initialisation function module \texttt{MyModule} :
+      \item Initialisation function for the module \texttt{MyModule}:
       \begin{verbatim}
 	 int MyModule_Init(Tcl_Inter *interp);
       \end{verbatim}
 
       \item Integration of the function in the interpreter\\
-	 In the initialisation function of the module :
+	 In the initialisation function of the module:
 	 \begin{verbatim}
 	    Tcl_CreateObjCommand(interp, "myCommand", myFunction, NULL, NULL);
 	 \end{verbatim}
@@ -926,13 +921,13 @@ strange effects:
    \begin{bitemize}{color@bulle}
       \item Tcl objects (\texttt{Tcl\_Obj}): Tcl data representation
          either with a string, or in binary. 
-      \item creation of an Tcl object : \texttt{Tcl\_NewStringObj()},
+      \item creation of an Tcl object: \texttt{Tcl\_NewStringObj()},
 	 \texttt{Tcl\_NewDoubleObj()}, \texttt{Tcl\_NewListObj()}, etc.
-      \item conversion of Tcl object to C data :
+      \item conversion of Tcl object to C data:
 	 \texttt{Tcl\_GetIntFromObj()}, \texttt{Tcl\_GetDoubleFromObj()},
          etc.
-      \item evalutation of Tcl expression : \texttt{Tcl\_EvalObj()}
-      \item result of the Tcl command : \texttt{Tcl\_SetObjResult()}
+      \item evalutation of Tcl expression: \texttt{Tcl\_EvalObj()}
+      \item result of the Tcl command: \texttt{Tcl\_SetObjResult()}
    \end{bitemize}
    \vfill
 \end{tslide}
@@ -942,14 +937,14 @@ strange effects:
 \begin{tslide}{Creation of Tcl modules}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item compile the C file to produce a shared object :
+      \item compile the C file to produce a shared object:
       \begin{verbatim}
-	 cc -c -Kpic -g MyModule.c
-	 ld -G -z text MyModule.o -o MyModule.so
+	 gcc -c -fpic -g MyModule.c
+	 gcc -shared MyModule.o -o MyModule.so
       \end{verbatim}
 
       \item load the module in the Tcl interpreter \texttt{tclsh} or
-	 \texttt{wish} :
+	 \texttt{wish}:
 	    \tclex{load MyModule.so}{}\\
       \item Tcl calls automatically the C function
 	 \texttt{MyModule\_Init()} to initialize the module.
@@ -965,14 +960,13 @@ strange effects:
 \begin{part}{}{Tcl at LAAS}
    \vfill
    \begin{bitemize}{color@bulle}
-      \item Current version : 8.4.3 in \texttt{/usr/local/tcl-8.4}
-      \item House-made interpreters : \texttt{eltclsh} and \texttt{elwish} in
+      \item Current version: 8.5 in most Linux package systems.
+      \item House-made interpreters: \texttt{eltclsh} and \texttt{elwish} in
 	    \texttt{http://softs.laas.fr/openrobots}
-      \item Documentations :
+      \item Documentations:
 	 \begin{itemize}
 	    \item \texttt{http://www.tcl.tk}
 	    \item \texttt{http://wiki.tcl.tk}
-%	    \item \texttt{file:/home/mallet/help/tcl8.3.1/html/contents.htm}
 	 \end{itemize}
    \end{bitemize}
    \vfill
