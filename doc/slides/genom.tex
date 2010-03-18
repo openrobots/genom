@@ -529,7 +529,7 @@ request SetSpeed {
     output:               <name>::<sdi-ref>; 
     c_control_func:       demoSetSpeedCntrl;
     fail_msg:             <msg-name> , ...;
-    incompatible_with:    <exec-rqst-name> , ...;
+    interrupt_activity:   <exec-rqst-name> , ...;
 };
 \end{lstlisting}
 }
@@ -555,7 +555,7 @@ request Goto {
     c_exec_func_end:      demoGotoEnd; 
     c_exec_func_inter:    demoGotoInter; 
     fail_msg:             <msg-name> , ...; 
-    incompatible_with:    Goto, <exec-rqst-name>, ...; 
+    interrupt_activity:   Goto, <exec-rqst-name>, ...; 
 };
 \end{lstlisting}
 }
@@ -676,7 +676,7 @@ request Goto {
     c_exec_func:            demoGotoExec;
     c_exec_func_end:        demoGotoEnd;
     c_exec_func_inter:      demoGotoEnd;
-    incompatible_with:      Goto;
+    interrupt_activity:     Goto;
     exec_task:              MotionTask;
 };
 \end{lstlisting}
@@ -1249,7 +1249,7 @@ request Goto {
    c_exec_func:         demoGotoExec;   
    c_exec_func_end:     demoGotoEnd;      
    c_exec_func_inter:   demoGotoInter;      
-   incompatible_with:   Goto;       
+   interrupt_activity:  Goto;       
    exec_task:           MotionTask;         
 };
 \end{lstlisting}
