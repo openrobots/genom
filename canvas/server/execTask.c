@@ -174,6 +174,11 @@ void $module$$execTaskName$ (void)
       logMsg("$module$$execTaskName$: h2timerPause error\n");
       $module$$execTaskName$Suspend (FALSE);
     }
+#elif ($task_wait_codel_flag$)
+    if ($task_wait_codel$() != OK) {
+      logMsh("$module$$execTaskName$: $task_wait_codel$ error\n");
+      $module$$execTaskName$Suspend(FALSE);
+    }
 #else /* wait for external events */
     if (h2evnSusp(0) != TRUE) {
       printf ("$module$$execTaskName$: h2evnSusp error\n");

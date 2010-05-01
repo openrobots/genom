@@ -126,7 +126,14 @@ execTaskGen(FILE *out)
 	    print_sed_subst(out, "cFuncExecFlag2", "0");
 	    print_sed_subst(out, "cFuncExecName2", "dummy");
 	}
-	
+	/* codel_task_wait */
+	if (t->codel_task_wait != NULL) {
+	  print_sed_subst(out, "codel_task_wait_flag", "1");
+	  print_sed_subst(out, "codel_task_wait", t->codel_task_wait);
+	} else {
+	  print_sed_subst(out, "codel_task_wait_flag", "0");
+	  print_sed_subst(out, "codel_task_wait", "dummy");
+	}
 	/* 
 	 * Creation des posters 
 	 */
