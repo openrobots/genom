@@ -41,7 +41,7 @@ LTLD=           @LIBTOOL@ --mode=link $(PURIFY) $(CC)
 MKDEP=		@MKDEP@
 LEX=            @LEX@
 YACC=		@YACC@
-LTINSTALL=	$(top_builddir)/libtool --mode=install $(INSTALL)
+LTINSTALL=	@LIBTOOL@ --mode=install $(INSTALL)
 INSTALL_DATA=	$(INSTALL) -m 644
 MKINSTALLDIRS= $(top_srcdir)/mkinstalldirs
 CMP=cmp -s
