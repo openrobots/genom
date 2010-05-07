@@ -36,8 +36,8 @@ CPP=		@CPP@
 STDINCPP=	@STDINCPP@
 PURIFY=		
 CC=		@CC@
-LTCC=           $(top_builddir)/libtool --mode=compile $(CC)
-LTLD=           $(top_builddir)/libtool --mode=link $(PURIFY) $(CC)
+LTCC=           @LIBTOOL@ --mode=compile $(CC)
+LTLD=           @LIBTOOL@ --mode=link $(PURIFY) $(CC)
 MKDEP=		@MKDEP@
 LEX=            @LEX@
 YACC=		@YACC@
