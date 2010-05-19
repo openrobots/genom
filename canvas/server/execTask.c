@@ -139,11 +139,7 @@ void $module$$execTaskName$ (void)
   int periodOverShot=0;
 
   MODULE_EVENT_STR moduleEvent;
-#ifdef HAS_POSIX_CLOCK
-  struct timespec tp; /* time measure */
-#else
-  struct timeval tv;
-#endif /* HAS_POSIX_CLOCK */
+  H2TIMESPEC tp; /* time measure */
 
   unsigned long mseBeginPrev=0, msecBegin, msecEnd, meanDuration, nbIter=1;
   int firstChrono=TRUE;
@@ -182,13 +178,8 @@ void $module$$execTaskName$ (void)
     moduleEvent.eventType = EXEC_START_EVENT;
     sendModuleEvent(&moduleEvent);
 
-#ifdef HAS_POSIX_CLOCK
-    clock_gettime(CLOCK_REALTIME, &tp);
+    h2GetTimeSpec(&tp);
     msecBegin = (tp.tv_nsec / 1000000) + (tp.tv_sec * 1000);
-#else
-    gettimeofday(&tv, NULL);
-    msecBegin = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
-#endif /* HAS_POSIX_CLOCK */
     EXEC_TASK_TIME_BEGIN_LOOP($execTaskNum$) = msecBegin;
 
     if(firstChrono) {firstChrono=FALSE; mseBeginPrev=msecBegin;}
@@ -383,13 +374,8 @@ void $module$$execTaskName$ (void)
     moduleEvent.eventType = EXEC_END_EVENT;
     sendModuleEvent(&moduleEvent);
 
-#ifdef HAS_POSIX_CLOCK
-    clock_gettime(CLOCK_REALTIME, &tp);
+    h2GetTimeSpec(&tp);
     msecEnd = (tp.tv_nsec / 1000000) + (tp.tv_sec * 1000);
-#else
-    gettimeofday(&tv, NULL);
-    msecEnd = (tv.tv_usec / 1000) + (tv.tv_sec * 1000);
-#endif /* HAS_POSIX_CLOCK */
 
 #if (!$periodFlag$)
     EXEC_TASK_ON_PERIOD($execTaskNum$) = msecEnd - msecBegin;
