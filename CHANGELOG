@@ -1,3 +1,25 @@
+Genom 2.6, xxx xx 2010.
+
+ 96. Use h2getTimeSpec() to read the clock to compute codels duration.
+ 95. Cross-compilation fixes for OpenEmbedded.
+ 94. Update slides: incompatible_with -> interrupt_activity.
+ 93. Fix openprs pkg-config file.
+ 92. Update docs to match 2009 reality.
+ 91. Convert Genom slides to beamer
+
+Genom 2.5, October 14, 2009.
+ 
+ 90. Fix typos in documentation.
+ 89. Fix posters_input attribute when a poster type is repeated in 
+     different fields
+ 88. Do not aggressively destroy tclserv's mbox when loading modules.
+ 87. Raise an error when we try to delete tclserv's mbox with pending requests.
+ 86. Remove pseudo-protection against async events in tclserv while sending 
+     requests. 
+ 85. Fix several problems related to client disconnection in tclserv.
+ 84. Relinquish CPU after each loop of execution tasks.
+ 83. Add 'extern "C"' declaration to genom{Give,Take}SDIs prototypes.
+
 Genom 2.4, July 28, 2009.
  82. Add a new 'clock_rate' module attribute that can modify the default 100
      ticks/s.
