@@ -91,7 +91,7 @@ $(LIB): $(OBJS)
 	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $<
 
 clean:
-	$(top_builddir)/libtool --mode=clean rm -f $(OBJS) $(LIB)
+	$(LIBTOOL) --mode=clean rm -f $(OBJS) $(LIB)
 
 distclean: clean
 	rm -f DEPENDANCES Makefile
