@@ -83,10 +83,10 @@ typedef struct {
   int taskId;              /* (CONST.) Id de la tache (process) */
   STATUS status;           /* status de la tache OK ou ERROR */
   double period;           /* (CONST.) Periode requise (sec) */
-  unsigned long maxPeriod; /* Periode max (msec) */
-  unsigned long onPeriod;  /* Periode courante (msec) */
-  unsigned long timeBeginLoop; /* starting time of the exec task loop */
-  unsigned long timeEndLoop;   /* end time of the exec task loop */
+  unsigned long maxPeriod; /* Periode max (usec) */
+  unsigned long onPeriod;  /* Periode courante (usec) */
+  unsigned long unused1;   /* was: starting time of the exec task loop */
+  unsigned long unused2;   /* was: end time of the exec task loop */
   unsigned long durationLoop;  /* duration of last loop */
   unsigned long unused;        /* duration of last loop */
   int bilan;               /* bilan de la tache et de l'activite permanente */
@@ -146,8 +146,6 @@ typedef struct {
 #define M_EXEC_TASK_PERIOD(p,t)     ((p)->execTaskTab[(t)].period)
 #define M_EXEC_TASK_MAX_PERIOD(p,t) ((p)->execTaskTab[(t)].maxPeriod)
 #define M_EXEC_TASK_ON_PERIOD(p,t)  ((p)->execTaskTab[(t)].onPeriod)
-#define M_EXEC_TASK_TIME_BEGIN_LOOP(p,t)((p)->execTaskTab[(t)].timeBeginLoop)
-#define M_EXEC_TASK_TIME_END_LOOP(p,t)  ((p)->execTaskTab[(t)].timeEndLoop)
 #define M_EXEC_TASK_DURATION_LOOP(p,t)  ((p)->execTaskTab[(t)].durationLoop)
 #define M_EXEC_TASK_BILAN(p,t)      ((p)->execTaskTab[(t)].bilan)
 #define M_EXEC_TASK_NB_ACTI(p,t)    ((p)->execTaskTab[(t)].nbActivities)

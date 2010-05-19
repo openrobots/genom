@@ -98,6 +98,9 @@ static BOOL filterAndSendEvn (ACTIVITY_STATE state,
 /* Returns a string representing the h2 event */
 char const * h2GetEvnStateString(int num);
 
+/* Compute micro-seconds difference between 2 H2TIMESPEC */
+static long h2timespec_udiff(const H2TIMESPEC *, const H2TIMESPEC *);
+
 /*--------------------------- LOCAL VARIABLES -------------------------*/
 /* WARNING: use unique names */
 
@@ -140,9 +143,9 @@ void $module$$execTaskName$ (void)
   int periodOverShot=0;
 
   MODULE_EVENT_STR moduleEvent;
-  H2TIMESPEC tp; /* time measure */
+  H2TIMESPEC tpBegin, tpBeginPrev, tpEnd; /* time measure */
 
-  unsigned long mseBeginPrev=0, msecBegin, msecEnd, meanDuration, nbIter=1;
+  unsigned long  meanDuration, nbIter=1;
   int firstChrono=TRUE;
   int computeMeanFlag = FALSE; /* try to compute meanDuration only if main exec loop and not abnormal overshot */
 
@@ -160,6 +163,9 @@ void $module$$execTaskName$ (void)
     $module$$execTaskName$Suspend (FALSE);
   moduleEvent.moduleNum = $numModule$;
   moduleEvent.taskNum = $execTaskNum$;
+
+  tpBeginPrev.tv_sec = 0;
+  tpBeginPrev.tv_nsec = 0;
 
   /* main loop */
   FOREVER {
@@ -179,34 +185,37 @@ void $module$$execTaskName$ (void)
     moduleEvent.eventType = EXEC_START_EVENT;
     sendModuleEvent(&moduleEvent);
 
-    h2GetTimeSpec(&tp);
-    msecBegin = (tp.tv_nsec / 1000000) + (tp.tv_sec * 1000);
-    EXEC_TASK_TIME_BEGIN_LOOP($execTaskNum$) = msecBegin;
+    h2GetTimeSpec(&tpBegin);
 
-    if(firstChrono) {firstChrono=FALSE; mseBeginPrev=msecBegin;}
+    if (firstChrono) {
+	    firstChrono=FALSE; 
+	    memcpy(&tpBeginPrev, &tpBegin, sizeof(H2TIMESPEC));
+    }
 
     computeMeanFlag = 1;
 #if ($periodFlag$) /* periodic task */
-    if ((EXEC_TASK_ON_PERIOD($execTaskNum$) = msecBegin - mseBeginPrev) 
+    EXEC_TASK_ON_PERIOD($execTaskNum$) = 
+	h2timespec_udiff(&tpBegin, &tpBeginPrev);
+    if (EXEC_TASK_ON_PERIOD($execTaskNum$) 
 	> EXEC_TASK_MAX_PERIOD($execTaskNum$)) {
-      EXEC_TASK_MAX_PERIOD($execTaskNum$) = msecBegin - mseBeginPrev;
+      EXEC_TASK_MAX_PERIOD($execTaskNum$) = EXEC_TASK_ON_PERIOD($execTaskNum$);
       computeMeanFlag = 0;
     }
-    mseBeginPrev = msecBegin;
+    memcpy(&tpBeginPrev, &tpBegin, sizeof(H2TIMESPEC));
 
     /* Previous computation overshot */
-    if (EXEC_TASK_DURATION_LOOP($execTaskNum$) > (1000.0*EXEC_TASK_PERIOD($execTaskNum$))) {
+    if (EXEC_TASK_DURATION_LOOP($execTaskNum$) > (1000000.0*EXEC_TASK_PERIOD($execTaskNum$))) {
       periodOverShot = (int) ((EXEC_TASK_DURATION_LOOP($execTaskNum$)
-			       /(1000.0*EXEC_TASK_PERIOD($execTaskNum$))));
+			       /(1000000.0*EXEC_TASK_PERIOD($execTaskNum$))));
       
       if (GENOM_PRINT_TIME_FLAG) 
-	printf("$module$$execTaskName$ overshot of %d periods (d=%ldms mean=%ldms p=%ldms max=%ldms th=%dms)\n",
+	printf("$module$$execTaskName$ overshot of %d periods (d=%ldus mean=%ldus p=%ldus max=%ldus th=%dus)\n",
 	       periodOverShot,
 	       EXEC_TASK_DURATION_LOOP($execTaskNum$),
 	       meanDuration,
 	       EXEC_TASK_ON_PERIOD($execTaskNum$),
 	       EXEC_TASK_MAX_PERIOD($execTaskNum$),
-	       (int)(1000*EXEC_TASK_PERIOD($execTaskNum$)));
+	       (int)(1000000*EXEC_TASK_PERIOD($execTaskNum$)));
     }
     else
       periodOverShot = 0;
@@ -375,19 +384,18 @@ void $module$$execTaskName$ (void)
     moduleEvent.eventType = EXEC_END_EVENT;
     sendModuleEvent(&moduleEvent);
 
-    h2GetTimeSpec(&tp);
-    msecEnd = (tp.tv_nsec / 1000000) + (tp.tv_sec * 1000);
+    h2GetTimeSpec(&tpEnd);
 
 #if (!$periodFlag$)
-    EXEC_TASK_ON_PERIOD($execTaskNum$) = msecEnd - msecBegin;
+    EXEC_TASK_ON_PERIOD($execTaskNum$) = h2timespec_udiff(&tpEnd, &tpBegin);
     if (EXEC_TASK_ON_PERIOD($execTaskNum$) > EXEC_TASK_MAX_PERIOD($execTaskNum$)) {
       EXEC_TASK_MAX_PERIOD($execTaskNum$) = EXEC_TASK_ON_PERIOD($execTaskNum$);
       computeMeanFlag = 0;
     }
 #endif
 
-    EXEC_TASK_TIME_END_LOOP($execTaskNum$) = msecEnd;
-    EXEC_TASK_DURATION_LOOP($execTaskNum$) = msecEnd-msecBegin;
+    EXEC_TASK_DURATION_LOOP($execTaskNum$) = 
+	h2timespec_udiff(&tpEnd, &tpBegin);
     if (computeMeanFlag) {
       meanDuration = (int)
 	(((double)((nbIter-1)*meanDuration + EXEC_TASK_DURATION_LOOP($execTaskNum$))
@@ -402,7 +410,7 @@ void $module$$execTaskName$ (void)
 	     meanDuration,
 	     EXEC_TASK_ON_PERIOD($execTaskNum$),
 	     EXEC_TASK_MAX_PERIOD($execTaskNum$),
-	     (int)(EXEC_TASK_PERIOD($execTaskNum$)*1000.0)); 
+	     (int)(EXEC_TASK_PERIOD($execTaskNum$)*1000000.0)); 
     }
 
     /* The result changed: inform the control task */
@@ -775,4 +783,27 @@ static BOOL filterAndSendEvn (ACTIVITY_STATE state,
     $module$$execTaskName$Suspend (TRUE);
   }
   return wakeUpCntrlTask;
+}
+
+static long
+h2timespec_udiff(const H2TIMESPEC *x, const H2TIMESPEC *y)
+{
+	H2TIMESPEC yy;
+
+	memcpy(&yy, y, sizeof(H2TIMESPEC));
+
+	/* Carry */
+	if (x->tv_nsec < y->tv_nsec) {
+		long sec = (y->tv_nsec - x->tv_nsec) / 1000000000 + 1;
+		yy.tv_nsec -= 1000000000 * sec;
+		yy.tv_sec += sec;
+	}
+	if (x->tv_nsec - y->tv_nsec > 1000000000) {
+		int sec = (x->tv_nsec - y->tv_nsec) / 1000000000;
+		yy.tv_nsec += 1000000000 * sec;
+		yy.tv_sec -= sec;
+	}
+
+	return 1000000*(x->tv_sec - yy.tv_sec) 
+	    + (x->tv_nsec - yy.tv_nsec)/1000;
 }

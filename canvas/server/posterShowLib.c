@@ -100,13 +100,13 @@ STATUS $module$CntrlPosterShow ()
 	    i, $module$ExecTaskNameTab[i],
 	    M_EXEC_TASK_STATUS(sdic,i) == OK ? "OK": "ERROR");
     if (M_EXEC_TASK_PERIOD(sdic,i) != 0) {
-      printf ("    %3lums ", M_EXEC_TASK_ON_PERIOD(sdic,i));
-      printf ("(max %lu, ", M_EXEC_TASK_MAX_PERIOD(sdic,i));
-      printf ("th %d)", (int)(M_EXEC_TASK_PERIOD(sdic,i)*1000.));
+      printf ("    %.2lfms ", M_EXEC_TASK_ON_PERIOD(sdic,i)/1000.0);
+      printf ("(max %.2lf, ", M_EXEC_TASK_MAX_PERIOD(sdic,i)/1000.0);
+      printf ("th %.2lf)", M_EXEC_TASK_PERIOD(sdic,i)*1000.);
     }
     else {
-      printf ("    %3lums ", M_EXEC_TASK_ON_PERIOD(sdic,i));
-      printf ("(max %lu)        ", M_EXEC_TASK_MAX_PERIOD(sdic,i));      
+      printf ("    %.2lfms ", M_EXEC_TASK_ON_PERIOD(sdic,i)/1000.0);
+      printf ("(max %.2lf)        ", M_EXEC_TASK_MAX_PERIOD(sdic,i)/1000.0);      
     }
     printf ("\t %s\n", h2getErrMsg(M_EXEC_TASK_BILAN(sdic,i), strmsg, 64));
 

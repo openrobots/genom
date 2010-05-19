@@ -2,7 +2,7 @@
 /* --- Generated file, do not edit by hand --------------------------- */
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2010 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -110,8 +110,6 @@ $listUserFuncProto$
 #define EXEC_TASK_PERIOD(t)     M_EXEC_TASK_PERIOD(SDI_C,t)
 #define EXEC_TASK_MAX_PERIOD(t) M_EXEC_TASK_MAX_PERIOD(SDI_C,t)
 #define EXEC_TASK_ON_PERIOD(t)  M_EXEC_TASK_ON_PERIOD(SDI_C,t)
-#define EXEC_TASK_TIME_BEGIN_LOOP(t) M_EXEC_TASK_TIME_BEGIN_LOOP(SDI_C,t)
-#define EXEC_TASK_TIME_END_LOOP(t) M_EXEC_TASK_TIME_END_LOOP(SDI_C,t)
 #define EXEC_TASK_DURATION_LOOP(t) M_EXEC_TASK_DURATION_LOOP(SDI_C,t)
 #define EXEC_TASK_BILAN(t)      M_EXEC_TASK_BILAN(SDI_C,t)
 #define EXEC_TASK_NB_ACTI(t)    M_EXEC_TASK_NB_ACTI(SDI_C,t)
