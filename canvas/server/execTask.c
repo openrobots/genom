@@ -51,6 +51,7 @@
 
 #include <commonStructLib.h>
 #include <h2evnLib.h>
+#include <h2timeLib.h>
 #include <h2timerLib.h>
 
 #include <genom/modules.h>
