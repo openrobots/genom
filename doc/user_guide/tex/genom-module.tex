@@ -44,55 +44,55 @@ services in a  standard template. It then lets  you access those services
 with a standardized  interface. Produced data can  also be retrieved in a
 standard way.
 
-The services are controlled ({\em  i.e.} parameterized, started or stopped)
-with  {\em   requests},  that  represent  the    visible  part   of   the
+The services are controlled (\emph{i.e.} parameterized, started or stopped)
+with  \emph{requests},  that  represent  the    visible  part   of   the
 module. Requests  will be sent by the operator using various interfaces
-({\tt  Test} program  generated   by /GenoM/ or  {\tt  tcl}  shell  - see 
-paragraph~\vref{sec|tcl})    or  by a  program,    usually  named a  {\em
-supervisor},  that  will supervised  the  robot  (for  intance using {\tt
-OpenPRS} - see paragraph~\vref{sec|propice}).
+(\texttt{Test} program  generated   by /GenoM/ or  \texttt{tcl}  shell  - see 
+paragraph~\vref{sec|tcl})    or  by a  program,    usually  named a  
+\emph{supervisor},  that  will supervised  the  robot  (for  intance using 
+\texttt{OpenPRS} - see paragraph~\vref{sec|propice}).
  
-Each request can  have an {\em  input parameter} and an  {\em
-output parameter} ({\tt C} structures as  of today). When a service ends,
-a   {\em  reply} is sent to   the   client who invoked  the 
-request. Each reply  is  associated with an  {\em  execution  report}:  it
+Each request can  have an \emph{input parameter} and an  
+\emph{output parameter} (\texttt{C} structures as  of today). When a service ends,
+a   \emph{reply} is sent to   the   client who invoked  the 
+request. Each reply  is  associated with an  \emph{execution  report}:  it
 reports on the execution of  the service and  lets  the client  know about
 problems that might have occured.
 
-There are two kind of requests: the {\em execution} requests and the {\em
-control} requests. Execution requests  start  an actual service,  whereas
+There are two kind of requests: the \emph{execution} requests and the 
+\emph{control} requests. Execution requests  start  an actual service,  whereas
 control requests control the  execution of the services. Control requests
 mainy allow to set parameters or  interrupt services. Each module has  a
-predefined control request whose name  is  {\tt Abort}: it can  interrupt
+predefined control request whose name  is  \texttt{Abort}: it can  interrupt
 any running service as well as the module itself.
 
 The execution time of  a control request  is considered to be zero. Thus,
 they have only one final reply, which is  sent to the client immediately.
 On the other hand, execution requests can last for an arbitrary amount of
-time (even indefinitely). Thus they send an {\em intermediate} reply,  as
+time (even indefinitely). Thus they send an \emph{intermediate} reply,  as
 soon as the service 
 starts.  The final reply is sent when the service is over.
 
-A running  service is called an   {\em activity}. Some function,  such as
-monitoring services,  can start {\em several}  activities and  execute them
+A running  service is called an   \emph{activity}. Some function,  such as
+monitoring services,  can start \emph{several}  activities and  execute them
 simultaneously. Other  kind   of function,  such as   servoing functions,
-cannot handle  parallelism  and can only  start  {\em one} activity at  a
+cannot handle  parallelism  and can only  start  \emph{one} activity at  a
 time. This constraint has to be indicated by the developer.
 
 Activities can control a physical device (sensors, actuators), read  data
 produced by  other modules (by  the mean of  posters) or produce
 data. These data can  be transfered at the end  of the  execution through
-the final reply, or at any time by the mean of {\em posters}.
+the final reply, or at any time by the mean of \emph{posters}.
 
-A {\em  poster} is a structure ({\tt  C} and {\tt XML} structure as  of  
+A \emph{poster} is a structure (\texttt{C} and \texttt{XML} structure as  of  
 today) that is
-updated by an {\tt activity} and shared in the global system. It can be read by
+updated by an \texttt{activity} and shared in the global system. It can be read by
 any other component of the system (a module, an operator, ...) at any time.
 
 Every piece  of data that goes through  a module (requests or posters) is
-stored  in an internal database  which is called {\em Functional Internal
+stored  in an internal database  which is called \emph{Functional Internal
 Data Structure} (fIDS  for short --- you might  also find the acronym
-{\em SDIf} which is the French translation of fIDS).
+\emph{SDIf} which is the French translation of fIDS).
 
 % -----------------------------------------------------------------------
 
@@ -101,12 +101,12 @@ Data Structure} (fIDS  for short --- you might  also find the acronym
 
 As shown in the figure  \ref{fig|module}, a  module defines two  Internal
 Data Structures:  the functional IDS (fIDS)  and  the control  IDS (cIDS)
-dedicated to the internal routines.  The module also defines {\em  tasks}
+dedicated to the internal routines.  The module also defines \emph{tasks}
 (threads under Unix) that execute code. There are at least two tasks:
 
 \begin{itemize}
-\item One {\em control task} that controls the module.
-\item One (or several) {\em execution tasks} that run your services and
+\item One \emph{control task} that controls the module.
+\item One (or several) \emph{execution tasks} that run your services and
 the algorithms they are made of.
 \end{itemize}
 
@@ -133,18 +133,18 @@ any output produced by the service (the execution report and possibly the
 C structure declared for that service).
 \end{enumerate}
 
-Beside    this, the control task  maintains   a poster  (the {\em control
+Beside    this, the control task  maintains   a poster  (the \emph{control
 poster}) that contains informations on   the current state of the  module
 (running services, activities, and so on).
 
 Conflicts between services are   handled  according to the following  rule:  if
-incompatible  services are to  be run  at the  same  time, {\bf  the last
+incompatible  services are to  be run  at the  same  time, \textbf{the last
 request   has  the  priority}. Activities    that  happen to  be
 incompatible  with that new request are  interrupted. This strategy matches a
-{\em reactivity} criterion and is systematically applied.
+\emph{reactivity} criterion and is systematically applied.
 
 You must  declare  yourself which  services  are incompatible with  which
-services. Note that   a service is  {\em  very often}  incompatible  with
+services. Note that   a service is  \emph{very often}  incompatible  with
 itself; you must not forget to declare this.
 
 
@@ -159,9 +159,10 @@ scheduling. Tasks are  given priorities (supported under real-time
 operating systems only),
 depending on their constrains in terms of resources and CPU requirements.
 
-In the  {\tt  demo} example,  there were  only one  execution  task ({\tt
-exec\_task MotionTask}). This   is  usually  sufficient since  a   single
-execution task can handle {\em several}  activities in parallel. However,
+In the  \texttt{demo} example,  there were  only one  execution  task 
+(\texttt{exec\_task MotionTask}). 
+This   is  usually  sufficient since  a   single
+execution task can handle \emph{several}  activities in parallel. However,
 if several  activities require different  priorities or periods, you will
 have to declare several execution tasks.
 
@@ -169,7 +170,7 @@ have to declare several execution tasks.
 \subsubsection{Interface libraries:}
 
 Modules provide two standard interface libraries in various programming
-languages (for now: {\tt C, tcl, XML, open-prs}).
+languages (for now: \texttt{C, tcl, XML, open-prs}).
 
 \begin{itemize}
 \item A service library, which handles requests emission and reception,
@@ -186,8 +187,8 @@ the module posters.
 In order to associate your code to the requests, you have to tell \GenoM\
 which are the  functions that must be  executed to  handle requests. Your
 algorithms must be split into several parts (startup, main function, end,
-interruption, ...).   Each  of  these   parts  is called  a   {\em codel}
-(elementary code). At this time, codels are {\tt C} functions.
+interruption, ...).   Each  of  these   parts  is called  a   \emph{codel}
+(elementary code). At this time, codels are \texttt{C} functions.
 
 A module is the result of  the link edition between  the code \GenoM\ has
 generated and the codels libraries.

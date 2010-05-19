@@ -31,11 +31,11 @@
 % $Id$
 %
 
-Communication between modules is based  on two libraries: {\tt posterLib}
-for posters and {\tt csLib} for requests.  This appendix presents a short
+Communication between modules is based  on two libraries: \texttt{posterLib}
+for posters and \texttt{csLib} for requests.  This appendix presents a short
 overview of the functions of composing these libraries.
 
-\section{Posters and {\tt posterLib}}
+\section{Posters and \texttt{posterLib}}
 
 Posters are  shared memory segments, that  can be written by their owners
 and read by  any process.  The  basic poster handling functions and their
@@ -85,18 +85,18 @@ name		& description \\
 
 
 % =======================================================================
-\section{Requests and {\tt csLib}}
+\section{Requests and \texttt{csLib}}
 
-Communication between modules is based  on the client/server library {\tt
-csLib}. Messages   (requests and replies)  are   held in mailboxes  (ring
+Communication between modules is based  on the client/server library 
+\texttt{csLib}. Messages   (requests and replies)  are   held in mailboxes  (ring
 buffers).
 
-{\tt csLib} has the following properties:
+\texttt{csLib} has the following properties:
 \begin{itemize}
 \item Both the sending of requests and the reception of replies can be
 done in non-blocking mode.
-\item The reception of a request is associated to the execution of a {\tt
-C} function.
+\item The reception of a request is associated to the execution of a 
+\texttt{C} function.
 \item A request generates at most two replies.
 \item There is no dynamic memory allocation.
 \item It runs under Unix (and VxWorks).
@@ -118,13 +118,13 @@ name		& description \\
 % =======================================================================
 \section{Execution}
 
-\subsubsection{Unix} Launch {\tt h2 init}.
+\subsubsection{Unix} Launch \texttt{h2 init}.
 
-To  access   remote posters   (on  another  machine),  define    the {\tt
-POSTER\_HOST} environment  variable  with the  name  of the {\em  server}
-machine (there can be only one, {\em i.e.} all the posters must be hosted
+To  access   remote posters   (on  another  machine),  define    the 
+\texttt{POSTER\_HOST} environment  variable  with the  name  of the \emph{server}
+machine (there can be only one, \emph{i.e.} all the posters must be hosted
 by the same machine).
 
-The  poster server {\tt posterServ} is  launched by {\tt h2 init}, except
-if {\tt POSTER\_HOST} is defined.
+The  poster server \texttt{posterServ} is  launched by \texttt{h2 init}, except
+if \texttt{POSTER\_HOST} is defined.
 

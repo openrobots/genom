@@ -31,7 +31,7 @@
 % $Id$
 %
 
-\GenoM\ ({\bf Gen}erator {\bf o}f {\bf M}odules) is a development
+\GenoM\ (\textbf{Gen}erator \textbf{o}f \textbf{M}odules) is a development
 framework that allows  the definition and the  production of modules that
 encapsulate algorithms.  A module is  a standardized software entity that
 is able to offer services which are provided by your algorithms.  Modules
@@ -39,13 +39,13 @@ can start or stop the execution of these services,  pass arguments to the
 algorithms and export the data produced.
 
 Now  you  might ask  yourself:  ``why should  I bother  integrating  into
-modules my   own algorithms that   {\em do} work  very  well?''. That's a
+modules my   own algorithms that   \emph{do} work  very  well?''. That's a
 pretty good  question and this introduction  will try to advocate on that
 point and give you some answers.
 
 \bigbreak
 
-Your  algorithms aim to  being embedded into  a  {\em target} machine ---
+Your  algorithms aim to  being embedded into  a  \emph{target} machine ---
 let's say: a robot.  You might not embrace the way  this machine works in
 its whole and, most important, your  algorithms will be integrated into a
 more general software system that includes  other algorithms developed by
@@ -61,7 +61,7 @@ acquire an image, localize itself,  build a local  map with some  sensors
 and  move.  If the  environment  is rather free, the  robot  could plan a
 trajectory, but  it could also  decide to move on the  basis of the local
 data given by its  proximetric  sensors.  To be   able to schedule  these
-rather complex (and uncertain!) actions, it  is {\em necessary} to define
+rather complex (and uncertain!) actions, it  is \emph{necessary} to define
 a protocol that can handle tasks at an abstract level. This protocol will
 let the robot:
 
@@ -84,7 +84,7 @@ down. Failures can be as general as:
    \end{itemize}
 \end{itemize}
 
-Therefore,  the  general   concept  of  {\em module}  and   {\em standard
+Therefore,  the  general   concept  of  \emph{module}  and   \emph{standard
 protocols}  have  been defined.   These  generic  modules can encapsulate
 almost  every  kind of  algorithm:  periodic or aperiodic, synchronous or
 asynchronous, interruptible or uninterruptible, and even yours!
@@ -97,7 +97,7 @@ every situation, \ldots\ and \GenoM\ already does it for you!
 
 \bigbreak
 
-The generator  of modules comes  with  a description {\em language},  and
+The generator  of modules comes  with  a description \emph{language},  and
 standard templates.  The templates will let you describe your module, the
 services  it  can offer, and  for   each  service the  list  of  expected
 parameters,  the algorithms (yours!) that will  be  executed, the results
@@ -107,11 +107,11 @@ With the template file and the code of your algorithms --- sorry, you still
 must write it yourself --- \GenoM\ produces:
 
 \begin{itemize}
-   \item {\em a complete module} that can run on several flavor of Unix
+   \item \emph{a complete module} that can run on several flavor of Unix
 or VxWorks, 
-   \item {\em interface libraries} that will let you use the services of
+   \item \emph{interface libraries} that will let you use the services of
 the module and get their results back,
-   \item {\em an interactive test program} that let you send several
+   \item \emph{an interactive test program} that let you send several
 requests to the module and trigger the execution of the corresponding
 services.
 \end{itemize}
@@ -119,24 +119,24 @@ services.
 \bigbreak
 
 Now that you  have an idea  of what \GenoM\ can  be used for, this manual
-will explain you {\em how} to actually do it. You will learn
+will explain you \emph{how} to actually do it. You will learn
 
 \begin{center}\begin{cartouche}\parbox{0.9\hsize}{
 \parskip10pt
-    1. {\bf How to produce and use a first test module}, with a concrete
+    1. \textbf{How to produce and use a first test module}, with a concrete
 example.
 
-    2. {\bf How the generic modules work}, and {\bf how they are
+    2. \textbf{How the generic modules work}, and \textbf{how they are
 structured}. In particular, some useful vocabulary is explained.
 
-    3. {\bf How to describe your own modules}. The complete
+    3. \textbf{How to describe your own modules}. The complete
 specification language will be explained.
 
-    4. {\bf How to generate your modules}.
+    4. \textbf{How to generate your modules}.
 
-    5. {\bf How to integrate your algorithms into the modules}.
+    5. \textbf{How to integrate your algorithms into the modules}.
 
-    6. {\bf How to use modules} (from an interactive program, from
+    6. \textbf{How to use modules} (from an interactive program, from
 another module, \ldots).
 }\end{cartouche}\end{center}
 
