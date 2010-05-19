@@ -80,7 +80,7 @@ the fIDS, and set default values to parameters.
 executed by the execution task upon destruction of the module, just after
 it has stopped serving requests.
 
-\item {\bf Permanent codel} ({\tt c\_func}). This codel is executed
+\item {\bf Permanent codel} ({\tt codel\_task\_main}). This codel is executed
 each  time  the task  wakes  up (therefore  periodically  if  the task is
 periodic). This codel creates a permanent activity.
 \end{itemize}
@@ -819,11 +819,12 @@ demoInit(int *report)
 \end{verbatim}\end{cartouche}\end{center}
 
 
-\subsection{Permanent activity codel {\tt c\_func}}
+\subsection{Permanent activity codel \texttt{codel\_task\_main}}
 
 A permanent activity can  be defined for  any execution task, by the mean
-of the  field  {\tt c\_func}.  It is executed  each  time the task  wakes
-up. It is usually used to set up a  filtering function (pose computation,
+of the  field  \texttt{codel\_task\_main}.  It is executed  each  
+time the task  wakes up. 
+It is usually used to set up a  filtering function (pose computation,
 sonar echos  reading, \ldots), or   a permanent  servoing activity  which
 starts and stops with the module.
 
