@@ -40,7 +40,7 @@ datarootdir=	@datarootdir@
 datadir=	@datadir@
 
 INSTALL= 	@INSTALL@
-VPATH=		$(srcdir) $(top_srcdir)/compat
+VPATH=		$(srcdir) $(top_srcdir)/compat $(top_srcdir)/lib
 
 include $(top_builddir)/config.mk
 
@@ -83,7 +83,8 @@ SRCS = \
 	userCntrlCodelsGen.c	\
 	userStartGen.c		\
 	configureGen.c		\
-	extern_processes.c
+	extern_processes.c	\
+	printScanUtil.c
 
 OBJS = $(SRCS:.c=.lo) @LIBOBJS@
 
@@ -98,8 +99,7 @@ install: all
 	$(LTINSTALL) $(GENOM) ${DESTDIR}$(bindir)
 
 $(GENOM): $(OBJS) ../lib/lib$(GENOM).la
-	$(LTLD) -static $(CFLAGS) $(OBJS) -o $@ \
-		../lib/lib$(GENOM).la $(LDFLAGS)
+	$(LTLD) -static $(CFLAGS) $(OBJS) -o $@ 
 
 parser.tab.lo: parser.tab.c
 	$(LTCC) -static -c $(CPPFLAGS)  $(CFLAGS)	\
