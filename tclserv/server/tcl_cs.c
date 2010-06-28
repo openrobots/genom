@@ -439,12 +439,13 @@ tclServCsWakeUpTask(int port, int timeout, int parentId)
 	    break;
 
 	 case FALSE:
-	    /* timeout */
-	    break;
+	    /* timeout or error */
 
-	 case ERROR:
+	    if (errnoGet() == S_h2semLib_TIMEOUT) /* timeout */ break;
+
 	    perror("h2SemTake");
 	    csWakeUpTaskToBeDeleted = 1;
+	    write(sock, "DIE\n", 4);
 	    break;
       }
 
