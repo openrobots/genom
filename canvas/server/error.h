@@ -53,8 +53,15 @@ $listStdFailures$
 #define $MODULE$_H2_ERR_MSGS {\$listTabFailures$
 }
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int $module$RecordH2errMsgs(void);
 
+#ifdef __cplusplus
+}
+#endif
 
 
 /*-------------------------- end file loading ---------------------------*/
