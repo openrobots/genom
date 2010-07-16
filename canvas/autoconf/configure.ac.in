@@ -13,6 +13,9 @@ m4_sinclude([../acinclude.user.m4])
 
 ABI_VERSION_INFO=$iface_version$
 AC_SUBST(ABI_VERSION_INFO)
+genServer="$genServer$"
+genTcl="$genTcl$"
+genOpenprs="$genOpenprs$"
 
 AC_CANONICAL_HOST
 
