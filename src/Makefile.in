@@ -1,6 +1,6 @@
 
 #
-# Copyright (c) 2003,2008-2009 LAAS/CNRS
+# Copyright (c) 2003,2008-2010 LAAS/CNRS
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -98,8 +98,8 @@ install: all
 	$(MKINSTALLDIRS) ${DESTDIR}$(bindir)
 	$(LTINSTALL) $(GENOM) ${DESTDIR}$(bindir)
 
-$(GENOM): $(OBJS) ../lib/lib$(GENOM).la
-	$(LTLD) -static $(CFLAGS) $(OBJS) -o $@ 
+$(GENOM): $(OBJS)
+	$(LTLD) -static $(CFLAGS) $^ -o $@
 
 parser.tab.lo: parser.tab.c
 	$(LTCC) -static -c $(CPPFLAGS)  $(CFLAGS)	\
