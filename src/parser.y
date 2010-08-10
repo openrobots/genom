@@ -76,6 +76,7 @@
 #include "tclClientGen.h"
 
 #include "tclservClientEncodeGen.h"
+#include "tclservClientDecodeGen.h"
 
 #include "userCntrlCodelsGen.h"
 #include "userExecCodelsGen.h"
@@ -1922,6 +1923,7 @@ main(int argc, char **argv)
 	
 	if (genTclservClient) {
 	   fatalError |= (genTclservClientEncode(sortie) != 0);
+	   fatalError |= (genTclservClientDecode(sortie) != 0);
 	}
 
     /* codels templates */

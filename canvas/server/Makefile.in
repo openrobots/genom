@@ -152,10 +152,12 @@ oprsclient_data = \
 	openprs/$module$Openprs.inc openprs/$module$Openprs.opf openprs/$module$Openprs.sym
 
 tclservclient_src=\
-	tclservClient/$module$TclservClientEncode.c
+	tclservClient/$module$TclservClientEncode.c \
+	tclservClient/$module$TclservClientDecode.c
 tclservclient_obj=$(tclservclient_src:%.c=$(OBJDIR)/%.lo)
 tclservclient_headers=\
-	tclservClient/$module$TclservClientEncode.h
+	tclservClient/$module$TclservClientEncode.h \
+	tclservClient/$module$TclservClientDecode.h
 
 # --- what to do --------------------------------------------------------
 

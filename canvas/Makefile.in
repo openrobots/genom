@@ -122,7 +122,8 @@ flist+=\
 
 # Tclserv templates
 flist+= \
-	server/tclservClient/tclservClientEncode.h
+	server/tclservClient/tclservClientEncode.h \
+	server/tclservClient/tclservClientDecode.h 
 
 # codels templates
 flist+=\

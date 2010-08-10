@@ -79,6 +79,7 @@ SRCS = \
 	initGen.c		\
 	tclGen.c		\
 	tclClientGen.c		\
+	tclservClientDecodeGen.c \
 	tclservClientEncodeGen.c \
 	userExecCodelsGen.c	\
 	userCntrlCodelsGen.c	\
