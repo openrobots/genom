@@ -154,7 +154,7 @@ oprsclient_data = \
 tclservclient_src=\
 	tclservClient/$module$TclservClientEncode.c
 tclservclient_obj=$(tclservclient_src:%.c=$(OBJDIR)/%.lo)
-tclservclient_header=\
+tclservclient_headers=\
 	tclservClient/$module$TclservClientEncode.h
 
 # --- what to do --------------------------------------------------------
@@ -264,7 +264,7 @@ $genServer$$genTcl$	$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) ${DESTDIR}$(libdir)/
 $genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/openprs
 $genOpenprs$	$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) ${DESTDIR}$(libdir)/openprs/$(OPENPRSCLIENT_LIB)
 $genTclservClient$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/tclservClient
-$genTclservClient$	$(LTINSTALL) $(OBJDIR)/$(TCLSERVCLIENT_LIB) ${DESTDIR}$(libdir)/openprs/$(TCLSERVCLIENT_LIB)
+$genTclservClient$	$(LTINSTALL) $(OBJDIR)/$(TCLSERVCLIENT_LIB) ${DESTDIR}$(libdir)/tclservClient/$(TCLSERVCLIENT_LIB)
 $genServer$	$(MKINSTALLDIRS) ${DESTDIR}$(bindir)
 $genServer$	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) ${DESTDIR}$(bindir)/$(INIT_BIN)
 $genServer$	$(LTINSTALL) $(OBJDIR)/$(TEST_BIN) ${DESTDIR}$(bindir)/$(TEST_BIN)
