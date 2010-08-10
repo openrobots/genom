@@ -1,6 +1,5 @@
-
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2010 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -34,11 +33,10 @@
 #ifndef $MODULE$_PRINT_H
 #define $MODULE$_PRINT_H
 
-#include "genom/printScan.h"
 
 /* Structures definies par d'autres modules */
 $externPrintLibs$
 
-#include "$module$PosterLib.h"
+#include "server/$module$PosterLib.h"
 
 /* Prototypes */
