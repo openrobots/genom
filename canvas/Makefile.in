@@ -120,6 +120,10 @@ flist+=\
 	server/openprs/openprsProto.h		\
 	server/openprs/openprsRqst.op
 
+# Tclserv templates
+flist+= \
+	server/tclservClient/tclservClientEncode.h
+
 # codels templates
 flist+=\
 	codels/Makefile.in
@@ -138,7 +142,7 @@ genlist = \
 	autoconf/configure.ac \
 	autogen
 
-dirs=autoconf codels openprs server server/tcl server/openprs
+dirs=autoconf codels openprs server server/tcl server/openprs server/tclservClient
 
 # -----------------------------------------------------------------------
 

@@ -75,6 +75,8 @@
 #include "tclGen.h"
 #include "tclClientGen.h"
 
+#include "tclservClientEncodeGen.h"
+
 #include "userCntrlCodelsGen.h"
 #include "userExecCodelsGen.h"
 #include "userStartGen.h"
@@ -1504,6 +1506,7 @@ main(int argc, char **argv)
     int genIfChange = 0;
     int genTcl = 0;
     int genOpenprs = 0;
+	int genTclservClient = 0;
     int genServer = 1;
     int upToDate;
     struct stat statfile, statstamp, statgen;
@@ -1520,10 +1523,11 @@ main(int argc, char **argv)
     char autoconfDir[MAXPATHLEN] = "autoconf";
     char tclDir[MAXPATHLEN] = "server/tcl";
     char openprsDir[MAXPATHLEN] = "server/openprs";
+	char tclservClientDir[MAXPATHLEN] = "server/tclservClient";
 
     static const char *usage = 
       "Usage: \n  genom [-i] [-c] [-d] [-n] [-p protoDir] [-s] [-t] "
-      "[-u codelsDir] [-o]\n\t[-Ddefine] [-Ipath] [-Ppackage] module[.gen]\n"
+      "[-u codelsDir] [-o] [-x]\n\t[-Ddefine] [-Ipath] [-Ppackage] module[.gen]\n"
       "with:\n"
       "     -P: declare a package on which this module is dependent.\n"
       "         Packages are defined used via pkg-config, so you should\n"
@@ -1537,6 +1541,7 @@ main(int argc, char **argv)
       "     -o: produces openprs interfaces\n\n"
       "     -u: specifies the name of the codels directory\n"
       "     -p: changes the path for prototype files (canvas) \n"
+	  "     -x: produce tclserv C client interface\n"
       "     -D: define a preprocessor symbol\n"
       "     -c: generates if changes only  \n"
       "     -d: debug \n"
@@ -1561,7 +1566,7 @@ main(int argc, char **argv)
     memset(cppOptions, 0, sizeof(cppOptions));
     nopt = argc;
 
-    while ((opt = getopt(argc, argv, "D:I:OP:dnp:ciu:toas-:v")) != -1) {
+    while ((opt = getopt(argc, argv, "D:I:OP:dnp:ciu:toxas-:v")) != -1) {
 
 	switch (opt) {
 	  case 'D':
@@ -1643,6 +1648,10 @@ main(int argc, char **argv)
 	    bufcat(&cmdLine, "-o ", optarg);
 	    genOpenprs = 1;
 	    break;
+	  case 'x':
+		bufcat(&cmdLine, "-x ", optarg);
+		genTclservClient = 1;
+		break;
 	  case 'h':
 	    printf(usage);
 	    exit(0);
@@ -1851,17 +1860,19 @@ main(int argc, char **argv)
     fprintf(sortie, "# Generateur du module %s\n\n", module->name);
 
     /* Variables for perl */
-    fprintf(sortie, "use vars qw($module $moduleOprs $genOpenprs $genTcl $codelsDir $autoconfDir $serverDir $installUserPart $openprsDir $tclDir);\n");
+    fprintf(sortie, "use vars qw($module $moduleOprs $genOpenprs $genTcl $genTclservClient $codelsDir $autoconfDir $serverDir $installUserPart $openprsDir $tclDir $tclservClientDir);\n");
     fprintf(sortie, "$module=\"%s\";\n", module->name);
     fprintf(sortie, "$moduleOprs=\"%s-oprs\";\n", module->name);
     fprintf(sortie, "$genOpenprs=%d;\n", genOpenprs);
     fprintf(sortie, "$genTcl=%d;\n", genTcl);
+	fprintf(sortie, "$genTclservClient=%d;\n", genTclservClient);
 
     fprintf(sortie, "$codelsDir=\"%s\";\n\n", codelsDir);
     fprintf(sortie, "$autoconfDir=\"%s\";\n\n", autoconfDir);
     fprintf(sortie, "$serverDir=\"%s\";\n\n", autoDir);
     fprintf(sortie, "$openprsDir=\"%s\";\n\n", openprsDir);
     fprintf(sortie, "$tclDir=\"%s\";\n\n", tclDir);
+    fprintf(sortie, "$tclservClientDir=\"%s\";\n\n", tclservClientDir);
     fprintf(sortie, "$installUserPart=%d;\n\n", installUserPart);
 
     fprintf(sortie, "use vars qw($OVERWRITE $ASK_IF_CHANGED $SKIP_IF_CHANGED);\n");
@@ -1875,7 +1886,7 @@ main(int argc, char **argv)
 
     fatalError |= (configureServerGen(sortie, 
                                       cmdLine, argv[0], genfile,
-				      genTcl, genOpenprs, genServer)!=0);
+				      genTcl, genOpenprs, genServer, genTclservClient)!=0);
     fatalError |= (typeGen(sortie) != 0);
     fatalError |= (errorGen(sortie) != 0);
     fatalError |= (endianGen(sortie) != 0);
@@ -1908,6 +1919,10 @@ main(int argc, char **argv)
        fatalError |= (tclGen(sortie) != 0);
        fatalError |= (tclClientGen(sortie) != 0);
     }
+	
+	if (genTclservClient) {
+	   fatalError |= (genTclservClientEncode(sortie) != 0);
+	}
 
     /* codels templates */
     if (genServer) {
@@ -1920,10 +1935,10 @@ main(int argc, char **argv)
 				codelsDir, 
                                 cmdLine, argv[0], genfile, 
                                 cwd,
-				genTcl, genOpenprs, genServer) != 0);
+				genTcl, genOpenprs, genServer, genTclservClient) != 0);
     /* pkgconfig data file */
     fatalError |= (pkgconfigGen(sortie, cmdLine, genfile, 
-				genOpenprs, genServer, cppOptions) != 0);
+				genOpenprs, genServer, genTclservClient, cppOptions) != 0);
 
     /* finishing up */
     script_do(sortie, protoDir, "end.pl");

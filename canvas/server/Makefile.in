@@ -151,12 +151,19 @@ oprsclient_headers = \
 oprsclient_data = \
 	openprs/$module$Openprs.inc openprs/$module$Openprs.opf openprs/$module$Openprs.sym
 
+tclservclient_src=\
+	tclservClient/$module$TclservClientEncode.c
+tclservclient_obj=$(tclservclient_src:%.c=$(OBJDIR)/%.lo)
+tclservclient_header=\
+	tclservClient/$module$TclservClientEncode.h
+
 # --- what to do --------------------------------------------------------
 
 
 dirs: $(OBJDIR)
 $genTcl$dirs: $(OBJDIR)/tcl
 $genOpenprs$dirs: $(OBJDIR)/openprs
+$genTclservClient$dirs: $(OBJDIR)/tclservClient
 
 $(OBJDIR):
 	mkdir -p $@
@@ -167,6 +174,9 @@ $(OBJDIR)/tcl:
 $(OBJDIR)/openprs:
 	mkdir -p $@
 
+$(OBJDIR)/tclservClient:
+	mkdir -p $@
+
 $genServer$server: $(OBJDIR)/$(MODULE_LIB)
 $genServer$server: $(OBJDIR)/$(INIT_BIN)
 $genServer$server: $(OBJDIR)/$(POSTERWRITE_LIB)
@@ -175,6 +185,7 @@ client:: $(OBJDIR)/$(CLIENT_LIB)
 $genServer$client:: $(OBJDIR)/$(TEST_BIN) $(OBJDIR)/$(CONNECT)
 $genServer$$genTcl$client:: $(OBJDIR)/$(TCLCLIENT_LIB)
 $genOpenprs$client:: $(OBJDIR)/$(OPENPRSCLIENT_LIB)
+$genTclservClient$client:: $(OBJDIR)/$(TCLSERVCLIENT_LIB)
 
 
 # --- libraries ---------------------------------------------------------
@@ -204,6 +215,9 @@ $(OBJDIR)/$(OPENPRSCLIENT_LIB): $(oprsclient_obj)
 	$(LTLD) $(CFLAGS) $(oprsclient_obj) $(SERVERS_ENDIAN_LIB) -o $@ \
 		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
+$(OBJDIR)/$(TCLSERVCLIENT_LIB): $(tclservclient_obj)
+	$(LTLD) $(CFLAGS) $(tclservclient_obj) $(SERVERS_ENDIAN_LIB) -o $@ \
+		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
 # --- binaries ----------------------------------------------------------
 
@@ -228,6 +242,9 @@ $(oprsclient_obj): $(OBJDIR)/%.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(TRANSGEN_CFLAGS) \
 		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
+$(tclservclient_obj): $(OBJDIR)/%.lo: %.c
+	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
+
 $(OBJDIR)/%.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
 
@@ -246,6 +263,8 @@ $genTcl$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/tclserv
 $genServer$$genTcl$	$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) ${DESTDIR}$(libdir)/tclserv/$(TCLCLIENT_LIB)
 $genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/openprs
 $genOpenprs$	$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) ${DESTDIR}$(libdir)/openprs/$(OPENPRSCLIENT_LIB)
+$genTclservClient$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/tclservClient
+$genTclservClient$	$(LTINSTALL) $(OBJDIR)/$(TCLSERVCLIENT_LIB) ${DESTDIR}$(libdir)/openprs/$(TCLSERVCLIENT_LIB)
 $genServer$	$(MKINSTALLDIRS) ${DESTDIR}$(bindir)
 $genServer$	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) ${DESTDIR}$(bindir)/$(INIT_BIN)
 $genServer$	$(LTINSTALL) $(OBJDIR)/$(TEST_BIN) ${DESTDIR}$(bindir)/$(TEST_BIN)
@@ -263,7 +282,8 @@ $genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/openprs
 $genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_data) ${DESTDIR}$(datadir)/openprs )
 $genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)/server/openprs
 $genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_headers) ${DESTDIR}$(includedir)/server/openprs )
-
+$genTclservClient$	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)/server/tclservClient
+$genTclservClient$	( cd $(srcdir) && $(INSTALL_DATA) $(tclservclient_headers) ${DESTDIR}$(includedir)/server/tclservClient )
 
 # --- clean -------------------------------------------------------------
 
@@ -281,6 +301,7 @@ CLEAN_FILES += \
 
 CLEAN_FILES += $(tclclient_obj) $(OBJDIR)/$(TCLCLIENT_LIB)
 CLEAN_FILES += $(oprsclient_obj) $(OBJDIR)/$(OPENPRSCLIENT_LIB)
+CLEAN_FILES += $(tclservclient_obj) $(OBJDIR)/$(TCLSERVCLIENT_LIB)
 
 clean:
 	$(LTRM) $(CLEAN_FILES)
@@ -327,6 +348,9 @@ $genTcl$	$(make_depend) $(TCL_CPPFLAGS) $?
 
 $genOpenprs$depend $(OBJDIR)/dependencies:: $(openprsclient_src)
 $genOpenprs$	$(make_depend) $(TRANSGEN_CFLAGS) $?
+
+$genTclservClient$depend $(OBJDIR)/dependencies:: $(tclservclient_src)
+$genTclservClient$	$(make_depend) $?
 
 -include $(OBJDIR)/dependencies
 endif

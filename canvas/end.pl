@@ -64,6 +64,12 @@ if ($genOpenprs == 1)
     print "" if (mirror_dir("server/openprs", "../$openprsDir", "", "",$OVERWRITE));
 }
 
+if ($genTclservClient == 1)
+{
+    print "Updating $tclservClientDir";
+    print "" if (mirror_dir("server/tclservClient", "../$tclservClientDir", "", "",$OVERWRITE));
+}
+
 # Do +x on autogen
 my $autogen = "../autogen";
 my $autogen_mode = stat($autogen)->mode & 07777;

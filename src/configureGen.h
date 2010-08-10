@@ -63,10 +63,10 @@ int configureGen(FILE *out,
         const char *codelsDir, 
 	const char *cmdLine, const char *genomBin, const char *genomFile, 
         const char *genomWd,
-		 int genTcl, int genOpenprs, int genServer);
+		 int genTcl, int genOpenprs, int genServer, int genTclservClient);
 int configureServerGen(FILE *out, 
         const char* cmdLine, const char *genomBin, const char *genomFile,
-		       int genTcl, int genOpenprs, int genServer);
-int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genOpenprs, int genServer, char** cppOptions);
+		       int genTcl, int genOpenprs, int genServer, int genTclservClient);
+int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genOpenprs, int genServer, int genTclservClient, char** cppOptions);
 
 #endif /* H_CONFIGUREGEN */

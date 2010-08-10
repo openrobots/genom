@@ -140,7 +140,7 @@ int
 configureGen(FILE *out,
 	     const char *codelsDir, const char *cmdLine,
 	     const char *genomBin, const char *genomFile, const char *genomWd,
-	     int genTcl, int genOpenprs, int genServer)
+	     int genTcl, int genOpenprs, int genServer, int genTclservClient)
 {
    const char **p;
    EXEC_TASK_LIST *lt;
@@ -188,6 +188,7 @@ configureGen(FILE *out,
       print_sed_subst(out, "module", module->name);
       print_sed_subst(out, "genTcl", genTcl ? "yes":"no");
       print_sed_subst(out, "genOpenprs", genOpenprs ? "yes":"no");
+      print_sed_subst(out, "genTclservClient", genTclservClient ? "yes":"no");
       print_sed_subst(out, "genServer", genServer ? "yes":"no");
       print_sed_subst(out, "genomBin", genomBin);
       print_sed_subst(out, "codelsDir", codelsDir);
@@ -205,6 +206,7 @@ configureGen(FILE *out,
    print_sed_subst(out, "codelsDir", codelsDir);
    print_sed_subst(out, "genTcl", genTcl ? "" : "#");
    print_sed_subst(out, "genOpenprs", genOpenprs ? "":"#");
+   print_sed_subst(out, "genTclservClient", genTclservClient ? "":"#");
    print_sed_subst(out, "genServer", genServer ? "":"#");
 
    subst_end(out);
@@ -354,7 +356,8 @@ configureGen(FILE *out,
 int
 configureServerGen(FILE *out, char const* cmdLine,
 		   const char *genomBin, const char *genomFile,
-		   int genTcl, int genOpenprs, int genServer)
+		   int genTcl, int genOpenprs, int genServer,
+		   int genTclservClient)
 {
    char *str;
    EXEC_TASK_LIST *lt;
@@ -379,6 +382,7 @@ configureServerGen(FILE *out, char const* cmdLine,
    print_sed_subst(out, "genTcl", genTcl ? "" : "#");
    print_sed_subst(out, "genOpenprs", genOpenprs ? "" : "#");
    print_sed_subst(out, "genServer", genServer ? "" : "#");
+   print_sed_subst(out, "genTclservClient", genTclservClient ? "" : "#");
 
    str = NULL;
    for (ln = allIncludeFiles; ln != NULL; ln = ln->next) {
@@ -409,7 +413,7 @@ configureServerGen(FILE *out, char const* cmdLine,
     return 0;
 }
 /*----------------------------------------------------------------------*/
-int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genOpenprs, int genServer, char** cppOptions)
+int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genOpenprs, int genServer, int genTclservClient, char** cppOptions)
 {
     char* require = 0;
     char* require2 = 0;

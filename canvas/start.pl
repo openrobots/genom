@@ -151,5 +151,16 @@ if ($genOpenprs == 1) {
   }
 }
 
+# Creation du repertoire tclservClient
+#
+if ($genTclservClient == 1) {
+  if (! -d "$tclservClientDir") {
+    mkdir "$tclservClientDir", 04775;
+  }
+  else {
+    chmod 04775, "$tclservClientDir";
+  }
+}
+
 #---------------------------------------------------------------
 
