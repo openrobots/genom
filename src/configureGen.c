@@ -290,6 +290,7 @@ configureGen(FILE *out,
    print_sed_subst(out, "pkgname",   pkgname);
    print_sed_subst(out, "genTcl",    genTcl?     "yes":"no");
    print_sed_subst(out, "genOpenprs", genOpenprs? "yes":"no");
+   print_sed_subst(out, "genTclservClient", genTclservClient ? "yes":"no");
    print_sed_subst(out, "genServer", genServer? "yes":"no");
    print_sed_subst(out, "genomBin",  genomBin);
    print_sed_subst(out, "codelsDir", codelsDir);
@@ -308,6 +309,7 @@ configureGen(FILE *out,
    print_sed_subst(out, "codelsDir", codelsDir);
    print_sed_subst(out, "genTcl",    genTcl?     "":"# ");
    print_sed_subst(out, "genOpenprs", genOpenprs? "":"# ");
+   print_sed_subst(out, "genTclservClient", genTclservClient? "":"# ");
 
    /* GenoM -D options */
    genomDefines(out);

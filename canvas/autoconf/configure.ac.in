@@ -16,6 +16,7 @@ AC_SUBST(ABI_VERSION_INFO)
 genServer="$genServer$"
 genTcl="$genTcl$"
 genOpenprs="$genOpenprs$"
+genTclservClient="$genTclservClient$"
 
 AC_CANONICAL_HOST
 
@@ -96,6 +97,11 @@ ifelse([$genOpenprs$], [yes], [
 	PKG_CHECK_MODULES(TRANSGEN, transgen)
         AC_CONFIG_FILES([$module$-oprs.pc:autoconf/$module$-oprs.pc.in])
 	], [])
+
+dnl search libtclserv_client
+ifelse([$genTclservClient$], [yes], [
+		PKG_CHECK_MODULES(TCLSERV_CLIENT_LIB, libtclserv_client)
+		], [])
 
 dnl --- Check for extra software ----------------------------------------
 
