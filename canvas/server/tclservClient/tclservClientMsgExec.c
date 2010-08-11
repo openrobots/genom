@@ -1,0 +1,164 @@
+$commentbegin$
+/* 
+ * Copyright (c) 1993-2005 LAAS/CNRS
+ * All rights reserved.
+ *
+ * Redistribution and use  in source  and binary  forms,  with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *   1. Redistributions of  source  code must retain the  above copyright
+ *      notice, this list of conditions and the following disclaimer.
+ *   2. Redistributions in binary form must reproduce the above copyright
+ *      notice,  this list of  conditions and the following disclaimer in
+ *      the  documentation  and/or  other   materials provided  with  the
+ *      distribution.
+ *
+ * THIS  SOFTWARE IS PROVIDED BY  THE  COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND  ANY  EXPRESS OR IMPLIED  WARRANTIES,  INCLUDING,  BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES  OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR  PURPOSE ARE DISCLAIMED. IN  NO EVENT SHALL THE COPYRIGHT
+ * HOLDERS OR      CONTRIBUTORS  BE LIABLE FOR   ANY    DIRECT, INDIRECT,
+ * INCIDENTAL,  SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF  SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN  CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
+ * DAMAGE.
+ */
+$commentend$
+
+/*========================================================================
+ *
+ *  $module$$request$RqstSend  -  Emission d'une requete d'execution
+ *
+ *  Retourne : OK ou ERROR
+ */
+ 
+STATUS $module$$request$RqstSend (TCLSERV_CLIENT_ID clientId, 
+				ssize_t *pRqstId $hasInput$,
+				$input$
+		)
+{
+  buf_t buf = buf_init();
+  ssize_t res;
+  buf_cat(buf, "$module$::$request$ ");
+$hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
+
+  /* Emit the msg */
+  res = tclserv_client_rqst(clientId, buf->data);
+  buf_destroy(&buf);
+  if (res != -1) {
+	  *pRqstId = res;
+	  return OK;
+  }
+
+  return (ERROR);
+}
+
+/*-------------------------------------------------------------------------
+ *  $module$$request$ReplyRcv  -  Reception des repliques
+ *
+ *  Retourne : ERROR ou FINAL_REPLY_OK ou 
+ *             WAITING_INTERMED_REPLY ou INTERMED_REPLY_TIMEOUT ou
+ *             WAITING_FINAL_REPLY    ou FINAL_REPLY_TIMEOUT
+ */
+ 
+int $module$$request$ReplyRcv (TCLSERV_CLIENT_ID clientId, ssize_t rqstId, 
+			       $output$
+			       ssize_t *activity, char **bilan)
+{
+  int status;    /* ERROR ou FINAL_REPLY_TIMEOUT ou FINAL_REPLY_OK */
+  char* res;
+
+  status = tclserv_client_wait(clientId, rqstId, &res);
+  if (status == -2)
+	  return -2;
+
+  if (status == 0) {
+	  char* begin = res + 2; // SKIP ok
+$has_output$    if (scan_buf_$output_type$(&begin, $outputName$, 0, NULL) == -1) {
+$has_output$      free(res);
+$has_output$      return -2;
+$has_output$    }
+	 free(res);
+  } else {
+	  *bilan = res;
+  }
+  
+  return(status);
+}
+ 
+/*-------------------------------------------------------------------------
+ *  $module$$request$RqstAndAck  -  Emet la requete d'exec, 
+ *                                  attend la replique intermediaire
+ *
+ *  Retourne : ERROR ou INTERMED_REPLY_TIMEOUT ou WAITING_FINAL_REPLY ou 
+ *             FINAL_REPLY_OK 
+ */
+ 
+int $module$$request$RqstAndAck (TCLSERV_CLIENT_ID clientId, ssize_t *pRqstId,
+				 $input$ $hasInput$,
+				 $output$
+				 int *activity, char **bilan)
+{
+  buf_t buf = buf_init();
+  ssize_t res;
+  buf_cat(buf, "$module$::$request$ ");
+$hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
+
+  /* Emit the msg */
+  res = tclserv_client_rqst_ack(clientId, buf->data);
+  buf_destroy(&buf);
+  if (res != -1) {
+	  *pRqstId = res;
+	  return OK;
+  }
+
+  return ERROR;
+}
+
+/*-------------------------------------------------------------------------
+ *  $module$$request$RqstAndRcv  -  Emet la requete d'execution,
+ *                                  Attend les repliques.
+ *
+ *  Retourne : ERROR ou FINAL_REPLY_TIMEOUT ou FINAL_REPLY_OK ou 
+ *             INTERMED_REPLY_TIMEOUT
+ */
+ 
+int $module$$request$RqstAndRcv (TCLSERV_CLIENT_ID clientId, 
+				 int replyTimeOut,
+				 $input$ $hasInput$,
+				 $output$
+				 int *activity,
+				 char **bilan)
+{
+  int status;
+  char * res;
+
+  buf_t buf = buf_init();
+  buf_cat(buf, "$module$::$request$ ");
+$hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
+
+  /* Emit the msg */
+  status = tclserv_client_rqst_wait(clientId, buf->data, &res);
+  buf_destroy(&buf);
+
+  if (status == -2)
+	  return -2;
+
+  if (status == 0) {
+	  char* begin = res + 2; // SKIP ok
+$has_output$    if (scan_buf_$output_type$(&begin, $outputName$, 0, NULL) == -1) {
+$has_output$      free(res);
+$has_output$      return -2;
+$has_output$    }
+	 free(res);
+  } else { // status == 1, method term but not ok
+	  *bilan = res;
+  }
+
+  return ERROR;
+}
+ 

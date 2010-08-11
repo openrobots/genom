@@ -123,7 +123,13 @@ flist+=\
 # Tclserv templates
 flist+= \
 	server/tclservClient/tclservClientEncode.h \
-	server/tclservClient/tclservClientDecode.h 
+	server/tclservClient/tclservClientDecode.h \
+	server/tclservClient/tclservClientMsgLib.c \
+	server/tclservClient/tclservClientMsgLib.h \
+	server/tclservClient/tclservClientMsgExec.c \
+	server/tclservClient/tclservClientMsgCtrl.c \
+	server/tclservClient/tclservClientMsgLibCtrlProto.h \
+	server/tclservClient/tclservClientMsgLibExecProto.h \
 
 # codels templates
 flist+=\

@@ -153,11 +153,13 @@ oprsclient_data = \
 
 tclservclient_src=\
 	tclservClient/$module$TclservClientEncode.c \
-	tclservClient/$module$TclservClientDecode.c
+	tclservClient/$module$TclservClientDecode.c \
+	tclservClient/$module$TclservClientMsgLib.c
 tclservclient_obj=$(tclservclient_src:%.c=$(OBJDIR)/%.lo)
 tclservclient_headers=\
 	tclservClient/$module$TclservClientEncode.h \
-	tclservClient/$module$TclservClientDecode.h
+	tclservClient/$module$TclservClientDecode.h \
+	tclservClient/$module$TclservClientMsgLib.h
 
 # --- what to do --------------------------------------------------------
 
