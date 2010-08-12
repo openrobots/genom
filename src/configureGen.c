@@ -104,6 +104,20 @@ static void defineExternOprsPackage(char** conf_in, char** conf_mk_in, char cons
 }
 #endif
 
+static void
+defineExternTclservClientPackage(char** conf_in, char** conf_mk_in, 
+							     char const* NAME, char const* name)
+{
+    bufcatIfNotIn(conf_mk_in, "\n%s_TCLSERV_CLIENT_LIB_CFLAGS   = \t\\@%s_TCLSERV_CLIENT_LIB_CFLAGS\\@", NAME, NAME);
+    bufcatIfNotIn(conf_mk_in, "\n%s_TCLSERV_CLIENT_LIB_LIBS   = \t\\@%s_TCLSERV_CLIENT_LIB_LIBS\\@", NAME, NAME);
+
+    bufcatIfNotIn(conf_in,
+        "\nPKG_CHECK_MODULES(%s_TCLSERV_CLIENT_LIB, %s-tclserv_client)\n"
+        "AC_SUBST(%s_TCLSERV_CLIENT_LIB_CFLAGS)\n"
+        "AC_SUBST(%s_TCLSERV_CLIENT_LIB_LIBS)\n\n", 
+        NAME, name, NAME, NAME);
+}
+
 /*----------------------------------------------------------------------*/
 /*
  * format a module name into a pkgconfig name
@@ -148,6 +162,7 @@ configureGen(FILE *out,
 
    char *pkg_conf_in, *pkg_conf_mk;
    char *genomIncludes, *serverLibs, *codelLibs, *codel_files;
+   char *tclserv_client_cflags, *tclserv_client_libs;
    char *at_sign, *pkgname;
 #define VERSION_TO_STR_LENGTH 200
    char version_to_str[VERSION_TO_STR_LENGTH];
@@ -257,6 +272,10 @@ configureGen(FILE *out,
        defineExternOprsPackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 #endif
 
+   if (genTclservClient)
+     for (ln = imports; ln != NULL; ln = ln->next) 
+       defineExternTclservClientPackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
+
    if (genServer)
      for (ln = codels_requires; ln != NULL; ln = ln->next) 
        definePackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
@@ -317,9 +336,11 @@ configureGen(FILE *out,
    genomIncludes = NULL;
    serverLibs = NULL;
    codelLibs = NULL;
+   tclserv_client_cflags = NULL;
+   tclserv_client_libs = NULL;
 
    /* Include all packages by default */
-   for (ln = requires; ln != NULL; ln = ln->next)
+   for (ln = requires; ln != NULL; ln = ln->next) 
        bufcatIfNotIn(&genomIncludes, " \\$(%s_CFLAGS)", ln->NAME);
 
    for (ln = codels_requires; ln != NULL; ln = ln->next) {
@@ -331,11 +352,19 @@ configureGen(FILE *out,
    for (ln = imports; ln != NULL; ln = ln->next)
    {
         bufcatIfNotIn(&genomIncludes, " \\$(%s_CFLAGS)", ln->NAME);
-	bufcatIfNotIn(&serverLibs, " \\$(%s_LIBS)", ln->NAME); 
+		bufcatIfNotIn(&serverLibs, " \\$(%s_LIBS)", ln->NAME); 
+		if (genTclservClient) {
+			bufcatIfNotIn(&tclserv_client_cflags, 
+					" \\$(%s_TCLSERV_CLIENT_LIB_CFLAGS)", ln->NAME);
+			bufcatIfNotIn(&tclserv_client_libs, 
+					" \\$(%s_TCLSERV_CLIENT_LIB_LIBS)", ln->NAME);
+		}
    }
    output(out, "genomPackages", pkg_conf_mk);
    output(out, "serverLibs", serverLibs);
    output(out, "codelLibs", codelLibs);
+   output(out, "tclserv_client_cflags", tclserv_client_cflags);
+   output(out, "tclserv_client_libs", tclserv_client_libs);
 
    /* -I options */
    for (ln = externPath; ln != NULL; ln = ln->next)

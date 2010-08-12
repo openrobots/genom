@@ -222,6 +222,7 @@ $(OBJDIR)/$(OPENPRSCLIENT_LIB): $(oprsclient_obj)
 $(OBJDIR)/$(TCLSERVCLIENT_LIB): $(tclservclient_obj)
 	$(LTLD) $(CFLAGS) $(tclservclient_obj) -o $@ \
 		$(LIBTOOL_LINKOPT) $(TCLSERV_CLIENT_LIB_LIBS) \
+		$(TCLSERV_CLIENT_LIB_OTHER_LIBS) \
 		$(LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
 # --- binaries ----------------------------------------------------------
@@ -249,6 +250,7 @@ $(oprsclient_obj): $(OBJDIR)/%.lo: %.c
 
 $(tclservclient_obj): $(OBJDIR)/%.lo: %.c
 	$(LTCC) -c $(CPPFLAGS) $(TCLSERV_CLIENT_LIB_CFLAGS) \
+		$(TCLSERV_CLIENT_LIB_OTHER_CFLAGS) \
 		$(CFLAGS) -o $@ $< $(LIBTOOL_COPT)
 
 $(OBJDIR)/%.lo: %.c
