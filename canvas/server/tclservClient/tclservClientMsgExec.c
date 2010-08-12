@@ -73,7 +73,7 @@ int $module$$request$ReplyRcv (TCLSERV_CLIENT_ID clientId, ssize_t rqstId,
 	  return -2;
 
   if (status == 0) {
-	  char* begin = res + 2; // SKIP ok
+	  char* begin = res + 3; // SKIP "ok "
 $has_output$    if (scan_buf_$output_type$(&begin, $outputName$, 0, NULL) == -1) {
 $has_output$      free(res);
 $has_output$      return -2;
@@ -83,7 +83,7 @@ $has_output$    }
 	  *bilan = res;
   }
   
-  return(status);
+  return status;
 }
  
 /*-------------------------------------------------------------------------
@@ -106,10 +106,10 @@ $hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
   buf_destroy(&buf);
   if (res != -1) {
 	  *pRqstId = res;
-	  return OK;
+	  return 0;
   }
 
-  return ERROR;
+  return -1;
 }
 
 /*-------------------------------------------------------------------------
@@ -137,7 +137,7 @@ $hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
 	  return -2;
 
   if (status == 0) {
-	  char* begin = res + 2; // SKIP ok
+	  char* begin = res + 3; // SKIP "ok "
 $has_output$    if (scan_buf_$output_type$(&begin, $outputName$, 0, NULL) == -1) {
 $has_output$      free(res);
 $has_output$      return -2;
@@ -147,6 +147,6 @@ $has_output$    }
 	  *bilan = res;
   }
 
-  return ERROR;
+  return status;
 }
  
