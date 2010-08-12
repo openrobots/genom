@@ -75,7 +75,7 @@ genTclservClientEncode(FILE *out)
     fprintf(out, "#include <stdlib.h>\n");
     fprintf(out, "#include <assert.h>\n");
     fprintf(out, "\n");
-    fprintf(out, "#include <buf.h>\n");
+    fprintf(out, "#include <tclserv_client/buf.h>\n");
 	fprintf(out, "#include \"genom/printScan.h\"\n");
     fprintf(out, "#include \"%sTclservClientEncode.h\"\n\n", module->name);
 

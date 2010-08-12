@@ -75,6 +75,7 @@ genTclservClientDecode(FILE *out)
     fprintf(out, "#include <stdio.h>\n");
     fprintf(out, "#include <stdlib.h>\n");
     fprintf(out, "\n");
+	fprintf(out, "#include <tclserv_client/scan.h>\n");
     fprintf(out, "#include \"%sScan.h\"\n\n", module->name);
 
     /* Generation des fonctions scan */
