@@ -63,7 +63,6 @@ SRCS += \
 	h2endian.c		\
 	moduleEvents.c		\
 	scan.c			\
-	scan_buf.c		\
 	posterXMLLib.c		\
 	print.c			\
 	printXML.c		\
