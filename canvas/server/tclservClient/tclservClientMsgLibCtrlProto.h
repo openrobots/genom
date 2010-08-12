@@ -29,7 +29,7 @@ $commentbegin$
  */
 $commentend$
 
-STATUS $module$$request$RqstSend (TCLSERV_CLIENT_ID clientId, 
+int $module$$request$RqstSend (TCLSERV_CLIENT_ID clientId, 
 					 ssize_t *pRqstId $hasInput$,
 					 $input$
 		);

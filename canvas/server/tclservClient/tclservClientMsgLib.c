@@ -77,12 +77,10 @@ int $module$ClientInit (TCLSERV_CLIENT_ID clientId)
  *  Retourne : OK ou ERROR
  */
 
-STATUS $module$ClientEnd (TCLSERV_CLIENT_ID clientId)         /* Id. du client */
+int $module$ClientEnd (TCLSERV_CLIENT_ID clientId)         /* Id. du client */
      
 {
-  STATUS status;
-  status = tclserv_client_unload_module(clientId, "$module$");
-  return status;
+  return tclserv_client_unload_module(clientId, "$module$");
 }
 
 
