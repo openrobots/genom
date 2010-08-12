@@ -220,7 +220,7 @@ $(OBJDIR)/$(OPENPRSCLIENT_LIB): $(oprsclient_obj)
 		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
 $(OBJDIR)/$(TCLSERVCLIENT_LIB): $(tclservclient_obj)
-	$(LTLD) $(CFLAGS) $(tclservclient_obj) $(SERVERS_ENDIAN_LIB) -o $@ \
+	$(LTLD) $(CFLAGS) $(tclservclient_obj) -o $@ \
 		$(LIBTOOL_LINKOPT) $(TCLSERV_CLIENT_LIB_LIBS) \
 		$(LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
