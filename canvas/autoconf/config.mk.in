@@ -84,7 +84,7 @@ ABI_VERSION_INFO=	@ABI_VERSION_INFO@
 CLIENT_LIB=		lib$module$Client$(LIBEXT)
 TCLCLIENT_LIB=		lib$module$TclServ$(LIBEXT)
 OPENPRSCLIENT_LIB=	lib$module$Openprs$(LIBEXT)
-TCLSERVCLIENT_LIB=  lib$module$TclServClient$(LIBEXT)
+TCLSERVCLIENT_LIB=  lib$module$TclservClient$(LIBEXT)
 
 # Use that to link to our client library
 MY_CLIENT_LIB=          $(GENOM_LIBS) $(abs_top_builddir)/server/$(OBJDIR)/$(CLIENT_LIB)
