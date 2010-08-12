@@ -58,6 +58,7 @@
 
 #define PROTO_PKGCONFIG_IN	"autoconf/module.pc.in"
 #define PROTO_PKGCONFIG_OPRS_IN	"autoconf/module-oprs.pc.in"
+#define PROTO_PKGCONFIG_TCLSERV_CLIENT_IN "autoconf/module-tclserv_client.pc.in"
 
 int configureGen(FILE *out, 
         const char *codelsDir, 

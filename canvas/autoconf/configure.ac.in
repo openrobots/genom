@@ -101,6 +101,7 @@ ifelse([$genOpenprs$], [yes], [
 dnl search libtclserv_client
 ifelse([$genTclservClient$], [yes], [
 		PKG_CHECK_MODULES(TCLSERV_CLIENT_LIB, libtclserv_client)
+		AC_CONFIG_FILES([$module$-tclserv_client.pc:autoconf/$module$-tclserv_client.pc.in])
 		], [])
 
 dnl --- Check for extra software ----------------------------------------

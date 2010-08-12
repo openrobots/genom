@@ -61,7 +61,8 @@ flist=\
 	autoconf/config.mk.in           \
 	autoconf/codels.mk		\
 	autoconf/module.pc.in		\
-	autoconf/module-oprs.pc.in	
+	autoconf/module-oprs.pc.in	 \
+	autoconf/module-tclserv_client.pc.in
 
 # server templates
 flist+=\

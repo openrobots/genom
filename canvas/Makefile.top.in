@@ -122,6 +122,7 @@ regen: standalone-regen
 # --- pkgconfig ---------------------------------------------------------
 ALL_PKGCONFIG := $pkgname$.pc $(addsuffix .pc,@EXTRA_PKGCONFIG@)
 $genOpenprs$ALL_PKGCONFIG += $pkgname$-oprs.pc
+$genTclservClient$ALL_PKGCONFIG += $pkgname$-tclserv_client.pc
 install:: $(ALL_PKGCONFIG)
 	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/pkgconfig
 	$(INSTALL) $(ALL_PKGCONFIG) ${DESTDIR}$(libdir)/pkgconfig

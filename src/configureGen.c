@@ -502,6 +502,33 @@ int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genO
       subst_end(out);
       script_close(out, "autoconf/%s-oprs.pc.in", pkgname);
     } /* -oprs.pc.in */
+
+    /* package -tclserv_client.pc.in for tclserv_client */
+    if (genTclservClient) {
+      script_open(out);
+      subst_begin(out, PROTO_PKGCONFIG_TCLSERV_CLIENT_IN);
+      
+      /* Build the require field 
+       * We take into account only the packages 
+       * use in "import from" statements */
+      for (ln = imports; ln != NULL; ln = ln->next)
+	{
+	  for (ln2 = requires; ln2 != NULL; ln2 = ln2->next)
+	    if (! strcmp(ln2->name, ln->name))
+	      {
+		bufcat(&require2, ", ");
+		bufcat(&require2, ln->name);
+		bufcat(&require2, "-tclserv_client");
+	      }
+	}
+      output(out, "require", require2);
+      
+      print_sed_subst(out, "module", module->name);
+      print_sed_subst(out, "pkgname", pkgname);
+      print_sed_subst(out, "genomVersion", genomVersion);
+      subst_end(out);
+      script_close(out, "autoconf/%s-tclserv_client.pc.in", pkgname);
+    } /* -tclserv_client.pc.in */
     
     free(pkgname);
     return 0;
