@@ -58,9 +58,6 @@ $hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
 
 /*-------------------------------------------------------------------------
  *  $module$$request$ReplyRcv  -  Reception de la replique finale
- *
- *  Retourne : ERROR ou FINAL_REPLY_TIMEOUT ou FINAL_REPLY_OK ou
- *             WAITING_FINAL_REPLY
  */
  
 int $module$$request$ReplyRcv (TCLSERV_CLIENT_ID clientId, 
@@ -68,7 +65,7 @@ int $module$$request$ReplyRcv (TCLSERV_CLIENT_ID clientId,
 			       $output$
 			       char** bilan)
 {
-  int status;    /* ERROR ou FINAL_REPLY_TIMEOUT ou FINAL_REPLY_OK */
+  int status;    
   char* res;
 
   status = tclserv_client_wait(clientId, rqstId, &res);
@@ -91,8 +88,6 @@ $has_output$    }
  
 /*-------------------------------------------------------------------------
  *  $module$$request$RqstAndRcv  -  Emission/reception requete de controle
- *
- *  Retourne : ERROR ou FINAL_REPLY_TIMEOUT ou FINAL_REPLY_OK
  */
  
 int $module$$request$RqstAndRcv (TCLSERV_CLIENT_ID clientId, 

@@ -59,17 +59,13 @@ $hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
 
 /*-------------------------------------------------------------------------
  *  $module$$request$ReplyRcv  -  Reception des repliques
- *
- *  Retourne : ERROR ou FINAL_REPLY_OK ou 
- *             WAITING_INTERMED_REPLY ou INTERMED_REPLY_TIMEOUT ou
- *             WAITING_FINAL_REPLY    ou FINAL_REPLY_TIMEOUT
  */
  
 int $module$$request$ReplyRcv (TCLSERV_CLIENT_ID clientId, ssize_t rqstId, 
 			       $output$
-			       ssize_t *activity, char **bilan)
+			       char **bilan)
 {
-  int status;    /* ERROR ou FINAL_REPLY_TIMEOUT ou FINAL_REPLY_OK */
+  int status;    
   char* res;
 
   status = tclserv_client_wait(clientId, rqstId, &res);
@@ -93,15 +89,12 @@ $has_output$    }
 /*-------------------------------------------------------------------------
  *  $module$$request$RqstAndAck  -  Emet la requete d'exec, 
  *                                  attend la replique intermediaire
- *
- *  Retourne : ERROR ou INTERMED_REPLY_TIMEOUT ou WAITING_FINAL_REPLY ou 
- *             FINAL_REPLY_OK 
  */
  
 int $module$$request$RqstAndAck (TCLSERV_CLIENT_ID clientId, ssize_t *pRqstId,
 				 $input$ $hasInput$,
 				 $output$
-				 int *activity, char **bilan)
+				 char **bilan)
 {
   buf_t buf = buf_init();
   ssize_t res;
@@ -122,16 +115,11 @@ $hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
 /*-------------------------------------------------------------------------
  *  $module$$request$RqstAndRcv  -  Emet la requete d'execution,
  *                                  Attend les repliques.
- *
- *  Retourne : ERROR ou FINAL_REPLY_TIMEOUT ou FINAL_REPLY_OK ou 
- *             INTERMED_REPLY_TIMEOUT
  */
  
 int $module$$request$RqstAndRcv (TCLSERV_CLIENT_ID clientId, 
-				 int replyTimeOut,
 				 $input$ $hasInput$,
 				 $output$
-				 int *activity,
 				 char **bilan)
 {
   int status;
