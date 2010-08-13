@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+tclservClientlibdir=@libdir@/tclservClient
+includedir=@includedir@
+
+Name: $pkgname$-tclserv_client
+Description: $module$ Genom module tclserv_client
+Version: @PACKAGE_VERSION@
+Requires: $require$
+Libs: -L${tclservClientlibdir} -l$module$TclservClient
+Cflags: -I${includedir} -I${includedir}/$pkgname$
