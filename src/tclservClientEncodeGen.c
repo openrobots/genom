@@ -38,8 +38,8 @@
 #include "tclservClientEncodeGen.h"
 
 static char *format_type(TYPE_STR *type);
-void tclservClientEncodeVal(FILE *out, DCL_NOM_STR *n, char *muette);
-void tclservClientEncodeEnum(FILE *out, DCL_NOM_LIST *members);
+static void tclservClientEncodeVal(FILE *out, DCL_NOM_STR *n, char *muette);
+static void tclservClientEncodeEnum(FILE *out, DCL_NOM_LIST *members);
 
 /*** 
  *** Génération des fonctions d'impression des structures 

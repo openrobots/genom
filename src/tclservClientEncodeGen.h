@@ -28,8 +28,8 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#ifndef _PRINTGEN_H
-#define _PRINTGEN_H
+#ifndef _TCLSERV_ENCODE_GEN_H_
+#define _TCLSERV_ENCODE_GEN_H_
 
 #define POINTER_PRINT_ADDR
 
@@ -37,8 +37,6 @@
 
 /* printGen.c */
 
-void tclservClientEncodeVal(FILE *out, DCL_NOM_STR *n, char *muette);
-void tclservClientEncodeEnum(FILE *out, DCL_NOM_LIST *members);
 int genTclservClientEncode(FILE *out);
 
-#endif
+#endif /* _TCLSERV_ENCODE_GEN_H */
