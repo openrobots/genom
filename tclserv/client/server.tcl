@@ -1,6 +1,5 @@
-
 #
-# Copyright (c) 1999-2003 LAAS/CNRS
+# Copyright (c) 1999-2003,2010 LAAS/CNRS
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -270,6 +269,13 @@ namespace eval server {
 	set list [array names connections]
 	if {[llength $list] == 0} { error "not connected" }
 	return [lindex $list end]
+    }
+
+    # all connected servers
+    proc servers { } {
+	variable connections
+
+	return [array names connections]
     }
 
     # the "command" socket
