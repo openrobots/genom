@@ -1,6 +1,5 @@
-
 #
-# Copyright (c) 1999-2003 LAAS/CNRS
+# Copyright (c) 1999-2003,2010 LAAS/CNRS
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -37,6 +36,7 @@ namespace eval cs {
     variable servers
 
     # public procedures
+    namespace export lsmbox
     namespace export serverof
     namespace export replyof
     namespace export mboxInit
@@ -50,6 +50,23 @@ namespace eval cs {
 	package require pm::tools
     } else {
 	package require el::tools
+    }
+
+    # List server mailboxes ------------------------------------------------
+
+    proc lsmbox {{servers ""}} {
+	if {[llength $servers] == 0} { set servers [server::servers] }
+
+	set result [list]
+	foreach s $servers {
+	    if {[server::chat $s "cs::lsmbox" "^OK.*" l]} {
+		foreach m [lrange $l 1 end] {
+		    lappend result [list $s $m]
+		}
+	    }
+	}
+
+	return $result
     }
 
     # Generic function to send a request --------------------------------
@@ -130,7 +147,7 @@ namespace eval cs {
 	    # wait for ACK
 	    if { ![ack $rqstId 1] } { error "internal error in ack" }
 	    return $rqstId
-	}	
+	}
     }
 
     # Generic function to recieve a reply -------------------------------
@@ -258,7 +275,7 @@ namespace eval cs {
 	}
 
 	# no need to check the answer
-	return 1	
+	return 1
     }
 
 
@@ -315,7 +332,7 @@ namespace eval cs {
     }
 
     proc mboxInit { args } {
-    
+
 	if {[llength $args] > 1} {
 	    error "wrong \# args: should be \"mboxInit [server]\""
 	}
@@ -357,7 +374,7 @@ namespace eval cs {
     # Abort some activity -----------------------------------------------
 
     proc abort { rqstId } {
-	
+
 	::server::chat \
 	    [lindex $rqstId 0] "ABORT [lindex $rqstId 1]" ".*" reply
 
