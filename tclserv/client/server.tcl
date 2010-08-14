@@ -40,6 +40,7 @@ namespace eval server {
     namespace export connect
     namespace export disconnect
     namespace export die
+    namespace export rexec
 
     proc connect { args } {
 	variable connections
@@ -218,6 +219,15 @@ namespace eval server {
 	    uplevel "set [lindex $args 0] \"$reply\""
 	}
 	return 0
+    }
+
+    # exec program on server
+    proc rexec { server args } {
+	if {[chat $server "exec -- $args &" "OK.*" r]} {
+	    return [lrange $r 1 end]
+	}
+
+	error "$server: [lrange $r 2 end]"
     }
 
     # This one is a bit hard. (adults only). It kills every server.
