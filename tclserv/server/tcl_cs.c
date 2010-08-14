@@ -1,8 +1,5 @@
-
-/* --- FILE GENERATED WITH GENOM, DO NOT EDIT BY HAND ------------------ */
-
-/* 
- * Copyright (c) 1999-2005 LAAS/CNRS
+/*
+ * Copyright (c) 1999-2010 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -82,6 +79,9 @@ static int csWakeUpTaskSuspended = 0;
 #define CSWAKEUPTASK_SUSPEND	2
 #define CSWAKEUPTASK_RESUME	3
 
+static int tclServCsLsMboxCb(ClientData clientData, Tcl_Interp *interp,
+		int argc, Tcl_Obj *const argv[]);
+
 static int tclServCsWakeUpTaskInstall(int);
 
 static int csMboxInitCb(ClientData, Tcl_Interp *, int, Tcl_Obj* const []);
@@ -96,11 +96,12 @@ static STATUS tclServCsWakeUpTask(int port, int timeout, int parentId);
  * Start and stop communication with csLib ------------------------------
  */
 
-int 
+int
 tclServCsStart(Tcl_Interp *interp)
 {
    char buf[20];
 
+   Tcl_CreateObjCommand(interp, "cs::lsmbox", tclServCsLsMboxCb, NULL, NULL);
    Tcl_CreateObjCommand(interp, "cs::mboxInit", csMboxInitCb, NULL, NULL);
    Tcl_CreateObjCommand(interp, "cs::mboxEnd", csMboxEndCb, NULL, NULL);
    Tcl_CreateObjCommand(interp, "cs::mboxWait", csMboxWaitCb, NULL, NULL);
@@ -126,12 +127,44 @@ tclServCsStop(Tcl_Interp *interp)
 }
 
 /*
+ * Retrieve the list of available server mboxes ----------------------------
+ */
+
+static int
+tclServCsLsMboxCb(ClientData clientData, Tcl_Interp *interp,
+		  int argc, Tcl_Obj *const argv[])
+{
+  int i;
+  Tcl_Obj *r;
+  const char *name;
+
+  if (argc != 1) {
+    Tcl_WrongNumArgs(interp, 1, argv, NULL);
+    return TCL_ERROR;
+  }
+
+  r = Tcl_NewListObj(0, NULL);
+  for(i=0; i<H2_DEV_MAX; i++)
+    if (H2DEV_TYPE(i) == H2_DEV_TYPE_MBOX) {
+      name = H2DEV_NAME(i);
+      /* filter-out reception mailboxes; not very robust */
+      if (name[strlen(name)-1] != 'R') {
+	Tcl_ListObjAppendElement(interp, r, Tcl_NewStringObj(name, -1));
+      }
+    }
+
+  Tcl_SetObjResult(interp, r);
+  return TCL_OK;
+}
+
+
+/*
  * Send a request -------------------------------------------------------
  */
 
 STATUS
 tclServRqstSend(Tcl_Interp *interp, char *name,
-		CLIENT_ID clientId, int rqstType, 
+		CLIENT_ID clientId, int rqstType,
 		void *inputData, int inputSize,
 		int *rqstId, int *bilan)
 {
@@ -151,17 +184,17 @@ tclServRqstSend(Tcl_Interp *interp, char *name,
  * Recieve a reply ------------------------------------------------------
  */
 
-STATUS 
+STATUS
 tclServReplyRcv(Tcl_Interp *interp,
-		CLIENT_ID clientId, int rqstId, int block, 
+		CLIENT_ID clientId, int rqstId, int block,
 		int *activity, void *outputData, int outputSize,
 		int *bilan)
 {
    int status;
    errnoSet(0);
 
-   status = csClientReplyRcv(clientId, rqstId, block, 
-                             (void *)activity, sizeof(int), (FUNCPTR)NULL, 
+   status = csClientReplyRcv(clientId, rqstId, block,
+                             (void *)activity, sizeof(int), (FUNCPTR)NULL,
                              outputData, outputSize, (FUNCPTR)NULL);
 
    if (status == ERROR) {
@@ -169,7 +202,7 @@ tclServReplyRcv(Tcl_Interp *interp,
       if (H2_MODULE_ERR_FLAG(*bilan)) status = FINAL_REPLY_OK;
    }
    else *bilan = OK;
-   
+
    return status;
 }
 
@@ -226,19 +259,19 @@ tclServCsWakeUpTaskInstall(int action)
  * Callbacks ------------------------------------------------------------
  */
 
-static int 
-csMboxInitCb(ClientData clientData, Tcl_Interp *interp, 
+static int
+csMboxInitCb(ClientData clientData, Tcl_Interp *interp,
 	     int argc, Tcl_Obj *const argv[])
 {
    static char *syntax = "<mboxName> <rcvSize> <replySize>";
    int rcvSize, replySize;
    char strerr[64];
-    
+
    if (csInit) {
       Tcl_SetResult(interp, "csMbox already initialized", TCL_STATIC);
       return TCL_ERROR;
    }
-   
+
    if (argc != 4) {
       Tcl_WrongNumArgs(interp, 1, argv, syntax);
       return(TCL_ERROR);
@@ -252,7 +285,7 @@ csMboxInitCb(ClientData clientData, Tcl_Interp *interp,
       return(TCL_ERROR);
    }
 
-   if (csMboxInit(Tcl_GetStringFromObj(argv[1], NULL), 
+   if (csMboxInit(Tcl_GetStringFromObj(argv[1], NULL),
 		  rcvSize, replySize) != OK) {
       Tcl_SetObjResult(interp, Tcl_NewStringObj(
 	 h2getErrMsg(errnoGet(), strerr, 64), -1));
@@ -268,7 +301,7 @@ csMboxInitCb(ClientData clientData, Tcl_Interp *interp,
 }
 
 
-static int 
+static int
 csMboxEndCb(ClientData clientData, Tcl_Interp *interp,
 	    int argc, Tcl_Obj *const argv[])
 {
@@ -299,14 +332,14 @@ csMboxEndCb(ClientData clientData, Tcl_Interp *interp,
 }
 
 
-static int 
+static int
 csMboxWaitCb(ClientData clientData, Tcl_Interp *interp,
 	     int argc, Tcl_Obj *const argv[])
 {
    static char *syntax = "<timeOut>";
    int timeout, mask;
    char strerr[64];
-    
+
    if (!csInit) {
       Tcl_SetResult(interp, "csMbox not initialized", TCL_STATIC);
       return TCL_ERROR;
@@ -332,7 +365,7 @@ csMboxWaitCb(ClientData clientData, Tcl_Interp *interp,
 }
 
 static int
-csMboxEventCb(ClientData clientData, Tcl_Interp *interp, 
+csMboxEventCb(ClientData clientData, Tcl_Interp *interp,
 	      int objc, Tcl_Obj *const objv[])
 {
    int len;
@@ -433,7 +466,7 @@ tclServCsWakeUpTask(int port, int timeout, int parentId)
 
 	    if (!csWakeUpTaskToBeDeleted) {
 	       write(sock, "CSREPLY\n", 8);
-	       if (read(sock, buf, 4) != 4 || 
+	       if (read(sock, buf, 4) != 4 ||
 		   strncmp(buf, "OK", 2) != 0) perror("read");
 	    }
 	    break;
