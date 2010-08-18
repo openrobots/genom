@@ -112,7 +112,7 @@ int printXML_unsigned_char(FILE *out, char *name, unsigned char *x, int indent,
 {
   indent++;
   FOR_NB_elt(nDim,dims)
-    if (!(fprintfBuf(out, "%s<%s%s>%c</%s%s>\n", 
+    if (!(fprintfBuf(out, "%s<%s%s>%u</%s%s>\n", 
 	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
 		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
   END_FOR
