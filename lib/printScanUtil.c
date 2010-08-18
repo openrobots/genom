@@ -36,11 +36,7 @@
  *** par les bibliothèques print et scan de chaque module.
  ***/
 
-#ifdef VXWORKS
-#  include <vxWorks.h>
-#else
-#  include <portLib.h>
-#endif
+#include <portLib.h>
 
 #include <stdio.h>
 #include <string.h>
