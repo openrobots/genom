@@ -1,5 +1,13 @@
 Genom 2.6, xxx xx 2010.
 
+106. In PrintXML, Print unsigned chars with "%u" instead of "%c"
+105. Add 'rexec server args' procedure in genom tcl package
+104. Add lsmbox ?servers? procedure in genom tcl package
+103. Add server::servers procedure in genom tcl package
+102. Add cs::lsmbox procedure in tclserv
+101. Define shell variable with genom flags for optional steps in configure.
+100. Fix error.h file for C++ users.
+ 99. Fix (finally !) the "my tclserv is eating 100% cpu" bug
  98. Don't link genom with -lgenom (and thus with pocolibs).
  97. Implement asynchronous execution tasks.
  96. Use h2getTimeSpec() to read the clock to compute codels duration.
