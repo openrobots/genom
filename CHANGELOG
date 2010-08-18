@@ -1,5 +1,6 @@
 Genom 2.6, xxx xx 2010.
 
+ 98. Don't link genom with -lgenom (and thus with pocolibs).
  97. Implement asynchronous execution tasks.
  96. Use h2getTimeSpec() to read the clock to compute codels duration.
  95. Cross-compilation fixes for OpenEmbedded.
