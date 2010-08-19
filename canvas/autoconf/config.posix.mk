@@ -38,6 +38,7 @@ BINEXPORT=-export-dynamic
 
 LIBTOOL_COPT=
 LIBTOOL_LINKOPT= -rpath $(libdir)
+LIBTOOL_LINKOPT_TCLSERV_CLIENT= -rpath $(libdir)/tclservClient
 
 LIBTOOL_LINKPORTLIB=	-lportLib
 LIBTOOL_LINKERRORLIB=	-lerrorLib
