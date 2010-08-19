@@ -119,7 +119,7 @@ int genTclservClientMsgLib(FILE *out)
  */
 static void msgLibSubstRqst(FILE *out, RQST_STR *r)
 {
-  char *type, *var, *size;
+  char *type, *var, *size, *type1;
 
   print_sed_subst(out, "module", module->name);
   print_sed_subst(out, "request", r->name);
@@ -132,7 +132,9 @@ static void msgLibSubstRqst(FILE *out, RQST_STR *r)
     print_sed_subst(out, "inputSize", size, 
 		    r->input->dcl_nom->name);
 	print_sed_subst(out, "hasInput", "");
+	type1 = nom_type1(r->input->dcl_nom->type);
 	print_sed_subst(out, "type_input", type);
+	free(type1);
     free(type);
     free(var);
     free(size);
@@ -152,8 +154,10 @@ static void msgLibSubstRqst(FILE *out, RQST_STR *r)
 		    ? "*" : "", var);
     print_sed_subst(out, "outputSize", size, 
 		    r->output->dcl_nom->name);
-	print_sed_subst(out, "output_type", type);
+	type1 = nom_type1(r->output->dcl_nom->type);
+	print_sed_subst(out, "output_type", type1);
 	print_sed_subst(out, "has_output", "");
+	free(type1);
     free(type);
     free(var);
     free(size);
