@@ -31,12 +31,15 @@ $commentend$
 
 /*========================================================================
  *
- *  $module$$request$RqstSend  -  Emission d'une requete d'execution
+ *  $module$TclservClient$request$RqstSend  -  Emit exec request
  *
- *  Retourne : OK ou ERROR
+ *  Returns :
+ *     -1 in failure case
+ *     0 in success case. pRqstId has a sensible value.
  */
  
-int $module$$request$RqstSend (TCLSERV_CLIENT_ID clientId, 
+int $module$TclservClient$request$RqstSend (
+				TCLSERV_CLIENT_ID clientId, 
 				ssize_t *pRqstId $hasInput$,
 				$input$
 		)
@@ -58,10 +61,19 @@ $hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
 }
 
 /*-------------------------------------------------------------------------
- *  $module$$request$ReplyRcv  -  Reception des repliques
+ *  $module$TclservClient$request$ReplyRcv 
+ *
+ *  Wait for answer associated to the rqst defined by rqstId
+ *
+ *  Returns : 
+ *    -2 in internal failure case
+ *    -1 in rqst failure case, bilan store the error msg, and mut be freed
+ *    0 in success case, output contains some sensible value
  */
  
-int $module$$request$ReplyRcv (TCLSERV_CLIENT_ID clientId, ssize_t rqstId, 
+int $module$TclservClient$request$ReplyRcv (
+				   TCLSERV_CLIENT_ID clientId, 
+				   ssize_t rqstId, 
 			       $output$
 			       char **bilan)
 {
@@ -87,11 +99,19 @@ $has_output$    }
 }
  
 /*-------------------------------------------------------------------------
- *  $module$$request$RqstAndAck  -  Emet la requete d'exec, 
- *                                  attend la replique intermediaire
+ *  $module$TclservClient$request$RqstAndAck  
+ *
+ *  Emit an exec request, and wait for acknowledgment
+ *
+ *  Returns : 
+ *    -2 in internal failure case
+ *    -1 in rqst failure case, bilan store the error msg, and mut be freed
+ *    0 in success case, pRqstId contains the id of the emitted rqst
  */
  
-int $module$$request$RqstAndAck (TCLSERV_CLIENT_ID clientId, ssize_t *pRqstId,
+int $module$TclservClient$request$RqstAndAck (
+				 TCLSERV_CLIENT_ID clientId, 
+				 ssize_t *pRqstId,
 				 $input$ $hasInput$,
 				 $output$
 				 char **bilan)
@@ -113,11 +133,18 @@ $hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
 }
 
 /*-------------------------------------------------------------------------
- *  $module$$request$RqstAndRcv  -  Emet la requete d'execution,
- *                                  Attend les repliques.
+ *  $module$TclservClient$request$RqstAndRcv  - 
+ *
+ *  Emit an exec request, and wait for its termination 
+ *
+ *  Returns : 
+ *    -2 in internal failure case
+ *    -1 in rqst failure case, bilan store the error msg, and mut be freed
+ *    0 in success case, output contains some sensible value
  */
  
-int $module$$request$RqstAndRcv (TCLSERV_CLIENT_ID clientId, 
+int $module$TclservClient$request$RqstAndRcv (
+				 TCLSERV_CLIENT_ID clientId, 
 				 $input$ $hasInput$,
 				 $output$
 				 char **bilan)

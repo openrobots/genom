@@ -30,12 +30,15 @@ $commentbegin$
 $commentend$
 /*=========================================================================
  *
- *  $module$$request$RqstSend  -  Emission d'une requete de controle
+ *  $module$TclservClient$request$RqstSend  -  Emit control request
  *
- *  Retourne : OK ou ERROR
+ *  Return: 
+ *    -1 in failure case
+ *    0 in success case. pRqstId has a sensible value.
  */
  
-int $module$$request$RqstSend (TCLSERV_CLIENT_ID clientId, 
+int $module$Tclservclient$request$RqstSend (
+				  TCLSERV_CLIENT_ID clientId, 
 				  int *pRqstId $hasInput$,
 				  $input$
 		)
@@ -57,10 +60,18 @@ $hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
 }
 
 /*-------------------------------------------------------------------------
- *  $module$$request$ReplyRcv  -  Reception de la replique finale
+ *  $module$TclservClient$request$ReplyRcv  
+ *
+ *  Wait for answer associated to the rqst defined by rqstId
+ *
+ *  Returns : 
+ *    -2 in internal failure case
+ *    -1 in rqst failure case, bilan store the error msg, and mut be freed
+ *    0 in success case, output contains some sensible value
  */
  
-int $module$$request$ReplyRcv (TCLSERV_CLIENT_ID clientId, 
+int $module$TclservClient$request$ReplyRcv (
+				   TCLSERV_CLIENT_ID clientId, 
 			       ssize_t rqstId, 
 			       $output$
 			       char** bilan)
@@ -87,10 +98,18 @@ $has_output$    }
 }
  
 /*-------------------------------------------------------------------------
- *  $module$$request$RqstAndRcv  -  Emission/reception requete de controle
+ *  $module$TclservClient$request$RqstAndRcv  
+ *
+ *  Emit a request and wait for its termination
+ *
+ *  Returns : 
+ *    -2 in internal failure case
+ *    -1 in rqst failure case, bilan store the error msg, and mut be freed
+ *    0 in success case, output contains some sensible value
  */
  
-int $module$$request$RqstAndRcv (TCLSERV_CLIENT_ID clientId, 
+int $module$TclservClient$request$RqstAndRcv (
+				 TCLSERV_CLIENT_ID clientId, 
 				 $input$ $hasInput$, 
 				 $output$
 				 char** bilan)

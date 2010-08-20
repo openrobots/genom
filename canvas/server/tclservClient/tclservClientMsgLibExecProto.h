@@ -29,21 +29,28 @@ $commentbegin$
  */
 $commentend$
 
-int $module$$request$RqstSend (TCLSERV_CLIENT_ID clientId, ssize_t *pRqstId $hasInput$,
+int $module$TclservClient$request$RqstSend (
+				 TCLSERV_CLIENT_ID clientId, 
+				 ssize_t *pRqstId $hasInput$,
 				 $input$ 
 		);
 
-int $module$$request$ReplyRcv (TCLSERV_CLIENT_ID clientId, ssize_t  rqstId, 
+int $module$TclservClient$request$ReplyRcv (
+			      TCLSERV_CLIENT_ID clientId, 
+				  ssize_t  rqstId, 
 			      $output$
 			      char **bilan);
 
 
-int $module$$request$RqstAndAck (TCLSERV_CLIENT_ID clientId, ssize_t *pRqstId,
+int $module$TclservClient$request$RqstAndAck (
+			    TCLSERV_CLIENT_ID clientId, 
+				ssize_t *pRqstId,
 				$input$ $hasInput$,
 				$output$
 				char **bilan);
 
-int $module$$request$RqstAndRcv (TCLSERV_CLIENT_ID clientId, 
+int $module$TclservClient$request$RqstAndRcv (
+				    TCLSERV_CLIENT_ID clientId, 
 					$input$ $hasInput$,
 					$output$
 					char **bilan);

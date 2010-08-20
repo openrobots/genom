@@ -41,7 +41,7 @@
 extern "C" {
 #endif
 
-int $module$ClientInit (TCLSERV_CLIENT_ID pClientId);
+int $module$TclservClientInit (TCLSERV_CLIENT_ID pClientId);
 
-int $module$ClientEnd (TCLSERV_CLIENT_ID clientId);
+int $module$TclservClientEnd (TCLSERV_CLIENT_ID clientId);
 
