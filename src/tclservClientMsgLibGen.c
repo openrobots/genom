@@ -133,7 +133,7 @@ static void msgLibSubstRqst(FILE *out, RQST_STR *r)
 		    r->input->dcl_nom->name);
 	print_sed_subst(out, "hasInput", "");
 	type1 = nom_type1(r->input->dcl_nom->type);
-	print_sed_subst(out, "type_input", type);
+	print_sed_subst(out, "type_input", type1);
 	free(type1);
     free(type);
     free(var);
