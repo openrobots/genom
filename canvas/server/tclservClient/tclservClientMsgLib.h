@@ -34,6 +34,7 @@
 #ifndef $module$_TCLSERV_CLIENT_MSG_LIB_H
 #define $module$_TCLSERV_CLIENT_MSG_LIB_H
 
+#include <$module$/server/$module$Type.h>
 
 /*---------------- PROTOTYPES DES FONCTIONS EXTERNES ------------------*/
 
