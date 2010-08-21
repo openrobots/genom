@@ -37,7 +37,7 @@ $commentend$
  *    0 in success case. pRqstId has a sensible value.
  */
  
-int $module$Tclservclient$request$RqstSend (
+int $module$TclservClient$request$RqstSend (
 				  TCLSERV_CLIENT_ID clientId, 
 				  int *pRqstId $hasInput$,
 				  $input$
