@@ -319,10 +319,21 @@ genDecodeEnum (FILE *out, DCL_NOM_LIST *members)
 {
   DCL_NOM_LIST *m;
   
+  fprintf(out, "    {char tmp_buf[512];\n");
+  fprintf(out, "    { int dims[1] = { 512};\n"
+		       "       if (scan_buf_string(buf, tmp_buf, 1, dims) != 0)\n"
+			   "         return -1;\n"
+			   "    }\n");
   /* Affichage en clair des symboles de l'enum */
-  fprintf(out, "    if (scan_buf_int(buf, (x+elt), 0, NULL) != 0)\n"
-		       "        return -1;\n"
-			   );
+  for (m = members; m != NULL; m = m->next) {
+    fprintf(out, 
+		"     if (strcmp(tmp_buf, \"%s\") == 0) { \n"
+		"        *(x+elt) = %s;\n"
+		"        continue;\n"
+		"     } \n",
+	    m->dcl_nom->name, m->dcl_nom->name);
+  } /* for */
+  fprintf(out, "    return -1; }\n");
 }
 
 
