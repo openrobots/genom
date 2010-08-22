@@ -39,7 +39,7 @@ $commentend$
  
 int $module$TclservClient$request$RqstSend (
 				  TCLSERV_CLIENT_ID clientId, 
-				  int *pRqstId $hasInput$,
+				  ssize_t *pRqstId $hasInput$,
 				  $input$
 		)
 {
