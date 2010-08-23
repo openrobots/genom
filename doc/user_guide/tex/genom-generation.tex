@@ -38,7 +38,7 @@
 
 \item\textbf{Synopsis}
 
-\texttt{genom [-Ocdinto] [-I\emph{path}] [-D\emph{macro}] <module>[.gen]}
+\texttt{genom [-Ocdinxto] [-I\emph{path}] [-D\emph{macro}] <module>[.gen]}
 
 \item\textbf{Description}
 
@@ -76,6 +76,10 @@ tcl interpreter (see section~\ref{sec|tcl}).\\
 \texttt{-o}  & \emph{OpenPRS libraries generation:} Generates OpenPRS
 interface libraries.  They are  mandatory  if you   wish to  control this
 module from an OpenPRS program.\\
+
+\texttt{-x} & \emph{Tclserv C Client generation:} Generates Tclserv C interface
+libraries. They can be used to control this module in C from a remote host, using
+Tclserv protocol.\\
 
 \texttt{-n} & Generates the perl script that is used to generate the module,
 without actually executing it.\\
@@ -174,11 +178,19 @@ the module. See section~\ref{sec|tcl} in this document.
 
 
 % -----------------------------------------------------------------------
-\subsection{Propice library}
+\subsection{Openprs library}
 
-The files located in the \texttt{propice/} directory are  used by Propice to
+The files located in the \texttt{openprs/} directory are  used by OpenPRS to
 control the module. See section~\ref{sec|propice} in this document.
 
+% -----------------------------------------------------------------------
+
+\subsection{TclservClient Library}
+
+The files located in the \texttt{tclservClient/} directory can be used by a C
+client to remotely control the module. To use this lib, you need to link with 
+\texttt{-ldemoTclservClient}. See section ~\ref{sec|tclserv_client_lib}
+in this document for more details.
 
 % -----------------------------------------------------------------------
 \subsection{Executables: server, test program, initialization request}

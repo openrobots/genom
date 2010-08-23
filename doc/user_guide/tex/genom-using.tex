@@ -319,6 +319,7 @@ and close the mailbox with \texttt{csMboxEnd}.
 
 
 \subsection{Sending requests and receiving replies}
+\label{sec|sending_request}
 
 You   can send requests  through the  functions  of the two
 libraries  \texttt{usMsgLib}   and \texttt{demoMsgLib}  (in  the case of   our
@@ -511,3 +512,148 @@ variables defined in the previous example.
 \end{verbatim}\end{cartouche}\end{center}
 
 
+\subsection{The library \texttt{tclservClientMsgLib}}
+\label{sec|tclserv_client_lib}
+
+To generate this library, you need to call \GenoM\ with the -x option.
+
+Before you can use this library, you need to create a connection with a
+TclServ.  This is  done with the  function \texttt{tclserv\_client\_init} .
+
+Then, you  must  initialize   connections  for individual   module : for
+instance \texttt{demoTclservClientInit} in the library
+\texttt{demoTclservClientMsgLib}. One connection with a TclServ, identified by
+a \texttt{TCLSERV\_CLIENT\_ID} can be shared by multiples modules.
+
+Before you  quit, you must  free this connection with \texttt{demoTclservClientEnd}
+and close the connection with the Tclserv with texttt{tclserv\_client\_destroy}.
+
+
+\subsection{Sending requests and receiving replies witch tclservClientMsgLib}
+
+The library \texttt{demoTclservClientMsgLib}  defines  several functions whose
+names are concatenation of: \emph{i.} the name of the module, \emph{ii.}
+TclservClient to make difference with \texttt{demoMsgLib} interface \emph{iii.}
+the name of a request (\texttt{Abort} for the interrupt request),  \emph{iv.}
+a  suffix showing its purpose. Four suffixes are available:
+
+\begin{center}\small\begin{tabularx}{\linewidth}{|l|X|}
+\hline
+suffix & function \\
+\hline
+\tt RqstSend & send a request (non blocking) \\
+
+\tt ReplyRcv & wait for a final reply (blocking )\\
+
+\tt RqstAndRcv & send a request \emph{and} receive the \emph{final reply}
+(blocking) \\
+
+\tt RqstAndAck & send a request \emph{and} receive the \emph{intermediate reply}
+(blocking) \\
+\hline
+\end{tabularx}\end{center}
+
+The library design is the same than \texttt{MsgLib}, so usage described in
+\ref{sec|sending_request} are still valid.
+
+\subsection{Api description}
+
+\subsubsection{Sending an request: \texttt{RqstSend}}
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+  int ...RqstSend(TCLSERV_CLIENT_ID clientId,
+                    ssize_t *rqstId, 
+                    [STR_IN *in,]
+					)
+\end{verbatim}\end{cartouche}\end{center}
+
+
+\begin{itemize}
+\item The first argument is the client identifier
+
+\item \texttt{rqstId} is filled with the request id. This id will let you
+read the reply later or to 
+
+\item the third argument is optional, and defined only if the request defines
+an input.
+\end{itemize}
+
+The function returns \texttt{0} in success case, and \texttt{-1} in failure case.
+
+\subsubsection{Sending an request and wait for ackolegdement: \texttt{RqstAndAck}}
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+  int ...RqstAndAck(TCLSERV_CLIENT_ID clientId,
+                    ssize_t *rqstId, 
+                    [STR_IN *in,],
+                    char** report
+					)
+\end{verbatim}\end{cartouche}\end{center}
+
+The argument are the same than the previous request. It only get one more
+argument, to store the report value.
+
+\subsubsection{Sending and wait for a request :  \texttt{RqstAndRcv}}
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+  int ...RqstAndRcv(TCLSERV_CLIENT_ID clientId,
+                    [STR_IN *in,] 
+                    [STR_OUT *out,] 
+                    char **report);
+\end{verbatim}\end{cartouche}\end{center}
+\begin{itemize}
+\item The first argument is the client identifier.
+
+\item The second and third arguments (between square brackets) are
+optional, and defined only if the request defines an input or an output
+parameter.
+
+\item The last argument is the report, returned by the request. 
+\end{itemize}
+
+This function returns \texttt{0}  if everything went well,  \texttt{-1} if the
+request has failed (in this case, report has some valid values, and must be
+freed by caller, \texttt{-2} in case of internal failure.
+
+
+\subsubsection{Getting final reply: \texttt{ReplyRcv}}
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+  int ...ReplyRcv(TCLSERV_CLIENT_ID clientId,
+                  ssize_t rqstId, 
+                  [STR_OUT *out,]
+                  char** report
+					)
+\end{verbatim}\end{cartouche}\end{center}
+
+
+\begin{itemize}
+\item The first argument is the client identifier
+
+\item \texttt{rqstId} is the request descriptor
+
+\item the third argument is optional, and defined only if the request defines
+an output.
+
+\item The last arguments store the error message, if any.
+\end{itemize}
+
+The function returns \texttt{0} in success case (and out is filled, if it
+exists), \texttt{-1} in failure case (report is filled, and must be freed by
+the user), or \texttt{-2} in case of internal failure.
+
+\subsection{Checking if a request is terminated}
+
+You can use the generic function 
+
+\begin{center}\begin{cartouche}\small\begin{verbatim}
+  int tclserv_client_has_terminated(TCLSERV_CLIENT_ID clientId, ssize_t rqstId)
+\end{verbatim}\end{cartouche}\end{center}
+
+\begin{itemize}
+\item the first argument is the client identifier
+\item \texttt{rqstid} is the request descriptor
+\end{itemize}
+
+The function returns \texttt{-2} in case of internal failure, \texttt{-1} if
+the request is not terminated and \texttt{0} otherwise.
