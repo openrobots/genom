@@ -10,6 +10,8 @@ AC_CONFIG_HEADER(genom-config.h)
 
 AC_CANONICAL_HOST
 
+AC_CONFIG_MACRO_DIR([m4])
+
 AC_ARG_WITH(libsonly,
            AC_HELP_STRING([--with-libsonly],
                [only compile run-time libraries]),
