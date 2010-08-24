@@ -150,7 +150,7 @@ genlist = \
 	autoconf/configure.ac \
 	autogen
 
-dirs=autoconf codels openprs server server/tcl server/openprs server/tclservClient
+dirs=autoconf codels server server/tcl server/openprs server/tclservClient
 
 # -----------------------------------------------------------------------
 
