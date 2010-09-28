@@ -20,7 +20,8 @@
 # COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 # INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 # BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION
+  ) HOWEVER
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
@@ -32,7 +33,6 @@
 
 # tkGenomRequest is a tk interface for genom request
 # tkGenomPoster is a tk interface for genom poster
-# tkGenomModule
 
 # Bugs
 #
@@ -40,7 +40,23 @@
 #
 # thGenomPoster : record : ReRead manuel n'enregistre pas la valeur 
 #      lorsque record est actif  --> ecriture d'un ficheir "vide"
+#
+# In some case variables are not all destroyed when the widget is deleted
 
+#  Example using the demo module
+#
+#  lm demo
+#  tkGenomRequest .g ::demo::GotoPosition
+#  tkGenomRequest .gg demo::SetSpeed demo::GetSpeed
+#  tkGenomPoster .ggg ::demo::MobilestatePosterRead
+#
+#  To record some data with .ggg: 
+#    Choose the time between records (500 ms by default), 
+#    Select Permanent update
+#    Select Record
+#    Push the button ReRead
+#    To stop recording unselect permanent update
+#    To save the data push the button Save.
 
 
 lappend auto_path /home/daniel/mytmp/tclTools
