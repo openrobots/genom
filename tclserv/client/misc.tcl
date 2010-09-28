@@ -57,6 +57,27 @@ proc getopt { varName blockVar rawVar docVar } {
     }
 }
 
+proc getOptions { argList listeOptions } {
+    upvar 1 $argList list
+    while 1 {
+	set arg [lindex $list 0]
+	set find 0
+	foreach el $listeOptions {
+	    if { $el == $arg } {
+		upvar 1 $el option
+		set find 1
+		set list [lrange $list 1 end]
+		set option 1
+		break
+	    }
+	}
+	if { $find == 0 } {
+	    break
+	}
+    }
+}
+
+
 # -----------------------------------------------------------------------
 # Generic function to format a request's output
 
