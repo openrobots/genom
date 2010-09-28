@@ -55,7 +55,9 @@ tlist=\
 	load.tcl	\
 	misc.tcl	\
 	pmtools.tcl	\
-	server.tcl
+	server.tcl      \
+	tkgenom.tcl	\
+	editval.tcl
 
 pkgfile= pkgIndex.tcl
 
