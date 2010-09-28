@@ -45,3 +45,19 @@ package ifneeded pm::tools @genomversion@ {
     source [file join  $dir tcl pmtools.tcl]
     unset dir
 }
+
+package ifneeded tkgenom @genomversion@ {
+    package provide tkgenom @genomversion@
+
+    set dirtkgenom @canvasdir@
+    source [file join  $dirtkgenom tcl tkgenom.tcl]
+    unset dirtkgenom
+}
+
+package ifneeded editval @genomversion@ {
+    package provide editval @genomversion@
+
+    set direditval @canvasdir@
+    source [file join  $direditval tcl editval.tcl]
+    unset direditval
+}
