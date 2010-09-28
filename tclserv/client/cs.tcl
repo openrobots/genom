@@ -74,19 +74,27 @@ namespace eval cs {
     proc rqstSend { module name docString usage argNumber inputInfo argList } {
 	variable mbox
 	variable modules
-	set block 1
-	set raw 0
-	set doc 0
+	set -ack 0
+	set -raw 0
+	set -doc 0
+	set -format 0
 
 	# Scan options
-	getopt argList block raw doc
+	getOptions argList {-ack -doc -raw -format}
 
-	if { $doc } {
+	if { [set -doc] } {
 	    wrappedputs $docString 80
 	    wrappedputs $usage 80
 	    return
 	}
-
+	if { [set -format] } {
+	    return $inputInfo
+	}
+	if { [set -ack] } {
+	    set block 0
+	} else {
+	    set block 1
+	}
 	# Scan input
 	set origArgs $argList
 	set argList [mapscan $inputInfo $argList]
@@ -96,8 +104,8 @@ namespace eval cs {
 	    if { [llength [info commands ::el::history]] > 0 } {
 		set opts ""
 		if { !$block } { lappend opts "-ack" }
-		if { $raw } { lappend opts "-raw" }
-		if { $doc } { lappend opts "-doc" }
+		if { [set -raw] } { lappend opts "-raw" }
+		if { [set -doc] } { lappend opts "-doc" }
 		::el::history add "${module}::$name $opts $argList"
 	    }
 	}
@@ -138,7 +146,7 @@ namespace eval cs {
 	    if { "[lindex $answer 0]" != "OK" } {
 		set retCode "error"
 	    }
-	    if { !$raw } {
+	    if { ![set -raw] } {
 		set p [set modules($module)]${name}FormatOutput
 		set answer [interp invoke {} -global $p $answer]
 	    }
@@ -199,17 +207,20 @@ namespace eval cs {
 
     proc posterRead { module name docString argList } {
 	variable modules
-	set block 1
-	set raw 0
-	set doc 0
+	set -ack 0
+	set -raw 0
+	set -doc 0
 
 	# Scan options
-	getopt argList block raw doc
-
-	if { !$block } {
+	getOptions argList { -ack -raw -doc }
+	if { [set -ack] } {
+	    set block 0
 	    puts "Blocking param is meaningless in that context"
+	} else {
+	    set block 1
 	}
-	if { $doc } {
+
+	if { [set -doc] } {
 	    wrappedputs $docString 80
 	    return
 	}
@@ -225,7 +236,7 @@ namespace eval cs {
 	}
 
 	# Return result
-	if { !$raw } {
+	if { ![set -raw] } {
 	    set p [set modules($module)]${name}PosterFormatOutput
 	    set reply [interp invoke {} -global $p $reply]
 	}
