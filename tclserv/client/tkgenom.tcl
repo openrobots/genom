@@ -149,7 +149,7 @@ proc tkGenomRequestGet { w functionRequest listeVar
     }
     if { $verbose != "" && $verbose != "forceRead" } {
 	puts "$functionRequest -raw [set params]"
-	# ??return
+	return
     }
     set status [catch { $functionRequest -raw {*}[set params] } data ]
     set f [$w.sw.sf getframe]
@@ -387,11 +387,8 @@ proc tkGenomSave { w functionPosterRead functionElToPath } {
 	    lappend lprint 0
 	}
     }
-    set l_lprint $lprint
-    foreach el $format {
+    foreach el $format elprint [lrange $lprint 1 end] {
 	if { [$functionElToPath $el] != "" } {
-	    set elprint [lindex $l_lprint 0]
-	    set l_lprint [lrange $l_lprint 1 end]
 	    if { $elprint } {
 		puts -nonewline $file [tkGenomBuildNameVar { } $el ]
 	    }
