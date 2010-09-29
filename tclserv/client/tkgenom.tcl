@@ -58,7 +58,6 @@
 #    To save the data push the button Save.
 
 
-lappend auto_path /home/daniel/mytmp/tclTools
 package require editval
 package require BWidget
 package require Ttk
