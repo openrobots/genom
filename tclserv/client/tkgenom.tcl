@@ -396,6 +396,7 @@ proc tkGenomSave { w functionPosterRead functionElToPath } {
     }
     puts $file ""
     set t 0
+    set time [$w.f1.time get]
     foreach el [set ::tkGenomData_$w] elprint $lprint {
 	puts -nonewline $file "$t"
 	foreach val $el elprint $lprint {
@@ -404,7 +405,7 @@ proc tkGenomSave { w functionPosterRead functionElToPath } {
 	    }
 	}
 	puts $file ""
-	incr t
+	set t [expr $t + $time]
     }
     close $file
 }
