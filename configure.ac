@@ -80,8 +80,8 @@ if test "x$opt_xenomai" = "xyes"; then
 	else
 		AC_MSG_RESULT([Configuring to use Xenomai])
 		OSAPI=xenomai
-		XENO_CFLAGS=`${XENO_CONFIG} --posix-cflags`
-		XENO_LDFLAGS=`${XENO_CONFIG} --posix-ldflags`
+		XENO_CFLAGS=`${XENO_CONFIG} --skin=posix --cflags`
+		XENO_LDFLAGS=`${XENO_CONFIG} --skin=posix --ldflags`
 	fi
 fi
 
