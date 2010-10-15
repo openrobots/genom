@@ -1,3 +1,10 @@
+Genom 2.7, xxx xx 2011.
+
+110. Update xeno-config options used to figure out CFLAGS and LDFLAGS 
+     for Xenomai.
+109. Add tkGenom, a graphical interface to genom modules using tclserv
+     (Daniel Sidobre).
+
 Genom 2.6, August 23 2010.
 
 108. Add documentation on the tclserv protocol.
