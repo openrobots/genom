@@ -7,6 +7,6 @@ includedir=@includedir@
 Name: $pkgname$-oprs
 Description: $module$ Genom module
 Version: @PACKAGE_VERSION@
-Requires: genom >= $genomVersion$ $require$
+Requires: genom >= $genomVersion$, $pkgname$ >= @PACKAGE_VERSION@ $require$
 Libs: -L${libdir} -l$module$Client -L${oprslibdir} -l$module$Openprs
 Cflags: -I${includedir} -I${includedir}/$pkgname$

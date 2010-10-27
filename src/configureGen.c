@@ -462,27 +462,28 @@ int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genO
     script_open(out);
     subst_begin(out, PROTO_PKGCONFIG_IN);
 
-    /* Build the require field 
-     * We take into account only the packages 
-     * used in "import from" statements */
-    for (ln = imports; ln != NULL; ln = ln->next)
-    {
-      for (ln2 = requires; ln2 != NULL; ln2 = ln2->next)
-	    if (! strcmp(ln2->name, ln->name))
-	    {
-		bufcat(&require, ", ");
-		bufcat(&require, ln->name);
-	    }
-      if (genServer)
-	for (ln2 = codels_requires; ln2 != NULL; ln2 = ln2->next)
-	    if (! strcmp(ln2->name, ln->name))
-	    {
-		bufcat(&require, ", ");
-		bufcat(&require, ln->name);
-	    }
+    /* Build the Requires: field. We take into account all packages in the
+     * require: field of the .gen. */
+    for (ln = requires; ln != NULL; ln = ln->next) {
+      bufcat(&require, ", ");
+      bufcat(&require, ln->name);
     }
-    output(out, "require", require);
-    
+    print_sed_subst(out, "require", require);
+    free(require);
+    require = NULL;
+
+    /* Check that all "import from" are listed in the requires */
+    for (ln = imports; ln != NULL; ln = ln->next) {
+      for (ln2 = requires; ln2 != NULL; ln2 = ln2->next)
+	if (!strncmp(ln2->name, ln->name, strlen(ln->name)))
+	  break;
+      if (ln2 == NULL) {
+	fprintf(stderr,
+		"imported module %s is not listed in the required packages.\n",
+		ln->name);
+      }
+    }
+
     cppOptStrLen = 0;
     for (cppOpt = cppOptions; *cppOpt; ++cppOpt)
         cppOptStrLen += strlen(*cppOpt) + 1;
@@ -508,23 +509,32 @@ int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genO
     if (genOpenprs) {
       script_open(out);
       subst_begin(out, PROTO_PKGCONFIG_OPRS_IN);
-      
-      
-      /* Build the require field 
-       * We take into account only the packages 
-       * use in "import from" statements */
-      for (ln = imports; ln != NULL; ln = ln->next)
-	{
-	  for (ln2 = requires; ln2 != NULL; ln2 = ln2->next)
-	    if (! strcmp(ln2->name, ln->name))
-	      {
-		bufcat(&require2, ", ");
-		bufcat(&require2, ln->name);
-		bufcat(&require2, "-oprs");
-	      }
+
+      /* Build the Requires: field. We take into account all packages in the
+       * import_from field of the .gen. */
+      for (ln = imports; ln != NULL; ln = ln->next) {
+	for (ln2 = requires; ln2 != NULL; ln2 = ln2->next) {
+	  size_t s = strcspn(ln2->name, " \t");
+	  if (s > 0 && ln2->name[s] == '\0') s = 0;
+	  if (s > 0) ln2->name[s] = '\0';
+
+	  if (!strcmp(ln2->name, ln->name)) {
+	    bufcat(&require, ", ");
+	    bufcat(&require, ln2->name);
+	    bufcat(&require, "-oprs");
+	    if (s > 0) {
+	      bufcat(&require, " ");
+	      bufcat(&require, &ln2->name[s+1]);
+	    }
+	  }
+
+	  if (s > 0) ln2->name[s] = ' ';
 	}
-      output(out, "require", require2);
-      
+      }
+      print_sed_subst(out, "require", require);
+      free(require);
+      require = NULL;
+
       print_sed_subst(out, "module", module->name);
       print_sed_subst(out, "pkgname", pkgname);
       print_sed_subst(out, "genomVersion", genomVersion);
@@ -536,22 +546,32 @@ int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genO
     if (genTclservClient) {
       script_open(out);
       subst_begin(out, PROTO_PKGCONFIG_TCLSERV_CLIENT_IN);
-      
-      /* Build the require field 
-       * We take into account only the packages 
-       * use in "import from" statements */
-      for (ln = imports; ln != NULL; ln = ln->next)
-	{
-	  for (ln2 = requires; ln2 != NULL; ln2 = ln2->next)
-	    if (! strcmp(ln2->name, ln->name))
-	      {
-		bufcat(&require2, ", ");
-		bufcat(&require2, ln->name);
-		bufcat(&require2, "-tclserv_client");
-	      }
+
+      /* Build the Requires: field. We take into account all packages in the
+       * import_from field of the .gen. */
+      for (ln = imports; ln != NULL; ln = ln->next) {
+	for (ln2 = requires; ln2 != NULL; ln2 = ln2->next) {
+	  size_t s = strcspn(ln2->name, " \t");
+	  if (s > 0 && ln2->name[s] == '\0') s = 0;
+	  if (s > 0) ln2->name[s] = '\0';
+
+	  if (!strcmp(ln2->name, ln->name)) {
+	    bufcat(&require, ", ");
+	    bufcat(&require, ln2->name);
+	    bufcat(&require, "-tclserv_client");
+	    if (s > 0) {
+	      bufcat(&require, " ");
+	      bufcat(&require, &ln2->name[s+1]);
+	    }
+	  }
+
+	  if (s > 0) ln2->name[s] = ' ';
 	}
-      output(out, "require", require2);
-      
+      }
+      print_sed_subst(out, "require", require);
+      free(require);
+      require = NULL;
+
       print_sed_subst(out, "module", module->name);
       print_sed_subst(out, "pkgname", pkgname);
       print_sed_subst(out, "genomVersion", genomVersion);

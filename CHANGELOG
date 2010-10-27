@@ -1,5 +1,7 @@
 Genom 2.7, xxx xx 2011.
 
+111. Update (fix) the list of dependencies listed in the Requires: field of the
+     generated pkg-config files.
 110. Update xeno-config options used to figure out CFLAGS and LDFLAGS 
      for Xenomai.
 109. Add tkGenom, a graphical interface to genom modules using tclserv
