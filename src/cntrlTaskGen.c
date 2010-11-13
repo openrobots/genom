@@ -37,7 +37,7 @@
 #include "cntrlTaskGen.h"
 
 /***
- *** Ge'ne'ration de la ta^che de controle
+ *** Generate the control task
  ***/
 
 static char *
@@ -92,32 +92,30 @@ cntrlTaskGen(FILE *out)
     script_open(out);
     subst_begin(out, PROTO_CNTRL_TASK_C);
     
-    /* Nom du  module */
+    /* module name */
     print_sed_subst(out, "module", module->name);
     print_sed_subst(out, "MODULE", module->NAME);
     print_sed_subst(out, "numModule", "%d", module->number);
 	
-    /* Compte des taches d'execution */
+    /* enumerate execution tasks */
     print_sed_subst(out, "nbExecTask", "%d", nbExecTask);
 
-    /* numero de la requete d'abort */
+    /* index of the abort request */
     print_sed_subst(out, "abortRequestNum", "%d", trouve_abort_num());
     
-    /* tableau des fonctions de gestion des requetes */
+    /* request handler array */
     trf = tabRequestFunc(nbRequest);
     print_sed_subst(out, "tabRequestFuncDeclare", trf);
     free(trf);
     
-    /* type de donne'es interne */
+    /* internal data structure type */
     print_sed_subst(out, "internalDataType", "struct %s", 
 		    module->internal_data->name);
     
-    /* Requete d'init attendue */
+    /* look for the init request */
     if(initRequest == 0) {
       print_sed_subst(out, "initRqst", "-1");
-    }
-    /* Recherche de la requet d'init */
-    else {
+    } else {
       for (rqst = requetes; rqst != NULL; rqst = rqst->next) {
 	if(rqst->rqst->type == INIT) {
 	  print_sed_subst(out, "initRqst", "%d", rqst->rqst->num);
@@ -126,7 +124,7 @@ cntrlTaskGen(FILE *out)
       }
     }
 
-    /* Liste des taches d'execution */
+    /* execution task list */
     execTask = NULL;
     bufcat(&execTask, "\nstatic char *%sExecTaskNameTab[] = {\n",
 	   module->name); 
@@ -139,28 +137,28 @@ cntrlTaskGen(FILE *out)
     print_sed_subst(out, "execTaskNameTabDeclare", execTask);
     free(execTask);
 
-    /* Fin */
+    /* done */
     subst_end(out);
 
     
     for (rqst = requetes; rqst != NULL; rqst = rqst->next) {
 
-      /* Selection canevas */
+      /* select canvas */
 	subst_begin(out, rqst->rqst->type == CONTROL ?  
-		    /* Requete CONTROL */
+		    /* CONTROL request */
 		    PROTO_RQST_CNTRL_C : 
-		    /* Requete INIT ou EXEC */
+		    /* INIT or EXEC request */
 		    PROTO_RQST_EXEC_C);
 
-	/* Nom du  module */
+	/* module name */
 	print_sed_subst(out, "module", module->name);
 	print_sed_subst(out, "MODULE", module->NAME);
-	/* Nom de la requete */
+	/* request namee */
 	print_sed_subst(out, "request", rqst->rqst->name);
-	/* Numero de la requete */
+	/* request index */
 	print_sed_subst(out, "requestNum", "%d", rqst->rqst->num);
 
-	/* Requete d'init */
+	/* init request */
 	if (rqst->rqst->type == INIT)
 	  print_sed_subst(out, "initRqst", "0");
 	else
@@ -268,7 +266,7 @@ cntrlTaskGen(FILE *out)
 	print_sed_subst(out, "tabCompatibilityDeclare", buf);
 	print_sed_subst(out, "tabCompatibility", "%s%sCompatibility", 
 			module->name, rqst->name);
-	/* Flag pour indiquer si fct reentrante */
+	/* flag to mark reentrant requests */
 	if (tabCompat[rqst->rqst->num] == 1) {
 	    print_sed_subst(out, "reentrantFlag", "1");
 	} else {
@@ -277,7 +275,7 @@ cntrlTaskGen(FILE *out)
 	free(tabCompat);
 
 
-	/* Fonction de controle */
+	/* control codel */
 	if (rqst->rqst->codel_control != NULL) {
 	    print_sed_subst(out, "controlFuncFlag", "1");
 	    print_sed_subst(out, "cControlFunc", 
@@ -298,7 +296,7 @@ cntrlTaskGen(FILE *out)
 	    print_sed_subst(out, "cControlFuncProto", "");
 	}
 	    
-	/* Exec task pour INIT et EXEC */
+	/* Execution task for INIT and EXEC */
 	if (rqst->rqst->exec_task != NULL) {
 	    print_sed_subst(out, "execTaskNum", "%d", 
 			    rqst->rqst->exec_task->num);
@@ -313,5 +311,3 @@ cntrlTaskGen(FILE *out)
     script_close(out, "server/%sCntrlTask.c", module->name);
     return(0);
 }
-
-
