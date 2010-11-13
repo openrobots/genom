@@ -1,6 +1,5 @@
-
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2010 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -305,7 +304,7 @@ cntrlTaskGen(FILE *out)
 			    rqst->rqst->exec_task->num);
 	} else if (rqst->rqst->type != CONTROL) {
 	    fprintf(stderr, 
-		    "%s: Error: pas d'exec_task pour la requete exec %s\n",
+		    "%s: Error: no exec_task for exec request %s\n",
 		    nomfic, rqst->name);
 	    return(-1);
 	}
