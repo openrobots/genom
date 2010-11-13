@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 1993-2010 LAAS/CNRS
  * All rights reserved.
  *
@@ -48,15 +48,15 @@ tabRequestFunc(int nbRqst)
     char *msg = NULL;
 
     for (l = requetes; l != NULL; l = l->next) {
-        r = l->rqst;
-	bufcat(&msg,  
-		"static void %sCntrl%s(SERV_ID servId, int rqstId);\n", 
+	r = l->rqst;
+	bufcat(&msg,
+		"static void %sCntrl%s(SERV_ID servId, int rqstId);\n",
 		module->name, r->name);
     } /* for */
     bufcat(&msg, "\nstatic void (*%sTabRequestFunc[])() = {\n",
-	   module->name); 
+	   module->name);
     for (l = requetes; l != NULL; l = l->next) {
-        r = l->rqst;
+	r = l->rqst;
 	bufcat(&msg, "%sCntrl%s", module->name, r->name);
 	if (l->next != NULL)
 	    bufcat(&msg, ",\n");
@@ -76,7 +76,7 @@ tabRequestFunc(int nbRqst)
     return(msg);
 }
 
-int 
+int
 cntrlTaskGen(FILE *out)
 {
     char buf[1024], buf1[80];
@@ -91,27 +91,27 @@ cntrlTaskGen(FILE *out)
 
     script_open(out);
     subst_begin(out, PROTO_CNTRL_TASK_C);
-    
+
     /* module name */
     print_sed_subst(out, "module", module->name);
     print_sed_subst(out, "MODULE", module->NAME);
     print_sed_subst(out, "numModule", "%d", module->number);
-	
+
     /* enumerate execution tasks */
     print_sed_subst(out, "nbExecTask", "%d", nbExecTask);
 
     /* index of the abort request */
     print_sed_subst(out, "abortRequestNum", "%d", trouve_abort_num());
-    
+
     /* request handler array */
     trf = tabRequestFunc(nbRequest);
     print_sed_subst(out, "tabRequestFuncDeclare", trf);
     free(trf);
-    
+
     /* internal data structure type */
-    print_sed_subst(out, "internalDataType", "struct %s", 
+    print_sed_subst(out, "internalDataType", "struct %s",
 		    module->internal_data->name);
-    
+
     /* look for the init request */
     if(initRequest == 0) {
       print_sed_subst(out, "initRqst", "-1");
@@ -127,12 +127,12 @@ cntrlTaskGen(FILE *out)
     /* execution task list */
     execTask = NULL;
     bufcat(&execTask, "\nstatic char *%sExecTaskNameTab[] = {\n",
-	   module->name); 
+	   module->name);
     for (lt = taches; lt != NULL; lt = lt->next) {
 	bufcat(&execTask, "\"%s\"", lt->exec_task->name);
 	if (lt->next != NULL)
 	    bufcat(&execTask, ",\n");
-    } 
+    }
     bufcat(&execTask, "\n};");
     print_sed_subst(out, "execTaskNameTabDeclare", execTask);
     free(execTask);
@@ -140,13 +140,13 @@ cntrlTaskGen(FILE *out)
     /* done */
     subst_end(out);
 
-    
+
     for (rqst = requetes; rqst != NULL; rqst = rqst->next) {
 
       /* select canvas */
-	subst_begin(out, rqst->rqst->type == CONTROL ?  
+	subst_begin(out, rqst->rqst->type == CONTROL ?
 		    /* CONTROL request */
-		    PROTO_RQST_CNTRL_C : 
+		    PROTO_RQST_CNTRL_C :
 		    /* INIT or EXEC request */
 		    PROTO_RQST_EXEC_C);
 
@@ -183,7 +183,7 @@ cntrlTaskGen(FILE *out)
 		 il = il->next) {
 		strcat(buf, ".");
 		strcat(buf, il->name);
-	    } 
+	    }
 	    strcat(buf, ")");
 	    print_sed_subst(out, "inputSize", buf);
 	    sprintf(buf, "&((*%sDataStrId)", module->name);
@@ -195,7 +195,7 @@ cntrlTaskGen(FILE *out)
 	    strcat(buf, ")");
 	    print_sed_subst(out, "inputRefPtr", buf);
 	    if (rqst->rqst->codel_control != NULL) {
-		print_sed_subst(out, "cControlFunc", 
+		print_sed_subst(out, "cControlFunc",
 				rqst->rqst->codel_control);
 	    }
 	} else {
@@ -212,14 +212,14 @@ cntrlTaskGen(FILE *out)
 	    print_sed_subst(out, "outputDeclare", "%s %s;", type, var);
 	    free(type);
 	    free(var);
-	    print_sed_subst(out, "outputNamePtr", "&%s", 
+	    print_sed_subst(out, "outputNamePtr", "&%s",
 			    rqst->rqst->output->dcl_nom->name);
 	    sprintf(buf, "sizeof((*%sDataStrId)", module->name);
 	    for (il = rqst->rqst->output->sdi_ref; il != NULL;
 		 il = il->next) {
 		strcat(buf, ".");
 		strcat(buf, il->name);
-	    } 
+	    }
 	    strcat(buf, ")");
 	    print_sed_subst(out, "outputSize", buf);
 	    sprintf(buf, "&((*%sDataStrId)", module->name);
@@ -243,7 +243,7 @@ cntrlTaskGen(FILE *out)
 	    print_sed_subst(out, "outputSize", "0");
 	}
 	/* tableau de compatibilite' */
-	sprintf(buf, "static int %s%sCompatibility[] = { ", 
+	sprintf(buf, "static int %s%sCompatibility[] = { ",
 		module->name, rqst->rqst->name);
 	tabCompat = (int *)xalloc(nbRequest * sizeof(int));
 
@@ -262,9 +262,9 @@ cntrlTaskGen(FILE *out)
 	}
 	sprintf(buf1, "%d };", tabCompat[nbRequest - 1]);
 	strcat(buf, buf1);
-	
+
 	print_sed_subst(out, "tabCompatibilityDeclare", buf);
-	print_sed_subst(out, "tabCompatibility", "%s%sCompatibility", 
+	print_sed_subst(out, "tabCompatibility", "%s%sCompatibility",
 			module->name, rqst->name);
 	/* flag to mark reentrant requests */
 	if (tabCompat[rqst->rqst->num] == 1) {
@@ -278,16 +278,16 @@ cntrlTaskGen(FILE *out)
 	/* control codel */
 	if (rqst->rqst->codel_control != NULL) {
 	    print_sed_subst(out, "controlFuncFlag", "1");
-	    print_sed_subst(out, "cControlFunc", 
+	    print_sed_subst(out, "cControlFunc",
 			    rqst->rqst->codel_control);
 	    if (rqst->rqst->input != NULL) {
 		dcl_nom_decl(rqst->rqst->input->dcl_nom, &type, &var);
-		print_sed_subst(out, "cControlFuncProto", "int %s(%s *%s);", 
+		print_sed_subst(out, "cControlFuncProto", "int %s(%s *%s);",
 				rqst->rqst->codel_control, type, var);
 		free(type);
 		free(var);
 	    } else {
-		print_sed_subst(out, "cControlFuncProto", "int %s(void *);", 
+		print_sed_subst(out, "cControlFuncProto", "int %s(void *);",
 				rqst->rqst->codel_control);
 	    }
 	} else {
@@ -295,13 +295,13 @@ cntrlTaskGen(FILE *out)
 	    print_sed_subst(out, "cControlFunc", "dummy");
 	    print_sed_subst(out, "cControlFuncProto", "");
 	}
-	    
+
 	/* Execution task for INIT and EXEC */
 	if (rqst->rqst->exec_task != NULL) {
-	    print_sed_subst(out, "execTaskNum", "%d", 
+	    print_sed_subst(out, "execTaskNum", "%d",
 			    rqst->rqst->exec_task->num);
 	} else if (rqst->rqst->type != CONTROL) {
-	    fprintf(stderr, 
+	    fprintf(stderr,
 		    "%s: Error: no exec_task for exec request %s\n",
 		    nomfic, rqst->name);
 	    return(-1);
