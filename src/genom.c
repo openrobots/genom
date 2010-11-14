@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 1993-2003,2009 LAAS/CNRS                      Tue Jul 13 1993
  * All rights reserved.
@@ -56,7 +55,7 @@ push_back(ID_LIST* list, ID_LIST* item)
 
     item->next = NULL;
     if (list == NULL)
-        return item;
+	return item;
 
     for (last = list; last->next != NULL; last = last->next);
     last->next = item;
@@ -114,17 +113,17 @@ upCaseNames(void)
 
     /* Import from */
     for (ln = imports; ln != NULL; ln = ln->next)
-        ln->NAME = strcpytoupper(ln->name);
+	ln->NAME = strcpytoupper(ln->name);
 
     /* Required packages */
     for (ln = requires; ln != NULL; ln = ln->next) {
-        ln->NAME = strcpytoupper(ln->name);
+	ln->NAME = strcpytoupper(ln->name);
 	/* stop at first blank */
 	{ char *tmp = ln->NAME; strsep(&tmp, " \t"); }
     }
 
     for (ln = codels_requires; ln != NULL; ln = ln->next) {
-        ln->NAME = strcpytoupper(ln->name);
+	ln->NAME = strcpytoupper(ln->name);
 	/* stop at first blank */
 	{ char *tmp = ln->NAME; strsep(&tmp, " \t"); }
     }
@@ -132,22 +131,22 @@ upCaseNames(void)
     /* Noms des taches d'execution */
     for (lt = taches; lt != NULL; lt = lt->next) {
 	t = lt->exec_task;
-        t->NAME = strcpytoupper(t->name);
+	t->NAME = strcpytoupper(t->name);
     } /* for */
 
     /* Noms des requetes */
     for (lr = requetes; lr != NULL; lr = lr->next) {
 	r = lr->rqst;
-        r->NAME = strcpytoupper(r->name);
+	r->NAME = strcpytoupper(r->name);
     } /* for */
 
     /* Noms des posters */
     for (p = posters; p != NULL; p = p->next)
-        p->NAME = strcpytoupper(p->name);
+	p->NAME = strcpytoupper(p->name);
 
     /* Posters_input */
     for (p_in = posters_input; p_in != NULL; p_in = p_in->next)
-        p_in->NAME = strcpytoupper(p_in->name);
+	p_in->NAME = strcpytoupper(p_in->name);
 
 
 } /* upCaseNames */
@@ -170,9 +169,9 @@ genom_get_requires(char* filename, char* cppOptions[])
     yyin = fopen(processed_file, "r");
     if (!yyin)
     {
-        printf("genom: Unable to open %s for reading\n", filename);
-        unlink(processed_file);
-        exit(1);
+	printf("genom: Unable to open %s for reading\n", filename);
+	unlink(processed_file);
+	exit(1);
     }
 
     /* Go for the primitive parsing ... :p */
@@ -180,7 +179,7 @@ genom_get_requires(char* filename, char* cppOptions[])
       case REQUIRE:
       case CODELS_REQUIRE:
 	if (yylex() != ':') {
-	  fprintf(stderr, "%s:%d: syntax error, missing ':'", 
+	  fprintf(stderr, "%s:%d: syntax error, missing ':'",
 	      nomfic, num_ligne);
 	  break;
 	}
@@ -250,7 +249,7 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
 	  exit(2);
 	}
 	module->codel_files = av->value.codel_files;
-        break;
+	break;
       case VERSION:
 	if (module->version) {
 	  fprintf(stderr,
@@ -258,22 +257,22 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
 		  nomfic, module->name);
 	  exit(2);
 	}
-        module->version = av->value.version;
-        break;
+	module->version = av->value.version;
+	break;
       case IFACE_VERSION:
-        if (av->value.iface_version->current < av->value.iface_version->age)
-        {
-            fprintf(stderr, "error: iface_version should have CURRENT >= AGE. Please check GenoM manual\n");
-            exit(1);
-        }
+	if (av->value.iface_version->current < av->value.iface_version->age)
+	{
+	    fprintf(stderr, "error: iface_version should have CURRENT >= AGE. Please check GenoM manual\n");
+	    exit(1);
+	}
 	if (module->iface_version) {
 	  fprintf(stderr,
 		  "genom %s: Error: twice field 'iface_version' in module %s\n",
 		  nomfic, module->name);
 	  exit(2);
 	}
-        module->iface_version = av->value.iface_version;
-        break;
+	module->iface_version = av->value.iface_version;
+	break;
       case EMAIL:
 	if (module->email) {
 	  fprintf(stderr,
@@ -281,8 +280,8 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
 		  nomfic, module->name);
 	  exit(2);
 	}
-        module->email = av->value.email;
-        break;
+	module->email = av->value.email;
+	break;
       case LANG:
 	if (module->lang != MODULE_LANG_DEFAULT) {
 	  fprintf(stderr,
@@ -290,8 +289,8 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
 		  nomfic, module->name);
 	  exit(2);
 	}
-        module->lang = av->value.lang;
-        break;
+	module->lang = av->value.lang;
+	break;
       case CLKRATE:
 	if (module->clkrate) {
 	  fprintf(stderr,
@@ -458,7 +457,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 		  nomfic, rqst->name);
 	  exit(2);
 	}
-        rqst->doc = av->value.doc;
+	rqst->doc = av->value.doc;
 	break;
     case RQST_INPUT_INFO:
 	if (rqst->input_info) {
@@ -877,8 +876,8 @@ resolveTypes(void)
     /* Types des posters */
     for (p = posters; p != NULL; p = p->next) {
 
-        /* On cree la structure du poster */
-        t_poster = STR_ALLOC(TYPE_STR);
+	/* On cree la structure du poster */
+	t_poster = STR_ALLOC(TYPE_STR);
 	t_poster->members = NULL;
 	t_poster->type = STRUCT;
 	sprintf(buf, "%s_%s_POSTER_STR", module->NAME, p->NAME);
@@ -907,8 +906,8 @@ resolveTypes(void)
 		  /* Il faut recupere le type, MAIS AUSSI les caractéristiques
 		     de la variable, MAIS sans ecraser le nom.
 		     -> enregistrement du type est insufisant
-		        et recuperation directe de n erronee
-		        (sara Oct 96) */
+			et recuperation directe de n erronee
+			(sara Oct 96) */
 		    lm->str_ref->dcl_nom->type = n->type;
 		    lm->str_ref->dcl_nom->pointeur = n->pointeur;
 		    lm->str_ref->dcl_nom->dimensions = n->dimensions;
@@ -1087,8 +1086,8 @@ resolveTypes(void)
 		       tableau de variable (car normalement la variable
 		       ne doit plus etre utilisee)
 		       (Pb1: verifier qu'on a pas deja remplacer une fois
-		        Pb2: cas d'utilisation de la variable par des
-		            requetes reentrante ET non-reentrante):
+			Pb2: cas d'utilisation de la variable par des
+			    requetes reentrante ET non-reentrante):
 
 		    int nDim=r->input->dcl_nom->ndimensions;
 		    DCL_NOM_STR *n=r->input->dcl_nom;
@@ -1645,7 +1644,7 @@ nom_type1(TYPE_STR *type)
 	break;
 
     case CHAR:
-        if (type->flags & STRING) {
+	if (type->flags & STRING) {
 	  bufcat(&res, "string");
 	  break;
 	}
@@ -2128,7 +2127,7 @@ void
 copy_script(FILE *out, const char *protoName)
 {
 	fprintf(out, "\ncopy(\"%s/%s\", \"%s\") || "
-	    "die \"Copy failed: $!\";\n", 
+	    "die \"Copy failed: $!\";\n",
 	    protoDir, protoName, protoName);
 	fprintf(out, "\nchmod(0755, \"%s\") || die \"chmod failed: $!\";\n\n",
 	    protoName);
@@ -2190,4 +2189,3 @@ cat_end(FILE *out)
 {
     fprintf(out, "__END_OF_FILE__\n");
 }
-

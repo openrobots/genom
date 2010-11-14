@@ -1,5 +1,5 @@
-/* 
- * Copyright (c) 2004 
+/*
+ * Copyright (c) 2004
  *      Autonomous Systems Lab, Swiss Federal Institute of Technology.
  * Copyright (c) 2003 LAAS/CNRS
  * All rights reserved.
@@ -49,7 +49,7 @@ static void output(FILE* out, char const* name, char* value)
    }
 }
 
-static void genomDefines(FILE* out) 
+static void genomDefines(FILE* out)
 {
    char* str = NULL;
    int i;
@@ -73,10 +73,10 @@ static void definePackage(char** conf_in, char** conf_mk_in, char const* NAME, c
     bufcatIfNotIn(conf_mk_in, "\n%s_LIBS     = \t\\@%s_LIBS@", NAME, NAME);
 
     bufcatIfNotIn(conf_in,
-        "\nPKG_CHECK_MODULES(%s, %s)\n"
-        "AC_SUBST(%s_CFLAGS)\n"
-        "AC_SUBST(%s_LIBS)\n\n", 
-        NAME, name, NAME, NAME);
+	"\nPKG_CHECK_MODULES(%s, %s)\n"
+	"AC_SUBST(%s_CFLAGS)\n"
+	"AC_SUBST(%s_LIBS)\n\n",
+	NAME, name, NAME, NAME);
 }
 
 #ifdef FOR_OPRS
@@ -85,25 +85,25 @@ static void defineExternOprsPackage(char** conf_in, char** conf_mk_in, char cons
     bufcatIfNotIn(conf_mk_in, "\n%s_OPRS_CFLAGS   = \t\\@%s_OPRS_CFLAGS\\@", NAME, NAME);
 
     bufcatIfNotIn(conf_in,
-        "\nPKG_CHECK_MODULES(%s_OPRS, %s-oprs)\n"
-        "AC_SUBST(%s_OPRS_CFLAGS)\n"
-        "AC_SUBST(%s_OPRS_LIBS)\n\n", 
-        NAME, name, NAME, NAME);
+	"\nPKG_CHECK_MODULES(%s_OPRS, %s-oprs)\n"
+	"AC_SUBST(%s_OPRS_CFLAGS)\n"
+	"AC_SUBST(%s_OPRS_LIBS)\n\n",
+	NAME, name, NAME, NAME);
 }
 #endif
 
 static void
-defineExternTclservClientPackage(char** conf_in, char** conf_mk_in, 
+defineExternTclservClientPackage(char** conf_in, char** conf_mk_in,
 							     char const* NAME, char const* name)
 {
     bufcatIfNotIn(conf_mk_in, "\n%s_TCLSERV_CLIENT_LIB_CFLAGS   = \t\\@%s_TCLSERV_CLIENT_LIB_CFLAGS\\@", NAME, NAME);
     bufcatIfNotIn(conf_mk_in, "\n%s_TCLSERV_CLIENT_LIB_LIBS   = \t\\@%s_TCLSERV_CLIENT_LIB_LIBS\\@", NAME, NAME);
 
     bufcatIfNotIn(conf_in,
-        "\nPKG_CHECK_MODULES(%s_TCLSERV_CLIENT_LIB, %s-tclserv_client)\n"
-        "AC_SUBST(%s_TCLSERV_CLIENT_LIB_CFLAGS)\n"
-        "AC_SUBST(%s_TCLSERV_CLIENT_LIB_LIBS)\n\n", 
-        NAME, name, NAME, NAME);
+	"\nPKG_CHECK_MODULES(%s_TCLSERV_CLIENT_LIB, %s-tclserv_client)\n"
+	"AC_SUBST(%s_TCLSERV_CLIENT_LIB_CFLAGS)\n"
+	"AC_SUBST(%s_TCLSERV_CLIENT_LIB_LIBS)\n\n",
+	NAME, name, NAME, NAME);
 }
 
 /*----------------------------------------------------------------------*/
@@ -180,7 +180,7 @@ configureGen(FILE *out,
        PROTO_CONFIGURE_AC_USER,
        NULL
    };
-      
+
    for(p = configProtosExec; *p; p++) {
 	   copy_script(out, *p);
    }
@@ -240,32 +240,32 @@ configureGen(FILE *out,
       }
    print_sed_subst(out, "codel_files", codel_files);
    free(codel_files);
-    
+
    /* done */
    subst_end(out);
    script_close(out, PROTO_MAKEFILE_CODELS);
 
    /* --- build the configuration strings for needed packages  -----------------
-    They are required because of -P 
+    They are required because of -P
    */
    pkg_conf_in = NULL;
    pkg_conf_mk = NULL;
 
-   for (ln = requires; ln != NULL; ln = ln->next) 
+   for (ln = requires; ln != NULL; ln = ln->next)
        definePackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 
 #ifdef FOR_OPRS
    if (genOpenprs)
-     for (ln = imports; ln != NULL; ln = ln->next) 
+     for (ln = imports; ln != NULL; ln = ln->next)
        defineExternOprsPackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 #endif
 
    if (genTclservClient)
-     for (ln = imports; ln != NULL; ln = ln->next) 
+     for (ln = imports; ln != NULL; ln = ln->next)
        defineExternTclservClientPackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 
    if (genServer)
-     for (ln = codels_requires; ln != NULL; ln = ln->next) 
+     for (ln = codels_requires; ln != NULL; ln = ln->next)
        definePackage(&pkg_conf_in, &pkg_conf_mk, ln->NAME, ln->name);
 
    /* --- configure.ac --------------------------------------------------- */
@@ -276,8 +276,8 @@ configureGen(FILE *out,
    version_to_str[0] = 0;
    if (module->iface_version)
    {
-       snprintf(version_to_str, VERSION_TO_STR_LENGTH, "%i:%i:%i", 
-               module->iface_version->current, module->iface_version->revision, module->iface_version->age);
+       snprintf(version_to_str, VERSION_TO_STR_LENGTH, "%i:%i:%i",
+	       module->iface_version->current, module->iface_version->revision, module->iface_version->age);
    }
    print_sed_subst(out, "iface_version", version_to_str);
 
@@ -328,7 +328,7 @@ configureGen(FILE *out,
    tclserv_client_libs = NULL;
 
    /* Include all packages by default */
-   for (ln = requires; ln != NULL; ln = ln->next) 
+   for (ln = requires; ln != NULL; ln = ln->next)
        bufcatIfNotIn(&genomIncludes, " \\$(%s_CFLAGS)", ln->NAME);
 
    for (ln = codels_requires; ln != NULL; ln = ln->next) {
@@ -339,12 +339,12 @@ configureGen(FILE *out,
 
    for (ln = imports; ln != NULL; ln = ln->next)
    {
-        bufcatIfNotIn(&genomIncludes, " \\$(%s_CFLAGS)", ln->NAME);
-		bufcatIfNotIn(&serverLibs, " \\$(%s_LIBS)", ln->NAME); 
+	bufcatIfNotIn(&genomIncludes, " \\$(%s_CFLAGS)", ln->NAME);
+		bufcatIfNotIn(&serverLibs, " \\$(%s_LIBS)", ln->NAME);
 		if (genTclservClient) {
-			bufcatIfNotIn(&tclserv_client_cflags, 
+			bufcatIfNotIn(&tclserv_client_cflags,
 					" \\$(%s_TCLSERV_CLIENT_LIB_CFLAGS)", ln->NAME);
-			bufcatIfNotIn(&tclserv_client_libs, 
+			bufcatIfNotIn(&tclserv_client_libs,
 					" \\$(%s_TCLSERV_CLIENT_LIB_LIBS)", ln->NAME);
 		}
    }
@@ -405,11 +405,11 @@ configureServerGen(FILE *out, char const* cmdLine,
 
    str = NULL;
    for (ln = allIncludeFiles; ln != NULL; ln = ln->next) {
-     /* Will install only .h files used by .gen file that are located 
+     /* Will install only .h files used by .gen file that are located
 	in the main module directory */
-     if (strstr(ln->name, "..") == NULL 
-             && ln->name[0] != '/' 
-             && strcmp(ln->name + strlen(ln->name) - 2, ".h") == 0) {
+     if (strstr(ln->name, "..") == NULL
+	     && ln->name[0] != '/'
+	     && strcmp(ln->name + strlen(ln->name) - 2, ".h") == 0) {
        bufcat(&str, "\t%s \\\\\n", ln->name);
      }
     } /* for */
@@ -419,8 +419,8 @@ configureServerGen(FILE *out, char const* cmdLine,
     /* execution tasks */
     str = NULL;
     for (lt = taches; lt != NULL; lt = lt->next) {
-        bufcat(&str, "\t%s%s.c\t\\\\%s", module->name, lt->exec_task->name,
-                lt->next?"\n":"");
+	bufcat(&str, "\t%s%s.c\t\\\\%s", module->name, lt->exec_task->name,
+		lt->next?"\n":"");
     }
     print_sed_subst(out, "listExecTask_c", str);
     free(str);
@@ -474,13 +474,13 @@ int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genO
 
     cppOptStrLen = 0;
     for (cppOpt = cppOptions; *cppOpt; ++cppOpt)
-        cppOptStrLen += strlen(*cppOpt) + 1;
+	cppOptStrLen += strlen(*cppOpt) + 1;
     cppOptStr = malloc(cppOptStrLen + 1);
     *cppOptStr = 0;
     for (cppOpt = cppOptions; *cppOpt; ++cppOpt)
     {
-        strcat(cppOptStr, " ");
-        strcat(cppOptStr, *cppOpt);
+	strcat(cppOptStr, " ");
+	strcat(cppOptStr, *cppOpt);
     }
 
     print_sed_subst(out, "module", module->name);
@@ -566,7 +566,7 @@ int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genO
       subst_end(out);
       script_close(out, "autoconf/%s-tclserv_client.pc.in", pkgname);
     } /* -tclserv_client.pc.in */
-    
+
     free(pkgname);
     return 0;
 }
