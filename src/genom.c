@@ -76,7 +76,7 @@ strcpytolower(char const* value)
     int i;
     for (i = 0; value[i] != '\0'; ++i)
     {
-	if (value[i] == '-')
+	if (value[i] == '-' || value[i] == '.')
 	    result[i] = '_';
 	else
 	    result[i] = tolower(value[i]);
@@ -94,7 +94,7 @@ strcpytoupper(char const* value)
     int i;
     for (i = 0; value[i] != '\0'; ++i)
     {
-	if (value[i] == '-')
+	if (value[i] == '-' || value[i] == '.')
 	    result[i] = '_';
 	else
 	    result[i] = toupper(value[i]);
