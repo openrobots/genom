@@ -1,4 +1,3 @@
-
 /* 
  * Copyright (c) 2004 
  *      Autonomous Systems Lab, Swiss Federal Institute of Technology.
@@ -39,17 +38,6 @@
 
 #include "genom.h"
 #include "configureGen.h"
-
-/*
-static char* strtoupper(char const* from)
-{
-    char* str = NULL, *str1 = NULL;
-    bufcat(&str, "%s", from);
-    for(str1 = str; *str1; ++str1)
-        *str1 = toupper(*str1);
-    return str;
-}
-*/
 
 static void output(FILE* out, char const* name, char* value)
 {
