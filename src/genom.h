@@ -372,7 +372,6 @@ extern void upCaseArguments ( void );
 extern void * xalloc ( size_t n );
 extern void * xrealloc ( void *p, size_t n );
 extern const char *	langFileExt(MODULE_LANG lang);
-extern char* strcpytolower(char const* value);
 
 /*----------------------------------------------------------------------*/
 
