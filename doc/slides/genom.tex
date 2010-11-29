@@ -32,10 +32,8 @@
  
 \author{Sara Fleury - Matthieu Herrb}
  
-\date{October 2009\\
-\figw{./figures/openlogo.png}{4cm}}
 \institute{\includegraphics[height=2cm]{openlogo}}
-\date{October 2009}
+\date{November 2010}
 
 
 \AtBeginSection[]{
@@ -64,7 +62,7 @@
 \label{gene}
 %----------------------------------------------------------------------
 \begin{frame}
-\frametitle{\GenoM{} : Generator of Modules}
+\frametitle{\GenoM{}: Generator of Modules}
 
 \begin{center}
 \begin{tabularx}{\linewidth}{p{3cm}Xp{3cm}}
@@ -85,7 +83,7 @@
 
 %----------------------------------------------------------------------
 \begin{frame}
-\frametitle{\GenoM{} : Generator of Modules}
+\frametitle{\GenoM{}: Generator of Modules}
 
 \begin{center}
 \begin{tabularx}{\linewidth}{p{3cm}Xp{3cm}}
@@ -100,7 +98,7 @@
 
 %----------------------------------------------------------------------
 \begin{frame}
-\frametitle{\GenoM{} : Generator of Modules}
+\frametitle{\GenoM{}: Generator of Modules}
 
 Tool to integrate processing functions into independant servers or \textbf{modules}
 
@@ -120,7 +118,7 @@ Tool to integrate processing functions into independant servers or \textbf{modul
 \centerline{ \textbf{Software integration on embedded systems} }
 
 \vspace{1em}
- \textbf{Requirements :} 
+ \textbf{Requirements:} 
 
 	\begin{itemize}
 
@@ -224,7 +222,7 @@ and \textbf{perenity})
 
 %----------------------------------------------------------------------
 \begin{frame}
-\frametitle{Sample modules : Lama \hfill\includegraphics[width=0.9cm]{lama-detour-web-small.jpg}
+\frametitle{Sample modules: Lama \hfill\includegraphics[width=0.9cm]{lama-detour-web-small.jpg}
 }
 
 
@@ -234,7 +232,7 @@ and \textbf{perenity})
 
 %----------------------------------------------------------------------
 \begin{frame}
-\frametitle{Sample modules : Karma  \hfill\includegraphics[width=1.7cm]{karma-detour-web-small.jpg}
+\frametitle{Sample modules: Karma  \hfill\includegraphics[width=1.7cm]{karma-detour-web-small.jpg}
 }
 
 \figw{karma-components.pdf}{\textwidth} 
@@ -242,7 +240,7 @@ and \textbf{perenity})
 
 %----------------------------------------------------------------------
 \begin{frame}
-\frametitle{Sample modules : Rackham  \hfill\includegraphics[width=0.25cm]{rackham-detour-web-small.jpg}
+\frametitle{Sample modules: Rackham  \hfill\includegraphics[width=0.25cm]{rackham-detour-web-small.jpg}
 }
 
 
@@ -331,7 +329,7 @@ and \textbf{perenity})
 
 
 \begin{tabbing}
-\textbf{Module : } \=
+\textbf{Module: } \=
  database\\
  \> + processing functions  (set of \textbf{codels})\\
  \> + execution engine
@@ -355,7 +353,8 @@ and \textbf{perenity})
 General configuration:
 
 \begin{itemize}
-\item Openrobots tools installed in \verb|$prefix| (\texttt{/usr/local/openrobots}) 
+\item Use \emph{Robotpkg} to install genom and its dependencies.
+\item Openrobots tools installed in \verb|$prefix| (\texttt{\$HOME/openrobots}) 
 %$
 
 \item Environment variables:
@@ -365,8 +364,9 @@ General configuration:
 \end{itemize}
 \end{itemize}
 
-\vspace{1em}
+\vspace{1ex}
 Directory layout for \texttt{demo}:\\
+\vspace{.5ex}
 {\small
 \begin{tabular}{|l|ll|}
 \hline
@@ -403,20 +403,23 @@ The \texttt{demo.gen} file describes:
 
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{Edition of the module: emacs \texttt{genom} mode}
+\frametitle{Edition of the module: XEmacs \texttt{genom} mode}
 
 Configuration file \texttt{.emacs.d/init.el}
 \vspace*{.5cm}
 {\footnotesize
 \begin{lstlisting}
 (setq load-path 
-  (cons "/usr/local/openrobots/genom/emacs"  load-path))
+  (cons (expand-file-name "~/openrobots/share/genom")  
+        load-path))
 (setq auto-mode-alist 
   (cons '("\\.gen$" . genom-mode) auto-mode-alist))
 (autoload 'genom-mode "genom-mode" "Genom-mode" t)
 \end{lstlisting} 
 }
 %$
+
+(currently broken with modern emacs versions)
 
 \end{frame}
 
@@ -425,7 +428,7 @@ Configuration file \texttt{.emacs.d/init.el}
 \begin{frame}
 \frametitle{Emacs Genom mode}
 
-Commands (or menu) :
+Commands (or menu):
 
 \vspace{1em}
 \begin{tabularx}{\linewidth}{|l|X|}
@@ -462,13 +465,13 @@ How to control the motion of a mobile moving along one axis ?
 $\Rightarrow$ {\bf execution request}: \texttt{Goto}
 %\vspace{-.8cm}
 		\begin{itemize}
-		\item input : \texttt{position} to reach
+		\item input: \texttt{position} to reach
 		\end{itemize}
 \item {\bf parameters control}: "get or change speed reference"\\
 	 $\Rightarrow$ {\bf control request}: 
 		\begin{itemize}
 		\item \texttt{SetSpeed} with input: new speed reference
-		\item \texttt{GetSpeed} with output : current speed reference
+		\item \texttt{GetSpeed} with output: current speed reference
 		\end{itemize}
 \end{itemize}
 \end{frame}
@@ -513,7 +516,7 @@ typedef struct DEMOCAL_STR {
 
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{\texttt{demo.gen} : creation of a control request}
+\frametitle{\texttt{demo.gen}: creation of a control request}
 
 {\footnotesize
 \begin{lstlisting}
@@ -537,7 +540,7 @@ request SetSpeed {
 
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{\texttt{demo.gen} : creation of an execution request}
+\frametitle{\texttt{demo.gen}: creation of an execution request}
 
 {\footnotesize
 \begin{lstlisting}
@@ -579,7 +582,7 @@ poster Status {
 
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{\texttt{demo.gen} : creation of an execution task}
+\frametitle{\texttt{demo.gen}: creation of an execution task}
 \vspace*{1cm}
 
 {\small
@@ -744,11 +747,11 @@ typedef enum DEMO_SPEED {
 \section{How to generate a module}
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{First generation of the module : \texttt{genom demo.gen}}
+\frametitle{First generation of the module: \texttt{genom demo.gen}}
 
 %\vspace{0.1cm}
 
-%Commande : \texttt{genom -i demo.gen}
+%Commande: \texttt{genom -i demo.gen}
 
 {\tiny
 \begin{lstlisting}
@@ -786,7 +789,7 @@ Done.
 \begin{frame}[containsverbatim]
 \frametitle{GenoM outputs}
 
-Production of several files and directories :
+Production of several files and directories:
 %\vspace{-1cm}
 \begin{itemize}
 \item \texttt{Makefile.in}, \texttt{configure}...
@@ -810,13 +813,13 @@ autoconf/           configure*          demoStruct.h
 
 In \texttt{demo/server/} files used by genom and clients of the module, related to:
 \begin{itemize}
-\item server : 
+\item server: 
 	\texttt{demoCntrlTask, demoMotionTask, \ldots}
 \item libraries to send requests and receive replies
 	\texttt{demoMsgLib}
 \item libraries to access posters:
 	\texttt{demoPosterLib}
-\item Test program :
+\item Test program:
 	\texttt{demoTest.c}
 \end{itemize}
 \end{frame}
@@ -856,7 +859,7 @@ Call configure, telling where to install the module:
 
 {\scriptsize
 \begin{lstlisting}
-blues% ../configure --prefix=/usr/local/openrobots
+blues% ../configure --prefix=${HOME}/openrobots
 checking build system type... i686-pc-linux-gnu
 checking host system type... i686-pc-linux-gnu
 checking for gcc... gcc
@@ -883,16 +886,16 @@ Call: \texttt{make}
 \begin{lstlisting}
 blues% make
 make all-posix
-make[1]: Entering directory `/usr/local/openrobots/modules/demo/build'
-make[2]: Entering directory `/usr/local/openrobots/modules/demo/build/server'
+make[1]: Entering directory `/home/foo/openrobots/modules/demo/build'
+make[2]: Entering directory `/home/foo/openrobots/modules/demo/build/server'
 mkdir -p posix-build
-/usr/local/openrobots/i386-linux/bin/mkdep -c"gcc" -oposix-build/dependencies -dposix-build 
--t.lo -DUNIX    -I. -I../.. -I../../server -I/usr/local/openrobots/i386-linux/include   
+/home/foor/openrobots/bin/mkdep -c"gcc" -oposix-build/dependencies -dposix-build 
+-t.lo -DUNIX    -I. -I../.. -I../../server -I/home/foo/openrobots/include   
 ../../server/demoCntrlTask.c ../../server/demoModuleInit
 ...
 creating posix-build/demo
-make[2]: Leaving directory `/usr/local/openrobots/modules/demo/build/codels'
-make[1]: Leaving directory `/usr/local/openrobots/modules/demo/build'
+make[2]: Leaving directory `/home/foo/openrobots/modules/demo/build/codels'
+make[1]: Leaving directory `/home/foo/openrobots/modules/demo/build'
 
 \end{lstlisting}}
 
@@ -920,14 +923,14 @@ According to the destination you have chosen, you may need \texttt{root} privile
 
 
 \begin{enumerate}
-\item Edit the module : {\bf demo.gen}
+\item Edit the module: {\bf demo.gen}
 
 \item Only the first time: generate {\bf genom} \\
   and configure {\bf configure}
 
-\item Compile and generate : {\bf make}
+\item Compile and generate: {\bf make}
 
-\item Install : {\bf make install}
+\item Install: {\bf make install}
 
 \end{enumerate}
 
@@ -937,16 +940,16 @@ According to the destination you have chosen, you may need \texttt{root} privile
 \section{How to run a module}
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{UNIX session : execution}
+\frametitle{UNIX session: execution}
 
 
-1. Start the communication server :
+1. Start the communication server:
 
 \begin{lstlisting}
 blues% h2 init
 \end{lstlisting}
 
-2. Start the module :
+2. Start the module:
 
 \begin{lstlisting}
 blues% demo -b
@@ -955,7 +958,7 @@ blues% demo -b
 \texttt{-b} option allows to wait until the module has effectively
 started.
 
-3. Start the client(s) :
+3. Start the client(s):
 
 \begin{lstlisting}
 blues% demoTest 1
@@ -971,8 +974,8 @@ blues% demoTest 1
 {\scriptsize
 \begin{lstlisting}
 blues% demoTest 1 
-pocolibs execution environment version 2.5
-Copyright (c) 1999-2008 CNRS-LAAS
+pocolibs execution environment version 2.8
+Copyright (c) 1999-2010 CNRS-LAAS
 client init ...ok.   Poster init ...ok.
 ---------------------------------------------------------------------
   0: SetSpeed              2: Stop                4: GotoPosition (E)
@@ -1017,10 +1020,10 @@ demo1 (3)>
 
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{UNIX  session : end}
+\frametitle{UNIX  session: end}
 
 \begin{enumerate}
-\item Kill the module :
+\item Kill the module:
 
 \begin{lstlisting}
 blues% killmodule demo
@@ -1045,15 +1048,15 @@ blues% h2 end
 \frametitle{Summary of 4th part}
 
 \begin{enumerate}
-\item Edit the module : {\bf demo.gen}
+\item Edit the module: {\bf demo.gen}
 
 \item Only the first time: generate ({\bf genom}) and configure ({\bf configure})
 
 \item (Re) generate and compile: {\bf make}
 
-\item Install : {\bf make install}
+\item Install: {\bf make install}
 
-\item Execute : {\bf h2 init, demo -b, demoTest 1, ... h2 end}
+\item Execute: {\bf h2 init, demo -b, demoTest 1, ... h2 end}
 
 \end{enumerate}
 
@@ -1067,7 +1070,7 @@ blues% h2 end
 
 \bi
 
-\item All the codels are in the directory : {\tt codels/}
+\item All the codels are in the directory: {\tt codels/}
 
 \item In this directory we have one codels file per task.
 
@@ -1164,7 +1167,7 @@ ACTIVITY_EVENT demoGotoEnd(double *posRef, int *report)
 \bi
 \item Initialisation codel {\tt c\_init\_func} 
 \item Terminaison codel  {\tt c\_end\_func} 
-\item Permanent activity codel  : {\tt c\_func}
+\item Permanent activity codel: {\tt c\_func}
 \ei
 
 $\rightarrow$ one per execution task  \\
@@ -1189,15 +1192,15 @@ STATUS demoComputeInit(int *report)
 \frametitle{Summary of 5th part}
 
 \begin{enumerate}
-\item Edit the module : {\bf demo.gen}
+\item Edit the module: {\bf demo.gen}
 
 \item Only the first time: generate ({\bf genom}) and configure ({\bf configure})
 
 \item (Re) generate and compile: {\bf make}
 
-\item Install : {\bf make install}
+\item Install: {\bf make install}
 
-\item Execute : {\bf h2 init, demo -b, demoTest 1, ... h2 end}
+\item Execute: {\bf h2 init, demo -b, demoTest 1, ... h2 end}
 
 \item Fill-in the codels (and goto {\bf 3})
 
@@ -1213,7 +1216,7 @@ STATUS demoComputeInit(int *report)
 
 \bi
 \item generally:
-1 activity $\rightarrow$ a sequence of codels :
+1 activity $\rightarrow$ a sequence of codels:
 
 {\tt start}\\
 {\tt exec}\\
@@ -1235,7 +1238,7 @@ STATUS demoComputeInit(int *report)
 \begin{frame}[containsverbatim]
 \frametitle{Execution requests and codels}
 
-One example :
+One example:
 
 {\footnotesize
 \begin{lstlisting}
@@ -1309,7 +1312,7 @@ exec_task Compute {
 
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{The posters : automatics or manual}
+\frametitle{The posters: automatics or manual}
 
 Exporting results
 
@@ -1341,8 +1344,8 @@ poster Status {
 \end{frame}
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{Posters :  manual update}
-Update from a codel : \\
+\frametitle{Posters:  manual update}
+Update from a codel: \\
 
 {\footnotesize
 \begin{lstlisting}
@@ -1366,15 +1369,15 @@ ACTIVITY_EVENT demoGotoStart(double *posRef, int *report)
 \frametitle{Summary of 6th part}
 
 \begin{enumerate}
-\item Edit the module : {\bf demo.gen}
+\item Edit the module: {\bf demo.gen}
 
 \item Only the first time: generate ({\bf genom}) and configure ({\bf configure})
 
 \item (Re) generate and compile: {\bf make}
 
-\item Install : {\bf make install}
+\item Install: {\bf make install}
 
-\item Execute : {\bf h2 init, demo -b, demoTest 1, ... h2 end}
+\item Execute: {\bf h2 init, demo -b, demoTest 1, ... h2 end}
 
 \item Fill-in the codels (and goto {\bf 3})
 
@@ -1387,7 +1390,7 @@ ACTIVITY_EVENT demoGotoStart(double *posRef, int *report)
 \begin{frame}[containsverbatim]
 \frametitle{Using module structures from another module}
 
-Import structures : 
+Import structures: 
 
 {\scriptsize
 \begin{lstlisting}
@@ -1429,7 +1432,7 @@ request Track {
 \end{lstlisting}
 }
 
-Library : {\tt demoPosterReadLib}
+Library: {\tt demoPosterReadLib}
 
 {\tiny
 \begin{lstlisting}
@@ -1468,22 +1471,21 @@ Library : {\tt demoPosterReadLib}
 \item Graphical libraries {\tt Tk}
 \end{itemize}
 
-\url{http://softs.laas.fr/openrobots/wiki/eltclsh}
+\url{http://www.openrobots.org/wiki/eltclsh}
 
 \end{frame}
 %----------------------------------------------------------------------
 \begin{frame}
-\frametitle{Module control with tclserv: use}
+\frametitle{Module control with tclserv: usage}
 
 \begin{enumerate}
 \item Generate the module with option {\tt -t}
 
 \item Start the server {\tt tclserv}.
 
-\item Start one (or several) tcl-shells :\\
+\item Start one (or several) tcl-shells:\\
 {\tt eltclsh -package genom}
 
-{\em Remark : make an alias !}
 
 \item Start session (see example).
 
@@ -1492,7 +1494,7 @@ Library : {\tt demoPosterReadLib}
 \end{frame}
 %----------------------------------------------------------------------
 \begin{frame}
-\frametitle{Module control with tclserv : options and commands}
+\frametitle{Module control with tclserv: options and commands}
 {\center
 {\small
 \begin{tabularx}{\linewidth}{|l|X|}
@@ -1504,6 +1506,11 @@ option		& function \\
 \tt -raw & the result is presented as a raw list of data
            (not a nice display)  \\
 \hline
+\end{tabularx}
+
+\vfill
+\begin{tabularx}{\linewidth}{|l|X|}
+\hline
 command		& function \\
 \hline
 \tt replyof \$rqstId & get answer {\em blocking mode}. 
@@ -1511,6 +1518,7 @@ Generaly used with option {\tt -raw}. \\
 \tt cs::term \$rqstId 0 & get answer {\em  non blocking mode}. \\
 \tt abort \$rqstId	& abort the request \\
 \tt kill $<$module$>$	& abort the module $<$module$>$ \\
+\texttt{die} & terminate tclserv and eltclsh itself\\
 \hline
 \end{tabularx}}
 }
@@ -1518,32 +1526,27 @@ Generaly used with option {\tt -raw}. \\
 
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{Module control with tclserv : examples}
+\frametitle{Module control with tclserv: examples}
 
 {\footnotesize
 \begin{lstlisting}
-tcl-> connect cabby
-no startup script for cabby: Rack inconnu
-sourcing ~/.tclservrc
-connected to cabby
-tcl[cabby]-> lm camera
-camera loaded on cabby
-tcl[cabby]-> lm platine
-platine loaded on cabby
-tcl[cabby]-> mboxInit 
-csLib mailbox created on cabby
-tcl[cabby]-> camera::Init
-Working mode [CAMERA_LIVE] : 
-Preprocessings mode [CAMERA_ENABLE_PREPROCESSINGS] : 
+eltclsh > connect localhost
+connecting to localhost:9472
+connected to localhost
+eltclsh> lm demo
+(re)starting tclServ cs daemon on port 9472
+demo loaded on localhost from ~/openrobots/share/modules
+eltclsh > ::demo::MoveDistance 
+distance in m [0]> 0.5
 status = OK
-tcl[cabby]-> 
+eltclsh > 
 
 \end{lstlisting}
 }
 \end{frame}
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{Module control with tclserv : examples (cont.)}
+\frametitle{Module control with tclserv: examples (cont.)}
 
 {\small
 \begin{lstlisting}
@@ -1557,40 +1560,24 @@ tcl[cabby]->
 
 %----------------------------------------------------------------------
 \begin{frame}
-\frametitle{Module control with tclserv:  tk, \ldots}
+\frametitle{Module control with tclserv: Tk and Gdhe}
 
+
+Modular and extensible 3D graphical interface with the \texttt{Tk} GUI toolkit:
 \begin{itemize}
-\item Initialization file : {\tt .tclservrc}
-
-\item Graphics tools with {\tt tk} : 
-
-Two modular and extensibles graphical interfaces :
-\begin{itemize}
-\item 2D version: {\tt /usr/local/robots/grh2/}
-\item 3D version: \url{http://softs.laas.fr/openrobots/wiki/gdhe}
+\item Gdhe \url{http://gdhe.openrobots.org/}
 \end{itemize}
 
-All our robots have their 3D model (lama, h2, h2bis with son bras, diligent,
-scouts). 
-
-\end{itemize}
-\end{frame}
-%----------------------------------------------------------------------
-\begin{frame}
-\frametitle{Display with GDHE \ldots}
-
-\url{http://softs.laas.fr/openrobots/wiki/gdhe}
+3D model of many robots (rackham, jido, dala, mana,...). 
 
 \figw{./figures/gdhe-robots.png}{10cm}
 
-
 \end{frame}
-
 %----------------------------------------------------------------------
 \begin{frame}
-\frametitle{Module control with OpenPRS : principle}
+\frametitle{Module control with OpenPRS: principle}
 
-\url{http://softs.laas.fr/openrobots/wiki/openprs}
+\url{http://openprs.openrobots.org/}
 
 \begin{itemize}
 \item Supervision
@@ -1615,7 +1602,7 @@ nom		& function \\
 \end{tabularx}}
 }
 
-The answer is a string in the data base :
+The answer is a string in the data base:
 \\
 {\tt (FR DEMO DEMO\_MOTION \$RQST-ID \$REPORT \$DATA)}.
 
@@ -1627,10 +1614,10 @@ The answer is a string in the data base :
 
 \begin{itemize}
 \item Automatic production of OpenPRS relocatable.
-\item Similar to GenoM :
+\item Similar to GenoM:
 
 \begin{itemize}
-\item  Description  file {\tt manip.tg} :
+\item  Description  file {\tt manip.tg}:
 \end{itemize}
 
 
@@ -1653,9 +1640,9 @@ supervisor manip {
 \frametitle{Module control with OpenPRS: {\tt transgen} (continued)}
 
 \begin{itemize}
-\item Call : {\tt tranGen manip.tg}
+\item Call: {\tt tranGen manip.tg}
 \item Compile in {\tt server/}.
-\item Start OpenPRS : 
+\item Start OpenPRS: 
 \end{itemize}
 
 {\footnotesize
@@ -1674,7 +1661,7 @@ blues% server/i386-linux/manip-xOpenPRS -n manip-cabby \
 An OP that automatically starts
 the continuous 
 localization request  ({\tt SEGLOC-LOCLOOP-ASYNC}) when the
-robot losts itself  :
+robot losts itself:
 
 {\scriptsize
 \begin{lstlisting}
@@ -1708,17 +1695,17 @@ robot losts itself  :
 \frametitle{Summary}
 
 \begin{enumerate}
-\item Edit the module : {\bf demo.gen}
+\item Edit the module: {\bf demo.gen}
 
-\item Only the first time: generate ({\bf genom}) and configure ({\bf configure})
+\item First time only: generate ({\bf genom}) and configure ({\bf configure})
 
 \item (Re) generate and compile: {\bf make}
 
-\item Install : {\bf make install}
+\item Install: {\bf make install}
 
-\item Execute : {\bf h2 init, demo -b, demoTest 1, ... h2 end}
+\item Execute: {\bf h2 init, demo -b, demoTest 1, ... h2 end}
 
-\item Control with : {\bf tclserv} and {\bf Tcl/Tk} {\tt (eltclsh, elwish,
+\item Control with: {\bf tclserv} and {\bf Tcl/Tk} {\tt (eltclsh, elwish,
 gdhe)}	or {\bf OpenPRS}
 
 \end{enumerate}
@@ -1731,12 +1718,12 @@ gdhe)}	or {\bf OpenPRS}
 
 \begin{itemize}
 \item Official page:
-\url{http://softs.laas.fr/openrobots/wiki/genom}
+\url{http://genom.openrobots.org/}
 
 \item Robotpkg:
-\url{http://www.laas.fr/~mallet/robotpkg}
+\url{http://robotpkg.openrobots.org/}
 
-\item Mailling-list: \url{openrobots@laas.fr}
+\item Mailling-list: \url{openrobots@laas.fr} \url{https://sympa.laas.fr/sympa/info/openrobots}
 
 \item (Intranet) Wiki: 
 \url{http:/intranet.laas.fr/robots/wiki}

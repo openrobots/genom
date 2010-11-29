@@ -1,5 +1,6 @@
 Genom 2.7, xxx xx 2011.
 
+112. Update slides for fall 2010 Genom courses.
 111. Update (fix) the list of dependencies listed in the Requires: field of the
      generated pkg-config files.
 110. Update xeno-config options used to figure out CFLAGS and LDFLAGS 
