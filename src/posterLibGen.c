@@ -789,9 +789,9 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
 
 	    fprintf(out, "STATUS %s%s%sPosterRead(%s *%s /* %s */)\n{\n",
 		    module->name, p->name, n->name, type, n->name, addrstr);
-	    fprintf(out, "  %s *x = NULL;\n", p->type->name);
-	    fprintf(out, "  int offset = (int)&(x->%s) - (int)(x);\n", n->name);
-	    fprintf(out, "  int size = sizeof(x->%s);\n", n->name);
+	    fprintf(out, "  int offset = offsetof(%s, %s);\n", 
+		p->type->name, n->name);
+	    fprintf(out, "  int size = sizeof(%s);\n", n->type->name);
 
 	    fprintf(out, "  int %s;\n\n", decla);
 
@@ -1005,9 +1005,9 @@ static void posterInLibMemberGen(FILE *out, POSTERS_INPUT_LIST *p,
 
 	    fprintf(out, "STATUS %s%s%sPosterRead(POSTER_ID posterId, %s *%s /* %s */)\n{\n",
 		    module->name, p->name, n->name, type, n->name, addrstr);
-	    fprintf(out, "  %s *x = NULL;\n", p->type->name);
-	    fprintf(out, "  int offset = (int)&(x->%s) - (int)(x);\n", n->name);
-	    fprintf(out, "  int size = sizeof(x->%s);\n", n->name);
+	    fprintf(out, "  int offset = offsetof(%s, %s);\n", 
+		p->type->name, n->name);
+	    fprintf(out, "  int size = sizeof(%s);\n", n->type->name);
 	    fprintf(out, 
 		    "  H2_ENDIANNESS posterDataEndianness;\n"
 		    "  if (posterEndianness(posterId, &posterDataEndianness) == ERROR) {\n"
