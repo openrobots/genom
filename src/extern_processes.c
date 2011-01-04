@@ -234,7 +234,7 @@ callCpp(char *nomFic, char *cppOptions[], int ignore_error)
 		    strerror(errno));
 	    exit(2);
 	}
-
+#if 0
         if (ignore_error) {
 	  /* Open /dev/null to redirect stderr. Simply closing stderr
 	   * make gcc-4.1.2 segfault on FC6... */
@@ -245,7 +245,7 @@ callCpp(char *nomFic, char *cppOptions[], int ignore_error)
 	    fprintf(stderr, "genom: cannot suppress error diagnostics: %s\n",
 		    strerror(errno));
 	}
-
+#endif
 	if (verbose)
 	{
 	    for (display = cppArg + 1; *display; ++display)

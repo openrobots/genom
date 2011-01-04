@@ -41,6 +41,7 @@
 # define gettimeofday(x,y)	do_gettimeofday(x)
 #else
 # include <sys/time.h>
+# include <stddef.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
