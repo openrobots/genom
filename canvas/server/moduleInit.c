@@ -174,9 +174,9 @@ $module$TaskInit()
      goto error; 
   }
   
-  if (taskSpawn("$module$CntrlTask", 10 /* priorite */, VX_FP_TASK,
+  if (taskSpawn2("$module$CntrlTask", 10 /* priorite */, VX_FP_TASK,
 		$MODULE$_MAX_RQST_SIZE + CNTRL_TASK_MIN_STACK_SIZE /*size*/, 
-		(FUNCPTR)$module$CntrlTask) == ERROR) {
+	  (FUNCPTR)$module$CntrlTask, NULL) == ERROR) {
      h2perror("$module$TaskInit: cannot spawn $module$CntrlTask");
      goto error;
   }
@@ -206,10 +206,10 @@ $module$TaskInit()
        goto error; 
     }
     
-    if (taskSpawn($module$ExecTaskTab[i].name, 
+    if (taskSpawn2($module$ExecTaskTab[i].name, 
 		  $module$ExecTaskTab[i].priority, VX_FP_TASK, 
 		  $module$ExecTaskTab[i].size + EXEC_TASK_MIN_STACK_SIZE, 
-		  (FUNCPTR)$module$ExecTaskTab[i].func) == ERROR) {
+	    (FUNCPTR)$module$ExecTaskTab[i].func, NULL) == ERROR) {
        h2perror("$module$TaskInit: cannot spawn exec task");
        goto error;
     }

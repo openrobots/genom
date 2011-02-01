@@ -1,5 +1,6 @@
 Genom 2.7, xxx xx 2011.
 
+114. Use taskSpawn2() in generated modules.
 113. Use the ANSI C offsetof() macro in generated code.
 112. Update slides for fall 2010 Genom courses.
 111. Update (fix) the list of dependencies listed in the Requires: field of the

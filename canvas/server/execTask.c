@@ -132,7 +132,8 @@ int $cFuncExecInitName$ ();
  *  Returns: never
  */
 
-void $module$$execTaskName$ (void)
+void *
+$module$$execTaskName$ (void *arg)
 {
   static H2TIMER_ID $module$$execTaskName$TimerId;
   int i, nb, nbActi;
@@ -252,7 +253,7 @@ void $module$$execTaskName$ (void)
       EXEC_TASK_WAKE_UP_FLAG($execTaskNum$) = FALSE;
       h2evnSignal(CNTRL_TASK_ID);
 
-      return;
+      return NULL;
     }
 
     /* take IDS access */
@@ -446,7 +447,7 @@ void $module$$execTaskName$ (void)
      * contended situations (small period) */
     taskDelay(0);
   }     /* FOREVER */
-
+  return NULL;
 }
 
 

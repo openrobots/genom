@@ -125,8 +125,8 @@ static void   $module$SignalEnd(void);
  *   Cette tache boucle a jamais.
  */
 
-void
-$module$CntrlTask()
+void *
+$module$CntrlTask(void *arg)
 {
   static SERV_ID $module$ServId;              /* Id du serveur */
 
@@ -183,6 +183,7 @@ $module$CntrlTask()
       commonStructGive ((void *) $module$CntrlStrId);
 
     }
+  return NULL;
 }
 
 
