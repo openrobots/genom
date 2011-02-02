@@ -56,7 +56,99 @@ static int id_member(ID_LIST *m, ID_LIST *l)
     return(0);
 }
 
-int errorGen(FILE *out)
+static int errorGenTclservClient(FILE* out, ID_LIST* cntrlFailList, ID_LIST* execFailList)
+{
+	ID_LIST* m;
+    char *cntrlFail, *execFail, *stdFail;
+	int i, genomNbErrs;
+
+	script_open(out);
+	subst_begin(out, PROTO_ERROR_TCLSERV_CLIENT_H);
+
+    /* Nom du  module */
+    print_sed_subst(out, "module", module->name);
+    print_sed_subst(out, "MODULE", module->NAME);
+
+    /* Nume'ro du module */
+    print_sed_subst(out, "numModule", "%d", module->number);
+
+    /* generation liste */
+    cntrlFail = NULL;
+    for (m = cntrlFailList; m != NULL; m = m->next) 
+		bufcat(&cntrlFail, 
+			   "\tE_%s_%-30s = S_%s_%s,\n",
+				 module->name, m->name, module->name, m->name);
+
+    execFail = NULL;
+    for (m = execFailList; m != NULL; m = m->next) 
+		bufcat(&execFail, 
+			   "\tE_%s_%-30s = S_%s_%s,\n",
+				 module->name, m->name, module->name, m->name);
+
+    /* erreurs standards */
+    stdFail = NULL;
+    
+    genomNbErrs = sizeof(genomH2errMsgs)/sizeof(H2_ERROR);
+    for (i=0; i<genomNbErrs; i++) 
+	  bufcat(&stdFail, "\tE_%s_%-30s = S_%s_stdGenoM_%s,\n",
+	      module->name, genomH2errMsgs[i].name,
+		  module->name, genomH2errMsgs[i].name);
+
+    print_sed_subst(out, "listCntrlFailures", cntrlFail);
+    print_sed_subst(out, "listExecFailures", execFail);
+    print_sed_subst(out, "listStdFailures", stdFail);
+
+	free(cntrlFail);
+	free(execFail);
+	free(stdFail);
+
+    subst_end(out);
+    script_close(out, "server/tclservClient/%sError.h", module->name);
+
+	script_open(out);
+	subst_begin(out, PROTO_ERROR_TCLSERV_CLIENT_C);
+
+    /* Nom du  module */
+    print_sed_subst(out, "module", module->name);
+    print_sed_subst(out, "MODULE", module->NAME);
+
+    /* generation liste */
+    cntrlFail = NULL;
+    for (m = cntrlFailList; m != NULL; m = m->next) 
+		bufcat(&cntrlFail, 
+			   "\t{\"S_%s_%s\", E_%s_%s},\n",
+				 module->name, m->name, module->name, m->name);
+
+    execFail = NULL;
+    for (m = execFailList; m != NULL; m = m->next) 
+		bufcat(&execFail, 
+			   "\t{\"S_%s_%s\", E_%s_%s},\n",
+				 module->name, m->name, module->name, m->name);
+
+    /* erreurs standards */
+    stdFail = NULL;
+    
+    genomNbErrs = sizeof(genomH2errMsgs)/sizeof(H2_ERROR);
+    for (i=0; i<genomNbErrs; i++) 
+	  bufcat(&stdFail, "\t{\"S_%s_stdGenoM_%s\", E_%s_%s},\n",
+	      module->name, genomH2errMsgs[i].name, module->name, 
+						genomH2errMsgs[i].name);
+
+    print_sed_subst(out, "listCntrlFailures", cntrlFail);
+    print_sed_subst(out, "listExecFailures", execFail);
+    print_sed_subst(out, "listStdFailures", stdFail);
+
+	free(cntrlFail);
+	free(execFail);
+	free(stdFail);
+
+    subst_end(out);
+    script_close(out, "server/tclservClient/%sError.c", module->name);
+
+	return 0;
+}
+
+int errorGen(FILE *out, int genTclservClient)
 {
     RQST_LIST *l;
     RQST_STR *r;
@@ -130,8 +222,6 @@ int errorGen(FILE *out)
 	n++;
     }
 
-    /* Liberation liste */
-    for (m = cntrlFailList; m != NULL; tmp = m->next, free(m), m = tmp);
 
     execFail = NULL;
     for (m = execFailList; m != NULL; m = m->next) {
@@ -148,8 +238,6 @@ int errorGen(FILE *out)
 	       "\n    {\"%s\", %d},\\\\", m->name, n);
 	n++;
     }
-    /* liberation liste */
-    for (m = execFailList; m != NULL; tmp = m->next, free(m), m = tmp);
 
     /* erreurs standards */
     stdFail = NULL;
@@ -201,6 +289,13 @@ int errorGen(FILE *out)
     free(othersReports);
     subst_end(out);
     script_close(out, "server/%sError.c", module->name);
+
+	if (genTclservClient)
+		errorGenTclservClient(out, cntrlFailList, execFailList);
+
+    /* Free lists */
+    for (m = cntrlFailList; m != NULL; tmp = m->next, free(m), m = tmp);
+    for (m = execFailList; m != NULL; tmp = m->next, free(m), m = tmp);
 
     return(0);
 }

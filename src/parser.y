@@ -1890,7 +1890,7 @@ main(int argc, char **argv)
                                       cmdLine, argv[0], genfile,
 				      genTcl, genOpenprs, genServer, genTclservClient)!=0);
     fatalError |= (typeGen(sortie) != 0);
-    fatalError |= (errorGen(sortie) != 0);
+    fatalError |= (errorGen(sortie, genTclservClient) != 0);
     fatalError |= (endianGen(sortie) != 0);
     fatalError |= (printGen(sortie) != 0);
     fatalError |= (printXMLGen(sortie) != 0);

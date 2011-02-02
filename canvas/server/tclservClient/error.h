@@ -1,7 +1,6 @@
 
 /* 
  * Copyright (c) 1993-2005 LAAS/CNRS
- * Matthieu Herrb - Thu Jul 22 1993
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -28,16 +27,40 @@
  * USE   OF THIS SOFTWARE, EVEN   IF ADVISED OF   THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-#ifndef _ERRORGEN_H
-#define _ERRORGEN_H
 
-#define PROTO_ERROR_H "server/error.h"
-#define PROTO_ERROR_C "server/error.c"
+/*------------------  Fichier généré automatiquement ------------------*/
+/*------------------  Ne pas éditer manuellement !!! ------------------*/
 
-#define PROTO_ERROR_TCLSERV_CLIENT_H "server/tclservClient/error.h"
-#define PROTO_ERROR_TCLSERV_CLIENT_C "server/tclservClient/error.c"
 
-/* errorGen.c */
-extern int errorGen(FILE *out, int genTclservClient);
+#ifndef $module$_TCLSERV_CLIENT_ERROR_H
+#define $module$_TCLSERV_CLIENT_ERROR_H
 
+#include <server/$module$Error.h>
+
+/* -- MODULES ERRORS -------------------------------------------------- */
+
+enum $module$_error {
+	E_$module$_OK					  			= 0,
+
+	/* module errors */
+$listCntrlFailures$$listExecFailures$
+
+	/* std errors */
+$listStdFailures$
+};
+
+typedef enum $module$_error $module$_error_t;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int $module$_decode_error(const char* str, $module$_error_t *err);
+
+#ifdef __cplusplus
+}
+#endif
+
+
+/*-------------------------- end file loading ---------------------------*/
 #endif

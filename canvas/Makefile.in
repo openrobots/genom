@@ -123,6 +123,8 @@ flist+=\
 
 # Tclserv templates
 flist+= \
+	server/tclservClient/error.c \
+	server/tclservClient/error.h \
 	server/tclservClient/tclservClientEncode.h \
 	server/tclservClient/tclservClientDecode.h \
 	server/tclservClient/tclservClientMsgLib.c \
