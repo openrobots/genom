@@ -12,7 +12,7 @@ $listCntrlFailures$$listExecFailures$
 $listStdFailures$
 };
 
-int $module$_decode_error(const char* str, $module$_error_t *err)
+int $module$_decode_error(const char* str, int *err)
 {
   int i;
 

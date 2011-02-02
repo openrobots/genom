@@ -66,7 +66,7 @@ $hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
  *
  *  Returns : 
  *    -2 in internal failure case
- *    -1 in rqst failure case, bilan store the error msg, and mut be freed
+ *    -1 in rqst failure case, bilan stores the error. 
  *    0 in success case, output contains some sensible value
  */
  
@@ -74,7 +74,7 @@ int $module$TclservClient$request$ReplyRcv (
 				   TCLSERV_CLIENT_ID clientId, 
 			       ssize_t rqstId, 
 			       $output$
-			       char** bilan)
+			       int *bilan)
 {
   int status;    
   char* res;
@@ -91,7 +91,8 @@ $has_output$      return -2;
 $has_output$    }
 	 free(res);
   } else {
-	  *bilan = res;
+	  $module$_decode_error(res, bilan);
+	  free(res);
   }
   
   return status;
@@ -104,7 +105,7 @@ $has_output$    }
  *
  *  Returns : 
  *    -2 in internal failure case
- *    -1 in rqst failure case, bilan store the error msg, and mut be freed
+ *    -1 in rqst failure case, bilan stores the error
  *    0 in success case, output contains some sensible value
  */
  
@@ -112,7 +113,7 @@ int $module$TclservClient$request$RqstAndRcv (
 				 TCLSERV_CLIENT_ID clientId, 
 				 $input$ $hasInput$, 
 				 $output$
-				 char** bilan)
+				 int  *bilan)
 {
   int status;
   char * res;
@@ -136,7 +137,8 @@ $has_output$      return -2;
 $has_output$    }
 	 free(res);
   } else { // status == 1, method term but not ok
-	  *bilan = res;
+	  $module$_decode_error(res, bilan);
+	  free(res);
   }
 
   return status;

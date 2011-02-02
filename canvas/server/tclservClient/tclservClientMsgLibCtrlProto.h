@@ -39,12 +39,12 @@ int $module$TclservClient$request$ReplyRcv (
 				   TCLSERV_CLIENT_ID clientId, 
 			       ssize_t rqstId, 
 			       $output$
-			       char **bilan);
+			       int *bilan);
 
 int $module$TclservClient$request$RqstAndRcv (
 				 TCLSERV_CLIENT_ID clientId, 
 				 $input$ $hasInput$,
 				 $output$
-				 char **bilan);
+				 int *bilan);
 
 
