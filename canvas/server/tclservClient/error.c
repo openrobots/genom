@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "$module$Error.h"
 
 struct $module$_msg_error 
@@ -26,4 +28,21 @@ int $module$_decode_error(const char* str, int *err)
   }
 
   return -1;
+}
+
+const char* $module$_error_str(int err)
+{
+  int i;
+
+  if (err == E_$module$_OK) 
+	  return "OK";
+
+  for (i = 0; i < sizeof($module$TclservClientErrMsgs) / sizeof($module$TclservClientErrMsgs[0]);
+	   i++)
+  {
+	  if (err == $module$TclservClientErrMsgs[i].err)  
+		  return $module$TclservClientErrMsgs[i].msg + sizeof("S_$module_$");
+  }
+
+  return NULL;
 }

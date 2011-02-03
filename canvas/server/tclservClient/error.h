@@ -55,8 +55,9 @@ typedef enum $module$_error $module$_error_t;
 extern "C" {
 #endif
 
+
 int $module$_decode_error(const char* str, int *err);
-const char* $module$_error_str($module$_error_t err);
+const char* $module$_error_str(int err);
 
 #ifdef __cplusplus
 }
