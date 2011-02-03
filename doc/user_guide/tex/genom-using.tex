@@ -580,13 +580,13 @@ an input.
 
 The function returns \texttt{0} in success case, and \texttt{-1} in failure case.
 
-\subsubsection{Sending an request and wait for ackolegdement: \texttt{RqstAndAck}}
+\subsubsection{Sending an request and wait for acknowledgement: \texttt{RqstAndAck}}
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
   int ...RqstAndAck(TCLSERV_CLIENT_ID clientId,
                     ssize_t *rqstId, 
                     [STR_IN *in,],
-                    char** report
+                    int* report
 					)
 \end{verbatim}\end{cartouche}\end{center}
 
@@ -599,7 +599,7 @@ argument, to store the report value.
   int ...RqstAndRcv(TCLSERV_CLIENT_ID clientId,
                     [STR_IN *in,] 
                     [STR_OUT *out,] 
-                    char **report);
+                    int  *report);
 \end{verbatim}\end{cartouche}\end{center}
 \begin{itemize}
 \item The first argument is the client identifier.
@@ -612,9 +612,8 @@ parameter.
 \end{itemize}
 
 This function returns \texttt{0}  if everything went well,  \texttt{-1} if the
-request has failed (in this case, report has some valid values, and must be
-freed by caller, \texttt{-2} in case of internal failure.
-
+request has failed (in this case, report has some valid values) \texttt{-2} in
+case of internal failure.
 
 \subsubsection{Getting final reply: \texttt{ReplyRcv}}
 
@@ -622,7 +621,7 @@ freed by caller, \texttt{-2} in case of internal failure.
   int ...ReplyRcv(TCLSERV_CLIENT_ID clientId,
                   ssize_t rqstId, 
                   [STR_OUT *out,]
-                  char** report
+                  int* report
 					)
 \end{verbatim}\end{cartouche}\end{center}
 
@@ -635,7 +634,7 @@ freed by caller, \texttt{-2} in case of internal failure.
 \item the third argument is optional, and defined only if the request defines
 an output.
 
-\item The last arguments store the error message, if any.
+\item The last argument stores the error value, if any.
 \end{itemize}
 
 The function returns \texttt{0} in success case (and out is filled, if it
@@ -652,7 +651,7 @@ You can use the generic function
 
 \begin{itemize}
 \item the first argument is the client identifier
-\item \texttt{rqstid} is the request descriptor
+\item \texttt{rqstId} is the request descriptor
 \end{itemize}
 
 The function returns \texttt{-2} in case of internal failure, \texttt{-1} if
