@@ -1,12 +1,15 @@
 .libs
 DEPENDANCES
 Makefile
+aclocal.m4
 autom4te.cache
 canvas/autoconf/configure.ac
 canvas/autogen
+configure
 config.log
 config.mk
 config.status
+ltmain.sh
 doc/user_guide/genom.log
 doc/user_guide/genom.out
 doc/user_guide/genom.pdf
