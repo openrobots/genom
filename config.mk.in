@@ -1,6 +1,6 @@
 
 #
-# Copyright (c) 2002-2005/CNRS                        --  Fri Mar 15 2002
+# Copyright (c) 2002-2005,2011/CNRS                        --  Fri Mar 15 2002
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -73,7 +73,7 @@ XENO_LDFLAGS=	@XENO_LDFLAGS@
 
 HAS_TCL=	@HAS_TCL@
 TCL_CPPFLAGS=	@TCL_CPPFLAGS@
-TCL_LDFLAGS=	@TCL_LDFLAGS@ @TCL_LIB_FLAG@ @TCL_LIBS@
+TCL_LDFLAGS=	@TCL_LDFLAGS@ @TCL_LIB_FLAG@ @TCL_LIB_SPEC@ @TCL_LIBS@
 
 ENDIANNESS=	@ENDIANNESS@
 

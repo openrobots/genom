@@ -1,6 +1,6 @@
 
 #
-# Copyright (c) 2002-2003,2008 LAAS/CNRS
+# Copyright (c) 2002-2003,2008,2011 LAAS/CNRS
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -402,6 +402,7 @@ AC_DEFUN([ROBOT_LIB_TCL],
       /usr/local/include                        \
       /usr/include                              \
       /Library/Frameworks/Tcl.framework/Headers \
+      /System/Library/Frameworks/Tcl.framework/Headers \
       $extra_include                            \
       ; \
    do
@@ -430,6 +431,7 @@ AC_DEFUN([ROBOT_LIB_TCL],
       /usr/local/lib                          \
       /usr/lib${libsuffix}                    \
       /Library/Frameworks/Tcl.framework       \
+      /System/Library/Frameworks/Tcl.framework\
       $extra_lib                              \
       ; \
    do
@@ -461,6 +463,10 @@ AC_DEFUN([ROBOT_LIB_TCL],
    fi # tcl.h not found
    fi # tclConfig.sh not found
    fi # --with-tcl=no
+
+   if test "x${tcl_prefix}" != "xno" -a "x${HAS_TCL}" != "xyes"; then
+	AC_MSG_FAILURE([cannot find a usable TCL])
+   fi
 
    AC_SUBST(HAS_TCL)
    AC_SUBST(TCL_CONFIG_PATH)
