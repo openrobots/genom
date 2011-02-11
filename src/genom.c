@@ -1911,9 +1911,15 @@ bufcatIfNotIn(char **buf, char *fmt, ...)
 #ifdef HAVE_VASPRINTF
   va_list ap;
   static char *buf1 = NULL;
+  int s;
 
   va_start(ap, fmt);
-  vasprintf(&buf1, fmt, ap);
+  s = vasprintf(&buf1, fmt, ap);
+  va_end(ap);
+  if (s == -1) {
+    fprintf(stderr, "vasprintf failed\n");
+    _exit(2);
+  }
 
   if (*buf == NULL || strstr(*buf, buf1) == NULL) {
     bufcat(buf, buf1);
