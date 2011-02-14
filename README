@@ -1,5 +1,5 @@
 
-Copyright (c) 1993-2007 LAAS/CNRS
+Copyright (c) 1993-2011 LAAS/CNRS
 
 
 -- EXTERNAL TOOLS REQUIREMENTS ------------------------------
@@ -15,7 +15,7 @@ Copyright (c) 1993-2007 LAAS/CNRS
 
 -- GETTING LAAS/OPENROBOTS TOOLS -----------------------------
 
-<http://softs.laas.fr/openrobots/wiki/>
+<http://www.openrobots.org/>
 
  - mkdep: LAAS tool to determine dependencies
  - pocolibs: system communication and real-time primitives
@@ -23,9 +23,16 @@ Copyright (c) 1993-2007 LAAS/CNRS
  - eltclsh: interactive TCL shell (optional but very practical)
  - GenoM: generator of modules
 
+--- ROBOTPKG -------------------------------------------------
+
+The easiest way to install Genom and most of the openrobots
+tools is to use robotpkg.
+See <http://robotpkg.openrobots.org/> for details.
 
 
 --- INSTALLATION INSTRUCTIONS --------------------------------
+
+Instructions when not using robotpkg:
 
 Most of the time, it is a simple sequence of untar, autogen, configure,
 build, and install. Configure options may vary, and some packages don't
@@ -70,6 +77,4 @@ environment variables :
 PATH :  add ${exec_prefix}/bin
 
 PKG_CONFIG_PATH :  add ${exec_prefix}/lib/pkgconfig
-
-LD_LIBRARY_PATH :  add ${exec_prefix}/lib:${exec_prefix}/lib/openprs
 
