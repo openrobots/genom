@@ -55,8 +55,20 @@ typedef enum $module$_error $module$_error_t;
 extern "C" {
 #endif
 
-
+/*
+ * Take an error string in parameter, and try to get the error index associated
+ * to this string
+ * Returns -1 in failure case (and err is not set)
+ * Returns 0 in success case (and err has a sensitive value)
+ */
 int $module$_decode_error(const char* str, int *err);
+
+/*
+ * Take an integer representing an error, and try to get its textual
+ * representation, in the $module$ context.
+ *
+ * Returns NULL in case of failure
+ */
 const char* $module$_error_str(int err);
 
 #ifdef __cplusplus
