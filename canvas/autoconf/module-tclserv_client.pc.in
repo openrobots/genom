@@ -7,6 +7,6 @@ includedir=@includedir@
 Name: $pkgname$-tclserv_client
 Description: $module$ Genom module tclserv_client
 Version: @PACKAGE_VERSION@
-Requires: $pkgname$ >= @PACKAGE_VERSION@ $require$
+Requires: libtclserv_client $require$
 Libs: -L${tclservClientlibdir} -l$module$TclservClient
 Cflags: -I${includedir} -I${includedir}/$pkgname$
