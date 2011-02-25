@@ -67,7 +67,7 @@ $hasInput$  buf_add_$type_input$(buf, $inputName$, 0, NULL);
  *
  *  Returns : 
  *    -2 in internal failure case
- *    -1 in rqst failure case, bilan (if not NULL) stores the error value 
+ *    -1 in rqst failure case, bilan stores the error value 
  *    0 in success case, output contains some sensible value
  */
  
@@ -91,6 +91,7 @@ $has_output$      free(res);
 $has_output$      return -2;
 $has_output$    }
 	 free(res);
+	 *bilan = E_$module$_OK;
   } else {
 	  $module$_decode_error(res, bilan);
 	  free(res);
@@ -170,6 +171,7 @@ $has_output$    if (scan_buf_$output_type$(&begin, $outputName$, 0, NULL) == -1)
 $has_output$      free(res);
 $has_output$      return -2;
 $has_output$    }
+	 *bilan = E_$module$_OK;
 	 free(res);
   } else { // status == 1, method term but not ok
 	  $module$_decode_error(res, bilan);

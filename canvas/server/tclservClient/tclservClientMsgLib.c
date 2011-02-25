@@ -45,6 +45,7 @@
 #include "$module$TclservClientDecode.h" 
 #include "$module$TclservClientEncode.h" 
 #include "$module$TclservClientMsgLib.h"
+#include "$module$Error.h"
 
 /*========================================================================
  *

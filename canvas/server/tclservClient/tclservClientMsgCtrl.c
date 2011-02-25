@@ -90,6 +90,7 @@ $has_output$      free(res);
 $has_output$      return -2;
 $has_output$    }
 	 free(res);
+	 *bilan = E_$module$_OK;
   } else {
 	  $module$_decode_error(res, bilan);
 	  free(res);
@@ -136,6 +137,7 @@ $has_output$      free(res);
 $has_output$      return -2;
 $has_output$    }
 	 free(res);
+	 *bilan = E_$module$_OK;
   } else { // status == 1, method term but not ok
 	  $module$_decode_error(res, bilan);
 	  free(res);
