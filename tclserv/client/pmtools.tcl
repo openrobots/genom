@@ -1,5 +1,5 @@
 #
-#  Copyright (c) 2001-2005 LAAS/CNRS
+#  Copyright (c) 2001-2005,2011 LAAS/CNRS
 #  All rights reserved.                                    Anthony Mallet
 #
 #
@@ -69,7 +69,7 @@ proc wrappedputs { line width } {
 }
 
 # ask user interactively for input
-proc aska { type prompt defaultValue args } {
+proc pmaska { type prompt defaultValue args } {
 
     if { [llength $args] > 1 } {
 	error "wrong \# args: should be \"aska type prompt default ?arg?\""
@@ -159,6 +159,9 @@ proc aska { type prompt defaultValue args } {
     }
 
     return $answer
+}
+if {[llength [info proc aska]] == 0 } {
+  rename pmaska aska
 }
 
 
