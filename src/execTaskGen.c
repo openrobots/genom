@@ -392,12 +392,13 @@ execTaskGen(FILE *out)
 		continue;
 	    }
 	    bufcat(&str, "  {\n");
+	    bufcat(&str, "  %s x;\n", p->type->name);
 	    bufcat(&str, "  int offset, size;\n\n");
 	    for (lm = p->data; lm != NULL; lm = lm->next) {
 		bufcat(&str, "  offset = offsetof(%s, %s);\n", 
 		    p->type->name, lm->str_ref->dcl_nom->name);
-		bufcat(&str, "  size = sizeof(%s);\n",
-		       lm->str_ref->dcl_nom->type->name);
+		bufcat(&str, "  size = sizeof(x.%s);\n",
+		    lm->str_ref->dcl_nom->name);
 		bufcat(&str, "  if (posterWrite(%s_%s_POSTER_ID, offset, "
 		       "(char *)&(%sDataStrId->",
 		       module->NAME, p->NAME, module->name);
