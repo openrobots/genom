@@ -90,7 +90,9 @@ AC_SUBST(GENOM_CFLAGS)
 AC_SUBST(GENOM_LIBS)
 
 dnl Tcl
-ifelse([$genTcl$], [yes], [ROBOT_LIB_TCL(@TCL_CONFIG_PATH@)], [])
+ifelse([$genTcl$], [yes],
+ [PKG_CHECK_MODULES(TCLSERV, [tclserv >= 2.7])
+  ROBOT_LIB_TCL(@TCL_CONFIG_PATH@)], [])
 
 dnl transgen and oprs
 ifelse([$genOpenprs$], [yes], [

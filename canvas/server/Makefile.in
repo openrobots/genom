@@ -213,7 +213,8 @@ $(OBJDIR)/$(CLIENT_LIB): $(client_obj)
 		$(LIBTOOL_LINKOPT) $(LIBTOOL_VERSION_INFO) $(GENOM_LIBS)
 
 $(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj) $(tclrequires_obj)
-	$(LTLD) $(CFLAGS) $(tclclient_obj)  $(tclrequires_obj) $(SERVERS_ENDIAN_LIB) -o $@	\
+	$(LTLD) $(CFLAGS) $(TCLSERV_CFLAGS) $(tclclient_obj)		\
+		$(tclrequires_obj) $(SERVERS_ENDIAN_LIB) -o $@		\
 		$(LIBTOOL_LINKOPT) $(GENOM_LIBS)			\
 		$(LDFLAGS) $(TCL_LDFLAGS) $(LIBTOOL_VERSION_INFO)
 

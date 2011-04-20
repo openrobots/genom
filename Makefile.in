@@ -54,8 +54,6 @@ config_files = \
 	canvas/Makefile			\
         canvas/autogen			\
         canvas/autoconf/configure.ac	\
-	tclserv/server/Makefile		\
-	tclserv/client/Makefile		\
 	doc/user_guide/Makefile		\
 	emacs/Makefile			\
 	scripts/Makefile
@@ -71,9 +69,6 @@ SUBDIRS= lib
 ifneq (yes,$(LIBSONLY))
 SUBDIRS+= src
 
-ifeq (yes,$(HAS_TCL))
-SUBDIRS+= tclserv/server tclserv/client
-endif
 ifneq (:,$(LATEX))
 SUBDIRS+= doc/user_guide
 endif

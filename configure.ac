@@ -24,9 +24,7 @@ AC_DEFINE_UNQUOTED([GENOM_VERSION], "AC_PACKAGE_VERSION", [Genom's version])
 dnl --- Programs names --------------------------------------------------
 dnl
 GENOM=genom
-TCLSERV=tclserv
 AC_SUBST(GENOM)
-AC_SUBST(TCLSERV)
 
 
 dnl --- Checks for programs ---------------------------------------------
@@ -149,8 +147,6 @@ AC_OUTPUT(
 	canvas/Makefile
         canvas/autogen
         canvas/autoconf/configure.ac
-	tclserv/server/Makefile
-	tclserv/client/Makefile
 	doc/user_guide/Makefile
 	emacs/Makefile
 	scripts/Makefile

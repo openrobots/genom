@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1993-2005 LAAS/CNRS
+ * Copyright (c) 1993-2005,2011 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -42,8 +42,8 @@
 #include <errnoLib.h>
 #include <h2errorLib.h>
 
-#include <genom/tclServ.h>
-#include <genom/tcl_cs.h>
+#include <tclserv/tclServ.h>
+#include <tclserv/tcl_cs.h>
 
 #include "$module$MsgLib.h"
 #include "$module$PosterLib.h"
