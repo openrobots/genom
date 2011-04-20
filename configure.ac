@@ -118,8 +118,6 @@ PKG_CHECK_MODULES(PORTLIB, pocolibs >= 2.0)
 AC_SUBST(PORTLIB_CFLAGS)
 AC_SUBST(PORTLIB_LIBS)
 
-ROBOT_LIB_TCL
-
 dnl Check for perl
 AC_ARG_VAR(PERL, full path of Perl interpreter)
 AC_PATH_PROG(PERL, perl, no)
