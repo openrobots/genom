@@ -1755,7 +1755,7 @@ main(int argc, char **argv)
     if (module == NULL) {
 	fprintf(stderr, "\"%s\": Error: can't find a MODULE declaration\n", 
 	       nomfic);
-	exit(2);
+	_exit(2);
     }
     if (yynerrs != 0) {
       fprintf(stderr, "Parsing errors.\n");
