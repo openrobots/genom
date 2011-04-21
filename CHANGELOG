@@ -1,5 +1,8 @@
 Genom 2.7, xxx xx 2011.
 
+117. Remove tclserv. It's now a separate package.
+116. Implement an error representation for tclserv_client.
+115. Autotools build fixes.
 114. Use taskSpawn2() in generated modules.
 113. Use the ANSI C offsetof() macro in generated code.
 112. Update slides for fall 2010 Genom courses.
