@@ -1,6 +1,7 @@
 Genom 2.8, xxx xx 2011.
 
-118. Explicitely reject OK as failure code.
+119. Fix reporting of errors in requests and task declarations
+118. Warn about OK in failure report lists
 
 Genom 2.7, april 26 2011.
 
