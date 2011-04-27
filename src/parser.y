@@ -1,6 +1,5 @@
-
 /* 
- * Copyright (c) 1993-2006,2008-2009 LAAS/CNRS
+ * Copyright (c) 1993-2006,2008-2011 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -110,6 +109,7 @@ char *genfile;
 FILE *sortie;
 int enumValue = 0;
 
+char *current_identifier;		/* request beeing parsed */
 static int import_flag = 0;
 static int accept_obsolete = 1;
 static void yyerror(char *s);
@@ -350,8 +350,8 @@ list_packages:
              | list_packages ',' QUOTED_STRING
              ;
 
-declaration_de_module: MODULE identificateur attributs_de_module  
-        { $3->name = $2; module = $3; $$ = $3; }
+declaration_de_module: MODULE identificateur {current_identifier = $2; } attributs_de_module  
+        { $4->name = $2; module = $4; $$ = $4; }
 ;
 
 attributs_de_module: '{' liste_av_module '}' { $$ = $2; }
@@ -359,6 +359,7 @@ attributs_de_module: '{' liste_av_module '}' { $$ = $2; }
 
 liste_av_module: paire_av_module
         { $$ = STR_ALLOC(MODULE_STR);
+	  $$->name = current_identifier;
 	  $$->lang = MODULE_LANG_DEFAULT; /* default value */
           $$ = ajout_av_module($1, $$); 
 	  free($1); } 
@@ -433,8 +434,8 @@ libtool_version: expression_constante ':' expression_constante ':' expression_co
       $$->age=$5; }
 ;
 
-declaration_de_requete: REQUEST identificateur  attributs_de_requete  
-    { $3->name = $2; $$ = $3; }
+declaration_de_requete: REQUEST identificateur { current_identifier = $2; } attributs_de_requete  
+    { $4->name = $2; $$ = $4; }
 ;
 
 attributs_de_requete: '{' liste_av_requete '}' { $$ = $2; } 
@@ -443,10 +444,11 @@ attributs_de_requete: '{' liste_av_requete '}' { $$ = $2; }
 liste_av_requete: paire_av_requete 
 	{ $$ = STR_ALLOC(RQST_STR);
           $$->rqst_num = -1;
+	  $$->name = current_identifier;
 	  $$ = ajout_av_requete($1, $$); 
 	  free($1); }
     | paire_av_requete liste_av_requete 
-	{ $$ = ajout_av_requete($1, $2); 
+    { $$ = ajout_av_requete($1, $2); 
 	  free($1); }
     ;
 
@@ -690,7 +692,7 @@ quoted_string_list:
 
 /*----------------------------------------------------------------------*/
 
-declaration_de_tache: EXEC_TASK identificateur attributs_de_tache  
+declaration_de_tache: EXEC_TASK identificateur { current_identifier = $2;} attributs_de_tache  
 	{
 	  if (!strcasecmp($2, "test")) {
 	    fprintf(stderr,
@@ -698,7 +700,7 @@ declaration_de_tache: EXEC_TASK identificateur attributs_de_tache
 		    nomfic, num_ligne);
 	    parseError = 1;
 	  }
-	  $3->name = $2; $$ = $3;
+	  $4->name = $2; $$ = $4;
 	}
 ;
 
@@ -707,6 +709,7 @@ attributs_de_tache: '{' liste_av_tache '}' { $$ = $2; }
 
 liste_av_tache: paire_av_tache
 	{ $$ = STR_ALLOC(EXEC_TASK_STR);
+	  $$->name = current_identifier;
 	  $$ = ajout_av_tache($1, $$); 
 	  free($1); }
     | paire_av_tache liste_av_tache
@@ -1476,7 +1479,6 @@ identificateur:
 /***
  *** The code C
  ***/
-
 int yydebug = 0;
 int verbose = 0;
 /*----------------------------------------------------------------------*/
