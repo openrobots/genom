@@ -44,7 +44,6 @@ int genTclservClientMsgLib(FILE *out)
 {
     RQST_LIST *l;
     RQST_STR *r;
-    char *rqstList = NULL;
     int abortNum;
 
     /*

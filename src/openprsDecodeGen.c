@@ -190,7 +190,7 @@ static void genOpenprsDecode (FILE *out, int protos)
 	}
 
 	/* Termine la fonction */
-	fprintf(out, func_tail);
+	fprintf(out, "%s", func_tail);
       }
     }
 
@@ -224,7 +224,7 @@ static void genOpenprsDecode (FILE *out, int protos)
 /* 	genDecodeTerm(out, ltypedefs->dcl_nom, 1); */
 	ltypedefs->dcl_nom->pointeur--;
 	/* Termine la fonction */
-	fprintf(out, func_td_tail);
+	fprintf(out, "%s", func_td_tail);
       }
     }
 }

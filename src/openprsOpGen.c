@@ -79,7 +79,7 @@ openprsOpGen(FILE *out)
   
   /* Entete */
   cat_begin(out);
-  fprintf(out, file_header_op);
+  fprintf(out, "%s", file_header_op);
   fprintf(out, "(\n");
   cat_end(out);
   

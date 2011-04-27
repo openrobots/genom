@@ -118,7 +118,7 @@ openprsGen(FILE *out)
   
      /* Entete */
      cat_begin(out);
-     fprintf(out, file_header_op);
+     fprintf(out, "%s", file_header_op);
 
      /* Declaration de chaque requete */
      for (rl = requetes; rl != NULL; rl = rl->next) {
@@ -178,7 +178,7 @@ openprsGen(FILE *out)
   
      /* Entete */
      cat_begin(out);
-     fprintf(out, file_header_op);
+     fprintf(out, "%s", file_header_op);
      fprintf(out, "include \"%sOpenprs.sym\"\n", module->name);
      fprintf(out, "load opf \"%sOpenprs.opf\"\n", module->name);
      cat_end(out);

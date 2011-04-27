@@ -199,7 +199,7 @@ static void genOpenprsEncode (FILE *out, int protos)
 	}
 
 	/* Termine la fonction */
-	fprintf(out, func_tail);
+	fprintf(out, "%s", func_tail);
     }
   }
 
@@ -233,7 +233,7 @@ static void genOpenprsEncode (FILE *out, int protos)
 
       ltypedefs->dcl_nom->pointeur--;
       /* Termine la fonction */
-      fprintf(out, func_td_tail);
+      fprintf(out, "%s", func_td_tail);
     }
   }
 }

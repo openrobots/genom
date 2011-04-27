@@ -1655,7 +1655,7 @@ main(int argc, char **argv)
 		genTclservClient = 1;
 		break;
 	  case 'h':
-	    printf(usage);
+	    puts(usage);
 	    exit(0);
 	    
 	  case '-':
@@ -1663,7 +1663,7 @@ main(int argc, char **argv)
 		puts(includeDir);
 		exit(0);
 	     } else if (!strcmp("help", optarg)) {
-	       printf(usage);
+	       puts(usage);
 	       exit(0);
 	     } else if (!strcmp("libraries", optarg)) {
 		puts(libraryDir);
@@ -1683,14 +1683,14 @@ main(int argc, char **argv)
     } /* while */
 
     if (errFlag) {
-      fprintf(stderr, usage);
+      fprintf(stderr, "%s", usage);
       exit(2);
     }
 
     /* make sure we've got an input file */
     if (nopt == 0) {
 	fprintf(stderr, "%s: error: no file specified\n", argv[0]);
-	fprintf(stderr, usage);
+	fprintf(stderr, "%s", usage);
 	exit (2);
     } 
 
