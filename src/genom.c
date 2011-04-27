@@ -250,7 +250,7 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
       case INTERNAL_DATA:
 	if (module->internal_data) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'internal_data' in module %s\n",
+		  "genom %s: Error: duplicate field 'internal_data' in module %s\n",
 		  nomfic, module->name);
 	  exit(2);
 	}
@@ -259,7 +259,7 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
       case NUMBER:
 	if (module->number) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'number' in module %s\n",
+		  "genom %s: Error: duplicate field 'number' in module %s\n",
 		  nomfic, module->name);
 	  exit(2);
 	}
@@ -268,7 +268,7 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
       case CODEL_FILES:
 	if (module->codel_files) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'codel_files' in module %s\n",
+		  "genom %s: Error: duplicate field 'codel_files' in module %s\n",
 		  nomfic, module->name);
 	  exit(2);
 	}
@@ -277,7 +277,7 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
       case VERSION:
 	if (module->version) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'version' in module %s\n",
+		  "genom %s: Error: duplicate field 'version' in module %s\n",
 		  nomfic, module->name);
 	  exit(2);
 	}
@@ -291,7 +291,7 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
 	}
 	if (module->iface_version) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'iface_version' in module %s\n",
+		  "genom %s: Error: duplicate field 'iface_version' in module %s\n",
 		  nomfic, module->name);
 	  exit(2);
 	}
@@ -300,7 +300,7 @@ ajout_av_module(MODULE_AV_STR *av, MODULE_STR *module)
       case EMAIL:
 	if (module->email) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'email' in module %s\n",
+		  "genom %s: Error: duplicate field 'email' in module %s\n",
 		  nomfic, module->name);
 	  exit(2);
 	}
@@ -341,7 +341,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case TYPE:
 	if (rqst->type) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'type:' in request %s",
+		  "genom %s: Error: duplicate field 'type:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -350,7 +350,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case INPUT:
 	if (rqst->input) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'input:' in request %s",
+		  "genom %s: Error: duplicate field 'input:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -359,7 +359,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case POSTERS_INPUT:
 	if (rqst->posters_input_types) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'posters_input_types:' in request %s",
+		  "genom %s: Error: duplicate field 'posters_input_types:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -368,7 +368,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case OUTPUT:
 	if (rqst->output) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'output:' in request %s",
+		  "genom %s: Error: duplicate field 'output:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -377,7 +377,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case CODEL_CONTROL:
 	if (rqst->codel_control) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'codel_control:' in request %s",
+		  "genom %s: Error: duplicate field 'codel_control:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -386,7 +386,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case CODEL_MAIN:
 	if (rqst->codel_main) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'codel_main:' in request %s",
+		  "genom %s: Error: duplicate field 'codel_main:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -395,7 +395,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case CODEL_START:
 	if (rqst->codel_start) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'codel_start:' in request %s",
+		  "genom %s: Error: duplicate field 'codel_start:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -404,7 +404,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case CODEL_END:
 	if (rqst->codel_end) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'codel_end:' in request %s",
+		  "genom %s: Error: duplicate field 'codel_end:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -413,7 +413,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case CODEL_FAIL:
 	if (rqst->codel_fail) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'codel_fail:' in request %s",
+		  "genom %s: Error: duplicate field 'codel_fail:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -422,7 +422,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case CODEL_INTER:
 	if (rqst->codel_inter) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'codel_inter:' in request %s",
+		  "genom %s: Error: duplicate field 'codel_inter:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -431,7 +431,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case INTERRUPT_ACTIVITY:
 	if (rqst->interrupt_activity) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'interrupt_activity:' in request %s",
+		  "genom %s: Error: duplicate field 'interrupt_activity:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -441,7 +441,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 	rqst->exec_task = NULL;
 	if (rqst->exec_task_name) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'exec_task_name:' in request %s",
+		  "genom %s: Error: duplicate field 'exec_task_name:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -450,7 +450,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case FAIL_REPORTS:
 	if (rqst->fail_reports) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'fail_reports:' in request %s",
+		  "genom %s: Error: duplicate field 'fail_reports:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -460,7 +460,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
       case RESOURCES:
 	if (rqst->resource_list) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'resource_list:' in request %s",
+		  "genom %s: Error: duplicate field 'resource_list:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -469,7 +469,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
     case RQST_NUM:
 	if (rqst->rqst_num) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'rqst_num:' in request %s",
+		  "genom %s: Error: duplicate field 'rqst_num:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -478,7 +478,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
     case RQST_DOC:
 	if (rqst->doc) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'doc:' in request %s",
+		  "genom %s: Error: duplicate field 'doc:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -487,7 +487,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
     case RQST_INPUT_INFO:
 	if (rqst->input_info) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'input_info:' in request %s",
+		  "genom %s: Error: duplicate field 'input_info:' in request %s\n",
 		  nomfic, rqst->name);
 	  exit(2);
 	}
@@ -510,7 +510,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case PERIOD:
 	if (task->period) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice filed 'period' in task %s\n",
+		  "genom %s: Error: duplicate field 'period' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
@@ -519,7 +519,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case T_DELAY:
 	if (task->delay) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'delay' in task %s\n",
+		  "genom %s: Error: duplicate field 'delay' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
@@ -528,7 +528,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case PRIORITY:
 	if (task->priority) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'priority' in task %s\n",
+		  "genom %s: Error: duplicate field 'priority' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
@@ -537,7 +537,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case STACK_SIZE:
 	if (task->stack_size) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'stack_size' in task %s\n",
+		  "genom %s: Error: duplicate field 'stack_size' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
@@ -546,7 +546,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case CODEL_TASK_START:
 	if (task->codel_task_start) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'codel_task_start' in task %s\n",
+		  "genom %s: Error: duplicate field 'codel_task_start' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
@@ -555,7 +555,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case CODEL_TASK_END:
 	if (task->codel_task_end) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'codel_task_end' in task %s\n",
+		  "genom %s: Error: duplicate field 'codel_task_end' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
@@ -564,7 +564,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case CODEL_TASK_MAIN:
 	if (task->codel_task_main) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'codel_task_main' in task %s\n",
+		  "genom %s: Error: duplicate field 'codel_task_main' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
@@ -573,7 +573,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case CODEL_TASK_MAIN2:
 	if (task->codel_task_main2) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'codel_task_main2' in task %s\n",
+		  "genom %s: Error: duplicate field 'codel_task_main2' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
@@ -582,7 +582,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case POSTERS_INPUT:
 	if (task->posters_input_types) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'posters_input_types' in task %s\n",
+		  "genom %s: Error: duplicate field 'posters_input_types' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
@@ -603,7 +603,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case RESOURCES:
 	if (task->resource_list) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'resource_list' in task %s\n",
+		  "genom %s: Error: duplicate field 'resource_list' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
@@ -612,7 +612,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
       case FAIL_REPORTS:
 	if (task->fail_reports) {
 	  fprintf(stderr,
-		  "genom %s: Error: twice field 'fail_reports' in task %s\n",
+		  "genom %s: Error: duplicate field 'fail_reports' in task %s\n",
 		  nomfic, task->name);
 	  exit(2);
 	}
