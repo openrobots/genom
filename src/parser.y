@@ -151,7 +151,7 @@ int parseError = 0;
 %start liste_declaration_top
 
 %union {
-    int                  ival;
+    long                 ival;
     double               dval;
     LIBTOOL_VERSION     *libtool_version;
     ID_LIST 		*idList;
@@ -433,7 +433,7 @@ libtool_version: expression_constante ':' expression_constante ':' expression_co
       $$->age=$5; }
 ;
 
-declaration_de_requete: REQUEST identificateur attributs_de_requete  
+declaration_de_requete: REQUEST identificateur  attributs_de_requete  
     { $3->name = $2; $$ = $3; }
 ;
 

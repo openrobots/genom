@@ -1351,13 +1351,13 @@ resolveTasks(void)
  ** Trouve la valeur d'un symbole (enum)
  **/
 int
-trouve_value(char *symbole, int *pVal)
+trouve_value(char *symbole, long *pVal)
 {
     TYPE_LIST *lt;
     TYPE_STR *t;
     DCL_NOM_LIST *l;
     DCL_NOM_STR *m;
-    int val;
+    long val;
 
     for (lt = types; lt != NULL; lt = lt->next) {
 	t = lt->type;
