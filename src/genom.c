@@ -214,6 +214,20 @@ genom_get_requires(char* filename, char* cppOptions[])
 }
 
 /*----------------------------------------------------------------------*/
+static void
+check_reports(ID_LIST *reports)
+{
+    ID_LIST *r;
+    
+    for (r = reports; r != NULL; r= r->next) {
+	if (strcmp(r->name, "OK") == 0) {
+	    fprintf(stderr, "genom %s: Error: \"OK\" can't be "
+		    "used as a failure code\n", nomfic);
+	    exit(2);
+	}
+    }
+}
+/*----------------------------------------------------------------------*/
 
 /*
  * Affectation d'un membre a` la structure du module
@@ -430,6 +444,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 		  nomfic, rqst->name);
 	  exit(2);
 	}
+	check_reports(av->value.fail_reports);
 	rqst->fail_reports = av->value.fail_reports;
 	break;
       case RESOURCES:
@@ -591,6 +606,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
 		  nomfic, task->name);
 	  exit(2);
 	}
+	check_reports(av->value.fail_reports);
 	task->fail_reports = av->value.fail_reports;
 	break;
     }

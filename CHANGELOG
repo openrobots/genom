@@ -1,4 +1,8 @@
-Genom 2.7, xxx xx 2011.
+Genom 2.8, xxx xx 2011.
+
+118. Explicitely reject OK as failure code.
+
+Genom 2.7, april 26 2011.
 
 117. Remove tclserv. It's now a separate package.
 116. Implement an error representation for tclserv_client.
