@@ -214,16 +214,26 @@ genom_get_requires(char* filename, char* cppOptions[])
 }
 
 /*----------------------------------------------------------------------*/
+/*
+ * Parse fail reports, and eliminate any 'OK' added here by mistake
+ */
 static void
-check_reports(ID_LIST *reports)
+check_reports(ID_LIST **reports, char *section, char *name)
 {
-    ID_LIST *r;
+    ID_LIST *r, *p;
     
-    for (r = reports; r != NULL; r= r->next) {
+    p = NULL;
+    for (r = *reports; r != NULL; r= r->next) {
 	if (strcmp(r->name, "OK") == 0) {
-	    fprintf(stderr, "genom %s: Error: \"OK\" can't be "
-		    "used as a failure code\n", nomfic);
-	    exit(2);
+	    fprintf(stderr, "genom %s: warning: removing \"OK\" from "
+		    "the list of failure codes for %s %s\n", 
+		    nomfic, section, name);
+	    if (p == NULL)
+		*reports = r->next;
+	    else
+		p->next = r->next;
+	} else {
+	    p = r;
 	}
     }
 }
@@ -444,7 +454,7 @@ ajout_av_requete(RQST_AV_STR *av, RQST_STR *rqst)
 		  nomfic, rqst->name);
 	  exit(2);
 	}
-	check_reports(av->value.fail_reports);
+	check_reports(&av->value.fail_reports, "request", rqst->name);
 	rqst->fail_reports = av->value.fail_reports;
 	break;
       case RESOURCES:
@@ -606,7 +616,7 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
 		  nomfic, task->name);
 	  exit(2);
 	}
-	check_reports(av->value.fail_reports);
+	check_reports(&av->value.fail_reports, "task", task->name);
 	task->fail_reports = av->value.fail_reports;
 	break;
     }
