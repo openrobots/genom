@@ -80,7 +80,7 @@ typedef enum GENOM_STATUS {
 
 /* Description d'une tache d'execution */
 typedef struct {
-  int taskId;              /* (CONST.) Id de la tache (process) */
+  long taskId;              /* (CONST.) Id de la tache (process) */
   STATUS status;           /* status de la tache OK ou ERROR */
   double period;           /* (CONST.) Periode requise (sec) */
   unsigned long maxPeriod; /* Periode max (usec) */
@@ -117,7 +117,7 @@ typedef struct {
 
 /* Description de la tache de controle */
 typedef struct {
-  int taskId;              /* (CONST) Id de la tache (process) */
+  long taskId;              /* (CONST) Id de la tache (process) */
   STATUS status;           /* status de la tache de controle: OK ou ERROR */
   int bilan;               /* bilan de la tache de controle */
   int nbActivities;        /* Nombre total d'activites en cours */
