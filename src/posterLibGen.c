@@ -53,6 +53,7 @@ static char *cFileHeader =
   " */\n\n"
   "#include <stdio.h>\n"
   "#include <stdlib.h>\n"
+  "#include <stddef.h>\n"
   "\n"
   "#include <portLib.h>\n"
   "#include <posterLib.h>\n";
@@ -1082,9 +1083,9 @@ static void posterWriteLibMemberGen(FILE *out, POSTER_LIST *p, int protos)
 		  module->name, p->name, n->name, type, n->name, addrstr);
 	  fprintf(out, "  %s *x = NULL;\n", p->type->name);
 	  fprintf(out, "  int size = sizeof(x->%s);\n", n->name);
-	  fprintf(out, "  return (posterWrite(pid, (int)&x->%s - (int)x, "
+	  fprintf(out, "  return (posterWrite(pid, offsetof(%s, %s), "
 		  "(char *)(%s), size) \n\t== size ? OK : ERROR);\n}\n\n",
-		  n->name, n->name);
+	      	  p->type->name, n->name, n->name);
 	}
 	free(type);
 	free(var);
