@@ -82,13 +82,11 @@ typedef enum GENOM_STATUS {
 typedef struct {
   long taskId;              /* (CONST.) Id de la tache (process) */
   STATUS status;           /* status de la tache OK ou ERROR */
+  int unused0;
   double period;           /* (CONST.) Periode requise (sec) */
   unsigned long maxPeriod; /* Periode max (usec) */
   unsigned long onPeriod;  /* Periode courante (usec) */
-  unsigned long unused1;   /* was: starting time of the exec task loop */
-  unsigned long unused2;   /* was: end time of the exec task loop */
   unsigned long durationLoop;  /* duration of last loop */
-  unsigned long unused;        /* duration of last loop */
   int bilan;               /* bilan de la tache et de l'activite permanente */
   int currentActivity;     /* Activite courante */
   int wakeUp;              /* Eveil de la tache d'exec requis */
@@ -108,8 +106,8 @@ typedef struct {
   int execTaskNum;          /* (CONST.) Tache d'exec qui gere l'activite */
   int reentranceFlag;       /* (CONST.) Activite reentrante */
   void *outputRef;          /* Adresse du parametre de sortie */
-  int outputSize;           /* (CONST.) Taille du parametre de sortie */
   void *inputRef;           /* Adresse du parametre d'entre */
+  int outputSize;           /* (CONST.) Taille du parametre de sortie */
   int inputSize;            /* (CONST.) Taille du parametre d'entre */
   int nbIncompatibles;      /* Nombre d'activites en cours incompatibles */
   int incompatibleActivities[MAX_ACTIVITIES];  /* Numeros de ces activites */
