@@ -49,6 +49,7 @@
 #endif
 
 #include "genom/modules.h"
+#include "genom/printStateProto.h"
 
 static char evnStateString[32];
 
