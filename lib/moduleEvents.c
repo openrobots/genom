@@ -30,6 +30,9 @@
  */
 #include "genom-config.h"
 
+#include <sys/types.h>
+#include <stdarg.h>
+
 /***
  *** Generation d'evenements date's a` la micro-seconde pres
  *** pour la trace du comportement des modules
@@ -37,6 +40,9 @@
 
 #include "genom/modules.h"
 #include "genom/moduleEvents.h"
+#include "genom/printStateProto.h"
+
+#include <h2logLib.h>
 
 /*----------------------------------------------------------------------*/
 
@@ -46,12 +52,38 @@
  ** parametres: moduleEvent: pointeur sur une structure MODULE_EVENT 
  **                          description de l'evenement
  ** 
- ** retourne: la date en micro-secondes de l'evenement
  **/
+
+#define ARRAY_SIZE(_a)        (sizeof((_a)) / sizeof((_a)[0]))
+
+static char *eventTypeName[] = {
+  "CNTRL_START_EVENT",
+  "CNTRL_END_EVENT",  
+  "EXEC_START_EVENT", 
+  "EXEC_END_EVENT",   
+  "STATE_START_EVENT",
+  "STATE_END_EVENT"
+};
+
+static char *h2GetModuleEventType(int evnType)
+{
+	if (evnType < 0 || evnType >= ARRAY_SIZE(eventTypeName))
+		return "UNKNOW";
+	else
+		return eventTypeName[evnType];
+}
+		    
 
 void
 sendModuleEvent(MODULE_EVENT_STR *moduleEvent)
 {
+	h2logMsg("module %hu task %u rqst %d activity %d state %s event %s",
+	    moduleEvent->moduleNum,
+	    moduleEvent->taskNum,
+	    moduleEvent->rqstType,
+	    moduleEvent->activityNum,
+	    h2GetEvnStateString(moduleEvent->activityState),
+	    h2GetModuleEventType(moduleEvent->eventType));
 } /* sendModuleEvent */
 
 /*----------------------------------------------------------------------*/
