@@ -30,10 +30,6 @@
  */
 #include "genom-config.h"
 
-#ifdef VXWORKS
-#  include <vxWorks.h>
-#endif
-
 #include <stdio.h>
 
 #include "genom/printScan.h"

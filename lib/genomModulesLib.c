@@ -10,11 +10,7 @@
  * MERCHANTABILITY AND FITNESS.
  */
 
-#ifndef VXWORKS
 #include <portLib.h>
-#else
-#include <vxWorks.h>
-#endif
 #include "commonStructLib.h"
 #include "genom/modules.h"
 #include "genom/genomError.h"

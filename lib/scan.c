@@ -34,11 +34,7 @@
  *** Scan des types de base utilise's par les modules generator
  ***/
 
-#ifdef VXWORKS
-#  include <vxWorks.h>
-#else
-#  include <portLib.h>
-#endif
+#include <portLib.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

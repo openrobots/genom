@@ -36,15 +36,11 @@
  *** 
  ***/
 
-#ifdef VXWORKS
-#  include <vxWorks.h>
-#else
-#  include <portLib.h>
-#endif
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include <portLib.h>
 
 #include "genom/posterXMLLib.h"
 #include "genom/printXMLProto.h"

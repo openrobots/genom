@@ -47,25 +47,19 @@
  **           dans le cas de gros tableaux (ie, plus de «genomMaxArray» 
  **           éléments). Si c'est NULL, alors seuls les genomMaxArray premier 
  **           éléments seront affichés. 
- **           Remarque : genomMaxArray est une variable globale qui peut 
- **           donc être modifiée sous le shell VxWorks.
  **/
 
 
-#ifdef VXWORKS
-#  include <vxWorks.h>
-#else
-#  include <portLib.h>
-#endif
-
 #include <stdio.h>
 #include <string.h>
+
+#include <portLib.h>
+
 #include "genom/printProto.h"
 #include "genom/printScan.h"
 
 /* Taille max des tableaux pouvant être affichés directement sans saisie
-   du nombre d'éléments à afficher -- variable globale : peut être modifiée 
-   dynamiquement dans le shell VxWorks */
+   du nombre d'éléments à afficher -- variable globale */
 int genomMaxArray = GENOM_MAX_ARRAY_DEFAULT;
 
 
@@ -230,9 +224,6 @@ void print_string_len(FILE *out, char *x, int max_str_len,
  ** Sorties : premier élément considéré (*start) et nombre d'éléments
  **           (retourné par la fonction)
  ** 
- ** REMARQUE : 
- ** genomMaxArray est une variable globale dont on peut changer 
- ** sa valeur sous le shell vxworks.
  ** 
  ** ATTENTION : 
  ** Par defaut la saisie de la dimension du sous-tableau a 

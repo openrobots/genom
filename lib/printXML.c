@@ -47,21 +47,16 @@
  **           dans le cas de gros tableaux (ie, plus de «genomMaxArray» 
  **           éléments). Si c'est NULL, alors seuls les genomMaxArray premier 
  **           éléments seront affichés. 
- **           Remarque : genomMaxArray est une variable globale qui peut 
- **           donc être modifiée sous le shell VxWorks.
  **/
 
 
-#ifdef VXWORKS
-#  include <vxWorks.h>
-#else
-#  include <portLib.h>
-#endif
 
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <stdarg.h>
+
+#include <portLib.h>
 
 #include "genom/printXMLProto.h"
 #include "genom/printScan.h"

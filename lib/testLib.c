@@ -45,21 +45,17 @@
 /*----------------------------- INCLUSIONS ---------------------------------*/
 
 /* Inclusions generales */
-#ifdef VXWORKS
-#include <vxWorks.h>
-#else
-#include <portLib.h>
-#endif
 
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <errnoLib.h>
 #include <stdarg.h>
 
 #include <taskLib.h>
+#include <errnoLib.h>
+#include <portLib.h>
 
 #include "csLib.h"
 #include "h2errorLib.h"

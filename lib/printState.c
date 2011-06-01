@@ -36,11 +36,7 @@
  **
  **/
 
-#ifdef VXWORKS
-# include <vxWorks.h>
-#else
-# include <portLib.h>
-#endif
+#include <portLib.h>
 
 #if defined(__RTAI__) && defined(__KERNEL__)
 # include <linux/kernel.h>
