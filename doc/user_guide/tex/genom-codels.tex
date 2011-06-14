@@ -104,7 +104,7 @@ return either \texttt{OK} if the parameter is valid, or \texttt{ERROR} if it is
 not. Warning: in the latter case, you must have defined an error code and
 you must set it before returning \texttt{ERROR}.
 
-If the  codel returns \\texttt{OK}, the  input parameter  is copied into the
+If the  codel returns \texttt{OK}, the  input parameter  is copied into the
 fIDS and the execution  continues. If the  codel returns \texttt{ERROR}, the
 parameter is not copied into the fIDS and the final reply is sent back to
 the client, along with the report which has been set by the codel. For an
@@ -113,10 +113,10 @@ fundamental: if it is  not  set, the client   will have no idea  of  what
 happened.
 
 As an example, here  is the control  codel \texttt{demoSetSpeedCntrl} of  the
-request \texttt{SetSpeed} of the module \\texttt{demo}.  This request expects a
+request \texttt{SetSpeed} of the module \texttt{demo}.  This request expects a
 speed as input (structure \texttt{DEMO\_SPEED}).  Therefore, the codel takes
 a pointer   to  this structure as  first  parameter.   The structure 
-\texttt{DEMO\_STR}  is   defined    in  the    file  \\texttt{demoStruct.h}    (see
+\texttt{DEMO\_STR}  is   defined    in  the    file  \texttt{demoStruct.h}    (see
 chapter~\ref{cha|session}).
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
@@ -195,12 +195,12 @@ demoHypotExec(DEMO_VECTOR_STR *vector, double *norm, int *report)
 }
 \end{verbatim}\end{cartouche}\end{center}
 
-The \\texttt{return  ETHER} statement tells   \GenoM\ that  the  activity is
+The \texttt{return  ETHER} statement tells   \GenoM\ that  the  activity is
 terminated: the client will  get the final  reply. We will see  later the
 other values that can be returned at the end of an execution codel.
 
 The next  step is to  compile the   module,  and link   it with the  
-\texttt{hypot()} function.  In  this  case, \\texttt{hypot} is   a function of   the
+\texttt{hypot()} function.  In  this  case, \texttt{hypot} is   a function of   the
 standard library, so there's nothing special  to do.  But it the function
 were a function of your own, defined in a non-standard library, you would
 have to edit the Makefiles and complete the variables:
@@ -247,8 +247,8 @@ more complex examples.
 
 \subsection{Splitting codels into several files}
 
-To help you   write the  codels, the \\texttt{-i}  option of  \\texttt{genom}
-generates empty templates in the \\texttt{codels/} directory. Then, you just
+To help you   write the  codels, the \texttt{-i}  option of  \texttt{genom}
+generates empty templates in the \texttt{codels/} directory. Then, you just
 have to complete the templates.
 
 \emph{Note}  that if you use the  \texttt{-i} option  and those files already
@@ -270,11 +270,11 @@ to reflect your changes.
 
 \subsection{Makefiles}
 
-Several \\texttt{Makefile} are generated   by \texttt{genom}.  By default, they
+Several \texttt{Makefile} are generated   by \texttt{genom}.  By default, they
 compile your codels  files, and perform the  link edition with the module
 server (\texttt{demoServer.a} for Unix).
 
-Each file  is compiled in the \\texttt{\$\{TARGET\}} subdirectory. For unix,
+Each file  is compiled in the \texttt{\$\{TARGET\}} subdirectory. For unix,
 the compilation  produces the executable \texttt{demo}.
 
 You can change the standard Makefiles to suit your needs. In particular,
@@ -304,7 +304,7 @@ represent a pointer to the fIDS of the module.
 of  a  request  directly  from the  fIDS,  but only from the codel
 function parameters.
 
-Indeed, the   \texttt{input}  and \\texttt{output} parameters  of   the
+Indeed, the   \texttt{input}  and \texttt{output} parameters  of   the
 requests  can  be those  of simultaneous activities  (if  the  request is
 compatible with  itself).  In that case, these  parameters \emph{are not}
 pointers to members of  the fIDS structure declared in  the module.  Each
@@ -328,7 +328,7 @@ transitions, executed by the execution tasks, are usualy much more
 frequent. Thus, the control poster is not updated in real time.
 
 
-Here is a non-exhaustive list, for a module \\texttt{pilo} client of another
+Here is a non-exhaustive list, for a module \texttt{pilo} client of another
 module \texttt{loco} and with an execution task \texttt{Motion} which updates a
 poster \texttt{Ref}:
 
@@ -363,13 +363,13 @@ decisions.
 
 The list of abnormal situations is defined with the field \texttt{fail\_reports}
 of every   request.  These   are strings,   wich are   meant to be  human
-readable:       for      instance  \\texttt{INVALID\_PARAMETERS},   
+readable:       for      instance  \texttt{INVALID\_PARAMETERS},   
 \texttt{POSTER\_NOT\_FOUND}, \texttt{NOT\_ENOUGH\_MEMORY},   \texttt{IMPORTANT\_DRIFT},
 \texttt{CASE\_NOT\_MANAGED},\\ \texttt{SOLUTION\_NOT\_FOUND}, \ldots
 
 Reports must be precise:  avoid strings such  as \texttt{ERROR}. However, it
 is not necessary to recall the name  of the request:  the client knows it
-already.  Thus, a  report \\texttt{INVALID\_PARAMETERS}   could be used  for
+already.  Thus, a  report \texttt{INVALID\_PARAMETERS}   could be used  for
 several requests without loss of information.
 
 Modules must  also   restore  themselves into  a  sane  state  and handle
@@ -382,12 +382,12 @@ that the module cannot restore a sane sate, it should put itself into the
 
 \subsection{Numerical values of reports}
 
-Reports which  are declared in the \\texttt{fail\_reports} field are mapped into
+Reports which  are declared in the \texttt{fail\_reports} field are mapped into
 32 bits integers using the VxWorks convention:
 
 The name of this integer is build as follow: \texttt{S\_<source>\_<report>},
 where \texttt{<source>} is the name of the module or the library which defines
-the      \\texttt{<report>}     string.    For       instance:     
+the      \texttt{<report>}     string.    For       instance:     
 \texttt{S\_demo\_INVALID\_PARAMETER}.
 
 The numerical value is computed as follow:
@@ -409,7 +409,7 @@ Error codes are stored in the file \texttt{server/<module>Error.h}.
 
 Posters which are  declared as \texttt{user}  must be updated by the codels.
 There are several ways to do so: depending on the type of poster, you can
-use  functions of    the      poster  library \\texttt{posterLib}      (see
+use  functions of    the      poster  library \texttt{posterLib}      (see
 appendix~\ref{anx|posters}) or   the function  generated by \GenoM\  (see
 below).  The function \texttt{posterWrite} is of particular interrest:
 
@@ -418,14 +418,14 @@ below).  The function \texttt{posterWrite} is of particular interrest:
 \bigbreak
 
 \texttt{posterId} is the poster id: e.g. \texttt{PILO\_REF\_POSTER\_ID} for the
-poster \texttt{Ref} in  module \\texttt{pilo}.   \texttt{posterWrite} writes  
+poster \texttt{Ref} in  module \texttt{pilo}.   \texttt{posterWrite} writes  
 \texttt{nbytes} from buffer \texttt{buf} in the poster structure, starting at offset
 \texttt{offset}.  It returns the  number of bytes actually written, normally
 \texttt{nbytes}.
 
 \bigbreak
 
-Consider the example  of poster \\texttt{Mobile} in module \\texttt{demo}. Its
+Consider the example  of poster \texttt{Mobile} in module \texttt{demo}. Its
 structure is:
 
 \begin{center}\begin{cartouche}\small\begin{verbatim}
@@ -517,7 +517,7 @@ be associated  to  a periodical  execution task  and  the  codel will  be
 invoked at each period.
 
 Typically, this codel  will be the \emph{execution codel} of the  request
-(\\texttt{codel\_main}).  To let   the    execution task call   the  codel
+(\texttt{codel\_main}).  To let   the    execution task call   the  codel
 periodically, the latter must let the task know that  the activity is not
 finished  when the codel  returns.  This is done  by returning \texttt{EXEC}
 instead  of \texttt{ETHER}.  The activity stays  in the state \texttt{EXEC} and
@@ -525,7 +525,7 @@ the execution codel will be called at the next task's wake up.
 
 Consider request \texttt{Monitor},   which monitorates the position   of the
 mobile and  throw an  alert when it   has the requested value, say,  
-\texttt{myPos}.  The  execution codel  \\texttt{demoMonitorExec} (see below)  is invoked
+\texttt{myPos}.  The  execution codel  \texttt{demoMonitorExec} (see below)  is invoked
 (\texttt{return EXEC;}) until the position \texttt{myPos}  has not been reached
 with the \texttt{DEMO\_THRESHOLD} precision. Once  this position is reached,
 the activity ends (\texttt{return  ETHER;}) and the  final reply is sent  to
@@ -558,13 +558,13 @@ a variable, starting another service, \ldots), this  would have been done
 thanks to the \emph{start} codel (\texttt{codel\_start}).  This codel
 corresponds to the \texttt{START} state, and  is always executed first if it
 is  defined. At the  end  of this codel,  we  would \texttt{return EXEC;} to
-switch to  the \\texttt{EXEC} state, or   \texttt{ETHER} if   we  want to  stop
+switch to  the \texttt{EXEC} state, or   \texttt{ETHER} if   we  want to  stop
 everything.
 
 Similarily, a termination phasis   would be defined   thanks to the  {\em
 termination codel} (the \texttt{codel\_end} field) associated to the
 \texttt{END} state. To indicate, at the end of  the execution codel, that we
-want to go through this  termination state, we just  have to \\texttt{return
+want to go through this  termination state, we just  have to \texttt{return
 END;} instead of \texttt{ETHER}.
 
 
@@ -583,7 +583,7 @@ previous section to glue pieces together.
 An activity that  goes through several  codels (or  several times through
 the  same codel), can  be  interrupted.  (as  we already  mentioned it, a
 single codel cannot be interrupted). When  this occurs, the activity goes
-into the  \texttt{INTER}rupted  state,  and the  \\texttt{codel\_inter}
+into the  \texttt{INTER}rupted  state,  and the  \texttt{codel\_inter}
 codel is executed.  By default, there is  no such codel, and the activity
 goes immediatly into the \texttt{ETHER} state.
 
@@ -598,7 +598,7 @@ which   is  beeing     interrupted.  In   that  case,   define    a
 
 The   different  states   an  activity can   go   through  are  shown  on
 figure~\ref{fig|states}. The external ring correspond to the \emph{normal}
-sequencing: \\texttt{ETHER} $\rightarrow$   \texttt{START} $\rightarrow$   
+sequencing: \texttt{ETHER} $\rightarrow$   \texttt{START} $\rightarrow$   
 \texttt{EXEC} $\rightarrow$ \texttt{END}  $\rightarrow$ \texttt{ETHER}. \texttt{START} and
 \texttt{END}  states are optional.   On any transition, one  can go into the
 \texttt{INTER} state.
@@ -651,10 +651,10 @@ specified, the activity goes directly into state \texttt{EXEC}.
 \end{itemize}
 
 It is up  to you to define the   following transitions. To  do so, codels
-must return one value of  the enum \\texttt{START},  \texttt{EXEC}, \\texttt{END},
-\texttt{ETHER},  \texttt{FAIL}, \\texttt{ZOMBIE} or \texttt{SLEEP}, which corresponds
+must return one value of  the enum \texttt{START},  \texttt{EXEC}, \texttt{END},
+\texttt{ETHER},  \texttt{FAIL}, \texttt{ZOMBIE} or \texttt{SLEEP}, which corresponds
 to the state of the same name. One does normally follow the sequence 
-\texttt{START} $\rightarrow$ \\texttt{EXEC} $\rightarrow$  \\texttt{END} $\rightarrow$
+\texttt{START} $\rightarrow$ \texttt{EXEC} $\rightarrow$  \texttt{END} $\rightarrow$
 \texttt{ETHER}.
 
 \begin{itemize}
@@ -674,7 +674,7 @@ re-synchronize two modules.
 \texttt{ZOMBIE}. The codel can do some additional cleanup.
 
 \item \texttt{SLEEP} suspends an activity, and waits for an external event
-to occur (a request,  or an \\texttt{h2evn} event). Then  it returns  to the
+to occur (a request,  or an \texttt{h2evn} event). Then  it returns  to the
 \texttt{EXEC} state.
 \end{itemize}
 
@@ -791,9 +791,9 @@ We will see later how one can access IDSs and how reports can be used.
 \subsection{Initialization codel \texttt{codel\_task\_start}}
 
 One initialization codel can be associated to any  execution task, by the
-mean of the field \\texttt{codel\_task\_start}. It is  usually used to initiliaze
+mean of the field \texttt{codel\_task\_start}. It is  usually used to initiliaze
 the fIDS to a known state. It takes only one  parameter: a pointer to the
-report.   It returns either \\texttt{OK}  or \texttt{ERROR}  (in  that case the
+report.   It returns either \texttt{OK}  or \texttt{ERROR}  (in  that case the
 module does not start).
 
 For the \texttt{demo} module,  this codel chooses  a  default speed for  the
@@ -855,7 +855,7 @@ codel,   the current  activity number  is    returned by the  macro
 
 This  id can be  used  to exchange   information between activities.  For
 instance, it would  be possible to  declare  a global (static) array,  of
-size \\texttt{MAX\_ACTIVITIES},    in which   each  element   would  contain
+size \texttt{MAX\_ACTIVITIES},    in which   each  element   would  contain
 information regarding each activity  (current state, order of  arrival of
 the request, number of the previous and next activity, \ldots).
 
@@ -865,7 +865,7 @@ compatible with  itself (because it must not  interrupt the latest motion
 request)  \emph{but} the execution codel  \texttt{EXEC} must not start before
 the previous request has completed.  This must be handled internally, and
 the  transition \texttt{START}  $\rightarrow$  \texttt{EXEC}  of a new activity
-must be  synchronized with the  transition \\texttt{EXEC} $\rightarrow$ 
+must be  synchronized with the  transition \texttt{EXEC} $\rightarrow$ 
 \texttt{END} of the activity.
 
 Such  a  synchronization     can  be  achieved   in     the   codel  
