@@ -41,7 +41,7 @@ const char* $module$_error_str(int err)
 	   i++)
   {
 	  if (err == $module$TclservClientErrMsgs[i].err)  
-		  return $module$TclservClientErrMsgs[i].msg + sizeof("S_$module_$");
+		  return $module$TclservClientErrMsgs[i].msg + sizeof("S_$module$_");
   }
 
   return NULL;
