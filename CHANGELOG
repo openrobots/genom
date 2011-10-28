@@ -1,5 +1,7 @@
-Genom 2.8, xxx xx 2011.
+Genom 2.8, October 28 2011.
 
+121. moduleEvents: implement logging of moduleEvents using h2logLib.
+120. fixes for LP64 architectures
 119. Fix reporting of errors in requests and task declarations
 118. Warn about OK in failure report lists
 
