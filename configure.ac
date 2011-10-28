@@ -114,7 +114,7 @@ AC_ARG_WITH(pocolibs-exec-prefix,
                [pocolibs libraries are installed in DIR (exec-prefix)]),
            [opt_pocolibs_eprefix=$withval],[opt_pocolibs_eprefix=$exec_prefix])
 
-PKG_CHECK_MODULES(PORTLIB, pocolibs >= 2.0)
+PKG_CHECK_MODULES(PORTLIB, pocolibs >= 2.10)
 AC_SUBST(PORTLIB_CFLAGS)
 AC_SUBST(PORTLIB_LIBS)
 
