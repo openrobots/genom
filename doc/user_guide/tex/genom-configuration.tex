@@ -33,11 +33,91 @@
 
 % -----------------------------------------------------------------------
 
+\section{Quick start using robotpkg}
+
+The robotpkg\footnote{\url{http://robotpkg.openrobots.org/}} tool is
+the quickest way to install GenoM and its dependencies. 
+
+\subsection{Setting up robotpkg in five minutes}
+
+
+After downloading the sources, you need to choose where the packages
+will be installed and bootstrap your installation. For that, you need
+the GNU make software (version 3.81 or later required), as well as a
+working C compiler chain.
+
+By default, robotpkg uses the \texttt{/opt/openrobots} installation prefix. If
+this location is convenient for you, installing the bootstrap kit
+should be as simple as:
+
+\begin{cartouche}
+\begin{verbatim}
+% cd robotpkg/bootstrap
+% ./bootstrap
+\end{verbatim}
+\end{cartouche}
+
+Notes:
+\begin{itemize}
+\item The bootstrap script will try to create the initial
+  /opt/openrobots directory using your user id. You are usually not
+  allowed to do so, so you should create the /opt/openrobots manually
+  before calling bootstrap (using sudo or a similar command). You can
+  also install to a different location as explained below. 
+
+\item If you need to install to a different prefix, pass the --prefix
+  option to bootstrap. For instance, installing the packages in your
+  home directory can be configured like this: 
+
+\begin{cartouche}
+\begin{verbatim}
+      % ./bootstrap --prefix=${HOME}/openrobots
+\end{verbatim}
+\end{cartouche}
+\end{itemize}
+
+Make sure to read carefuly the instructions printed at the end of the bootstrap for configuring your shell environment.
+
+\subsection{The five minutes guide to installing Genom}
+
+Once bootstraping is done, installing a package can be done by
+changing to the directory (within the robotpkg hierarchy) of the
+package to be installed and doing make update. For GenoM, this means:
+
+\begin{cartouche}
+\begin{verbatim}
+% cd robotpkg/architecture/genom
+% make update
+\end{verbatim}
+\end{cartouche}
+
+
+Notes:
+\begin{itemize}
+\item The make program must be GNUmake utility, a.k.a gmake. Version
+  >= 3.81 is required.  
+\end{itemize}
+
+A more extensive and largely incomplete (!) documentation is also
+available
+online\footnote{\url{http://softs.laas.fr/openrobots/robotpkg/README.html}},
+or in the \texttt{doc/robotpkg} directory of robotpkg. 
+
+If you successfully installed GenoM with robotpkg, you can skip to the
+next chapter. Otherwise read more detailled instructions below.
+
 \section{Requirements}
 \label{sec|configuration|requirements}
 
 \subsection{Operating systems}
 
+GenoM is known to work on most current Unix-like operating systems:
+Linux (many distributions including Debian, Fedora, Gentoo and Ubuntu
+have been tested), NetBSD, Mac OS X, Solaris.
+
+GenoM does not work on Microsoft Windows operating system, nor on
+mobile phones / tablets operating systems like Apple's iOS or Google's
+Android. 
 
 \subsection{External tools}
 
@@ -187,7 +267,7 @@ make install
 \end{cartouche}
 
 The command \texttt{./autogen.sh} is not always necessary. If there is
-already a script \texttt{configure} you can try it directly.
+already a \texttt{configure} script  you can try it directly.
 
 On some systems, \texttt{--with-tcl=DIR} and \texttt{--with-tk=DIR} will be
 required to specify where to find \texttt{tclConfig.sh} (resp. \texttt{tkConfig.h}). 
