@@ -279,7 +279,7 @@ int posterLibGen(FILE *out)
       /* function to find out the poster (and check its length) */
       fprintf(out,
 	      "STATUS %s%sPosterFind(char *posterName, POSTER_ID *posterId)\n{\n"
-	      "  int length;\n"
+	      "  size_t length;\n"
 	      "  if (posterFind(posterName, posterId) == ERROR) {\n"
 	      "     *posterId=NULL;\n"
 	      "     h2perror(\"%s%sPosterFind find\");\n"
@@ -293,7 +293,7 @@ int posterLibGen(FILE *out)
 	      "   if (length != sizeof(%s)) {\n"
 	      "     errnoSet(S_%s_stdGenoM_BAD_POSTER_TYPE);\n"
 	      "     h2perror(\"%s%sPosterFind warn bad data length\");\n"
-	      "     fprintf (stderr, \"%s%sPosterFind warn:  strlen %%d != poster %%d\\n\", sizeof(%s), length);\n"
+	      "     fprintf (stderr, \"%s%sPosterFind warn:  strlen %%zu != poster %%zu\\n\", sizeof(%s), length);\n"
 	      "     return ERROR;\n"
 	      "   }\n"
 	      "  return OK;\n"
