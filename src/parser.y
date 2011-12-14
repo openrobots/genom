@@ -374,7 +374,13 @@ av_module: INTERNAL_DATA ':' indicateur_de_type
 	{ $$ = STR_ALLOC(MODULE_AV_STR);
 	  $$->attribut = $1; $$->value.internal_data = $3; }
     | NUMBER ':' expression_constante
-	{ $$ = STR_ALLOC(MODULE_AV_STR);
+	{ if ($3 & ~0x7fffUL) {
+            fprintf(stderr, "%s:%d:"
+                    " module number must be positive and less than 32767\n",
+                    nomfic, num_ligne);
+            YYERROR;
+          }
+          $$ = STR_ALLOC(MODULE_AV_STR);
 	  $$->attribut = $1; $$->value.number = $3; }
     | CODEL_FILES ':' quoted_string_list
 	{ $$ = STR_ALLOC(MODULE_AV_STR);
