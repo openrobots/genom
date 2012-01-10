@@ -1,5 +1,5 @@
 %
-% Copyright (c) 2001,2009 LAAS/CNRS                        --  Wed Nov  7 2001
+% Copyright (c) 2001,2009,2012 LAAS/CNRS                        --  Wed Nov  7 2001
 % All rights reserved.                                     Anthony Mallet
 %
 % This document is a translation of the French documentation of GenoM,
@@ -656,3 +656,37 @@ You can use the generic function
 
 The function returns \texttt{-2} in case of internal failure, \texttt{-1} if
 the request is not terminated and \texttt{0} otherwise.
+
+
+% =======================================================================
+\section{Sharing modules between different unix users}
+\label{sec|h2devdir}
+
+By default, modules and clients can only communicate between processes owned by
+the same unix user id. This is so because communication libraries use special
+files located in the \texttt{\$\{HOME\}} directory of the user running the
+processes.
+
+In most situations, this is the desired behaviour since this allows different
+users to work on the same machine without unwanted interaction. However, in
+some situations, you might want to share the modules and clients between
+different users. To do so, you must define the \texttt{H2DEV\_DIR} environment
+variable and make it point to the same location for all users that must
+interact together. For instance, you can set it to \texttt{/tmp} with
+\texttt{export H2DEV\_DIR=/tmp} (sh, bash, ...) or \texttt{setenv H2DEV\_DIR
+/tmp} (csh, ...). This must be done before running any genom related process
+(server or client) as well as \texttt{h2 init}. Note that only the first user
+(the "owner") of the shared \texttt{H2DEV\_DIR} needs to execute the \texttt{h2
+init} command and execute the \texttt{h2 end} command after all modules and
+clients are shut down.
+
+For information, the special files created under \texttt{\$\{H2DEV\_DIR\}} are
+the following:
+\begin{description}
+   \item[\texttt{.h2dev-<hostname>}] Created by \texttt{h2 init} and used by
+   the communication libraries to retrieve the shared communication objects.
+
+   \item[\texttt{.<module>.pid-<hostname>}] Created when starting a \GenoM{}
+   module. This file contains the \texttt{pid} of the module, and is used by
+   some scripts such as \texttt{killmodule}.
+\end{description}
