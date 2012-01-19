@@ -1,6 +1,6 @@
-\documentclass{beamer}
+\documentclass[11pt]{beamer}
 
-\usepackage{bera}
+\usepackage{lmodern}
 \usepackage{hyperref}
 \usepackage{genom}
 \usepackage{listings}
@@ -17,7 +17,7 @@
         \centerline{
           \parbox{#2}{\includegraphics[width=#2]{#1}\\
         \centerline{
-	  {\em\footnotesize #3}}}}}
+	  \emph{\footnotesize #3}}}}}
 
 \newcommand{\bi}{\begin{itemize}\itemsep 0mm}
 \newcommand{\ei}{\end{itemize}}
@@ -26,14 +26,14 @@
 \newcommand{\bd}{\begin{description}\itemsep 0mm}
 \newcommand{\ed}{\end{description}}
 
-\lstset{frame=single}
+\lstset{frame=single,basicstyle=\ttfamily}
 %-------------------------------------------------
 \title{The Generator of Modules \\ \GenoM{}}
  
-\author{Sara Fleury - Matthieu Herrb}
+\author{Sara Fleury - Anthony Malley - Matthieu Herrb}
  
 \institute{\includegraphics[height=2cm]{openlogo}}
-\date{November 2010}
+\date{January 2012}
 
 
 \AtBeginSection[]{
@@ -271,7 +271,7 @@ and \textbf{perenity})
 
 \begin{center}  \textbf{$\rightarrow$ data flow}  \end{center}
 
-\texttt{pocolibs} (\url{http://softs.laas.fr/openrobots})
+\texttt{pocolibs} (\url{http://pocolibs.openrobots.org/})
 
 \end{frame}
 
@@ -433,7 +433,7 @@ Commands (or menu):
 \vspace{1em}
 \begin{tabularx}{\linewidth}{|l|X|}
 \hline
-\tt C-c C-m & \textbf{m}odule creation ({\em 1st command to call})\\
+\tt C-c C-m & \textbf{m}odule creation (\emph{1st command to call})\\
 \tt C-c C-i & \textbf{i}mportation de structures \\
 \tt C-c C-r & \textbf{r}equest creation \\
 \tt C-c C-p & \textbf{p}oster creation\\
@@ -461,14 +461,14 @@ How to control the motion of a mobile moving along one axis ?
 
 
 \begin{itemize}
-\item {\bf One main service}: "move the mobile to a given position"\\
-$\Rightarrow$ {\bf execution request}: \texttt{Goto}
+\item \textbf{One main service}: "move the mobile to a given position"\\
+$\Rightarrow$ \textbf{execution request}: \texttt{Goto}
 %\vspace{-.8cm}
 		\begin{itemize}
 		\item input: \texttt{position} to reach
 		\end{itemize}
-\item {\bf parameters control}: "get or change speed reference"\\
-	 $\Rightarrow$ {\bf control request}: 
+\item \textbf{parameters control}: "get or change speed reference"\\
+	 $\Rightarrow$ \textbf{control request}: 
 		\begin{itemize}
 		\item \texttt{SetSpeed} with input: new speed reference
 		\item \texttt{GetSpeed} with output: current speed reference
@@ -483,16 +483,8 @@ $\Rightarrow$ {\bf execution request}: \texttt{Goto}
 %\vspace*{-0.3cm}
 \textbf{\texttt{C-c C-m demo}}
 %\vspace*{-0.2cm}
-{\tiny
+{\footnotesize
 \begin{lstlisting}
-/*-------------------------------------------------------
- *               --  Module  DEMO  --
- *
- *  Description:       The only purpose is to do a demo
- *  Creation date:     Sat Jul 15 13:20:11 CEST 2006
- *  Author:            Sara Fleury
- *--------------------------------------------------------
-
 module demo {
      number:          <<number>>;
      version:         "0.1";
@@ -502,9 +494,9 @@ module demo {
      uses_cxx:        0;
 }; 
 
-/*-------------------------------------------------------
+/*--------------------------------------------------
  *               Structures and IDS
- *-------------------------------------------------------*/
+ *--------------------------------------------------*/
 #include "demoStruct.h"
 
 typedef struct DEMOCAL_STR {
@@ -525,14 +517,14 @@ typedef struct DEMOCAL_STR {
  *--------------------------------------------------*/
 
 request SetSpeed {
-    doc:                  "<some doc>";
-    type:                 control;
-    input:                <name>::<sdi-ref>; 
-    input_info:           <default-value>::"<doc>" , ...;
-    output:               <name>::<sdi-ref>; 
-    c_control_func:       demoSetSpeedCntrl;
-    fail_msg:             <msg-name> , ...;
-    interrupt_activity:   <exec-rqst-name> , ...;
+    doc:                "<some doc>";
+    type:               control;
+    input:              <name>::<sdi-ref>; 
+    input_info:         <default-value>::"<doc>", ...;
+    output:             <name>::<sdi-ref>; 
+    c_control_func:     demoSetSpeedCntrl;
+    fail_msg:           <msg-name> , ...;
+    interrupt_activity: <exec-rqst-name> , ...;
 };
 \end{lstlisting}
 }
@@ -545,20 +537,20 @@ request SetSpeed {
 {\footnotesize
 \begin{lstlisting}
 request Goto {  
-    doc:                  "<some doc>";
-    type:                 exec;
-    exec_task:            <<exec-task-name>>; 
-    input:                <name>::<sdi-ref>; 
-    input_info:           <default-value>::"<doc>" , ...;
-    posters_input:        <struct-name>, ...;
-    output:               <name>::<sdi-ref>; 
-    c_control_func:       demoGotoCntrl;
-    c_exec_func_start:    demoGotoStart; 
-    c_exec_func:          demoGotoExec; 
-    c_exec_func_end:      demoGotoEnd; 
-    c_exec_func_inter:    demoGotoInter; 
-    fail_msg:             <msg-name> , ...; 
-    interrupt_activity:   Goto, <exec-rqst-name>, ...; 
+    doc:                "<some doc>";
+    type:               exec;
+    exec_task:          <<exec-task-name>>; 
+    input:              <name>::<sdi-ref>; 
+    input_info:         <default-value>::"<doc>", ...;
+    posters_input:      <struct-name>, ...;
+    output:             <name>::<sdi-ref>; 
+    c_control_func:     demoGotoCntrl;
+    c_exec_func_start:  demoGotoStart; 
+    c_exec_func:        demoGotoExec; 
+    c_exec_func_end:    demoGotoEnd; 
+    c_exec_func_inter:  demoGotoInter; 
+    fail_msg:           <msg-name> , ...; 
+    interrupt_activity: Goto, <exec-rqst-name>, ...; 
 };
 \end{lstlisting}
 }
@@ -644,18 +636,19 @@ typedef struct DEMO_STR {
 
 /* Control requests */
 request SetSpeed {
-    doc:                 "To change speed";
-    type:                control;
-    input:               speed::speedRef;
-    input_info:          DEMO_DEFAULT_SPEED::"DEMO_SLOW or DEMO_FAST";
-    c_control_func:      controlSpeed;
-    fail_msg:            INVALID_SPEED;
+    doc:              "To change speed";
+    type:             control;
+    input:            speed::speedRef;
+    input_info:       DEMO_DEFAULT_SPEED::"DEMO_SLOW or "
+                                          "DEMO_FAST";
+    c_control_func:   controlSpeed;
+    fail_msg:         INVALID_SPEED;
 };
 
 request GetSpeed {
-    doc:                 "To get current speed value";
-    type:                control;
-    output:              speed::speedRef;
+    doc:              "To get current speed value";
+    type:             control;
+    output:           speed::speedRef;
 };
 \end{lstlisting}
 }
@@ -728,11 +721,11 @@ typedef enum DEMO_SPEED {
 
 3 files to describe a module:
 	\begin{itemize}
-	\item description file \texttt{demo.gen}
-	\item structures \texttt{demoStruct.h}
-	\item constants \texttt{demoConst.h}
+	\item description file: \texttt{demo.gen}
+	\item structures definitions: \texttt{demoStruct.h}
+	\item constants definitions: \texttt{demoConst.h}
 	\end{itemize}
-
+\vspace{1em}
 5 parts in the  \textbf{.gen} file:
 	\begin{itemize}
 	\item module (name + identifier)
@@ -830,7 +823,7 @@ In \texttt{demo/server/} files used by genom and clients of the module, related 
 In \texttt{demo/codels/}
 files that will contain the algorithms.
 
-1 codels file per task:
+One codels file per task:
 
 \begin{itemize}
 \item Control codels:
@@ -923,14 +916,14 @@ According to the destination you have chosen, you may need \texttt{root} privile
 
 
 \begin{enumerate}
-\item Edit the module: {\bf demo.gen}
+\item Edit the module: \textbf{demo.gen}
 
-\item Only the first time: generate {\bf genom} \\
-  and configure {\bf configure}
+\item Only the first time: generate \textbf{genom} \\
+  and configure \textbf{configure}
 
-\item Compile and generate: {\bf make}
+\item Compile and generate: \textbf{make}
 
-\item Install: {\bf make install}
+\item Install: \textbf{make install}
 
 \end{enumerate}
 
@@ -971,7 +964,7 @@ blues% demoTest 1
 \begin{frame}[containsverbatim]
 \frametitle{The test program \texttt{demoTest} }
 
-{\scriptsize
+{\fontsize{6.95}{9}\selectfont
 \begin{lstlisting}
 blues% demoTest 1 
 pocolibs execution environment version 2.8
@@ -993,7 +986,7 @@ demo1 (88)>
 \begin{frame}[containsverbatim]
 \frametitle{The test program \texttt{demoTest} (cont) }
 
-{\scriptsize
+{\fontsize{6.95}{9}\selectfont
 \begin{lstlisting}
 demo1 (88)> 3
 
@@ -1031,7 +1024,7 @@ blues% killmodule demo
 
 or with the command \texttt{-99} in the \texttt{demoTest} menu.
 
-{\bf (then one can restart the module)}
+\textbf{(then one can restart the module)}
 
 
 \item end the session:
@@ -1048,15 +1041,15 @@ blues% h2 end
 \frametitle{Summary of 4th part}
 
 \begin{enumerate}
-\item Edit the module: {\bf demo.gen}
+\item Edit the module: \textbf{demo.gen}
 
-\item Only the first time: generate ({\bf genom}) and configure ({\bf configure})
+\item Only the first time: generate (\textbf{genom}) and configure (\textbf{configure})
 
-\item (Re) generate and compile: {\bf make}
+\item (Re) generate and compile: \textbf{make}
 
-\item Install: {\bf make install}
+\item Install: \textbf{make install}
 
-\item Execute: {\bf h2 init, demo -b, demoTest 1, ... h2 end}
+\item Execute: \textbf{h2 init, demo -b, demoTest 1, ... h2 end}
 
 \end{enumerate}
 
@@ -1070,17 +1063,17 @@ blues% h2 end
 
 \bi
 
-\item All the codels are in the directory: {\tt codels/}
+\item All the codels are in the directory: \texttt{codels/}
 
 \item In this directory we have one codels file per task.
 
 \item Thus for the \texttt{demo} we have:
 
 \begin{itemize}
-\item {\tt demoCntrlTaskCodels.c} for the control codels ({\tt c\_control\_func})
+\item \texttt{demoCntrlTaskCodels.c} for the control codels (\texttt{c\_control\_func})
 
-\item {\tt demoMotionTaskCodels.c} for the execution codels ({\tt
-c\_exec\_func}, \ldots)
+\item \texttt{demoMotionTaskCodels.c} for the execution codels 
+(\texttt{c\_exec\_func}, \ldots)
 
 \end{itemize}
 \end{itemize}
@@ -1098,7 +1091,8 @@ STATUS demoSetSpeedCntrl(DEMO_SPEED *speed, int *report)
    if (*speed != DEMO_SLOW && *speed != DEMO_FAST) {
         *report = S_demo_INVALID_PARAMETER; return ERROR;
    }
-   /* Parameter is valid: it will be recorded into the fIDS */
+   /* Parameter is valid: 
+      it will be recorded into the fIDS */
    return OK;
 }
 
@@ -1165,9 +1159,9 @@ ACTIVITY_EVENT demoGotoEnd(double *posRef, int *report)
 \frametitle{Specific codels}
 
 \bi
-\item Initialisation codel {\tt c\_init\_func} 
-\item Terminaison codel  {\tt c\_end\_func} 
-\item Permanent activity codel: {\tt c\_func}
+\item Initialisation codel \texttt{c\_init\_func} 
+\item Terminaison codel  \texttt{c\_end\_func} 
+\item Permanent activity codel: \texttt{c\_func}
 \ei
 
 $\rightarrow$ one per execution task  \\
@@ -1192,17 +1186,17 @@ STATUS demoComputeInit(int *report)
 \frametitle{Summary of 5th part}
 
 \begin{enumerate}
-\item Edit the module: {\bf demo.gen}
+\item Edit the module: \textbf{demo.gen}
 
-\item Only the first time: generate ({\bf genom}) and configure ({\bf configure})
+\item Only the first time: generate (\textbf{genom}) and configure (\textbf{configure})
 
-\item (Re) generate and compile: {\bf make}
+\item (Re) generate and compile: \textbf{make}
 
-\item Install: {\bf make install}
+\item Install: \textbf{make install}
 
-\item Execute: {\bf h2 init, demo -b, demoTest 1, ... h2 end}
+\item Execute: \textbf{h2 init, demo -b, demoTest 1, ... h2 end}
 
-\item Fill-in the codels (and goto {\bf 3})
+\item Fill-in the codels (and goto \textbf{3})
 
 \end{enumerate}
 
@@ -1218,19 +1212,19 @@ STATUS demoComputeInit(int *report)
 \item generally:
 1 activity $\rightarrow$ a sequence of codels:
 
-{\tt start}\\
-{\tt exec}\\
-{\tt exec}\\
-{\tt \ldots}\\
-{\tt exec}\\
-{\tt end}
+\texttt{start}\\
+\texttt{exec}\\
+\texttt{exec}\\
+\texttt{\ldots}\\
+\texttt{exec}\\
+\texttt{end}
 \ei
 
 
 \bi
 \item Codels are not interruptible
 \item Activity are interruptible on transitions between 2 codels.
-\item On Interruption $\Rightarrow$ execution of the codel {\tt inter}
+\item On Interruption $\Rightarrow$ execution of the \texttt{inter} codel
 \ei 
 
 \end{frame}
@@ -1295,14 +1289,14 @@ $\rightarrow$ Periodical task \\
 {\footnotesize
 \begin{lstlisting}
 exec_task Compute {
-    period:                10;     /* 100ms */
-    priority:              20;     /* a hight priority */
-    stack_size:            10000;
+    period:             10;     /* 100ms */
+    priority:           20;     /* a high priority */
+    stack_size:         10000;
 };
 \end{lstlisting}}
 
 \bi
-\item usely 1 tic = 10ms on Unix/Linux
+\item usually 1 tic = 10ms on Linux
 \item priority: [0..255] (0: higher priority): \\
   used only on real-time OS
 \item stack\_size: used only on real-time OS
@@ -1349,7 +1343,8 @@ Update from a codel: \\
 
 {\footnotesize
 \begin{lstlisting}
-ACTIVITY_EVENT demoGotoStart(double *posRef, int *report)
+ACTIVITY_EVENT 
+demoGotoStart(double *posRef, int *report)
 {
    printf("Start engin\n");
    if (demoStatusSPEED_REFPosterWrite 
@@ -1369,17 +1364,17 @@ ACTIVITY_EVENT demoGotoStart(double *posRef, int *report)
 \frametitle{Summary of 6th part}
 
 \begin{enumerate}
-\item Edit the module: {\bf demo.gen}
+\item Edit the module: \textbf{demo.gen}
 
-\item Only the first time: generate ({\bf genom}) and configure ({\bf configure})
+\item Only the first time: generate (\textbf{genom}) and configure (\textbf{configure})
 
-\item (Re) generate and compile: {\bf make}
+\item (Re) generate and compile: \textbf{make}
 
-\item Install: {\bf make install}
+\item Install: \textbf{make install}
 
-\item Execute: {\bf h2 init, demo -b, demoTest 1, ... h2 end}
+\item Execute: \textbf{h2 init, demo -b, demoTest 1, ... h2 end}
 
-\item Fill-in the codels (and goto {\bf 3})
+\item Fill-in the codels (and goto \textbf{3})
 
 \end{enumerate}
 
@@ -1432,9 +1427,9 @@ request Track {
 \end{lstlisting}
 }
 
-Library: {\tt demoPosterReadLib}
+Library: \texttt{demoPosterReadLib}
 
-{\tiny
+{\fontsize{6.95}{8}\selectfont
 \begin{lstlisting}
   POSTER_ID trackPosterId=-1;
   DEMO_REF ref;
@@ -1462,13 +1457,13 @@ Library: {\tt demoPosterReadLib}
 
 
 \begin{itemize}
-\item {\tt tclServ} allows to control a set of modules from a unique interface
+\item \texttt{tclServ} allows to control a set of modules from a unique interface
 
 \item Full interactive programming language (Tcl)
 
 \item ASCII data transfers (non sensitive to data representation like little endian / big endian / alignment).
 
-\item Graphical libraries {\tt Tk}
+\item Graphical libraries \texttt{Tk}
 \end{itemize}
 
 \url{http://www.openrobots.org/wiki/eltclsh}
@@ -1479,12 +1474,12 @@ Library: {\tt demoPosterReadLib}
 \frametitle{Module control with tclserv: usage}
 
 \begin{enumerate}
-\item Generate the module with option {\tt -t}
+\item Generate the module with option \texttt{-t}
 
-\item Start the server {\tt tclserv}.
+\item Start the server \texttt{tclserv}.
 
 \item Start one (or several) tcl-shells:\\
-{\tt eltclsh -package genom}
+\texttt{eltclsh -package genom}
 
 
 \item Start session (see example).
@@ -1513,9 +1508,9 @@ option		& function \\
 \hline
 command		& function \\
 \hline
-\tt replyof \$rqstId & get answer {\em blocking mode}. 
-Generaly used with option {\tt -raw}. \\
-\tt cs::term \$rqstId 0 & get answer {\em  non blocking mode}. \\
+\tt replyof \$rqstId & get answer \emph{blocking mode}. 
+Generaly used with option \texttt{-raw}. \\
+\tt cs::term \$rqstId 0 & get answer \emph{ non blocking mode}. \\
 \tt abort \$rqstId	& abort the request \\
 \tt kill $<$module$>$	& abort the module $<$module$>$ \\
 \texttt{die} & terminate tclserv and eltclsh itself\\
@@ -1528,7 +1523,7 @@ Generaly used with option {\tt -raw}. \\
 \begin{frame}[containsverbatim]
 \frametitle{Module control with tclserv: examples}
 
-{\footnotesize
+{\scriptsize
 \begin{lstlisting}
 eltclsh > connect localhost
 connecting to localhost:9472
@@ -1581,7 +1576,7 @@ Modular and extensible 3D graphical interface with the \texttt{Tk} GUI toolkit:
 
 \begin{itemize}
 \item Supervision
-\item Generate the module with option {\tt -o}
+\item Generate the module with option \texttt{-o}
 \end{itemize}
 
 OPs producted for each request:
@@ -1591,8 +1586,8 @@ OPs producted for each request:
 \hline
 nom		& function \\
 \hline
-\tt DEMO-MOTION & send the request  {\em and} receive the {\em
-                    finale reply in blocking mode} \\
+\tt DEMO-MOTION & send the request  \emph{and} receive the 
+                  \emph{final reply in blocking mode} \\
 
 \tt DEMO-MOTION-REPORT & idem with the report  \\
 
@@ -1604,20 +1599,20 @@ nom		& function \\
 
 The answer is a string in the data base:
 \\
-{\tt (FR DEMO DEMO\_MOTION \$RQST-ID \$REPORT \$DATA)}.
+\texttt{(FR DEMO DEMO\_MOTION \$RQST-ID \$REPORT \$DATA)}.
 
 \end{frame}
 
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{Module control with OpenPRS: {\tt transgen}}
+\frametitle{Module control with OpenPRS: \texttt{transgen}}
 
 \begin{itemize}
 \item Automatic production of OpenPRS relocatable.
 \item Similar to GenoM:
 
 \begin{itemize}
-\item  Description  file {\tt manip.tg}:
+\item  Description  file \texttt{manip.tg}:
 \end{itemize}
 
 
@@ -1637,17 +1632,17 @@ supervisor manip {
 
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
-\frametitle{Module control with OpenPRS: {\tt transgen} (continued)}
+\frametitle{Module control with OpenPRS: \texttt{transgen} (continued)}
 
 \begin{itemize}
-\item Call: {\tt tranGen manip.tg}
-\item Compile in {\tt server/}.
+\item Call: \texttt{tranGen manip.tg}
+\item Compile in \texttt{server/}.
 \item Start OpenPRS: 
 \end{itemize}
 
 {\footnotesize
 \begin{lstlisting}
-blues% server/i386-linux/manip-xOpenPRS -n manip-cabby \
+blues% server/i386-linux/manip-xOpenPRS -n manip \
  -x server/data/manip-data.inc -x data/my-data.inc &
 \end{lstlisting}
 }
@@ -1660,7 +1655,7 @@ blues% server/i386-linux/manip-xOpenPRS -n manip-cabby \
 
 An OP that automatically starts
 the continuous 
-localization request  ({\tt SEGLOC-LOCLOOP-ASYNC}) when the
+localization request  (\texttt{SEGLOC-LOCLOOP-ASYNC}) when the
 robot losts itself:
 
 {\scriptsize
@@ -1695,18 +1690,18 @@ robot losts itself:
 \frametitle{Summary}
 
 \begin{enumerate}
-\item Edit the module: {\bf demo.gen}
+\item Edit the module: \textbf{demo.gen}
 
-\item First time only: generate ({\bf genom}) and configure ({\bf configure})
+\item First time only: generate (\textbf{genom}) and configure (\textbf{configure})
 
-\item (Re) generate and compile: {\bf make}
+\item (Re) generate and compile: \textbf{make}
 
-\item Install: {\bf make install}
+\item Install: \textbf{make install}
 
-\item Execute: {\bf h2 init, demo -b, demoTest 1, ... h2 end}
+\item Execute: \textbf{h2 init, demo -b, demoTest 1, ... h2 end}
 
-\item Control with: {\bf tclserv} and {\bf Tcl/Tk} {\tt (eltclsh, elwish,
-gdhe)}	or {\bf OpenPRS}
+\item Control with: \textbf{tclserv} and \textbf{Tcl/Tk} \texttt{(eltclsh, elwish,
+gdhe)}	or \textbf{OpenPRS}
 
 \end{enumerate}
 
@@ -1726,7 +1721,7 @@ gdhe)}	or {\bf OpenPRS}
 \item Mailling-list: \url{openrobots@laas.fr} \url{https://sympa.laas.fr/sympa/info/openrobots}
 
 \item (Intranet) Wiki: 
-\url{http:/intranet.laas.fr/robots/wiki}
+\url{https://wiki.laas.fr/robots/}
 \end{itemize}
 \end{frame}
 
