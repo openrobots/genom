@@ -1,3 +1,7 @@
+2012-03-02  Felix Ingrand  <felix@cturtle>
+
+	* openprsGen.c (declareRequests): Added the tclservclient declaration.
+
 2005-07-25  Francois Felix Ingrand  <felix@laas.fr>
 
 	* parser.y (main): Added $moduleOprs variable for the name of the module-oprs.pc file...

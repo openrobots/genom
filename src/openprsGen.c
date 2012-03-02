@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1998-2007 LAAS/CNRS
+ * Copyright (c) 1998-2012 LAAS/CNRS
  * Sara Fleury - Wed Dec 16 1998
  * All rights reserved.
  *
@@ -283,7 +283,7 @@ static int declareRequests(FILE *out)
 
     /* Selection de la fonction d'encode pour INPUTS (OPENPRS -> C) */
     if (rqst->input == NULL) {
-      fprintf(out, "               null_encode, 0,\n");
+	 fprintf(out, "               null_encode, 0, %sTclservClient%sRqstSend,\n", module->name, rqst->name);
     }
     else {
       /* Type de l'input */
@@ -304,13 +304,14 @@ static int declareRequests(FILE *out)
 	 Solution: generalisation of all pu_encode_genom_<STRUCT> functions to 5 paramaters and array management.....
 */
       if(dcl->flags & STRING) {
-	fprintf(out, "               (Encode_Func_Proto)pu_encode_genom_string, %d,\n", dcl->dimensions[0]);
+	fprintf(out, "               (Encode_Func_Proto)pu_encode_genom_string, %d, %sTclservClient%sRqstSend,\n", 
+		dcl->dimensions[0], module->name, rqst->name);
       }
 
       else {
 	dcl_nom_decl(dcl, &type, &var);
-	fprintf(out, "               (Encode_Func_Proto)pu_encode_genom_%s, sizeof(%s),\n",
-	      nom_type1(dcl->type), nom_type(dcl->type));
+	fprintf(out, "               (Encode_Func_Proto)pu_encode_genom_%s, sizeof(%s), %sTclservClient%sRqstSend,\n",
+	      nom_type1(dcl->type), nom_type(dcl->type), module->name, rqst->name);
 	free(type);
 	free(var);
       }
@@ -318,7 +319,7 @@ static int declareRequests(FILE *out)
 
     /* Selection de la fonction de decode pour OUTPUTS  (C -> OPENPRS) */
     if (rqst->output == NULL) {
-      fprintf(out, "               null_decode, 0);\n");
+      fprintf(out, "               null_decode, 0, %sTclservClient%sReplyRcv);\n", module->name, rqst->name);
     }
     else {
       /* Type de l'output */
@@ -334,13 +335,13 @@ static int declareRequests(FILE *out)
 
       /* this does not work for now */
       if(dcl->flags & STRING) {
-	fprintf(out, "               (Decode_Func_Proto)pu_decode_genom_string, %d);\n",
-		dcl->dimensions[0]);
+	fprintf(out, "               (Decode_Func_Proto)pu_decode_genom_string, %d, %sTclservClient%sReplyRcv);\n",
+		dcl->dimensions[0], module->name, rqst->name);
       }
       else {
 	dcl_nom_decl(dcl, &type, &var);
-	fprintf(out, "               (Decode_Func_Proto)pu_decode_genom_%s, sizeof(%s));\n",
-		nom_type1(dcl->type),  nom_type(dcl->type));
+	fprintf(out, "               (Decode_Func_Proto)pu_decode_genom_%s, sizeof(%s), %sTclservClient%sReplyRcv);\n",
+		nom_type1(dcl->type),  nom_type(dcl->type), module->name, rqst->name);
 	free(type);
 	free(var);
       }
@@ -351,8 +352,8 @@ static int declareRequests(FILE *out)
   /* Abort request */
   fprintf(out, 
 	  "  init_rqst_type(\"%s_ABORT\", %s_ABORT_RQST,\n"
-	  "               (Encode_Func_Proto)pu_encode_genom_int, sizeof(int),\n"
-	  "               null_decode, 0);\n",
+	  "               (Encode_Func_Proto)pu_encode_genom_int, sizeof(int), tclserv_client_abort,\n"
+	  "               null_decode, 0, (FRI)0);\n",
 	  module->NAME, module->NAME);
   
   /* Fin de la declaration des requetes */
