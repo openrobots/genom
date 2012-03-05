@@ -39,8 +39,8 @@
 #include "parser.tab.h"
 #include "openprsGen.h"
 
-static int declareRequests(FILE *out);
-static void declareAtoms(FILE *out);
+static int declareRequests(FILE *out, int genTclservClient);
+static void declareMainAndAtoms(FILE *out, int genTclservClient);
 static void declarePosters(FILE *out);
 
 static void declareReportAtoms(FILE *out);
@@ -98,7 +98,7 @@ static int declareCStruct(FILE *out, DCL_NOM_STR *dcl, int level)
  ***/
 
 int 
-openprsGen(FILE *out)
+openprsGen(FILE *out, int genTclservClient)
 {
      RQST_LIST *rl;
      RQST_STR *rqst;
@@ -216,18 +216,18 @@ openprsGen(FILE *out)
      print_sed_subst(out, "MODULE", module->NAME);
      subst_end(out);
 
-     cat_begin(out);
-  
+     cat_begin(out);  
+
      /* Declaration des requetes */
-     if (!declareRequests(out)) {
+     if (!declareRequests(out,genTclservClient)) {
        return -1;
      }
 
-     /* Declaration des atomes (enum + reports) */
-     declareAtoms(out);
-
      /* Declaration des posters */
      declarePosters(out);
+
+     /* Declaration des atomes (enum + reports) */
+     declareMainAndAtoms(out,genTclservClient);
 
      /* FIN */
      cat_end(out);
@@ -254,12 +254,19 @@ openprsGen(FILE *out)
                            FONCTIONS LOCALES
  *----------------------------------------------------------------------*/
 
-static int declareRequests(FILE *out) 
+static int declareRequests(FILE *out, int genTclservClient) 
 {
   RQST_STR *rqst;
   char *type, *var;
   DCL_NOM_STR *dcl;
   RQST_LIST *l;
+
+  if (genTclservClient)
+       fprintf(out, 
+	       "#include <tclserv_client/tclserv_client.h>\n"
+	       "#include <tclservClient/%sTclservClientMsgLib.h>\n"
+	       "#include <server/tclservClient/demoError.h>\n",
+	       module->name);
 
   /* Tableau de declaration de toutes les requetes */
   fprintf(out, 
@@ -268,7 +275,7 @@ static int declareRequests(FILE *out)
 	  "/*\n"
 	  " * Requests declaration\n"
 	  " */\n"
-	  "void init_%s_rqst_type_table ()\n"
+	  "static void init_%s_rqst_type_table ()\n"
 	  "{\n", 
 	  module->name);
 
@@ -283,7 +290,10 @@ static int declareRequests(FILE *out)
 
     /* Selection de la fonction d'encode pour INPUTS (OPENPRS -> C) */
     if (rqst->input == NULL) {
-	 fprintf(out, "               null_encode, 0, %sTclservClient%sRqstSend,\n", module->name, rqst->name);
+	 if (genTclservClient)
+	      fprintf(out, "               null_encode, 0, %sTclservClient%sRqstSend,\n", module->name, rqst->name);
+	 else
+	      fprintf(out, "               null_encode, 0, (FRI)0,\n");
     }
     else {
       /* Type de l'input */
@@ -304,14 +314,22 @@ static int declareRequests(FILE *out)
 	 Solution: generalisation of all pu_encode_genom_<STRUCT> functions to 5 paramaters and array management.....
 */
       if(dcl->flags & STRING) {
-	fprintf(out, "               (Encode_Func_Proto)pu_encode_genom_string, %d, %sTclservClient%sRqstSend,\n", 
-		dcl->dimensions[0], module->name, rqst->name);
+	 if (genTclservClient)
+	      fprintf(out, "               (Encode_Func_Proto)pu_encode_genom_string, %d, %sTclservClient%sRqstSend,\n",
+		      dcl->dimensions[0], module->name, rqst->name);
+	 else
+	      fprintf(out, "               (Encode_Func_Proto)pu_encode_genom_string, %d, (FRI)0,\n",
+		      dcl->dimensions[0]);
       }
 
       else {
 	dcl_nom_decl(dcl, &type, &var);
-	fprintf(out, "               (Encode_Func_Proto)pu_encode_genom_%s, sizeof(%s), %sTclservClient%sRqstSend,\n",
-	      nom_type1(dcl->type), nom_type(dcl->type), module->name, rqst->name);
+	 if (genTclservClient)
+	      fprintf(out, "               (Encode_Func_Proto)pu_encode_genom_%s, sizeof(%s), %sTclservClient%sRqstSend,\n",
+		      nom_type1(dcl->type), nom_type(dcl->type), module->name, rqst->name);
+	 else
+	      fprintf(out, "               (Encode_Func_Proto)pu_encode_genom_%s, sizeof(%s), (FRI)0,\n",
+		      nom_type1(dcl->type), nom_type(dcl->type));
 	free(type);
 	free(var);
       }
@@ -319,7 +337,10 @@ static int declareRequests(FILE *out)
 
     /* Selection de la fonction de decode pour OUTPUTS  (C -> OPENPRS) */
     if (rqst->output == NULL) {
-      fprintf(out, "               null_decode, 0, %sTclservClient%sReplyRcv);\n", module->name, rqst->name);
+	 if (genTclservClient)
+	      fprintf(out, "               null_decode, 0, %sTclservClient%sReplyRcv);\n", module->name, rqst->name);
+	 else
+	      fprintf(out, "               null_decode, 0, (FRI)0);\n");
     }
     else {
       /* Type de l'output */
@@ -335,13 +356,21 @@ static int declareRequests(FILE *out)
 
       /* this does not work for now */
       if(dcl->flags & STRING) {
-	fprintf(out, "               (Decode_Func_Proto)pu_decode_genom_string, %d, %sTclservClient%sReplyRcv);\n",
-		dcl->dimensions[0], module->name, rqst->name);
+	   if (genTclservClient)
+		fprintf(out, "               (Decode_Func_Proto)pu_decode_genom_string, %d, %sTclservClient%sReplyRcv);\n",
+			dcl->dimensions[0], module->name, rqst->name);
+	   else
+		fprintf(out, "               (Decode_Func_Proto)pu_decode_genom_string, %d, (FRI)0);\n",
+			dcl->dimensions[0]);
       }
       else {
 	dcl_nom_decl(dcl, &type, &var);
-	fprintf(out, "               (Decode_Func_Proto)pu_decode_genom_%s, sizeof(%s), %sTclservClient%sReplyRcv);\n",
-		nom_type1(dcl->type),  nom_type(dcl->type), module->name, rqst->name);
+	if (genTclservClient)
+	     fprintf(out, "               (Decode_Func_Proto)pu_decode_genom_%s, sizeof(%s), %sTclservClient%sReplyRcv);\n",
+		     nom_type1(dcl->type),  nom_type(dcl->type), module->name, rqst->name);
+	else
+	     fprintf(out, "               (Decode_Func_Proto)pu_decode_genom_%s, sizeof(%s), (FRI)0);\n",
+		     nom_type1(dcl->type),  nom_type(dcl->type));
 	free(type);
 	free(var);
       }
@@ -350,11 +379,18 @@ static int declareRequests(FILE *out)
   } /* for */
   
   /* Abort request */
-  fprintf(out, 
-	  "  init_rqst_type(\"%s_ABORT\", %s_ABORT_RQST,\n"
-	  "               (Encode_Func_Proto)pu_encode_genom_int, sizeof(int), tclserv_client_abort,\n"
-	  "               null_decode, 0, (FRI)0);\n",
-	  module->NAME, module->NAME);
+  if (genTclservClient)
+       fprintf(out, 
+	       "  init_rqst_type(\"%s_ABORT\", %s_ABORT_RQST,\n"
+	       "               (Encode_Func_Proto)pu_encode_genom_int, sizeof(int), tclserv_client_abort,\n"
+	       "               null_decode, 0, (FRI)0);\n",
+	       module->NAME, module->NAME);
+  else
+       fprintf(out, 
+	       "  init_rqst_type(\"%s_ABORT\", %s_ABORT_RQST,\n"
+	       "               (Encode_Func_Proto)pu_encode_genom_int, sizeof(int), (FRI)0,\n"
+	       "               null_decode, 0, (FRI)0);\n",
+	       module->NAME, module->NAME);
   
   /* Fin de la declaration des requetes */
   fprintf(out, "}\n");
@@ -367,26 +403,39 @@ static int declareRequests(FILE *out)
  ** DECLARATION DES ATOMS (bilans + enum)
  **/
 
-static void declareAtoms(FILE *out) 
+static void declareMainAndAtoms(FILE *out, int genTclservClient) 
 {
   /* La fonction de declaration */
   fprintf(out, 
 	  "/*\n"
-	  " * ATOM declaration (reports + enum)\n"
+	  " * This is the main function which declares everything.\n"
 	  " */\n"
 	  "void init_%s_module ()\n"
 	  "{\n",
 	  module->name);
-  
+
+  if (genTclservClient)
+       fprintf(out, "\n     declare_oprs_module(\"%s\", \"%s_REQUEST\",%sClientInit,%sTclservClientInit,%s_error_str);",
+	       module->NAME, module->NAME, module->name, module->name, module->name);
+  else
+       fprintf(out, "\n     declare_oprs_module(\"%s\", \"%s_REQUEST\",%sClientInit, (FRI) 0, (FRCS)0);",
+	       module->NAME, module->NAME, module->name);
+
+ 
   /* Les enum */
   declareEnumAtoms(out);
 
   /* Les reports */
   declareReportAtoms(out);
+
+  fprintf(out, "\ninit_%s_rqst_type_table ();\n"
+	  "init_%s_posters ();\n\n",
+	  module->name, module->name);
  
   /* Termine la fonction */
   fprintf(out, "}\n\n");
-} /* declareAtoms */
+
+}
 
 
 
@@ -403,7 +452,7 @@ static void declarePosters(FILE *out)
 	  "/*\n"
 	  " * Posters declaration\n"
 	  " */\n"
-	  "void init_%s_posters ()\n"
+	  "static void init_%s_posters ()\n"
 	  "{\n    void *x;\n\n",
 	  module->name);
 

@@ -66,6 +66,3 @@
 #include "$module$DecodeOpenprs.h"
 #include "$module$EncodeOpenprs.h"
 
-/* This should be here only when we have -x (FFI) */
-#include <tclserv_client/tclserv_client.h>
-#include "tclservClient/$module$TclservClientMsgLib.h"

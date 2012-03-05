@@ -1,4 +1,12 @@
+2012-03-05  Felix Ingrand  <felix@cturtle>
+
+	* We are now smarter about having -x or not when generating
+	openprs stuff (with -o). If -x is not given, we do not generate code to use
+	tclserv client.
+
 2012-03-02  Felix Ingrand  <felix@cturtle>
+
+	* parser.y (main): Forcing -x on -o... will write something smarter later.
 
 	* openprsGen.c (declareRequests): Added the tclservclient declaration.
 

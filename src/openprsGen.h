@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1999-2003 LAAS/CNRS
+ * Copyright (c) 1999-2012 LAAS/CNRS
  * Sara Fleury -   Apr  1 1999
  * All rights reserved.
  *
@@ -48,7 +48,7 @@
 #define PROTO_OPENPRS_ENCODE_H  "server/openprs/openprsEncode.h"
 
 /* Prototypes des fonctions de generation */
-extern int openprsGen(FILE *out);
+extern int openprsGen(FILE *out, int genTclservClient);
 extern int openprsMakeGen ( FILE *out );
 extern int openprsEncodeGen ( FILE *out );
 extern int openprsDecodeGen ( FILE *out );
