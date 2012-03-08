@@ -91,7 +91,7 @@
  \figc{rackham-detour-web-small.jpg}{0.7cm}{rackham} &
  \figc{jidowanki-detour-web-small.jpg}{1.6cm}{jido} \\
 \figc{lhassa-detour-web-small.jpg}{2cm}{lhassa}
-& \figc{hrp2.pdf}{1cm}{hrp2} & \figc{PatrolDX.jpg}{1cm}{Pioneer / Player} 
+& \figc{hrp2.pdf}{1cm}{hrp2} & \figc{PatrolDX.jpg}{1cm}{Pioneer / Player}
 \end{tabularx}
 \end{center}
 \end{frame}
@@ -106,7 +106,7 @@ Tool to integrate processing functions into independant servers or \textbf{modul
 
 \textbf{Activity:} function in processing
 
-\textbf{Reports:} ``incorrect-parameters'', ``solution-not-found'', 
+\textbf{Reports:} ``incorrect-parameters'', ``solution-not-found'',
 ``not-enough-memory'', ``unforeseen-case''
 
 \end{frame}
@@ -118,7 +118,7 @@ Tool to integrate processing functions into independant servers or \textbf{modul
 \centerline{ \textbf{Software integration on embedded systems} }
 
 \vspace{1em}
- \textbf{Requirements:} 
+ \textbf{Requirements:}
 
 	\begin{itemize}
 
@@ -144,7 +144,7 @@ Tool to integrate processing functions into independant servers or \textbf{modul
 \begin{frame}
 \frametitle{Why encapsulate functions (cont.)}
 
- \textbf{Requirements (cont.) } 
+ \textbf{Requirements (cont.) }
 
 
 	\begin{itemize}
@@ -235,7 +235,7 @@ and \textbf{perenity})
 \frametitle{Sample modules: Karma  \hfill\includegraphics[width=1.7cm]{karma-detour-web-small.jpg}
 }
 
-\figw{karma-components.pdf}{\textwidth} 
+\figw{karma-components.pdf}{\textwidth}
 \end{frame}
 
 %----------------------------------------------------------------------
@@ -244,7 +244,7 @@ and \textbf{perenity})
 }
 
 
-\figw{rackham-components.png}{8.5cm} 
+\figw{rackham-components.png}{8.5cm}
 
 \end{frame}
 
@@ -313,11 +313,11 @@ and \textbf{perenity})
 \begin{center}
 \begin{tabularx}{\linewidth}{ll|X}
 \bf 1. & \textbf{describe the module:} edit the \texttt{.gen} file, & \\
- 2. \& 3. & generate + build the module (\texttt{make}), & iterate \\ 
+ 2. \& 3. & generate + build the module (\texttt{make}), & iterate \\
 \bf 4. & \textbf{write the algorithms} (codels), &  while \\
  5. \& 6. & compile codels +  & needed \\
 	& link edition with the module (\texttt{make}), & \\
-\bf 7. & \textbf{test the module.} & 
+\bf 7. & \textbf{test the module.} &
 \end{tabularx}
 \end{center}}
 
@@ -335,7 +335,7 @@ and \textbf{perenity})
  \> + execution engine
 \end{tabbing}
 
-\textbf{Requests:} control and execution 
+\textbf{Requests:} control and execution
 
 \textbf{Posters:} data transfers
 
@@ -354,7 +354,7 @@ General configuration:
 
 \begin{itemize}
 \item Use \emph{Robotpkg} to install genom and its dependencies.
-\item Openrobots tools installed in \verb|$prefix| (\texttt{\$HOME/openrobots}) 
+\item Openrobots tools installed in \verb|$prefix| (\texttt{\$HOME/openrobots})
 %$
 
 \item Environment variables:
@@ -393,7 +393,7 @@ The \texttt{demo.gen} file describes:
 \begin{itemize}
 \item module (name + identifier)
 \item internal database (C structure)
-\item requests 
+\item requests
 \item posters
 \item execution tasks
 \end{itemize}
@@ -409,13 +409,13 @@ Configuration file \texttt{.emacs.d/init.el}
 \vspace*{.5cm}
 {\footnotesize
 \begin{lstlisting}
-(setq load-path 
-  (cons (expand-file-name "~/openrobots/share/genom")  
+(setq load-path
+  (cons (expand-file-name "~/openrobots/share/genom")
         load-path))
-(setq auto-mode-alist 
+(setq auto-mode-alist
   (cons '("\\.gen$" . genom-mode) auto-mode-alist))
 (autoload 'genom-mode "genom-mode" "Genom-mode" t)
-\end{lstlisting} 
+\end{lstlisting}
 }
 %$
 
@@ -468,7 +468,7 @@ $\Rightarrow$ \textbf{execution request}: \texttt{Goto}
 		\item input: \texttt{position} to reach
 		\end{itemize}
 \item \textbf{parameters control}: "get or change speed reference"\\
-	 $\Rightarrow$ \textbf{control request}: 
+	 $\Rightarrow$ \textbf{control request}:
 		\begin{itemize}
 		\item \texttt{SetSpeed} with input: new speed reference
 		\item \texttt{GetSpeed} with output: current speed reference
@@ -492,7 +492,7 @@ module demo {
      requires:        <package-or-module> ...;
      internal_data:   DEMO_STR;
      uses_cxx:        0;
-}; 
+};
 
 /*--------------------------------------------------
  *               Structures and IDS
@@ -513,15 +513,15 @@ typedef struct DEMOCAL_STR {
 {\footnotesize
 \begin{lstlisting}
 /*--------------------------------------------------
- *             Requests 
+ *             Requests
  *--------------------------------------------------*/
 
 request SetSpeed {
     doc:                "<some doc>";
     type:               control;
-    input:              <name>::<sdi-ref>; 
+    input:              <name>::<sdi-ref>;
     input_info:         <default-value>::"<doc>", ...;
-    output:             <name>::<sdi-ref>; 
+    output:             <name>::<sdi-ref>;
     c_control_func:     demoSetSpeedCntrl;
     fail_msg:           <msg-name> , ...;
     interrupt_activity: <exec-rqst-name> , ...;
@@ -536,21 +536,21 @@ request SetSpeed {
 
 {\footnotesize
 \begin{lstlisting}
-request Goto {  
+request Goto {
     doc:                "<some doc>";
     type:               exec;
-    exec_task:          <<exec-task-name>>; 
-    input:              <name>::<sdi-ref>; 
+    exec_task:          <<exec-task-name>>;
+    input:              <name>::<sdi-ref>;
     input_info:         <default-value>::"<doc>", ...;
     posters_input:      <struct-name>, ...;
-    output:             <name>::<sdi-ref>; 
+    output:             <name>::<sdi-ref>;
     c_control_func:     demoGotoCntrl;
-    c_exec_func_start:  demoGotoStart; 
-    c_exec_func:        demoGotoExec; 
-    c_exec_func_end:    demoGotoEnd; 
-    c_exec_func_inter:  demoGotoInter; 
-    fail_msg:           <msg-name> , ...; 
-    interrupt_activity: Goto, <exec-rqst-name>, ...; 
+    c_exec_func_start:  demoGotoStart;
+    c_exec_func:        demoGotoExec;
+    c_exec_func_end:    demoGotoEnd;
+    c_exec_func_inter:  demoGotoInter;
+    fail_msg:           <msg-name> , ...;
+    interrupt_activity: Goto, <exec-rqst-name>, ...;
 };
 \end{lstlisting}
 }
@@ -566,7 +566,7 @@ request Goto {
 poster Status {
     update:              auto;
     data:                <<name>>::<<sdi-ref>> , ...;
-    exec_task:           <<exec-task-name>>; 
+    exec_task:           <<exec-task-name>>;
 };
 \end{lstlisting}
 }
@@ -694,7 +694,7 @@ typedef struct DEMO_STATE_STR {
 } DEMO_STATE_STR;
 
 typedef enum DEMO_SPEED {
-  DEMO_SLOW, 
+  DEMO_SLOW,
   DEMO_FAST
 } DEMO_SPEED;
 #endif
@@ -791,10 +791,10 @@ Production of several files and directories:
 
 {\footnotesize
 \begin{lstlisting}
-autogen*            configure.ac.user   local.mk.in 
+autogen*            configure.ac.user   local.mk.in
 Makefile.in         demo.gen            server/
-acinclude.user.m4   codels/             demoConst.h         
-autoconf/           configure*          demoStruct.h        
+acinclude.user.m4   codels/             demoConst.h
+autoconf/           configure*          demoStruct.h
 \end{lstlisting}
 }
 
@@ -806,7 +806,7 @@ autoconf/           configure*          demoStruct.h
 
 In \texttt{demo/server/} files used by genom and clients of the module, related to:
 \begin{itemize}
-\item server: 
+\item server:
 	\texttt{demoCntrlTask, demoMotionTask, \ldots}
 \item libraries to send requests and receive replies
 	\texttt{demoMsgLib}
@@ -882,8 +882,8 @@ make all-posix
 make[1]: Entering directory `/home/foo/openrobots/modules/demo/build'
 make[2]: Entering directory `/home/foo/openrobots/modules/demo/build/server'
 mkdir -p posix-build
-/home/foor/openrobots/bin/mkdep -c"gcc" -oposix-build/dependencies -dposix-build 
--t.lo -DUNIX    -I. -I../.. -I../../server -I/home/foo/openrobots/include   
+/home/foor/openrobots/bin/mkdep -c"gcc" -oposix-build/dependencies -dposix-build
+-t.lo -DUNIX    -I. -I../.. -I../../server -I/home/foo/openrobots/include
 ../../server/demoCntrlTask.c ../../server/demoModuleInit
 ...
 creating posix-build/demo
@@ -966,7 +966,7 @@ blues% demoTest 1
 
 {\fontsize{6.95}{9}\selectfont
 \begin{lstlisting}
-blues% demoTest 1 
+blues% demoTest 1
 pocolibs execution environment version 2.8
 Copyright (c) 1999-2010 CNRS-LAAS
 client init ...ok.   Poster init ...ok.
@@ -976,7 +976,7 @@ client init ...ok.   Poster init ...ok.
 
 55: posters  66: abort  77: replies(0)  88: state  99: QUIT  -99: END
 ---------------------------------------------------------------------
-demo1 (88)> 
+demo1 (88)>
 \end{lstlisting}
 }
 
@@ -990,7 +990,7 @@ demo1 (88)>
 \begin{lstlisting}
 demo1 (88)> 3
 
-Get current distRef using poster Mobileref (y/n) ? (n) 
+Get current distRef using poster Mobileref (y/n) ? (n)
 
 -- Enter double distRef:  (0.000000) 1.0
 Wait final reply (y/n/a) ? : y
@@ -1006,7 +1006,7 @@ Final reply: OK
 
 55: posters  66: abort  77: replies(0)  88: state  99: QUIT  -99: END
 ---------------------------------------------------------------------
-demo1 (3)> 
+demo1 (3)>
 \end{lstlisting}}
 
 \end{frame}
@@ -1072,7 +1072,7 @@ blues% h2 end
 \begin{itemize}
 \item \texttt{demoCntrlTaskCodels.c} for the control codels (\texttt{c\_control\_func})
 
-\item \texttt{demoMotionTaskCodels.c} for the execution codels 
+\item \texttt{demoMotionTaskCodels.c} for the execution codels
 (\texttt{c\_exec\_func}, \ldots)
 
 \end{itemize}
@@ -1091,7 +1091,7 @@ STATUS demoSetSpeedCntrl(DEMO_SPEED *speed, int *report)
    if (*speed != DEMO_SLOW && *speed != DEMO_FAST) {
         *report = S_demo_INVALID_PARAMETER; return ERROR;
    }
-   /* Parameter is valid: 
+   /* Parameter is valid:
       it will be recorded into the fIDS */
    return OK;
 }
@@ -1102,7 +1102,7 @@ STATUS demoGotoCntrl(double *posRef, int *report)
    if (fabs(*posRef) > DEMO_MCHINE_LENGTH/2.0) {
         *report = S_demo_INVALID_PARAMETER; return ERROR;
    }
-   /* Parameter is valid: it will be recorded into the fIDS 
+   /* Parameter is valid: it will be recorded into the fIDS
       and Goto request will start */
    return OK;
 }
@@ -1159,8 +1159,8 @@ ACTIVITY_EVENT demoGotoEnd(double *posRef, int *report)
 \frametitle{Specific codels}
 
 \bi
-\item Initialisation codel \texttt{c\_init\_func} 
-\item Terminaison codel  \texttt{c\_end\_func} 
+\item Initialisation codel \texttt{c\_init\_func}
+\item Terminaison codel  \texttt{c\_end\_func}
 \item Permanent activity codel: \texttt{c\_func}
 \ei
 
@@ -1225,7 +1225,7 @@ STATUS demoComputeInit(int *report)
 \item Codels are not interruptible
 \item Activity are interruptible on transitions between 2 codels.
 \item On Interruption $\Rightarrow$ execution of the \texttt{inter} codel
-\ei 
+\ei
 
 \end{frame}
 %----------------------------------------------------------------------
@@ -1238,16 +1238,16 @@ One example:
 \begin{lstlisting}
 /* Translation on a given distance */
 request Goto {
-   type:                exec;               
-   input:               distance::distRef;  
+   type:                exec;
+   input:               distance::distRef;
    c_control_func:      demoGotoCntrl;
-   fail_msg:            TOO_FAR_AWAY;       
-   c_exec_func_start:   demoGotoStart;     
-   c_exec_func:         demoGotoExec;   
-   c_exec_func_end:     demoGotoEnd;      
-   c_exec_func_inter:   demoGotoInter;      
-   interrupt_activity:  Goto;       
-   exec_task:           MotionTask;         
+   fail_msg:            TOO_FAR_AWAY;
+   c_exec_func_start:   demoGotoStart;
+   c_exec_func:         demoGotoExec;
+   c_exec_func_end:     demoGotoEnd;
+   c_exec_func_inter:   demoGotoInter;
+   interrupt_activity:  Goto;
+   exec_task:           MotionTask;
 };
 \end{lstlisting}
 }
@@ -1334,7 +1334,7 @@ poster Status {
 };
 \end{lstlisting}
 }
-\ei 
+\ei
 \end{frame}
 %----------------------------------------------------------------------
 \begin{frame}[containsverbatim]
@@ -1343,11 +1343,11 @@ Update from a codel: \\
 
 {\footnotesize
 \begin{lstlisting}
-ACTIVITY_EVENT 
+ACTIVITY_EVENT
 demoGotoStart(double *posRef, int *report)
 {
    printf("Start engin\n");
-   if (demoStatusSPEED_REFPosterWrite 
+   if (demoStatusSPEED_REFPosterWrite
                          (DEMO_STATUS_POSTER_ID,
                           SDI_F->speedRef) != OK) {
     *report = S_demo_CANNOT_WRITE_POSTER;
@@ -1385,7 +1385,7 @@ demoGotoStart(double *posRef, int *report)
 \begin{frame}[containsverbatim]
 \frametitle{Using module structures from another module}
 
-Import structures: 
+Import structures:
 
 {\scriptsize
 \begin{lstlisting}
@@ -1394,7 +1394,7 @@ module pilo {
      version:         "0.1";
      requires:        demo;
      internal_data:   PILO_STR;
-}; 
+};
 
 import from demo {
 #include "demoStruct.h"
@@ -1508,7 +1508,7 @@ option		& function \\
 \hline
 command		& function \\
 \hline
-\tt replyof \$rqstId & get answer \emph{blocking mode}. 
+\tt replyof \$rqstId & get answer \emph{blocking mode}.
 Generaly used with option \texttt{-raw}. \\
 \tt cs::term \$rqstId 0 & get answer \emph{ non blocking mode}. \\
 \tt abort \$rqstId	& abort the request \\
@@ -1531,10 +1531,10 @@ connected to localhost
 eltclsh> lm demo
 (re)starting tclServ cs daemon on port 9472
 demo loaded on localhost from ~/openrobots/share/modules
-eltclsh > ::demo::MoveDistance 
+eltclsh > ::demo::MoveDistance
 distance in m [0]> 0.5
 status = OK
-eltclsh > 
+eltclsh >
 
 \end{lstlisting}
 }
@@ -1563,7 +1563,7 @@ Modular and extensible 3D graphical interface with the \texttt{Tk} GUI toolkit:
 \item Gdhe \url{http://gdhe.openrobots.org/}
 \end{itemize}
 
-3D model of many robots (rackham, jido, dala, mana,...). 
+3D model of many robots (rackham, jido, dala, mana,...).
 
 \figw{./figures/gdhe-robots.png}{10cm}
 
@@ -1586,7 +1586,7 @@ OPs producted for each request:
 \hline
 nom		& function \\
 \hline
-\tt DEMO-MOTION & send the request  \emph{and} receive the 
+\tt DEMO-MOTION & send the request  \emph{and} receive the
                   \emph{final reply in blocking mode} \\
 
 \tt DEMO-MOTION-REPORT & idem with the report  \\
@@ -1637,7 +1637,7 @@ supervisor manip {
 \begin{itemize}
 \item Call: \texttt{tranGen manip.tg}
 \item Compile in \texttt{server/}.
-\item Start OpenPRS: 
+\item Start OpenPRS:
 \end{itemize}
 
 {\footnotesize
@@ -1654,7 +1654,7 @@ blues% server/i386-linux/manip-xOpenPRS -n manip \
 \frametitle{Module control with OpenPRS: Example of procedure}
 
 An OP that automatically starts
-the continuous 
+the continuous
 localization request  (\texttt{SEGLOC-LOCLOOP-ASYNC}) when the
 robot losts itself:
 
@@ -1665,7 +1665,7 @@ robot losts itself:
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 (defop |Localize|
     :invocation (! (EXECUTE LOC-LOOP))
-    :context (& (UNCERTAINTY-LEVEL-1 $X1 $Y1 $T1) 
+    :context (& (UNCERTAINTY-LEVEL-1 $X1 $Y1 $T1)
                 (ALARM-LEVEL-1 $L1))
     :body ((IF (! (EXECUTE LOC-LOCAL))
               (! (SPEAK "ok"))
@@ -1720,7 +1720,7 @@ gdhe)}	or \textbf{OpenPRS}
 
 \item Mailling-list: \url{openrobots@laas.fr} \url{https://sympa.laas.fr/sympa/info/openrobots}
 
-\item (Intranet) Wiki: 
+\item (Intranet) Wiki:
 \url{https://wiki.laas.fr/robots/}
 \end{itemize}
 \end{frame}
