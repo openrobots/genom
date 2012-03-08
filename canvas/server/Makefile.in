@@ -163,6 +163,9 @@ tclservclient_headers=\
 	tclservClient/$module$TclservClientDecode.h \
 	tclservClient/$module$TclservClientMsgLib.h
 
+python_data = \
+	struct.py
+
 # --- what to do --------------------------------------------------------
 
 
@@ -297,6 +300,10 @@ $genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)/server/openprs
 $genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_headers) ${DESTDIR}$(includedir)/server/openprs )
 $genTclservClient$	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)/server/tclservClient
 $genTclservClient$	( cd $(srcdir) && $(INSTALL_DATA) $(tclservclient_headers) ${DESTDIR}$(includedir)/server/tclservClient )
+	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/python/${module}
+	touch ${DESTDIR}$(datadir)/python/__init__.py
+	touch ${DESTDIR}$(datadir)/python/${module}/__init__.py
+	cd $(srcdir) && $(INSTALL_DATA) $(python_data) ${DESTDIR}$(datadir)/python/${module}/
 
 # --- clean -------------------------------------------------------------
 

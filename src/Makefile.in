@@ -87,7 +87,8 @@ SRCS = \
 	userStartGen.c		\
 	configureGen.c		\
 	extern_processes.c	\
-	printScanUtil.c
+	printScanUtil.c \
+	pythonInterfaceGen.c
 
 OBJS = $(SRCS:.c=.lo) @LIBOBJS@
 

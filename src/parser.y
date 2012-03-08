@@ -78,6 +78,8 @@
 #include "tclservClientDecodeGen.h"
 #include "tclservClientMsgLibGen.h"
 
+#include "pythonInterfaceGen.h"
+
 #include "userCntrlCodelsGen.h"
 #include "userExecCodelsGen.h"
 #include "userStartGen.h"
@@ -1935,6 +1937,9 @@ main(int argc, char **argv)
 	   fatalError |= (genTclservClientDecode(sortie) != 0);
 	   fatalError |= (genTclservClientMsgLib(sortie) != 0);
 	}
+
+	/* generate python interface */
+	fatalError |= (genPythonInterface(sortie) != 0);
 
     /* codels templates */
     if (genServer) {
