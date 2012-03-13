@@ -78,3 +78,4 @@ LIBTOOL_DEPS=   @LIBTOOL_DEPS@
 # --- Paths -------------------------------------------------------------
 
 CANVASDIR=	$(datadir)/genom/@PACKAGE_VERSION@
+SHELL=@SHELL@
