@@ -428,8 +428,8 @@ static void declareMainAndAtoms(FILE *out, int genTclservClient)
   /* Les reports */
   declareReportAtoms(out);
 
-  fprintf(out, "\ninit_%s_rqst_type_table ();\n"
-	  "init_%s_posters ();\n\n",
+  fprintf(out, "\n     init_%s_rqst_type_table ();\n"
+	  "     init_%s_posters ();\n\n",
 	  module->name, module->name);
  
   /* Termine la fonction */

@@ -1,3 +1,7 @@
+2012-03-09  Francois Felix Ingrand  <felix@ingrand.net>
+
+	* openprsGen.c (declareMainAndAtoms): indent code.
+
 2012-03-05  Felix Ingrand  <felix@cturtle>
 
 	* We are now smarter about having -x or not when generating
