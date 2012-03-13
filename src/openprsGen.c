@@ -179,11 +179,11 @@ openprsGen(FILE *out, int genTclservClient)
      /* Entete */
      cat_begin(out);
      fprintf(out, "%s", file_header_op);
-     fprintf(out, "include \"%sOpenprs.sym\"\n", module->name);
-     fprintf(out, "load opf \"%sOpenprs.opf\"\n", module->name);
+     fprintf(out, "include \"@MODULEDATADIR@/%sOpenprs.sym\"\n", module->name);
+     fprintf(out, "load opf \"@MODULEDATADIR@/%sOpenprs.opf\"\n", module->name);
      cat_end(out);
   
-     script_close(out, "server/openprs/%sOpenprs.inc", module->name);
+     script_close(out, "server/openprs/%sOpenprs.inc.input", module->name);
   
      /* ------------------------------------------------------------
       *  LES MAKEFILES
