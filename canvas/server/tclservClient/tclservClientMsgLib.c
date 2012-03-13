@@ -64,7 +64,7 @@ int $module$TclservClientInit (TCLSERV_CLIENT_ID clientId)
   int status;
 
   /* Appeler la routine d'initialisation d'un client CS */
-  status = tclserv_client_load_module(clientId , "$module$"); 
+  status = tclserv_client_load_module_ex(clientId , "$module$", NULL); 
 
   return status;
 }
@@ -94,7 +94,7 @@ int $module$TclservClientEnd (TCLSERV_CLIENT_ID clientId)         /* Id. du clie
 int $module$AbortRqst (TCLSERV_CLIENT_ID clientId, 
 		ssize_t rqstId)
 {
-  return tclserv_client_abort(clientId, rqstId);
+  return tclserv_client_abort_ex(clientId, rqstId, true);
 }
 
 /* liste des requetes/repliques de controle : msgCntrl.c */

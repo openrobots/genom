@@ -102,7 +102,7 @@ ifelse([$genOpenprs$], [yes], [
 
 dnl search libtclserv_client
 ifelse([$genTclservClient$], [yes], [
-		PKG_CHECK_MODULES(TCLSERV_CLIENT_LIB, libtclserv_client)
+		PKG_CHECK_MODULES(TCLSERV_CLIENT_LIB, [libtclserv_client >= 0.3])
 		AC_CONFIG_FILES([$module$-tclserv_client.pc:autoconf/$module$-tclserv_client.pc.in])
 		], [])
 
