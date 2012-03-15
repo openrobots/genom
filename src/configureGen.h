@@ -67,7 +67,7 @@ int configureGen(FILE *out,
 		 int genTcl, int genOpenprs, int genServer, int genTclservClient);
 int configureServerGen(FILE *out, 
         const char* cmdLine, const char *genomBin, const char *genomFile,
-		       int genTcl, int genOpenprs, int genServer, int genTclservClient);
+		       int genTcl, int genOpenprs, int genServer, int genTclservClient, int genPython);
 int pkgconfigGen(FILE *out, const char* cmdLine, const char* genomFile, int genOpenprs, int genServer, int genTclservClient, char** cppOptions);
 
 #endif /* H_CONFIGUREGEN */

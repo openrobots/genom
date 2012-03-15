@@ -1519,6 +1519,7 @@ main(int argc, char **argv)
     int genTcl = 0;
     int genOpenprs = 0;
 	int genTclservClient = 0;
+	int genPython = 0;
     int genServer = 1;
     int upToDate;
     struct stat statfile, statstamp, statgen;
@@ -1539,7 +1540,7 @@ main(int argc, char **argv)
 
     static const char *usage = 
       "Usage: \n  genom [-i] [-c] [-d] [-n] [-p protoDir] [-s] [-t] "
-      "[-u codelsDir] [-o] [-x]\n\t[-Ddefine] [-Ipath] [-Ppackage] module[.gen]\n"
+      "[-u codelsDir] [-o] [-x] [-y]\n\t[-Ddefine] [-Ipath] [-Ppackage] module[.gen]\n"
       "with:\n"
       "     -P: declare a package on which this module is dependent.\n"
       "         Packages are defined used via pkg-config, so you should\n"
@@ -1554,6 +1555,7 @@ main(int argc, char **argv)
       "     -u: specifies the name of the codels directory\n"
       "     -p: changes the path for prototype files (canvas) \n"
 	  "     -x: produce tclserv C client interface\n"
+	  "     -y: produce python struct interface\n"
       "     -D: define a preprocessor symbol\n"
       "     -c: generates if changes only  \n"
       "     -d: debug \n"
@@ -1578,7 +1580,7 @@ main(int argc, char **argv)
     memset(cppOptions, 0, sizeof(cppOptions));
     nopt = argc;
 
-    while ((opt = getopt(argc, argv, "D:I:OP:dnp:ciu:toxas-:v")) != -1) {
+    while ((opt = getopt(argc, argv, "D:I:OP:dnp:ciu:toxyas-:v")) != -1) {
 
 	switch (opt) {
 	  case 'D':
@@ -1663,6 +1665,10 @@ main(int argc, char **argv)
 	  case 'x':
 		bufcat(&cmdLine, "-x ", optarg);
 		genTclservClient = 1;
+		break;
+	  case 'y':
+		bufcat(&cmdLine, "-y ", optarg);
+		genPython = 1;
 		break;
 	  case 'h':
 	    puts(usage);
@@ -1872,12 +1878,13 @@ main(int argc, char **argv)
     fprintf(sortie, "# Generateur du module %s\n\n", module->name);
 
     /* Variables for perl */
-    fprintf(sortie, "use vars qw($module $moduleOprs $genOpenprs $genTcl $genTclservClient $codelsDir $autoconfDir $serverDir $installUserPart $openprsDir $tclDir $tclservClientDir);\n");
+    fprintf(sortie, "use vars qw($module $moduleOprs $genOpenprs $genTcl $genTclservClient $genPython $codelsDir $autoconfDir $serverDir $installUserPart $openprsDir $tclDir $tclservClientDir);\n");
     fprintf(sortie, "$module=\"%s\";\n", module->name);
     fprintf(sortie, "$moduleOprs=\"%s-oprs\";\n", module->name);
     fprintf(sortie, "$genOpenprs=%d;\n", genOpenprs);
     fprintf(sortie, "$genTcl=%d;\n", genTcl);
 	fprintf(sortie, "$genTclservClient=%d;\n", genTclservClient);
+	fprintf(sortie, "$genPython=%d;\n", genPython);
 
     fprintf(sortie, "$codelsDir=\"%s\";\n\n", codelsDir);
     fprintf(sortie, "$autoconfDir=\"%s\";\n\n", autoconfDir);
@@ -1898,7 +1905,7 @@ main(int argc, char **argv)
 
     fatalError |= (configureServerGen(sortie, 
                                       cmdLine, argv[0], genfile,
-				      genTcl, genOpenprs, genServer, genTclservClient)!=0);
+				      genTcl, genOpenprs, genServer, genTclservClient, genPython)!=0);
     fatalError |= (typeGen(sortie) != 0);
     fatalError |= (errorGen(sortie, genTclservClient) != 0);
     fatalError |= (endianGen(sortie) != 0);
@@ -1939,7 +1946,9 @@ main(int argc, char **argv)
 	}
 
 	/* generate python interface */
-	fatalError |= (genPythonInterface(sortie) != 0);
+	if (genPython) {
+		fatalError |= (genPythonInterface(sortie) != 0);
+	}
 
     /* codels templates */
     if (genServer) {

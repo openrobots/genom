@@ -300,10 +300,9 @@ $genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)/server/openprs
 $genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_headers) ${DESTDIR}$(includedir)/server/openprs )
 $genTclservClient$	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)/server/tclservClient
 $genTclservClient$	( cd $(srcdir) && $(INSTALL_DATA) $(tclservclient_headers) ${DESTDIR}$(includedir)/server/tclservClient )
-	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/python/${module}
-	touch ${DESTDIR}$(datadir)/python/__init__.py
-	touch ${DESTDIR}$(datadir)/python/${module}/__init__.py
-	cd $(srcdir) && $(INSTALL_DATA) $(python_data) ${DESTDIR}$(datadir)/python/${module}/
+$genPython$	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/python/${module}
+$genPython$	touch ${DESTDIR}$(datadir)/python/${module}/__init__.py
+$genPython$	cd $(srcdir) && $(INSTALL_DATA) $(python_data) ${DESTDIR}$(datadir)/python/${module}/
 
 # --- clean -------------------------------------------------------------
 

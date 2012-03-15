@@ -376,7 +376,7 @@ int
 configureServerGen(FILE *out, char const* cmdLine,
 		   const char *genomBin, const char *genomFile,
 		   int genTcl, int genOpenprs, int genServer,
-		   int genTclservClient)
+		   int genTclservClient, int genPython)
 {
    char *str;
    EXEC_TASK_LIST *lt;
@@ -402,6 +402,7 @@ configureServerGen(FILE *out, char const* cmdLine,
    print_sed_subst(out, "genOpenprs", genOpenprs ? "" : "#");
    print_sed_subst(out, "genServer", genServer ? "" : "#");
    print_sed_subst(out, "genTclservClient", genTclservClient ? "" : "#");
+   print_sed_subst(out, "genPython", genPython? "" : "#");
 
    str = NULL;
    for (ln = allIncludeFiles; ln != NULL; ln = ln->next) {
