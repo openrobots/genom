@@ -12,7 +12,7 @@
 
 $commentbegin$
 #
-# Copyright (C) 1993-2005 LAAS/CNRS
+# Copyright (C) 1993-2012 LAAS/CNRS
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -190,7 +190,7 @@ $genServer$server: $(OBJDIR)/$(POSTERWRITE_LIB)
 client:: $(OBJDIR)/$(CLIENT_LIB)
 $genServer$client:: $(OBJDIR)/$(TEST_BIN) $(OBJDIR)/$(CONNECT)
 $genServer$$genTcl$client:: $(OBJDIR)/$(TCLCLIENT_LIB)
-$genOpenprs$client:: $(OBJDIR)/$(OPENPRSCLIENT_LIB)
+$genOpenprs$client:: $(OBJDIR)/$(OPENPRSCLIENT_MOD)
 $genTclservClient$client:: $(OBJDIR)/$(TCLSERVCLIENT_LIB)
 
 
@@ -218,9 +218,10 @@ $(OBJDIR)/$(TCLCLIENT_LIB): $(tclclient_obj) $(tclrequires_obj)
 		$(LIBTOOL_LINKOPT) $(GENOM_LIBS)			\
 		$(LDFLAGS) $(TCL_LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
-$(OBJDIR)/$(OPENPRSCLIENT_LIB): $(oprsclient_obj)
-	$(LTLD) $(CFLAGS) $(oprsclient_obj) $(SERVERS_ENDIAN_LIB) -o $@ \
-		$(LIBTOOL_LINKOPT) $(GENOM_LIBS) $(LDFLAGS) $(LIBTOOL_VERSION_INFO)
+$(OBJDIR)/$(OPENPRSCLIENT_MOD): $(oprsclient_obj) $(OBJDIR)/$(CLIENT_LIB) $(OBJDIR)/$(TCLSERVCLIENT_LIB) 
+	$(LTLD) -module -o $@ $(CFLAGS) $(oprsclient_obj) $(SERVERS_ENDIAN_LIB) \
+		$(LIBTOOL_LINKOPT_OPENPRSCLIENT) $(OBJDIR)/$(CLIENT_LIB) \
+		$(OBJDIR)/$(TCLSERVCLIENT_LIB) $(LDFLAGS) $(LIBTOOL_VERSION_INFO)
 
 $(OBJDIR)/$(TCLSERVCLIENT_LIB): $(tclservclient_obj)
 	$(LTLD) $(CFLAGS) $(tclservclient_obj) -o $@ \
@@ -273,7 +274,7 @@ install-bin:
 $genTcl$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/tclserv
 $genServer$$genTcl$	$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) ${DESTDIR}$(libdir)/tclserv/$(TCLCLIENT_LIB)
 $genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/openprs
-$genOpenprs$	$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_LIB) ${DESTDIR}$(libdir)/openprs/$(OPENPRSCLIENT_LIB)
+$genOpenprs$	$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_MOD) ${DESTDIR}$(libdir)/openprs/$(OPENPRSCLIENT_MOD)
 $genTclservClient$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/tclservClient
 $genTclservClient$	$(LTINSTALL) $(OBJDIR)/$(TCLSERVCLIENT_LIB) ${DESTDIR}$(libdir)/tclservClient/$(TCLSERVCLIENT_LIB)
 $genServer$	$(MKINSTALLDIRS) ${DESTDIR}$(bindir)
@@ -289,6 +290,7 @@ install-data:
 	$(INSTALL_DATA) $(top_srcdir)/$(GENFILE) ${DESTDIR}$(datadir)/gen
 $genTcl$	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/tcl
 $genTcl$	$(INSTALL_DATA) $(srcdir)/$(tclclient_tcl) ${DESTDIR}$(datadir)/$(tclclient_tcl)
+$genOpenprs$	$(SED) -e 's|@MODULEDATADIR@|${DESTDIR}$(datadir)/openprs|' openprs/$module$Openprs.inc.input > openprs/$module$Openprs.inc
 $genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/openprs
 $genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_data) ${DESTDIR}$(datadir)/openprs )
 $genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)/server/openprs
@@ -311,7 +313,7 @@ CLEAN_FILES += \
     $(test_obj) $(OBJDIR)/$(TEST_BIN)
 
 CLEAN_FILES += $(tclclient_obj) $(OBJDIR)/$(TCLCLIENT_LIB)
-CLEAN_FILES += $(oprsclient_obj) $(OBJDIR)/$(OPENPRSCLIENT_LIB)
+CLEAN_FILES += $(oprsclient_obj) $(OBJDIR)/$(OPENPRSCLIENT_MOD)
 CLEAN_FILES += $(tclservclient_obj) $(OBJDIR)/$(TCLSERVCLIENT_LIB)
 
 clean:

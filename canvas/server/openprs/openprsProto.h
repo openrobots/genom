@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1999-2003 LAAS/CNRS
+ * Copyright (c) 1999-2012 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -33,7 +33,5 @@
  ** Manual editing not recommended. Changes will be overridden.
  **/
 
-extern void init_$module$_rqst_type_table ( void );
 extern void init_$module$_module ( void );
-extern void init_$module$_posters ( void );
 

@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 1993-2006,2008-2011 LAAS/CNRS
+ * Copyright (c) 1993-2012 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -1922,7 +1922,7 @@ main(int argc, char **argv)
 
     /* useless without openprs */
     if (genOpenprs)
-      fatalError |= (openprsGen(sortie) != 0); 
+	 fatalError |= (openprsGen(sortie,genTclservClient) != 0); 
 
     /* useless without tcl */
     if (genTcl) {
