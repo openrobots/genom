@@ -112,7 +112,7 @@ int enumValue = 0;
 char *current_identifier;		/* request beeing parsed */
 static int import_flag = 0;
 static int accept_obsolete = 1;
-static void yyerror(char *s);
+static void yyerror(const char *s);
 
 #ifndef GENOM_VERSION
 # error GENOM_VERSION not defined!
@@ -1999,7 +1999,7 @@ main(int argc, char **argv)
  ** parsing errors treatment
  **/
 static void 
-yyerror(char *s)
+yyerror(const char *s)
 {
     fprintf(stderr, "\"%s\", line %d: %s\n", nomfic, num_ligne, s);
 } /* yyerror */
