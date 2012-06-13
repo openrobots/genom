@@ -50,7 +50,7 @@
 #  include <unistd.h>
 #  include <sys/utsname.h>
 
-#  define PID_FILE	".$module$.pid"
+#  define PID_FILE
 #endif /* RTAI && KERNEL */
 
 #include <portLib.h>
@@ -148,7 +148,8 @@ $module$TaskInit()
       errnoSet(errno);
       goto error;
   }
-  snprintf(pidFilePath, MAXPATHLEN, "%s/%s-%s", pidDir, PID_FILE, uts.nodename);
+  snprintf(pidFilePath, MAXPATHLEN, "%s/.%s.pid-%s", pidDir, 
+      genomInstanceName("$module$"), uts.nodename);
   pidFileFd = open(pidFilePath, O_CREAT|O_EXCL|O_WRONLY, 0644);
   if (pidFileFd < 0) {
       fprintf(stderr, "$module$: error creating %s: %s\n",
