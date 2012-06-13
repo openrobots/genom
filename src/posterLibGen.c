@@ -558,7 +558,8 @@ int posterLibGen(FILE *out)
     /* Noms des posters */
     ptstr = NULL;
     for (p = posters; p != NULL; p = p->next) {
-	bufcat(&ptstr, "#define %s_%s_POSTER_NAME \"%s%s\"\n",
+	bufcat(&ptstr, "#define %s_%s_POSTER_NAME "
+	    "genomInstanceSuffixName(\"%s\", \"%s\")\n",
 	       module->NAME, p->NAME, module->name, p->name);
     } /* for */
     print_sed_subst(out, "listPosterNameDeclare", ptstr);

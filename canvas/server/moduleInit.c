@@ -65,6 +65,8 @@
 #include "commonStructLib.h"
 #include "$module$MsgLib.h"
 
+#include "genom/genom.h"
+
 #define CNTRL_TASK_MIN_STACK_SIZE 4096
 #define EXEC_TASK_MIN_STACK_SIZE  4096
 
@@ -174,7 +176,8 @@ $module$TaskInit()
      goto error; 
   }
   
-  if (taskSpawn2("$module$CntrlTask", 10 /* priorite */, VX_FP_TASK,
+  if (taskSpawn2(genomInstanceSuffixName("$module$", "CntrlTask"), 
+	  10 /* priorite */, VX_FP_TASK,
 		$MODULE$_MAX_RQST_SIZE + CNTRL_TASK_MIN_STACK_SIZE /*size*/, 
 	  (FUNCPTR)$module$CntrlTask, NULL) == ERROR) {
      h2perror("$module$TaskInit: cannot spawn $module$CntrlTask");

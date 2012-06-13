@@ -55,6 +55,7 @@
 #include <h2timeLib.h>
 #include <h2timerLib.h>
 
+#include <genom/genom.h>
 #include <genom/modules.h>
 #include <genom/moduleEvents.h>
 

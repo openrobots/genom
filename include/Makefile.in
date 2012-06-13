@@ -42,6 +42,7 @@ include $(top_builddir)/config.mk
 
 # -----------------------------------------------------------------------
 flist = \
+				genom/genom.h \
 				genom/testLib.h \
 				genom/testLibProto.h \
 				genom/genomError.h \
