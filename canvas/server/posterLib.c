@@ -44,6 +44,7 @@
 #include "$module$Print.h"
 #include "$module$Endian.h"
 
+#include <genom/genom.h>
 #include <genom/h2endian.h>
 
 /* Id. du poster de controle */
