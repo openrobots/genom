@@ -226,6 +226,26 @@ int posterLibGen(FILE *out)
 	      module->name, p->name, /* h2perror */
 	      p->type->name); /* endian */
 
+      /* Read named posters */
+      fprintf(out, 
+	  "STATUS %s%sInstancePosterRead(const char *name, %s *x)\n{\n"
+	  "  POSTER_ID p;\n\n"
+	  "  if (posterFind(genomInstanceSuffixName(name, \"%s\"), &p) == ERROR) {\n"
+	  "     h2perror(\"posterFind\");\n"
+	  "     return ERROR;\n"
+	  "  }\n"
+	  "  if (posterRead(p, 0, (char *)x, sizeof(*x))\n"
+	  "           != sizeof(*x)) {\n"
+	  "     h2perror(\"%s%sNamePosterRead\");\n"
+	  "     return ERROR;\n"
+	  "  }\n"
+	  "  return OK;\n"
+	  "}\n\n",
+	  module->name, p->name, p->type->name,
+	  p->name,
+	  module->name, p->name);
+	 
+
 	/* Les fonctions pour les e'le'ments de la structure */
       posterLibMemberGen(out, p, 1 /* read */, 0 /* ! protos */); 
 
@@ -584,7 +604,9 @@ int posterLibGen(FILE *out)
 	      module->name, p->name);
      fprintf(out, "extern POSTER_ID %s%sPosterID ( void );\n",
 	      module->name, p->name);
-      fprintf(out, "extern STATUS %s%sPosterRead ( %s *x );\n",
+     fprintf(out, "extern STATUS %s%sPosterRead ( %s *x );\n",
+	      module->name, p->name, p->type->name);
+     fprintf(out, "extern STATUS %s%sInstancePosterRead ( const char *, %s * );\n",
 	      module->name, p->name, p->type->name);
 
       /* Les fonctions pour les e'le'ments de la structure */
@@ -777,6 +799,8 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
 	  if (protos) {
 	    fprintf(out, "extern STATUS %s%s%sPosterRead ( %s *%s );\n",
 		    module->name, p->name, n->name, type, n->name);
+	    fprintf(out, "extern STATUS %s%s%sInstancePosterRead( const char *, %s * );\n",
+		module->name, p->name, n->name, type);
 	  }
 	  else {
 
@@ -822,6 +846,32 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
 		    p->name, n->name,
 		    module->name, p->name, /* h2perror */
 		    type1, n->name, nDim);
+
+	    /* Read named posters */
+	    fprintf(out, 
+		"STATUS %s%s%sInstancePosterRead(const char *name, %s *%s)\n{\n"
+		"  POSTER_ID p;\n\n"
+		"  %s *x = NULL;\n"
+		"  int offset = offsetof(%s, %s);\n"
+		"  int size = sizeof(x->%s);\n"
+		"  if (posterFind(genomInstanceSuffixName(name, \"%s\"), &p) == ERROR) {\n"
+		"     h2perror(\"posterFind\");\n"
+		"     return ERROR;\n"
+		"  }\n"
+		"  if (posterRead(p, offset, (char *)%s, size)\n"
+		"           != size) {\n"
+		"     h2perror(\"%s%sNamedPosterRead\");\n"
+		"     return ERROR;\n"
+		"  }\n"
+		"  return OK;\n"
+		"}\n\n",
+		module->name, p->name, n->name, type, n->name,
+		p->type->name, 	/* %s *x = NULL; */
+		p->type->name, n->name, /* offsetof(%s, %s) */
+		n->name,		/* sizeof(s->%s) */
+		p->name,		/* genomInstanceSuffixName() */
+		n->name,		/* posterRead() */
+		module->name, p->name); /* h2perror("%s%sNamedPosterRead") */
 
 	    free(type1);
 
