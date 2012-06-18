@@ -599,7 +599,9 @@ int posterLibGen(FILE *out)
     fprintf(out, "extern POSTER_ID %sCntrlPosterID ();\n", module->name);
     fprintf(out, "extern STATUS %sCntrlPosterRead ( %s_CNTRL_STR *%sCntrlStrId );\n", module->name, module->NAME, module->name);
     fprintf(out, "extern STATUS %sCntrlPosterInit ( void );\n", module->name);
-
+    fprintf(out, "extern STATUS %sCntrlInstancePosterRead"
+	"(const char *name, %s_CNTRL_STR *%sCntrlStrId);\n",
+	module->name, module->NAME, module->name);
     for (p = posters; p != NULL; p = p->next) {
       /* la fonction pour lire tout le poster */
      fprintf(out, "extern STATUS %s%sPosterInit ( void );\n",
