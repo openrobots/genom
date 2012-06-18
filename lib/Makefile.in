@@ -67,7 +67,8 @@ SRCS += \
 	print.c			\
 	printXML.c		\
 	printScanUtil.c         \
-	genomModulesLib.c
+	genomModulesLib.c	\
+	instance.c
 
 OBJS = $(SRCS:.c=.lo)
 

@@ -65,6 +65,7 @@
 
 /* #include "$module$Reports.h" */
 
+#include "genom/genom.h"
 #include "genom/testLib.h"
 
 

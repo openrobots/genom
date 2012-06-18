@@ -54,6 +54,7 @@
 #include <h2timerLib.h>
 
 #include "$module$MsgLib.h"
+#include "genom/genom.h"
 #include "genom/moduleEvents.h"
 
 /* Print debugging information */

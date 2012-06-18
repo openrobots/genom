@@ -44,16 +44,22 @@ $module$$posterFullName$PosterTclRead(ClientData data, Tcl_Interp *interp,
    int ret;
    static $posterStructType$ *_posterData;	/* data */
    Tcl_Obj *my_own_private_unique_result;
+   struct ModuleInfo *m;
    char strerr[64];
 
    TEST_BAD_USAGE(objc != 1);
-		 
+  
   if ((_posterData = malloc(sizeof($dataType$))) == NULL) {
       Tcl_SetResult(interp, h2getErrMsg(errnoGet(), strerr, 64), TCL_VOLATILE);
       return TCL_ERROR;
   }
-
-   if ($module$$posterFullName$PosterRead(_posterData) != OK) {
+  m = (struct ModuleInfo *)data;
+  if (m == NULL || m->name[0] == '\0') 
+    /* default instance */
+    ret = $module$$posterFullName$PosterRead(_posterData);
+  else
+    ret = $module$$posterFullName$InstancePosterRead(m->name, _posterData);
+  if (ret != OK) {
       Tcl_SetResult(interp, h2getErrMsg(errnoGet(), strerr, 64), TCL_VOLATILE);
       free(_posterData);
       return TCL_ERROR;
