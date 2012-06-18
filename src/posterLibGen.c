@@ -229,8 +229,10 @@ int posterLibGen(FILE *out)
       /* Read named posters */
       fprintf(out, 
 	  "STATUS %s%sInstancePosterRead(const char *name, %s *x)\n{\n"
+          "  char posterName[H2_DEV_MAX_NAME];\n"
 	  "  POSTER_ID p;\n\n"
-	  "  if (posterFind(genomInstanceSuffixName(name, \"%s\"), &p) == ERROR) {\n"
+	  "  snprintf(posterName, sizeof(posterName), \"%%s%s\", name);\n"
+	  "  if (posterFind(posterName, &p) == ERROR) {\n"
 	  "     h2perror(\"posterFind\");\n"
 	  "     return ERROR;\n"
 	  "  }\n"
@@ -299,7 +301,7 @@ int posterLibGen(FILE *out)
       /* function to find out the poster (and check its length) */
       fprintf(out,
 	      "STATUS %s%sPosterFind(char *posterName, POSTER_ID *posterId)\n{\n"
-	      "  int length;\n"
+	      "  size_t length;\n"
 	      "  if (posterFind(posterName, posterId) == ERROR) {\n"
 	      "     *posterId=NULL;\n"
 	      "     h2perror(\"%s%sPosterFind find\");\n"
@@ -313,7 +315,7 @@ int posterLibGen(FILE *out)
 	      "   if (length != sizeof(%s)) {\n"
 	      "     errnoSet(S_%s_stdGenoM_BAD_POSTER_TYPE);\n"
 	      "     h2perror(\"%s%sPosterFind warn bad data length\");\n"
-	      "     fprintf (stderr, \"%s%sPosterFind warn:  strlen %%d != poster %%d\\n\", sizeof(%s), length);\n"
+	      "     fprintf (stderr, \"%s%sPosterFind warn:  strlen %%zu != poster %%zu\\n\", sizeof(%s), length);\n"
 	      "     return ERROR;\n"
 	      "   }\n"
 	      "  return OK;\n"
@@ -580,7 +582,7 @@ int posterLibGen(FILE *out)
     for (p = posters; p != NULL; p = p->next) {
 	bufcat(&ptstr, "#define %s_%s_POSTER_NAME "
 	    "genomInstanceSuffixName(\"%s\", \"%s\")\n",
-	       module->NAME, p->NAME, module->name, p->name);
+	    module->NAME, p->NAME, module->name, p->name);
     } /* for */
     print_sed_subst(out, "listPosterNameDeclare", ptstr);
     free(ptstr);
@@ -849,12 +851,13 @@ static void posterLibMemberGen(FILE *out, POSTER_LIST *p,
 
 	    /* Read named posters */
 	    fprintf(out, 
-		"STATUS %s%s%sInstancePosterRead(const char *name, %s *%s)\n{\n"
-		"  POSTER_ID p;\n\n"
+		"STATUS %s%s%sInstancePosterRead(const char *name, %s *%s)\n{\n"                "  char posterName[H2_DEV_MAX_NAME];\n"
+		"  POSTER_ID p;\n"
 		"  %s *x = NULL;\n"
 		"  int offset = offsetof(%s, %s);\n"
-		"  int size = sizeof(x->%s);\n"
-		"  if (posterFind(genomInstanceSuffixName(name, \"%s\"), &p) == ERROR) {\n"
+		"  int size = sizeof(x->%s);\n\n"
+                "  snprintf(posterName, sizeof(posterName), \"%%s%s\", name);\n"
+		"  if (posterFind(posterName, &p) == ERROR) {\n"
 		"     h2perror(\"posterFind\");\n"
 		"     return ERROR;\n"
 		"  }\n"

@@ -38,7 +38,9 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+#include <h2devLib.h>
 #include <portLib.h>
+#include <posterLib.h>
 
 #include "$module$PosterLib.h"
 #include "$module$Print.h"
