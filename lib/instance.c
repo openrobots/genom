@@ -40,6 +40,7 @@ genomInstanceName(const char *moduleName)
 	if (asprintf(&envvar, "GENOM_INSTANCE_%s", moduleName) == -1)
 		goto oom;
 	instance = getenv(envvar);
+	free(envvar);
 	if (instance == NULL) {
 		genomInstance = strdup(moduleName);
 		if (genomInstance == NULL) 
@@ -49,7 +50,6 @@ genomInstanceName(const char *moduleName)
 			moduleName, instance) == -1)
 			goto oom;
 	}
-	free(envvar);
 	genomInstanceInitialized++;
 	return &genomInstance[0];
 oom:
@@ -68,6 +68,7 @@ genomInstanceSuffixName(const char *moduleName, const char *suffix)
 	if (asprintf(&envvar, "GENOM_INSTANCE_%s", moduleName) == -1)
 		goto oom;
 	instance = getenv(envvar);
+	free(envvar);
 	if (instance == NULL) {
 		if (asprintf(&result, "%s%s", moduleName, suffix) == -1)
 			goto oom;
@@ -76,7 +77,6 @@ genomInstanceSuffixName(const char *moduleName, const char *suffix)
 			moduleName, instance, suffix) == -1)
 			goto oom;
 	}
-	free(envvar);
 	return result;
 oom:
 	fprintf(stderr, "genomInstanceSuffixName: out of memory\n");
