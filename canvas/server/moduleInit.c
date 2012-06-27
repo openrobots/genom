@@ -50,7 +50,7 @@
 #  include <unistd.h>
 #  include <sys/utsname.h>
 
-#  define PID_FILE	".$module$.pid"
+#  define PID_FILE
 #endif /* RTAI && KERNEL */
 
 #include <portLib.h>
@@ -64,6 +64,8 @@
 #include "$module$Header.h"
 #include "commonStructLib.h"
 #include "$module$MsgLib.h"
+
+#include "genom/genom.h"
 
 #define CNTRL_TASK_MIN_STACK_SIZE 4096
 #define EXEC_TASK_MIN_STACK_SIZE  4096
@@ -146,7 +148,8 @@ $module$TaskInit()
       errnoSet(errno);
       goto error;
   }
-  snprintf(pidFilePath, MAXPATHLEN, "%s/%s-%s", pidDir, PID_FILE, uts.nodename);
+  snprintf(pidFilePath, MAXPATHLEN, "%s/.%s.pid-%s", pidDir, 
+      genomInstanceName("$module$"), uts.nodename);
   pidFileFd = open(pidFilePath, O_CREAT|O_EXCL|O_WRONLY, 0644);
   if (pidFileFd < 0) {
       fprintf(stderr, "$module$: error creating %s: %s\n",
@@ -174,7 +177,8 @@ $module$TaskInit()
      goto error; 
   }
   
-  if (taskSpawn2("$module$CntrlTask", 10 /* priorite */, VX_FP_TASK,
+  if (taskSpawn2(genomInstanceSuffixName("$module$", "CntrlTask"), 
+	  10 /* priorite */, VX_FP_TASK,
 		$MODULE$_MAX_RQST_SIZE + CNTRL_TASK_MIN_STACK_SIZE /*size*/, 
 	  (FUNCPTR)$module$CntrlTask, NULL) == ERROR) {
      h2perror("$module$TaskInit: cannot spawn $module$CntrlTask");

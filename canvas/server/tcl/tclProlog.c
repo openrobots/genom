@@ -45,6 +45,8 @@
 #include <tclserv/tclServ.h>
 #include <tclserv/tcl_cs.h>
 
+#include <genom/genom.h>
+
 #include "$module$MsgLib.h"
 #include "$module$PosterLib.h"
 
@@ -80,7 +82,7 @@ static int
 $module$ClientInitCb(ClientData clientData, Tcl_Interp *interp,
 		     int objc, Tcl_Obj *const objv[])
 {
-   char *mboxName;
+   const char *mboxName;
    struct ModuleInfo *m;
    STATUS status;
    char strerr[64];

@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2003,2012 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -58,7 +58,7 @@
 /**
  ** Boite aux lettres reception requetes 
  **/
-#define  $MODULE$_MBOX_NAME                      "$module$"
+#define  $MODULE$_MBOX_NAME                  genomInstanceName("$module$")
 
 #define  $MODULE$_MAX_RQST_SIZE              $maxRequestSize$
 

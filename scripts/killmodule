@@ -31,6 +31,11 @@ $module = $ARGV[0];
 # host name
 $host = `uname -n`;
 chop $host;
+# instance 
+$instance = $ENV{"GENOM_INSTANCE_$module"};
+if (defined($instance)) {
+    $module = "$module$instance";
+}
 # name of the file holding the process id
 $h2owner = $ENV{'H2DEV_DIR'};
 if (defined($h2owner)) {

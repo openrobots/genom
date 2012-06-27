@@ -38,12 +38,15 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+#include <h2devLib.h>
 #include <portLib.h>
+#include <posterLib.h>
 
 #include "$module$PosterLib.h"
 #include "$module$Print.h"
 #include "$module$Endian.h"
 
+#include <genom/genom.h>
 #include <genom/h2endian.h>
 
 /* Id. du poster de controle */
@@ -68,6 +71,22 @@ STATUS $module$CntrlPosterRead ($MODULE$_CNTRL_STR *$module$CntrlStrId)
   if (!$module$CntrlPosterId)
     $module$CntrlPosterInit();
   if (posterRead ($module$CntrlPosterId, 0, (void *) $module$CntrlStrId, 
+	      sizeof($MODULE$_CNTRL_STR)) != sizeof($MODULE$_CNTRL_STR))
+    return ERROR; 
+  return OK;
+}
+
+STATUS $module$CntrlInstancePosterRead (const char *name, 
+                                        $MODULE$_CNTRL_STR *$module$CntrlStrId)
+{
+  char posterName[H2_DEV_MAX_NAME];
+  POSTER_ID p;
+  
+  snprintf(posterName, sizeof(posterName), "%sCntrl", name);
+  if (posterFind(posterName, &p) == ERROR)
+    return ERROR;
+
+  if (posterRead(p, 0, (void *) $module$CntrlStrId, 
 	      sizeof($MODULE$_CNTRL_STR)) != sizeof($MODULE$_CNTRL_STR))
     return ERROR; 
   return OK;

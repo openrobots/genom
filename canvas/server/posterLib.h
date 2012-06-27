@@ -60,7 +60,7 @@ typedef $MODULE$_CNTRL_STR $MODULE$_CNTRL_POSTER_STR;
 
 
 /* Posters */
-#define $MODULE$_CNTRL_POSTER_NAME         "$module$Cntrl"
+#define $MODULE$_CNTRL_POSTER_NAME genomInstanceSuffixName("$module$", "Cntrl")
 $listPosterNameDeclare$
 
 /*---------------- PROTOTYPES DES FONCTIONS EXTERNES ------------------*/
