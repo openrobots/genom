@@ -374,7 +374,7 @@ static int addParamToStrings (char *prefix, DCL_NOM_STR *dcl_nom)
 	return 1;
       }
       bufcat(&strA2Type, "  var%d = %s(argv[%d]);\n", numvar, str, numvar);
-      /* XXXX SI C"EST UN ENUM, L"AFFICHER EN CLAIRE XXX*/
+      /* XXXX SI C"EST UN ENUM, L"AFFICHER EN CLAIR XXX*/
       if (dcl_nom->type->type != ENUM) {
 	bufcat(&strVerif, "  printf (\"%s%s%s = %s\\\\n\", %s%s%s);\n",
 	       prefix, dcl_nom->name, getIndexesStr(ndims, dims, elt), 
