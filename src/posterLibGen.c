@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2012 LAAS/CNRS
  * Matthieu Herrb - Fri Aug 13 1993
  * All rights reserved.
  *
