@@ -422,12 +422,14 @@ static char *atotype_func(TYPE_STR *type)
 
   switch (type->type) {
   case CHAR:
-    return("");
+    return(type->flags & UNSIGNED_TYPE ? 
+	"(unsigned char)atoi" : "(char)atoi");
   case SHORT:
-    return(NULL);
+    return(type->flags & UNSIGNED_TYPE ? 
+	"(unsigned short)atoi" : "(short)atoi");
   case INT:
   case ENUM:
-    return(type->flags & UNSIGNED_TYPE ? NULL: "atoi");
+    return(type->flags & UNSIGNED_TYPE ? "(unsigned)atoi" : "atoi");
   case FLOAT:
     return("atof");
   case DOUBLE:
