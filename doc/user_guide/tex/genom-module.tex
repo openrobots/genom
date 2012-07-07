@@ -87,7 +87,7 @@ the final reply, or at any time by the mean of \emph{posters}.
 A \emph{poster} is a structure (\texttt{C} and \texttt{XML} structure as  of  
 today) that is
 updated by an \texttt{activity} and shared in the global system. It can be read by
-any other component of the system (a module, an operator, ...) at any time.
+any other component of the system (a module, an operator, \ldots) at any time.
 
 Every piece  of data that goes through  a module (requests or posters) is
 stored  in an internal database  which is called \emph{Functional Internal
@@ -152,7 +152,7 @@ itself; you must not forget to declare this.
 
 Your own code is executed by the execution(s) task(s).
 
-If  this code is to  be periodical (servoing,  monitoring, filters, ...),
+If  this code is to  be periodical (servoing,  monitoring, filters, \ldots),
 you will have to use a periodical  execution task and specify its period.
 It   is  also  possible   to use   a-periodical  tasks  and  a  sequential
 scheduling. Tasks are  given priorities (supported under real-time
@@ -187,7 +187,7 @@ the module posters.
 In order to associate your code to the requests, you have to tell \GenoM\
 which are the  functions that must be  executed to  handle requests. Your
 algorithms must be split into several parts (startup, main function, end,
-interruption, ...).   Each  of  these   parts  is called  a   \emph{codel}
+interruption, \ldots).   Each  of  these   parts  is called  a   \emph{codel}
 (elementary code). At this time, codels are \texttt{C} functions.
 
 A module is the result of  the link edition between  the code \GenoM\ has

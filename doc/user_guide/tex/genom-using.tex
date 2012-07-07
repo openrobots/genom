@@ -673,8 +673,8 @@ some situations, you might want to share the modules and clients between
 different users. To do so, you must define the \texttt{H2DEV\_DIR} environment
 variable and make it point to the same location for all users that must
 interact together. For instance, you can set it to \texttt{/tmp} with
-\texttt{export H2DEV\_DIR=/tmp} (sh, bash, ...) or \texttt{setenv H2DEV\_DIR
-/tmp} (csh, ...). This must be done before running any genom related process
+\texttt{export H2DEV\_DIR=/tmp} (sh, bash, \ldots) or \texttt{setenv H2DEV\_DIR
+/tmp} (csh, \ldots). This must be done before running any genom related process
 (server or client) as well as \texttt{h2 init}. Note that only the first user
 (the "owner") of the shared \texttt{H2DEV\_DIR} needs to execute the \texttt{h2
 init} command and execute the \texttt{h2 end} command after all modules and
