@@ -597,7 +597,7 @@ which   is  beeing     interrupted.  In   that  case,   define    a
 \subsection{States and transitions of activities}
 
 The   different  states   an  activity can   go   through  are  shown  on
-figure~\ref{fig|states}. The external ring correspond to the \emph{normal}
+figure~\ref{fig|states}. The external ring corresponds to the \emph{normal}
 sequencing: \texttt{ETHER} $\rightarrow$   \texttt{START} $\rightarrow$   
 \texttt{EXEC} $\rightarrow$ \texttt{END}  $\rightarrow$ \texttt{ETHER}. \texttt{START} and
 \texttt{END}  states are optional.   On any transition, one  can go into the
@@ -848,7 +848,7 @@ themselves.  There are  some   intermediate  cases, where  requests  must
 synchronize, or exchange  data.   Those cases are  to  be handled  by the
 codels.
 
-To  do so, it is  possible to use \emph{activity  ids}: each eactivity is
+To  do so, it is  possible to use \emph{activity  ids}: each activity is
 identified by a number between  $0$ and \texttt{MAX\_ACTIVITIES}$-1$. From a
 codel,   the current  activity number  is    returned by the  macro  
 \texttt{CURRENT\_ACTIVITY\_NUM}.
@@ -1012,10 +1012,10 @@ names.  In   such system, there   is nothing  that will   prevent  global
 variables with the same name to interfere!
 
 Furthermore, there are systems which do not provide memory access checks.
-It is possible to read or write  in the whole memory,  even in the system
-memory.  Array read or writes   beyond bounds will  lead to unpredictable
-results...  It is very advised to  process to memory checks with adequate
-tools such as \texttt{workShop} or \texttt{purify}.
+It is possible to  read or write in the whole memory,  even in the system
+memory. Array  read or  writes beyond bounds  will lead  to unpredictable
+results\ldots{}  It is  very advised  to  process to  memory checks  with
+adequate tools such as \texttt{workShop} or \texttt{purify}.
 
 \item[Temporal constrains:]
 
