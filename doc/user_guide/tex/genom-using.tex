@@ -556,7 +556,7 @@ suffix & function \\
 The library design is the same than \texttt{MsgLib}, so usage described in
 \ref{sec|sending_request} are still valid.
 
-\subsection{Api description}
+\subsection{API description}
 
 \subsubsection{Sending an request: \texttt{RqstSend}}
 
@@ -611,9 +611,9 @@ parameter.
 \item The last argument is the report, returned by the request. 
 \end{itemize}
 
-This function returns \texttt{0}  if everything went well,  \texttt{-1} if the
-request has failed (in this case, report has some valid values) \texttt{-2} in
-case of internal failure.
+This function returns \texttt{0} if  everything went well, \texttt{-1} if
+the request has  failed (in this case, report has  some valid values), or
+\texttt{-2} in the case of internal failure.
 
 \subsubsection{Getting final reply: \texttt{ReplyRcv}}
 
@@ -627,11 +627,11 @@ case of internal failure.
 
 
 \begin{itemize}
-\item The first argument is the client identifier
+\item The first argument is the client identifier.
 
-\item \texttt{rqstId} is the request descriptor
+\item \texttt{rqstId} is the request descriptor.
 
-\item the third argument is optional, and defined only if the request defines
+\item The third argument is optional, and defined only if the request defines
 an output.
 
 \item The last argument stores the error value, if any.
@@ -639,7 +639,7 @@ an output.
 
 The function returns \texttt{0} in success case (and out is filled, if it
 exists), \texttt{-1} in failure case (report is filled, and must be freed by
-the user), or \texttt{-2} in case of internal failure.
+the user), or \texttt{-2} in the case of internal failure.
 
 \subsection{Checking if a request is terminated}
 
@@ -674,9 +674,9 @@ different users. To do so, you must define the \texttt{H2DEV\_DIR} environment
 variable and make it point to the same location for all users that must
 interact together. For instance, you can set it to \texttt{/tmp} with
 \texttt{export H2DEV\_DIR=/tmp} (sh, bash, \ldots) or \texttt{setenv H2DEV\_DIR
-/tmp} (csh, \ldots). This must be done before running any genom related process
+/tmp} (csh, \ldots). This must be done before running any \GenoM\ related process
 (server or client) as well as \texttt{h2 init}. Note that only the first user
-(the "owner") of the shared \texttt{H2DEV\_DIR} needs to execute the \texttt{h2
+(the ``owner'') of the shared \texttt{H2DEV\_DIR} needs to execute the \texttt{h2
 init} command and execute the \texttt{h2 end} command after all modules and
 clients are shut down.
 

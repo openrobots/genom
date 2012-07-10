@@ -148,7 +148,7 @@ typedef struct DEMO_STR {
    DEMO_SPEED       speedRef;        /* Speed reference */
    double           distRef;         /* Distance reference */
    double           monitor;         /* Positions monitors */
-}DEMO_STR;
+} DEMO_STR;
  
 
 /* ------------------ SERVICES DEFINITION: The REQUESTS -------------------- */
@@ -157,8 +157,8 @@ typedef struct DEMO_STR {
 request SetSpeed {
    type:                control;              /* request's type  */
    input:               speed::speedRef;      /* input: speed chosen */
-   codel_control:      demoSetSpeedCntrl;    /* codel for validity checks */
-   fail_reports:            INVALID_SPEED;        /* possible error messages */
+   codel_control:       demoSetSpeedCntrl;    /* codel for validity checks */
+   fail_reports:        INVALID_SPEED;        /* possible error messages */
 };
 
 /* Control request: return the default speed */
@@ -170,7 +170,7 @@ request GetSpeed {
 /* Control request:  interrupt the mobile */
 request Stop {
    type:                control;              /* request's type */
-   interrupt_activity:   Goto;         /* request to interrupt */
+   interrupt_activity:  Goto;                 /* request to interrupt */
 };
 \end{verbatim}
 \end{cartouche}
@@ -196,7 +196,7 @@ request Goto {
    codel_main:            demoGotoMain;      /* main codel */
    codel_end:             demoGotoEnd;       /* termination codel */
    codel_inter:           demoGotoInter;     /* interruption codel */
-   interrupt_activity: Goto;              /* incompatible requests */
+   interrupt_activity:    Goto;              /* incompatible requests */
    exec_task:             MotionTask;        /* task (thread) executing
                                               * the codel */
 };
@@ -208,7 +208,7 @@ request Monitor {
    output:                position::state.position; /* outputs: actual pos. */
    codel_main:            demoMonitorExec;      /* main codel */
    fail_reports:          TOO_FAR_AWAY;         /* possible error messages */
-   interrupt_activity: none;                 /* no incompatible requests */
+   interrupt_activity:    none;                 /* no incompatible requests */
    exec_task:             MotionTask;           /* task (thread) */
 };
 
@@ -293,7 +293,7 @@ the definition of the module interface.
 typedef struct DEMO_STATE_STR {
    double position;              /* current position */
    double speed;                 /* current speed */
-}DEMO_STATE_STR;
+} DEMO_STATE_STR;
 
 /* Admissible speeds */
 typedef enum DEMO_SPEED{
@@ -458,9 +458,9 @@ blues% cd obj
 
 \subsection{Configuration}
 
-All the  openrobots software  and tools are  generally  installed in a specific
-directory           (for       instance    \texttt{\$\{HOME\}/openrobots     or
-\texttt{/usr/local/openrobots}}. This is the  main information that needs to be
+All the  OpenRobots software  and tools are  generally  installed in a specific
+directory           (for       instance    \texttt{\$\{HOME\}/openrobots}    or
+\texttt{/usr/local/openrobots}.  This is the  main information that needs to be
 specifed to the \texttt{configure} script. Don't forget to run
 \texttt{configure} from the build directory.
 
@@ -554,11 +554,11 @@ blues#
 
 Once the server and the codels are compiled and  the link edition between
 them has been done,  the \texttt{demo} module is  ready to be executed.  The
-module is located in the  \texttt{bin} sub-directory of the directory
+module is located in the  \texttt{bin} subdirectory of the directory
 specified as prefix in the 
 configuration step.     (see
 figure~\ref{fig|session|cycle}). This is an executable whose name is
-the   name   of the     module  (i.e. \texttt{demo}).
+the   name   of the     module  (i.e., \texttt{demo}).
 
 The   next two sections   present a step-by-step   tutorial on how to run
 modules.
@@ -614,7 +614,7 @@ demo: all tasks are spawned
 blues% 
 \end{verbatim}\end{cartouche}\end{center}
 
-\item You're done! So... what?
+\item You're done! So\ldots what?
 \end{enumerate}
 
 So the module is running and ready to serve requests. We will see how

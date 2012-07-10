@@ -47,9 +47,9 @@ standard way.
 The services are controlled (\emph{i.e.} parameterized, started or stopped)
 with  \emph{requests},  that  represent  the    visible  part   of   the
 module. Requests  will be sent by the operator using various interfaces
-(\texttt{Test} program  generated   by /GenoM/ or  \texttt{tcl}  shell  - see 
+(\texttt{Test} program  generated   by \GenoM\ or  \texttt{tcl}  shell  - see
 paragraph~\vref{sec|tcl})    or  by a  program,    usually  named a  
-\emph{supervisor},  that  will supervised  the  robot  (for  intance using 
+\emph{supervisor},  that  will supervise  the  robot  (for  instance using
 \texttt{OpenPRS} - see paragraph~\vref{sec|propice}).
  
 Each request can  have an \emph{input parameter} and an  
@@ -57,12 +57,12 @@ Each request can  have an \emph{input parameter} and an
 a   \emph{reply} is sent to   the   client who invoked  the 
 request. Each reply  is  associated with an  \emph{execution  report}:  it
 reports on the execution of  the service and  lets  the client  know about
-problems that might have occured.
+problems that might have occurred.
 
 There are two kind of requests: the \emph{execution} requests and the 
 \emph{control} requests. Execution requests  start  an actual service,  whereas
 control requests control the  execution of the services. Control requests
-mainy allow to set parameters or  interrupt services. Each module has  a
+mainly allow to set parameters or  interrupt services. Each module has  a
 predefined control request whose name  is  \texttt{Abort}: it can  interrupt
 any running service as well as the module itself.
 
@@ -73,7 +73,7 @@ time (even indefinitely). Thus they send an \emph{intermediate} reply,  as
 soon as the service 
 starts.  The final reply is sent when the service is over.
 
-A running  service is called an   \emph{activity}. Some function,  such as
+A running  service is called an   \emph{activity}. Some functions,  such as
 monitoring services,  can start \emph{several}  activities and  execute them
 simultaneously. Other  kind   of function,  such as   servoing functions,
 cannot handle  parallelism  and can only  start  \emph{one} activity at  a
@@ -124,7 +124,7 @@ idea to learn what it does. The control task
 
 \begin{enumerate}
 \item it receives the requests for the module,
-\item it checks the validity of the input parameters and store them in the fIDS,
+\item it checks the validity of the input parameters and stores them in the fIDS,
 \item it checks if the module can start a given service (handles conflicts
 between requests),
 \item it tells the right execution task to start the service,
@@ -170,7 +170,7 @@ have to declare several execution tasks.
 \subsubsection{Interface libraries:}
 
 Modules provide two standard interface libraries in various programming
-languages (for now: \texttt{C, tcl, XML, open-prs}).
+languages (for now: \texttt{C}, \texttt{tcl}, \texttt{XML}, \texttt{OpenPRS}).
 
 \begin{itemize}
 \item A service library, which handles requests emission and reception,
