@@ -53,7 +53,8 @@ name		& description \\
 \tt posterAddr  & get the poster address \\
 \tt posterTake	& take the poster semaphore  \\
 \tt posterGive	& give the poster semaphore \\
-\tt posterIoctl & query information about the poster (date, ...) \\
+\tt posterIoctl & query information about the poster (date, \ldots) \\
+\tt posterForget & forget about previously found poster \\
 \tt posterDelete & delete a poster \\
 \tt posterShow & display the state of every poster \\
 \tt posterMemCreate & create a poster at the given address \\
@@ -62,9 +63,9 @@ name		& description \\
 
 \begin{center}\small\begin{tabularx}{\linewidth}{|llX|}
 \hline
-\tt STATUS  & \tt posterCreate & \tt (char *name,      int size, 
+\tt STATUS  & \tt posterCreate & \tt (const char *name,      int size,
 	                        POSTER\_ID *id); \\
-\tt STATUS  & \tt posterFind   & \tt (char *name,      POSTER\_ID *id); \\
+\tt STATUS  & \tt posterFind   & \tt (const char *name,      POSTER\_ID *id); \\
 \tt int     & \tt posterWrite  & \tt (POSTER\_ID id,   int offset,
 	    		        void *buf,         int size); \\
 \tt int     & \tt posterRead   & \tt (POSTER\_ID id,   int offset, 
@@ -73,10 +74,11 @@ name		& description \\
 \tt STATUS  & \tt posterTake   & \tt (POSTER\_ID id,   POSTER\_WRITE); \\
 	    & 	or    	       & \tt (POSTER\_ID id,   POSTER\_READ); \\
 \tt STATUS  & \tt posterGive   & \tt (POSTER\_ID id);   \\
-\tt STATUS  & \tt posterIoctl  & \tt (POSTER\_ID id, int code, char *parg); \\
+\tt STATUS  & \tt posterIoctl  & \tt (POSTER\_ID id, int code, void *parg); \\
+\tt STATUS  & \tt posterForget & \tt (POSTER\_ID id);  \\
 \tt STATUS  & \tt posterDelete & \tt (POSTER\_ID id);  \\
 \tt STATUS  & \tt posterShow   & \tt (void);  \\
-\tt STATUS  & \tt posterMemCreate & \tt (char *name,  int busSpace, 
+\tt STATUS  & \tt posterMemCreate & \tt (const char *name,  int busSpace,
 				void *pPool, int size, POSTER\_ID *id); \\
 & & {\footnotesize (busSpace: POSTER\_LOCAL\_MEM,
 	    POSTER\_SM\_MEM, POSTER\_VME\_A32, POSTER\_VME\_A24)} \\
