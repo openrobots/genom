@@ -273,10 +273,10 @@ install-bin:
 	$(LTINSTALL) $(OBJDIR)/$(CLIENT_LIB) ${DESTDIR}$(libdir)/$(CLIENT_LIB)
 $genTcl$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/tclserv
 $genServer$$genTcl$	$(LTINSTALL) $(OBJDIR)/$(TCLCLIENT_LIB) ${DESTDIR}$(libdir)/tclserv/$(TCLCLIENT_LIB)
-$genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/openprs
-$genOpenprs$	$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_MOD) ${DESTDIR}$(libdir)/openprs/$(OPENPRSCLIENT_MOD)
 $genTclservClient$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/tclservClient
 $genTclservClient$	$(LTINSTALL) $(OBJDIR)/$(TCLSERVCLIENT_LIB) ${DESTDIR}$(libdir)/tclservClient/$(TCLSERVCLIENT_LIB)
+$genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(libdir)/openprs
+$genOpenprs$	$(LTINSTALL) $(OBJDIR)/$(OPENPRSCLIENT_MOD) ${DESTDIR}$(libdir)/openprs/$(OPENPRSCLIENT_MOD)
 $genServer$	$(MKINSTALLDIRS) ${DESTDIR}$(bindir)
 $genServer$	$(LTINSTALL) $(OBJDIR)/$(INIT_BIN) ${DESTDIR}$(bindir)/$(INIT_BIN)
 $genServer$	$(LTINSTALL) $(OBJDIR)/$(TEST_BIN) ${DESTDIR}$(bindir)/$(TEST_BIN)

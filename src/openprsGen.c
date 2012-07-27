@@ -265,8 +265,8 @@ static int declareRequests(FILE *out, int genTclservClient)
        fprintf(out, 
 	       "#include <tclserv_client/tclserv_client.h>\n"
 	       "#include <tclservClient/%sTclservClientMsgLib.h>\n"
-	       "#include <server/tclservClient/demoError.h>\n",
-	       module->name);
+	       "#include <server/tclservClient/%sError.h>\n",
+	       module->name, module->name);
 
   /* Tableau de declaration de toutes les requetes */
   fprintf(out, 
