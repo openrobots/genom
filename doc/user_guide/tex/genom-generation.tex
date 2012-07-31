@@ -38,7 +38,7 @@
 
 \item\textbf{Synopsis}
 
-\texttt{genom [-Ocdinxto] [-I\emph{path}] [-D\emph{macro}] <module>[.gen]}
+\texttt{genom [-Ocdinxyto] [-I\emph{path}] [-D\emph{macro}] <module>[.gen]}
 
 \item\textbf{Description}
 
@@ -80,6 +80,10 @@ module from an OpenPRS program.\\
 \texttt{-x} & \emph{Tclserv C Client generation:} Generates Tclserv C interface
 libraries. They can be used to control this module in C from a remote host, using
 Tclserv protocol.\\
+
+\texttt{-y} & \emph{Python client generation:} Generate Python interface (using
+ctypes) to manipulate the different GeNoM structure. They can be used further to
+create Python controller, or to directly access to posters. \\
 
 \texttt{-n} & Generates the perl script that is used to generate the module,
 without actually executing it.\\
