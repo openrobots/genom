@@ -40,6 +40,8 @@
 #include <portLib.h>
 #include <errnoLib.h>
 
+#include <genom/genom.h>
+
 #include "$module$MsgLib.h"
 #include "$module$Error.h"
  
