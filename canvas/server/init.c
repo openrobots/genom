@@ -55,6 +55,8 @@
 #include <errnoLib.h>
 #include <h2initGlob.h>
 
+#include <genom/genom.h>
+
 #define $MODULE$_PROMPT "usage: $module$SendInitRqst ($inputUsage$)\n"
 
 /* Inclusions pour acceder au module */
