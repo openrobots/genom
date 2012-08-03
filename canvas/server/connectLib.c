@@ -40,6 +40,7 @@
 
 
 #include <portLib.h>
+#include <genom/genom.h>
 
 #include "$module$MsgLib.h"
  
