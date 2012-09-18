@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2003,2012 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -35,6 +35,7 @@
 #define $module$_POSTER_LIB_H
 
 #include "posterLib.h"
+#include "genom/genom.h"
 
 /* Types definis ou utilises par le module */
 #include "$module$Type.h"
