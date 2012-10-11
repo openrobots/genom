@@ -1,3 +1,14 @@
+Genom 2.9, October 11, 2012.
+
+127. Documentation fixes (Piotr Trojanek)
+126. Add support for multible genom module instances.
+125. Handle unsigned types in init request parameters.
+124. OpenPRS support: build a module loadable in the oprs kernel. 
+     (Felix Ingrand) 
+123. Added support for having OpenPRS to talk to TclservClient. 
+     (Felix Ingrand)
+122. LP64 bug fixes (Arnaud Degroote)
+
 Genom 2.8, October 28 2011.
 
 121. moduleEvents: implement logging of moduleEvents using h2logLib.
