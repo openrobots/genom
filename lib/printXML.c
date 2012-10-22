@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 2003 LAAS/CNRS                       --  Fri Sep  5 2003
+ * Copyright (c) 2003,2012 LAAS/CNRS                       --  Fri Sep  5 2003
  * Sara Fleury
  * All rights reserved.
  *
@@ -93,11 +93,14 @@ int fprintfBuf(FILE *out, const char *fmt, ...)
 
 int printXML_char(FILE *out, char *name, char *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%d</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt), 
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+                     indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
@@ -105,55 +108,70 @@ int printXML_char(FILE *out, char *name, char *x, int indent, int nDim, int *dim
 int printXML_unsigned_char(FILE *out, char *name, unsigned char *x, int indent, 
 			 int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%u</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+                     indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
 
 int printXML_short_int(FILE *out, char *name, short int *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%d</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+                     indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
 
 int printXML_int(FILE *out, char *name, int *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%d</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+                     indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
 
 int printXML_long_int(FILE *out, char *name, long int *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%ld</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+                     indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
 
 int printXML_long_long_int(FILE *out, char *name, long long int *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%lld</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+	    indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
@@ -161,11 +179,14 @@ int printXML_long_long_int(FILE *out, char *name, long long int *x, int indent, 
 int printXML_unsigned_short_int(FILE *out, char *name, unsigned short *x, int indent, 
 			      int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%u</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+	    indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
@@ -173,11 +194,14 @@ int printXML_unsigned_short_int(FILE *out, char *name, unsigned short *x, int in
 int printXML_unsigned_int(FILE *out, char *name, unsigned int *x, int indent, 
 			int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%u</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+	    indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
@@ -185,11 +209,14 @@ int printXML_unsigned_int(FILE *out, char *name, unsigned int *x, int indent,
 int printXML_unsigned_long_int(FILE *out, char *name, unsigned long *x, int indent,
 			     int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%lu</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+	    indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
@@ -197,22 +224,28 @@ int printXML_unsigned_long_int(FILE *out, char *name, unsigned long *x, int inde
 int printXML_unsigned_long_long_int(FILE *out, char *name, 
     unsigned long long *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%llu</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+	    indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
 
 int printXML_float(FILE *out, char *name, float *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%f</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+	    indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
@@ -221,11 +254,14 @@ int printXML_float(FILE *out, char *name, float *x, int indent, int nDim, int *d
 
 int printXML_double(FILE *out, char *name, double *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>%f</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+	    indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
@@ -233,11 +269,14 @@ int printXML_double(FILE *out, char *name, double *x, int indent, int nDim, int 
 
 int printXML_addr(FILE *out, char *name, void **x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     if (!(fprintfBuf(out, "%s<%s%s>0x%p</%s%s>\n", 
-	    indentStr2(indent-1), name, getIndexesStr2(nDim, dims, elt),
-		     *(x+elt), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+	    indentStr2_r(indent-1, buf1), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf2),
+		     *(x+elt), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }
@@ -258,11 +297,14 @@ int printXML_string(FILE *out, char *name, char *x, int indent, int nDim, int *d
 int printXML_string_len(FILE *out, char *name, char *x, int max_str_len,
 		      int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80], buf3[80];
   indent++;
   FOR_NB_elt(nDim,dims) 
     if (!(fprintfBuf(out, "%s<%s%s>%s</%s%s>\n", 
-	    indentStr2(indent-1), name,
-		     getIndexesStr2(nDim, dims, elt), (x+elt*max_str_len), name, getIndexesStr2(nDim, dims, elt)))) return 0;
+	    indentStr2_r(indent-1, buf1), name,
+		     getIndexesStr2_r(nDim, dims, elt, buf2),
+                     (x+elt*max_str_len), name,
+                     getIndexesStr2_r(nDim, dims, elt, buf3)))) return 0;
   END_FOR
   return 1;
 }

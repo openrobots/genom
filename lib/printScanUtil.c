@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1996-2003 LAAS/CNRS
+ * Copyright (c) 1996-2003,2012 LAAS/CNRS
  * Sara Fleury - Oct 1996
  * All rights reserved.
  *
@@ -59,19 +59,24 @@ static char bufindexes[80];
    --------------------------------------------------------------------- */
 char *indentStr(int indent)
 {
+  return indentStr_r(indent, bufindent);
+}
+
+char *indentStr_r(int indent, char *retbuf)
+{
   int i,j;
 
-  bufindent[0]='\0';
+  retbuf[0]='\0';
   for(i=0;i<indent;i++) {
     for(j=0;j<TAB_INDENT-2;j++)
-      strcat(bufindent, " ");
+      strcat(retbuf, " ");
     if(i!=0) {
-      strcat(bufindent, "|");
-      strcat(bufindent, " ");
+      strcat(retbuf, "|");
+      strcat(retbuf, " ");
     }
   }
   /*  for(i=0;i<indent*TAB_INDENT;i++) strcat(bufindent, " ");*/
-  return bufindent;
+  return retbuf;
 }
 
 /* ---------------------------------------------------------------------
@@ -81,12 +86,17 @@ char *indentStr(int indent)
 
 char *indentStr2(int indent)
 {
+  return indentStr2_r(indent, bufindent);
+}
+
+char *indentStr2_r(int indent, char *retbuf)
+{
   int i;
 
-  bufindent[0]='\0';
+  retbuf[0]='\0';
 /*   for(i=0;i<indent*TAB_INDENT;i++) strcat(bufindent, " "); */
-  for(i=0;i<indent;i++) strcat(bufindent, "\t");
-  return bufindent;
+  for(i=0;i<indent;i++) strcat(retbuf, "\t");
+  return retbuf;
 }
 
 /* ---------------------------------------------------------------------
@@ -100,21 +110,26 @@ char *indentStr2(int indent)
    --------------------------------------------------------------------- */
 char *getIndexesStr(int nDim, int *dims, int indice) 
 {
+  return getIndexesStr_r(nDim, dims, indice, bufindexes);
+}
+
+char *getIndexesStr_r(int nDim, int *dims, int indice, char *retbuf) 
+{
   int index, n, m;
   int remain;
   char buf[80];
 
-  if(nDim>0) sprintf(bufindexes, "[");
-  else bufindexes[0]='\0';
+  if(nDim>0) sprintf(retbuf, "[");
+  else retbuf[0]='\0';
   for (n=0; n<nDim-1; n++) {
     for (remain=1,m=n+1; m<nDim; m++) remain *= dims[m];
     index = indice/remain;
     indice %= remain;
     sprintf(buf, "%d][", index);
-    strcat(bufindexes, buf);
+    strcat(retbuf, buf);
   }
-  if (nDim>0) {sprintf(buf, "%d]", indice); strcat(bufindexes,buf);}
-  return bufindexes;
+  if (nDim>0) {sprintf(buf, "%d]", indice); strcat(retbuf,buf);}
+  return retbuf;
 }
 
 /* ---------------------------------------------------------------------
@@ -125,21 +140,28 @@ char *getIndexesStr(int nDim, int *dims, int indice)
 /* A dot instead of [] */
 char *getIndexesStr2(int nDim, int *dims, int indice) 
 {
+  return getIndexesStr2_r(nDim, dims, indice, bufindexes);
+}
+
+
+/* A dot instead of [], reentrant */
+char *getIndexesStr2_r(int nDim, int *dims, int indice, char *retbuf)
+{
   int index, n, m;
   int remain;
   char buf[80];
 
-  if(nDim>0) sprintf(bufindexes, ".");
-  else bufindexes[0]='\0';
+  if(nDim>0) sprintf(retbuf, ".");
+  else retbuf[0]='\0';
   for (n=0; n<nDim-1; n++) {
     for (remain=1,m=n+1; m<nDim; m++) remain *= dims[m];
     index = indice/remain;
     indice %= remain;
     sprintf(buf, "%d.", index);
-    strcat(bufindexes, buf);
+    strcat(retbuf, buf);
   }
-  if (nDim>0) {sprintf(buf, "%d", indice); strcat(bufindexes,buf);}
-  return bufindexes;
+  if (nDim>0) {sprintf(buf, "%d", indice); strcat(retbuf,buf);}
+  return retbuf;
 }
 
 

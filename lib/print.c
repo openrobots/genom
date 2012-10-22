@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1994-2003 LAAS/CNRS
+ * Copyright (c) 1994-2003,2012 LAAS/CNRS
  * Sara Fleury - Sat Oct  1 1994
  * All rights reserved.
  *
@@ -65,124 +65,137 @@ int genomMaxArray = GENOM_MAX_ARRAY_DEFAULT;
 
 void print_char(FILE *out, char *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
 /*     fprintf(out, "%s%s %c\n",  */
     fprintf(out, "%s%s %d\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_unsigned_char(FILE *out, unsigned char *x, int indent, 
 			 int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %c\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_short_int(FILE *out, short int *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %d\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_int(FILE *out, int *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %d\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_long_int(FILE *out, long int *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %ld\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_long_long_int(FILE *out, long long int *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %lld\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_unsigned_short_int(FILE *out, unsigned short *x, int indent, 
 			      int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %u\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_unsigned_int(FILE *out, unsigned int *x, int indent, 
 			int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %u\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_unsigned_long_int(FILE *out, unsigned long *x, int indent,
 			     int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %lu\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_unsigned_long_long_int(FILE *out, unsigned long long *x, int indent,
 			     int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %llu\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_float(FILE *out, float *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %f\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_double(FILE *out, double *x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s %f\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
 void print_addr(FILE *out, void **x, int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims)
     fprintf(out, "%s%s 0x%p\n", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1), getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
   END_FOR
 }
 
@@ -201,11 +214,12 @@ void print_string(FILE *out, char *x, int indent, int nDim, int *dims, FILE *in)
 void print_string_len(FILE *out, char *x, int max_str_len,
 		      int indent, int nDim, int *dims, FILE *in) 
 {
+  char buf1[80], buf2[80];
   indent++;
   FOR_NB_elt(nDim,dims) 
     fprintf(out, "%s%s %s\n", 
-	    indentStr(indent-1),
-	    getIndexesStr(nDim, dims, elt), (x+elt*max_str_len));
+	    indentStr_r(indent-1, buf1),
+	    getIndexesStr_r(nDim, dims, elt, buf2), (x+elt*max_str_len));
   END_FOR
 }
 
@@ -237,6 +251,7 @@ void print_string_len(FILE *out, char *x, int max_str_len,
 int get_sub_array_indexes (FILE *out, FILE *in, int indent, 
 			   int nDim, int *dims, int *start)
 {
+  char buf[80];
   int nElts=1, i, nbd=genomMaxArray, first=0;
   *start = 0;
 
@@ -254,7 +269,7 @@ int get_sub_array_indexes (FILE *out, FILE *in, int indent,
   if (in == NULL) 
     return nElts;
 
-  fprintf(out, "%sArray of %d elts. ", indentStr(indent-1), nElts);
+  fprintf(out, "%sArray of %d elts. ", indentStr_r(indent-1, buf), nElts);
 
   /* Choix premier élément à afficher */
   fprintf(out, "Display from element : (0) ");
@@ -265,7 +280,7 @@ int get_sub_array_indexes (FILE *out, FILE *in, int indent,
     return (0);
 
   /* Choix nombre d'élément à afficher */
-  fprintf(out, "%snb elts : (%d) ", indentStr(indent-1), nbd);
+  fprintf(out, "%snb elts : (%d) ", indentStr_r(indent-1, buf), nbd);
   fflush(out);
   scan_type(in, out, "%d", &nbd);
   if(nbd <= 0) 

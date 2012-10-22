@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1993-2003 LAAS/CNRS
+ * Copyright (c) 1993-2003,2012 LAAS/CNRS
  * Matthieu Herrb - Fri Jul 16 1993
  * All rights reserved.
  *
@@ -64,13 +64,14 @@ printGen(FILE *out)
     const char *func_header = 
 "void print_%s(FILE *out, %s *x,\n"
 "                      int indent, int nDim, int *dims, FILE *in)\n{\n"
+"  char buf1[80], buf2[80];\n"
 "  char *indstr;\n"
-"  indstr=strdup(indentStr(nDim?++indent:indent));\n"
+"  indstr=strdup(indentStr_r(nDim?++indent:indent, buf1));\n"
 "  indent++;\n"
 "  FOR_NB_elt(nDim,dims) {\n"
 "    if (nDim != 0)\n"
 "      fprintf(out, \"%%s%%s%s\", "
-"indentStr(indent-2), getIndexesStr(nDim, dims, elt));\n\n";
+"indentStr_r(indent-2, buf1), getIndexesStr_r(nDim, dims, elt, buf2));\n\n";
 
 
 

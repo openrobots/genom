@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 1994-2003 LAAS/CNRS
+ * Copyright (c) 1994-2003,2012 LAAS/CNRS
  * Matthieu Herrb - Sat Oct  1 1994
  * All rights reserved.
  *
@@ -93,11 +93,13 @@ scan_type(FILE *in, FILE *out, char *format, void *ptr)
 int scan_char(FILE *in, FILE *out, char *x, 
 	      int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%c) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%c", (x+elt))) != OK) 
       return status;
   } END_FOR
@@ -107,11 +109,13 @@ int scan_char(FILE *in, FILE *out, char *x,
 int scan_unsigned_char(FILE *in, FILE *out, unsigned char *x, 
 		       int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%c) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%c", (x+elt))) != OK)
       return status;
   } END_FOR
@@ -121,11 +125,13 @@ int scan_unsigned_char(FILE *in, FILE *out, unsigned char *x,
 int scan_short_int(FILE *in, FILE *out, short int *x,
 		   int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%d) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1,buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%hd", (x+elt))) != OK)
       return status;
   } END_FOR
@@ -135,11 +141,13 @@ int scan_short_int(FILE *in, FILE *out, short int *x,
 int scan_int(FILE *in, FILE *out, int *x, 
 	     int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%d) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%d", (x+elt))) != OK)
       return status;
   } END_FOR
@@ -149,11 +157,13 @@ int scan_int(FILE *in, FILE *out, int *x,
 int scan_long_int(FILE *in, FILE *out, long int *x, 
 		  int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%ld) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%d", (x+elt))) != OK)
       return status;
   } END_FOR
@@ -163,11 +173,13 @@ int scan_long_int(FILE *in, FILE *out, long int *x,
 int scan_long_long_int(FILE *in, FILE *out, long long int *x, 
 		  int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%lld) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%lld", (x+elt))) != OK)
       return status;
   } END_FOR
@@ -177,11 +189,13 @@ int scan_long_long_int(FILE *in, FILE *out, long long int *x,
 int scan_unsigned_short_int(FILE *in, FILE *out, unsigned short *x, 
 			    int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%hu) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%u", (x+elt))) != OK)
       return status;
   } END_FOR
@@ -191,11 +205,13 @@ int scan_unsigned_short_int(FILE *in, FILE *out, unsigned short *x,
 int scan_unsigned_int(FILE *in, FILE *out, unsigned int *x, 
 		      int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%u) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%u", (x+elt))) != OK)
       return status;
   } END_FOR
@@ -205,11 +221,13 @@ int scan_unsigned_int(FILE *in, FILE *out, unsigned int *x,
 int scan_unsigned_long_int(FILE *in, FILE *out, unsigned long *x, 
 			   int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%lu) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%u", (x+elt))) != OK)
       return status;
   } END_FOR
@@ -219,11 +237,13 @@ int scan_unsigned_long_int(FILE *in, FILE *out, unsigned long *x,
 int scan_unsigned_long_long_int(FILE *in, FILE *out, unsigned long long *x, 
 			   int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%llu) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%llu", (x+elt))) != OK)
       return status;
   } END_FOR
@@ -232,11 +252,13 @@ int scan_unsigned_long_long_int(FILE *in, FILE *out, unsigned long long *x,
 int scan_float(FILE *in, FILE *out, float *x, 
 	       int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%f) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%f", (x+elt))) != OK)
       return status;
   } END_FOR
@@ -246,11 +268,13 @@ int scan_float(FILE *in, FILE *out, float *x,
 int scan_double(FILE *in, FILE *out, double *x, 
 		int indent, int nDim, int *dims) 
 {
+  char buf1[80], buf2[80];
   int status=OK;
   indent++;
   FOR_EACH_elt(nDim,dims) {
     fprintf(out, "%s%s (%f) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), *(x+elt));
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2), *(x+elt));
     if ((status = scan_type(in, out, "%lf", (x+elt))) != OK)
       return status;
   } END_FOR
@@ -276,13 +300,15 @@ int scan_string(FILE *in, FILE *out, char *x, int indent, int nDim, int *dims)
 int scan_string_len(FILE *in, FILE *out, char *x, int max_str_len, 
 		    int indent, int nDim, int *dims)  
 {
+  char buf1[80], buf2[80];
   int size;
 
   indent++;
   FOR_EACH_elt(nDim,dims) {
     
     fprintf(out, "%s%s (%s) ", 
-	    indentStr(indent-1), getIndexesStr(nDim, dims, elt), 
+	    indentStr_r(indent-1, buf1),
+            getIndexesStr_r(nDim, dims, elt, buf2),
 	    (x+elt*max_str_len));
 
     do {

@@ -1,5 +1,5 @@
 /**
- ** Copyright (c) 1996 LAAS/CNRS
+ ** Copyright (c) 1996,2012 LAAS/CNRS
  **
  ** Sara Fleury - Oct 1996
  **
@@ -35,7 +35,9 @@ char *strdup(const char *s);  /* /opt/hilare2/src/tools/ansiLib */
  */
 #define TAB_INDENT 4 
 char *indentStr(int indent);
+char *indentStr_r(int indent, char *retbuf);
 char *indentStr2(int indent);
+char *indentStr2_r(int indent, char *retbuf);
 
 
 /*
@@ -44,7 +46,9 @@ char *indentStr2(int indent);
  *           . rien si le tableau est de dimension 0
  */
 char *getIndexesStr(int nDim, int *dims, int indice);
+char *getIndexesStr_r(int nDim, int *dims, int indice, char *retbuf);
 char *getIndexesStr2(int nDim, int *dims, int indice);
+char *getIndexesStr2_r(int nDim, int *dims, int indice, char *retbuf);
 
 /*
  * Macro pour parcourir les elements "elt" d'un tableau

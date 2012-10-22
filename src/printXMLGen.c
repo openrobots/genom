@@ -1,6 +1,6 @@
 
 /* 
- * Copyright (c) 2003 LAAS/CNRS
+ * Copyright (c) 2003,2012 LAAS/CNRS
  * Sara Fleury
  * All rights reserved.
  *
@@ -64,12 +64,13 @@ printXMLGen(FILE *out)
     const char *func_header = 
 "void printXML_%s(FILE *out, char *name, %s *x,\n"
 "                      int indent, int nDim, int *dims, FILE *in)\n{\n"
+"  char buf[80];\n"
 "  char *indstr;\n"
-"  indstr=strdup(indentStr2(indent));\n"
+"  indstr=strdup(indentStr2_r(indent, buf));\n"
 "  indent++;\n"
 "  FOR_NB_elt(nDim,dims) {\n"
 "    fprintfBuf(out, \"%%s<%%s%%s>%s\", "
-"indstr, name, getIndexesStr2(nDim, dims, elt));\n\n";
+"indstr, name, getIndexesStr2_r(nDim, dims, elt, buf));\n\n";
 
 
     /* functions */
@@ -133,7 +134,7 @@ printXMLGen(FILE *out)
 	  break;
 	}
 
-	fprintf(out, "    fprintfBuf(out, \"%%s</%%s%%s>\\n\", %s, name, getIndexesStr2(nDim, dims, elt));\n", newline?"indstr":"\"\"");
+	fprintf(out, "    fprintfBuf(out, \"%%s</%%s%%s>\\n\", %s, name, getIndexesStr2_r(nDim, dims, elt, buf));\n", newline?"indstr":"\"\"");
 
 	/* Termine la fonction */
 	fprintf(out, 
@@ -156,7 +157,7 @@ printXMLGen(FILE *out)
 	fprintf(out, func_header, ltypedefs->dcl_nom->name, 
 		ltypedefs->dcl_nom->name, "\\n");
 	genPrintXMLVal(out, ltypedefs->dcl_nom, "(*(x+elt))");
-	fprintf(out, "    fprintfBuf(out, \"%%s</%%s%%s>\\n\", indstr, name, getIndexesStr2(nDim, dims, elt));\n");
+	fprintf(out, "    fprintfBuf(out, \"%%s</%%s%%s>\\n\", indstr, name, getIndexesStr2_r(nDim, dims, elt, buf));\n");
 	fprintf(out, 
 		"  } END_FOR\n"
 		"  free(indstr);\n"
