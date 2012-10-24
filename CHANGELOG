@@ -1,3 +1,10 @@
+Genom 2.10, October 24, 2012.
+
+129. Add a genom option (-y) to generate code for python
+     (Arnaud Degroote)
+128. Add a reentrant version of a bunch of functions in printScanUtil.c 
+     (Anthony Mallet)
+
 Genom 2.9, October 11, 2012.
 
 127. Documentation fixes (Piotr Trojanek)
