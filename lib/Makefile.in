@@ -99,7 +99,7 @@ distclean: clean
 
 ifeq ($(findstring clean,${MAKECMDGOALS}),)
 depend DEPENDANCES:: $(SRCS)
-	$(MKDEP) -c$(CC) -oDEPENDANCES -t.lo $(CPPFLAGS) $?
+	$(MKDEP) -c"$(CC)" -oDEPENDANCES -t.lo $(CPPFLAGS) $?
 
 include DEPENDANCES
 endif

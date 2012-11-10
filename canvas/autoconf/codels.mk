@@ -85,7 +85,7 @@ ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 depend $(OBJDIR)/dependencies:: $(OBJDIR);
 
 depend $(OBJDIR)/dependencies:: $(codels_src)
-	$(MKDEP) -c$(CC) -o$(OBJDIR)/dependencies -d$(OBJDIR) -t.lo \
+	$(MKDEP) -c"$(CC)" -o$(OBJDIR)/dependencies -d$(OBJDIR) -t.lo \
 		$(CPPFLAGS) $?
 
 -include $(OBJDIR)/dependencies
