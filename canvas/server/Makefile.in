@@ -196,11 +196,6 @@ $genServer$$genTcl$client:: $(OBJDIR)/$(TCLCLIENT_LIB)
 $genOpenprs$client:: $(OBJDIR)/$(OPENPRSCLIENT_MOD)
 $genTclservClient$client:: $(OBJDIR)/$(TCLSERVCLIENT_LIB)
 
-
-$genOpenprs$openprs/$module$Openprs.inc: openprs/$module$Openprs.inc.input
-$genOpenprs$	$(SED) -e 's|@MODULEDATADIR@|${DESTDIR}$(datadir)/openprs|'  $< >  $@
-
-
 # --- libraries ---------------------------------------------------------
 
 $(OBJDIR)/$(MODULE_LIB): $(module_obj)
@@ -298,6 +293,7 @@ install-data:
 $genTcl$	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/tcl
 $genTcl$	$(INSTALL_DATA) $(srcdir)/$(tclclient_tcl) ${DESTDIR}$(datadir)/$(tclclient_tcl)
 $genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(datadir)/openprs
+$genOpenprs$	$(SED) -e 's|@MODULEDATADIR@|${DESTDIR}$(datadir)/openprs|' $(srcdir)/openprs/$module$Openprs.inc.input >  $(srcdir)/openprs/$module$Openprs.inc
 $genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_data) ${DESTDIR}$(datadir)/openprs )
 $genOpenprs$	$(MKINSTALLDIRS) ${DESTDIR}$(includedir)/server/openprs
 $genOpenprs$	( cd $(srcdir) && $(INSTALL_DATA) $(oprsclient_headers) ${DESTDIR}$(includedir)/server/openprs )
