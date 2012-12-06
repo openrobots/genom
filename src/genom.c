@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1993-2003,2009 LAAS/CNRS                      Tue Jul 13 1993
+ * Copyright (c) 1993-2003,2009,2012 LAAS/CNRS                      Tue Jul 13 1993
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
