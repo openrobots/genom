@@ -70,13 +70,12 @@ int moduleInitGen(FILE *out)
     /* Liste des taches d'execution */
     execTask = NULL;
     for (lt = taches; lt != NULL; lt = lt->next) {
-	bufcat(&execTask, "extern void %s%s(%s_CNTRL_STR *, struct %s *);\n",
-	       module->name, lt->exec_task->name, module->NAME,
-	       module->internal_data->name);
+	bufcat(&execTask, "extern void *%s%s(void *);\n",
+	    module->name, lt->exec_task->name);
     }
     bufcat(&execTask, "\ntypedef struct {\n\tchar *name;\n");
     bufcat(&execTask,
-	   "\tint priority;\n\tint size;\n\tvoid (*func)();\n} ");
+	   "\tint priority;\n\tint size;\n\tvoid *(*func)(void *);\n} ");
     bufcat(&execTask, "%s_EXEC_TASK_STR;\n\n", module->NAME);
     bufcat(&execTask, "%s_EXEC_TASK_STR %sExecTaskTab[] = {\n",
 	   module->NAME, module->name);

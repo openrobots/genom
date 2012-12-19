@@ -78,7 +78,7 @@ SEM_ID sem$module$CntrlTaskInit;
 SEM_ID sem$module$InitExecTab[$MODULE$_NB_EXEC_TASK];
 
 /* Les taches */
-void $module$CntrlTask ();
+void *$module$CntrlTask (void *);
 $execTaskTabDescribe$
 
 /* Internal data structures */
@@ -180,7 +180,7 @@ $module$TaskInit()
   if (taskSpawn2(genomInstanceSuffixName("$module$", "CntrlTask"), 
 	  10 /* priorite */, VX_FP_TASK,
 		$MODULE$_MAX_RQST_SIZE + CNTRL_TASK_MIN_STACK_SIZE /*size*/, 
-	  (FUNCPTR)$module$CntrlTask, NULL) == ERROR) {
+	  $module$CntrlTask, NULL) == ERROR) {
      h2perror("$module$TaskInit: cannot spawn $module$CntrlTask");
      goto error;
   }
@@ -210,10 +210,10 @@ $module$TaskInit()
        goto error; 
     }
     
-    if (taskSpawn2($module$ExecTaskTab[i].name, 
+    if (taskSpawn2($module$ExecTaskTab[i].name,
 		  $module$ExecTaskTab[i].priority, VX_FP_TASK, 
 		  $module$ExecTaskTab[i].size + EXEC_TASK_MIN_STACK_SIZE, 
-	    (FUNCPTR)$module$ExecTaskTab[i].func, NULL) == ERROR) {
+	    $module$ExecTaskTab[i].func, NULL) == ERROR) {
        h2perror("$module$TaskInit: cannot spawn exec task");
        goto error;
     }
