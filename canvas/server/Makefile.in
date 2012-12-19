@@ -251,7 +251,7 @@ $(tclclient_obj): $(OBJDIR)/%.lo: %.c
 		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
 $(oprsclient_obj): $(OBJDIR)/%.lo: %.c
-	$(LTCC) -c $(CPPFLAGS) $(TRANSGEN_CFLAGS) \
+	$(LTCC) -c $(CPPFLAGS) $(TRANSGEN_CFLAGS) $(TCLSERV_CLIENT_LIB_CFLAGS) \
 		$(CFLAGS) -o $@ $<  $(LIBTOOL_COPT)
 
 $(tclservclient_obj): $(OBJDIR)/%.lo: %.c
