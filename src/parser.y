@@ -1,5 +1,5 @@
 /* 
- * Copyright (c) 1993-2012 LAAS/CNRS
+ * Copyright (c) 1993-2013 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
@@ -1501,7 +1501,8 @@ main(int argc, char **argv)
     extern FILE *yyin;
     char nomout[MAXPATHLEN];
     char cmdout[MAXPATHLEN];
-    
+    static const char *perl;
+
     char *nomTemp;
     int opt;
     int errFlag;
@@ -1980,7 +1981,8 @@ main(int argc, char **argv)
 	    exit(1);
 	}
 	if (!noExecFlag) {
-	     sprintf(cmdout, "perl -w %s\n", nomout);
+	     perl = getenv("PERL");
+	     sprintf(cmdout, "%s -w %s\n", perl?perl:"perl", nomout);
 	     fprintf(stderr,"%s", cmdout);
 	     status = system(cmdout);
 	    unlink(nomout);
