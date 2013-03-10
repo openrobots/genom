@@ -1,3 +1,5 @@
+135. In the generated autogen script, let the autoconf program be configurable
+     via the AUTOCONF environment variable.
 134. Let the perl program be configurable via the PERL environment variable
 133. Redo the instance name cache.
 132. Fix a bunch of generated prototypes after conversion to taskSpawn2()

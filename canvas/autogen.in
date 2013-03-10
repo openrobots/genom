@@ -13,7 +13,7 @@ if ( ! -f $user || ! -f "local.mk.in" || ! -f "codels/Makefile.in" ) {
 print "
 Creating build environment ...
   * Running autoconf\n";
-exit 1 if system("cd autoconf && autoconf -o ../configure");
+exit 1 if system('cd autoconf && ${AUTOCONF:-autoconf} -o ../configure');
 
 print "
 
