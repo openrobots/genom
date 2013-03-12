@@ -146,8 +146,10 @@ int genPythonInterface(FILE *out)
 					p++;
 				}
 				fprintf(out, ") = (");
-				for (k = 0; k < p; k++)
-					fprintf(out, "%d, ", k);
+				for (m = t->members; m != NULL; m = m->next) {
+					fprintf(out, "%d, ", m->dcl_nom->pointeur);
+					p++;
+				}
 				fprintf(out, ")\n\n");
 				break;
 
