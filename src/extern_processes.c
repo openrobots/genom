@@ -217,9 +217,6 @@ callCpp(char *nomFic, char *cppOptions[], int ignore_error)
     cppArg[i] = NULL;
 
     if (fork() == 0) {
-	char** display;
-	if (verbose)
-	    fputs("genom: running cpp with options\n", stderr);
 
 	/* read stdin from nomFic */
 	if (dup2(in, fileno(stdin)) < 0) {
@@ -246,10 +243,12 @@ callCpp(char *nomFic, char *cppOptions[], int ignore_error)
 		    strerror(errno));
 	}
 
-	if (verbose)
-	{
+	if (verbose) {
+	    char** display;
+	    fprintf(stderr, "genom: running cpp command: '%s'", cppArg[0]);
 	    for (display = cppArg + 1; *display; ++display)
-		fprintf(stderr, "genom:   '%s'\n", *display);
+		fprintf(stderr, " '%s'", *display);
+	    fputs("\n", stderr);
 	}
 
 	execvp(cppArg[0], cppArg);
