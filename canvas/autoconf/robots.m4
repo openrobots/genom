@@ -1,6 +1,6 @@
 
 #
-# Copyright (c) 2002-2007 LAAS/CNRS                   --  Fri Mar 15 2002
+# Copyright (c) 2002-2007,2013 LAAS/CNRS                   --  Fri Mar 15 2002
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -342,15 +342,19 @@ AC_DEFUN([ROBOT_LIB_TCL],
       AC_HELP_STRING([--with-tcl=DIR], [directory containing tclConfig.sh. 'no' to disable.]),
       [tcl_prefix=$withval],
       [for ac_dir in \
-         ${exec_prefix}/lib      	\
-         /usr/local/lib/tcl8.4   	\
-         /usr/local/lib/tcl8.3   	\
-         /usr/local/lib          	\
-         /usr/pkg/lib            	\
-         /usr/lib${libsuffix} 		\
+         ${exec_prefix}/lib		\
+         /usr/local/lib			\
+         /usr/local/lib/tcl8.5		\
+         /usr/local/lib/tcl8.4		\
+         /usr/pkg/lib			\
+         /usr/lib${libsuffix}		\
+         /usr/lib${libsuffix}/tcl8.5	\
          /usr/lib${libsuffix}/tcl8.4	\
          /usr/lib${libsuffix}/tcl-8.4	\
-         /usr/lib${libsuffix}/tcl8.3	\
+         /usr/lib			\
+         /usr/lib/tcl8.5		\
+         /usr/lib/tcl8.4		\
+         /usr/lib/tcl-8.4		\
         ; \
        do
          if test -r "$ac_dir/tclConfig.sh"; then
@@ -366,7 +370,7 @@ AC_DEFUN([ROBOT_LIB_TCL],
    AC_MSG_CHECKING([for tclConfig.sh])
    if test ! -r "${tcl_prefix}/tclConfig.sh"; then
       AC_MSG_RESULT([not found: DISABLING tclServ compilation])
-      AC_MSG_RESULT([Please use --with-tcl to specify a valid path to your tclConfig.sh file]) 
+      AC_MSG_RESULT([Please use --with-tcl to specify a valid path to your tclConfig.sh file, or --with-tcl=no]) 
    else
 
    TCL_CONFIG_PATH=${tcl_prefix}
@@ -374,83 +378,22 @@ AC_DEFUN([ROBOT_LIB_TCL],
    . $file
    AC_MSG_RESULT("${tcl_prefix}/tclConfig.sh")
 
-   dnl substitute variables in TCL_LIB_FILE
-   eval TCL_LIB_FILE=${TCL_LIB_FILE}
+   dnl substitute variables in TCL_LIB_SPEC
+   eval "TCL_LIB_SPEC=\"${TCL_LIB_SPEC}\""
 
    AC_MSG_CHECKING([for tcl headers])
-   test -z "$tcl_test_include" && tcl_test_include=tcl.h
-   for ac_dir in \
-      $TCL_PREFIX/include/tcl$TCL_VERSION       \
-      $TCL_PREFIX/include                       \
-      /usr/local/include/tcl$TCL_VERSION        \
-      /usr/local/include                        \
-      /usr/include                              \
-      /Library/Frameworks/Tcl.framework/Headers \
-      $extra_include                            \
-      ; \
-   do
-      if test -r "$ac_dir/$tcl_test_include"; then
-         ac_tcl_includes=$ac_dir
-         break
-      fi
-   done
-   if test "x$ac_tcl_includes" = "x"; then
-      echo
-      echo "+--------------------------------------------------+"
-      echo "|  If tclConfig.sh was found under /usr/lib/ but   |"
-      echo "|  the Tcl headers could not be found, you should  |"
-      echo "|  use --with-tcl=/path/to/tcl/headers             |"
-      echo "+--------------------------------------------------+"
-      AC_MSG_ERROR([not found (fatal)])
-   else
-
-   AC_MSG_RESULT($ac_tcl_includes)
+   AC_MSG_RESULT([$TCL_INCLUDE_SPEC])
 
    AC_MSG_CHECKING([for tcl library])
-   test -z "$tcl_test_lib" && tcl_test_lib="${TCL_LIB_FILE}"
-   for ac_dir in \
-      $TCL_EXEC_PREFIX/lib                    \
-      $TCL_PREFIX/lib                         \
-      /usr/local/lib                          \
-      /usr/lib${libsuffix}                    \
-      /Library/Frameworks/Tcl.framework       \
-      $extra_lib                              \
-      ; \
-   do
-      if test -r "$ac_dir/$tcl_test_lib"; then
-         ac_tcl_libs=$ac_dir
-         break
-      fi
-   done
-   if test "x$ac_tcl_libs" = "x"; then
-      AC_MSG_RESULT([not found (fatal)])
-   else
-
-   AC_MSG_RESULT($ac_tcl_libs/$TCL_LIB_FILE)
-
-   if test "$ac_tcl_includes" != "/usr/include"; then
-      TCL_CPPFLAGS="-I$ac_tcl_includes"
-   else 
-      TCL_CPPFLAGS=""
-   fi
-   if test "$ac_tcl_libs" != "/usr/include"; then
-      TCL_LDFLAGS="-L$ac_tcl_libs -R$ac_tcl_libs"
-   else 
-      TCL_LDFLAGS=""
-   fi
+   AC_MSG_RESULT([$TCL_LIB_SPEC])
 
    HAS_TCL=yes
 
-   fi # libtcl not found
-   fi # tcl.h not found
    fi # tclConfig.sh not found
    fi # --with-tcl=no
 
    AC_SUBST(HAS_TCL)
    AC_SUBST(TCL_CONFIG_PATH)
-   AC_SUBST(TCL_CPPFLAGS)
-   AC_SUBST(TCL_LDFLAGS)
-   AC_SUBST(TCL_LIBS)
-   AC_SUBST(TCL_LIB_FLAG)
-   AC_SUBST(TCL_LIB_SPEC)
+   AC_SUBST(TCL_CPPFLAGS, [$TCL_INCLUDE_SPEC])
+   AC_SUBST(TCL_LDFLAGS, [$TCL_LIB_SPEC])
 ])

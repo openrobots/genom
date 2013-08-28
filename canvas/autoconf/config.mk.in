@@ -1,6 +1,6 @@
 
 #
-# Copyright (c) 2003-2012 LAAS/CNRS                        --  Mon Aug 25 2003
+# Copyright (c) 2003-2013 LAAS/CNRS                        --  Mon Aug 25 2003
 # All rights reserved.
 #
 # Redistribution  and  use in source   and binary forms,  with or without
@@ -129,7 +129,7 @@ KERNEL_INC=	@KERNEL_INC@
 XENO_CONFIG=	@XENO_CONFIG@
 
 $genTcl$TCL_CPPFLAGS=	@TCL_CPPFLAGS@ @TCLSERV_CFLAGS@
-$genTcl$TCL_LDFLAGS=	@TCL_LDFLAGS@ @TCL_LIB_FLAG@ @TCL_LIBS@
+$genTcl$TCL_LDFLAGS=	@TCL_LDFLAGS@
 
 $genOpenprs$TRANSGEN_CFLAGS = @TRANSGEN_CFLAGS@
 $genOpenprs$TRANSGEN_LIBS = @TRANSGEN_LIBS@
