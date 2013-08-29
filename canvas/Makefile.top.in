@@ -96,14 +96,14 @@ make_subdirs_osapi=\
   for d in ${SUBDIRS}; do (cd $$d; ${MAKE} OSAPI=$${OSAPI} $*) || exit 2; done
 
 %-posix:
-	@OSAPI=posix; $(make_subdirs_osapi)
+	+@OSAPI=posix; $(make_subdirs_osapi)
 
 %-xenomai:
-	@OSAPI=xenomai; $(make_subdirs_osapi)
+	+@OSAPI=xenomai; $(make_subdirs_osapi)
 
 %-rtai:
-	@OSAPI=rtai;  $(make_subdirs_osapi)
-	@OSAPI=posix; $(make_subdirs_osapi)
+	+@OSAPI=rtai;  $(make_subdirs_osapi)
+	+@OSAPI=posix; $(make_subdirs_osapi)
 
 # --- genom -------------------------------------------------------------
 regen-user: standalone-regen-user
