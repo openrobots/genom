@@ -1,3 +1,7 @@
+139. Enable parallel builds
+138. Fix detection of tcl in configure script.
+137. Better printing of cpp command in verbose mode.
+136. [python] Fix the code generated for enum.
 135. In the generated autogen script, let the autoconf program be configurable
      via the AUTOCONF environment variable.
 134. Let the perl program be configurable via the PERL environment variable
