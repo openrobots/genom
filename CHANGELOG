@@ -1,3 +1,5 @@
+Genom 2.11, September 13, 2013.
+
 139. Enable parallel builds
 138. Fix detection of tcl in configure script.
 137. Better printing of cpp command in verbose mode.
