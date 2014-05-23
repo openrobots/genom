@@ -674,7 +674,8 @@ testStopModule(TEST_STR *eid)
 			     (void *) NULL, 0, (FUNCPTR) NULL);
   
   bilan = errnoGet();
-  h2perror("Final reply of request Abort");
+  if (bilan != OK) 
+	  h2perror("Final reply of request Abort");
 
   /* Requete d'abort DU MODULE qui a reussi */
   if (status == FINAL_REPLY_OK && bilan == OK) 
@@ -719,7 +720,8 @@ testAbortRqst(TEST_STR *eid)
 			     (void *) NULL, 0, (FUNCPTR) NULL);
   
   bilan = errnoGet();
-  h2perror("Final reply of request Abort");
+  if (bilan != OK) 
+	  h2perror("Final reply of request Abort");
 
   /* Requete d'abort DU MODULE qui a reussi */
   if (activity == GENOM_END_MODULE && status == FINAL_REPLY_OK && bilan == OK) 
