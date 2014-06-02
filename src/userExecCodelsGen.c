@@ -125,6 +125,30 @@ userExecCodelsGen(FILE *out)
 	      "}\n\n", t->codel_task_end);
     }
 
+    /*
+     * Wait codel
+     */
+    if (t->codel_task_wait != NULL) {
+      fprintf(out,
+	      "/*------------------------------------------------------------------------\n *\n"
+	      " * %s  --  wait codel of permanent activity (async task)\n *\n"
+	      " * Description: \n * \n"
+	      " * Reports:      OK\n", t->codel_task_wait);
+      for (lf=t->fail_reports; lf != NULL; lf=lf->next) {
+	fprintf(out, " *              S_%s_%s\n",
+		module->name, lf->name);
+      }
+
+      fprintf(out,
+	      " * \n * Returns:    OK or ERROR\n */\n\n");
+      fprintf(out,
+	      "STATUS\n%s(int *report)\n"
+	      "{\n"
+	      "  /* ... add your code here ... */\n"
+	      "  return OK;\n"
+	      "}\n", t->codel_task_wait);
+    }
+
     /* 
      * Codels activite permanente 
      */
