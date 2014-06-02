@@ -579,6 +579,15 @@ ajout_av_tache(EXEC_TASK_AV_STR *av, EXEC_TASK_STR *task)
 	}
 	task->codel_task_main2 = av->value.codel_task_main2;
 	break;
+      case CODEL_TASK_WAIT:
+	if (task->codel_task_wait) {
+	  fprintf(stderr,
+		  "genom %s: Error: duplicate field 'codel_task_wait' in task %s\n",
+		  nomfic, task->name);
+	  exit(2);
+	}
+	task->codel_task_wait = av->value.codel_task_wait;
+	break;
       case POSTERS_INPUT:
 	if (task->posters_input_types) {
 	  fprintf(stderr,
@@ -1367,12 +1376,10 @@ trouve_value(char *symbole, long *pVal)
     TYPE_STR *t;
     DCL_NOM_LIST *l;
     DCL_NOM_STR *m;
-    long val;
 
     for (lt = types; lt != NULL; lt = lt->next) {
 	t = lt->type;
 	if (t->type == ENUM) {
-	    val = 0;
 	    for (l = t->members; l != NULL; l = l->next) {
 		m = l->dcl_nom;
 		if (strcmp(m->name, symbole) == 0 && m->flags == ENUM_VALUE) {
