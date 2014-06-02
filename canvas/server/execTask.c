@@ -177,9 +177,9 @@ $module$$execTaskName$ (void *arg)
       logMsg("$module$$execTaskName$: h2timerPause error\n");
       $module$$execTaskName$Suspend (FALSE);
     }
-#elif ($task_wait_codel_flag$)
-    if ($task_wait_codel$() != OK) {
-      logMsh("$module$$execTaskName$: $task_wait_codel$ error\n");
+#elif ($codel_task_wait_flag$)
+    if ($codel_task_wait$() != OK) {
+      logMsg("$module$$execTaskName$: $codel_task_wait$ error\n");
       $module$$execTaskName$Suspend(FALSE);
     }
 #else /* wait for external events */
