@@ -72,14 +72,14 @@ char *genomActivityStateStr[] = {
 *
 *  Retourne: la chaine
 */
-char const * h2GetEvnStateString(int num)
+char const *
+h2GetEvnStateString(int num)
 {
   if (num < 0 || num >= GENOM_NB_ACTIVITY_STATE)
-    sprintf(evnStateString, "Unknown state %d", num);
-
+    snprintf(evnStateString, sizeof(evnStateString), "Unknown state %d", num);
   else
-    sprintf(evnStateString, genomActivityStateStr[num]);
+    snprintf(evnStateString, sizeof(evnStateString), "%s",
+	     genomActivityStateStr[num]);
 
   return(evnStateString);
 }
-
