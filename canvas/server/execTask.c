@@ -4,7 +4,7 @@
 /* 
  * Copyright (c) 2004-2005
  *      Autonomous Systems Lab, Swiss Federal Institute of Technology.
- * Copyright (c) 1993-2005 LAAS/CNRS
+ * Copyright (c) 1993-2005,2014 LAAS/CNRS
  * All rights reserved.
  *
  * Redistribution and use  in source  and binary  forms,  with or without
