@@ -531,9 +531,6 @@ static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId)
   $listPosterInit$
   LOGDBG(("$module$$execTaskName$InitTaskFunc: client posters initialized\n"));
 
-  /* Enregister le nom de la tache */
-/*  strcpy (EXEC_TASK_NAME($execTaskNum$), "execTaskName"); */
-
 #if ($cFuncExecInitFlag$)
     /* Execution de la fonction d'initialisation */
   if ($cFuncExecInitName$ (&bilan) != OK) {
@@ -542,9 +539,6 @@ static STATUS $module$$execTaskName$InitTaskFunc (H2TIMER_ID *execTimerId)
     return (ERROR);
   }
 #endif
-
-  /* Record errors */
-/*   $module$RecordH2errMsgs(); */
 
    /* Donner le sem de fin d'initialisation */
   LOGDBG(("$module$$execTaskName$InitTaskFunc: ok\n"));
@@ -775,7 +769,6 @@ static BOOL filterAndSendEvn (ACTIVITY_STATE state,
     /* Tache non periodique: Auto reveille sauf evn SLEEP */
     if (evn != SLEEP)
       h2evnSignal(EXEC_TASK_ID($execTaskNum$));
-/*    semGive (EXEC_TASK_SEM_ID($execTaskNum$));*/
 #endif
 
     /* Changement d'etat en vu : il faudra prevenir la tache de controle */

@@ -240,18 +240,8 @@ static void $module$CntrlIntEvnExec(SERV_ID servId)
       ACTIVITY_EVN(activity) = NO_EVENT;
     }
 
-    /* XXX Eveil systematique - le traitement des requetes est fait apres -> si l'une d'elle met le flag EXEC_TASK_WAKE_UP_FLAG on ne le voie pas ici */
-/*    else if (ACTIVITY_STATUS(activity) == SLEEP) {*/
-/*      && EXEC_TASK_WAKE_UP_FLAG(ACTIVITY_TASK_NUM(activity))) {*/
-/*      ACTIVITY_EVN(activity) = EXEC;
-      h2evnSignal(EXEC_TASK_ID(ACTIVITY_TASK_NUM(activity)));
-    }*/
-
   } /* for */
 
-  /* Reset demande d'eveil (pas utilise actuelement) */
-/*  for (i=0; i<$MODULE$_NB_EXEC_TASK; i++)
-    EXEC_TASK_WAKE_UP_FLAG(i) = FALSE;*/
 }
 
 
@@ -541,11 +531,6 @@ static int allocActivity (int rqstId,     /* Id de la requete */
   }
 
   /* Recherche d'une activite libre */
-  /*  activity = 0;
-  while(ACTIVITY_STATUS(activity) != ETHER && activity < MAX_ACTIVITIES) 
-    activity++;*/
-
-  
   for(i=0; i<MAX_ACTIVITIES; i++) {
     activity = ($module$LastActivityNum+1+i)%MAX_ACTIVITIES;
     if (ACTIVITY_STATUS(activity) == ETHER)
@@ -813,9 +798,6 @@ static void $module$ReplyAndSuspend (SERV_ID servId,
     h2perror ("$module$ReplyAndSuspend: posterWrite");
   }
 
-/*XXX  $module$CntrlPosterShow();*/
-
-
   /* Liberer les SDIs */
   if (giveFlag) {
     commonStructGive ((void *) $module$DataStrId);
@@ -891,7 +873,6 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 	/* Test if there is on going activities */
 	if (NB_ACTIVITIES != 0) {
 	  bilan = S_$module$_stdGenoM_WAIT_ABORT_ZOMBIE_ACTIVITY;
-	  /* bilan = S_stdGenoM_ACTIVITIES_stdGenoM_REMAINED; */
 	  break;
 	}
 
