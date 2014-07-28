@@ -92,7 +92,8 @@ STATUS $module$CntrlPosterShow ()
   /* Tache de controle */
   printf (" Control Task        %-5s                               %s\n",  
 	  M_CNTRL_TASK_STATUS(sdic)==OK ? "OK":"ERROR",
-	  h2getErrMsg(M_CNTRL_TASK_BILAN(sdic), strmsg, 64));
+          M_CNTRL_TASK_STATUS(sdic)==OK ? "" 
+          : h2getErrMsg(M_CNTRL_TASK_BILAN(sdic), strmsg, 64));
   
   /* Taches d'execution */
   for (i=0; i<$MODULE$_NB_EXEC_TASK; i++) {
@@ -108,8 +109,8 @@ STATUS $module$CntrlPosterShow ()
       printf ("    %.2lfms ", M_EXEC_TASK_ON_PERIOD(sdic,i)/1000.0);
       printf ("(max %.2lf)        ", M_EXEC_TASK_MAX_PERIOD(sdic,i)/1000.0);      
     }
-    printf ("\t %s\n", h2getErrMsg(M_EXEC_TASK_BILAN(sdic,i), strmsg, 64));
-
+    printf ("\t %s\n", M_EXEC_TASK_STATUS(sdic,i) == OK ? "" 
+	    : h2getErrMsg(M_EXEC_TASK_BILAN(sdic,i), strmsg, 64));
   }
   printf ("\n");
 
