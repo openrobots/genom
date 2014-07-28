@@ -317,7 +317,8 @@ static void $module$SpawnActivities (SERV_ID servId)
     
 	/* Declencher l'execution */
 	ACTIVITY_EVN(activity) = START;
-	h2evnSignal(EXEC_TASK_ID(ACTIVITY_TASK_NUM(activity)));
+	if (!EXEC_TASK_PERIOD(ACTIVITY_TASK_NUM(activity)))
+	  h2evnSignal(EXEC_TASK_ID(ACTIVITY_TASK_NUM(activity)));
 	
 	/* Envoyer la replique intermediaire */
 	if (csServReplySend (servId, ACTIVITY_RQST_ID(activity), INTERMED_REPLY, 
@@ -476,7 +477,8 @@ static BOOL $module$AbortActivity (SERV_ID servId, int activity)
     /* L'acitivite roupille */
   case SLEEP:
     ACTIVITY_EVN(activity) = INTER;
-    h2evnSignal(EXEC_TASK_ID(ACTIVITY_TASK_NUM(activity)));
+    if (!EXEC_TASK_PERIOD(ACTIVITY_TASK_NUM(activity)))
+      h2evnSignal(EXEC_TASK_ID(ACTIVITY_TASK_NUM(activity)));
     return(FALSE);
     
     /* Activite en cours d'exec: START, EXEC, END, FAIL, INTER , SLEEP */
@@ -500,7 +502,8 @@ static BOOL $module$AbortActivity (SERV_ID servId, int activity)
       /* Demande d'interruption END, START, EXEC, SLEEP? */
     default:
       ACTIVITY_EVN(activity) = INTER;
-      h2evnSignal(EXEC_TASK_ID(ACTIVITY_TASK_NUM(activity)));
+      if (!EXEC_TASK_PERIOD(ACTIVITY_TASK_NUM(activity)))
+	h2evnSignal(EXEC_TASK_ID(ACTIVITY_TASK_NUM(activity)));
       return(FALSE);
     }
   }
@@ -891,7 +894,8 @@ static void $module$RqstAbortActivity (SERV_ID servId, int rqstId)
 	  for (i=$MODULE$_NB_EXEC_TASK-1; i > -1; i--) {
 	    logMsg("Killing task %s ... \n", $module$ExecTaskNameTab[i]);
 	    taskResume(EXEC_TASK_ID(i));
-	    h2evnSignal(EXEC_TASK_ID(i));
+	    if (!EXEC_TASK_PERIOD(i))
+	      h2evnSignal(EXEC_TASK_ID(i));
 	  }
 
 	  /* Wait end */
@@ -984,7 +988,8 @@ $module$SignalEnd(void)
 	for (i=$MODULE$_NB_EXEC_TASK-1; i > -1; i--) {
 		logMsg("Killing task %s ... \n", $module$ExecTaskNameTab[i]);
 		taskResume(EXEC_TASK_ID(i));
-		h2evnSignal(EXEC_TASK_ID(i));
+		if (!EXEC_TASK_PERIOD(i))
+ 		  h2evnSignal(EXEC_TASK_ID(i));
 	}
 	
 	/* Wait end */
